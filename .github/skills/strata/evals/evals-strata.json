@@ -1,0 +1,266 @@
+[
+  {
+    "case_id": "strata-hp-1",
+    "category": "happy-path",
+    "scenario": "Step 1 completes successfully for a new project with no existing state",
+    "input": "The user invokes Strata with the topic 'impact of remote work on productivity'. No research folder or state.json exists for this topic.",
+    "expected_output": "The skill checks for state.json at research/impact-of-remote-work-on-productivity/state.json, does not find it, informs the user this is a new project, and proceeds to Step 2.",
+    "expected_outcome": "pass"
+  },
+  {
+    "case_id": "strata-hp-2",
+    "category": "happy-path",
+    "scenario": "Step 2 intake completes and user confirms the brief",
+    "input": "The user invokes Strata for a new topic. The /research-start sub-skill writes brief.md and plan.md to research/[topic-slug]/00-intake/. Both files are non-empty. The user replies 'yes' when asked to confirm the brief.",
+    "expected_output": "state.json is updated to phase: sourcing and progress.brief_approved: true. The skill proceeds to Step 3.",
+    "expected_outcome": "pass"
+  },
+  {
+    "case_id": "strata-hp-3",
+    "category": "happy-path",
+    "scenario": "Step 3 sourcing loop runs until the user confirms readiness to analyze",
+    "input": "state.json has phase: sourcing. The /research-source skill is invoked in a loop. After two batches, the user types 'analyze' in response to the sourcing gate prompt.",
+    "expected_output": "state.json is updated to phase: analysis and progress.sourcing_complete: true. The skill proceeds to Step 4.",
+    "expected_outcome": "pass"
+  },
+  {
+    "case_id": "strata-hp-4",
+    "category": "happy-path",
+    "scenario": "Step 4 analysis completes with all three output files present and non-empty",
+    "input": "state.json has phase: analysis. The /research-analyze sub-skill writes themes.md, contradictions.md, and gaps.md to 02-analysis/. All three files are non-empty. No critical Q-number gaps exist.",
+    "expected_output": "state.json is updated to phase: synthesis and progress.analysis_complete: true. The skill shows an analysis summary and asks the user to confirm before proceeding to synthesis.",
+    "expected_outcome": "pass"
+  },
+  {
+    "case_id": "strata-hp-5",
+    "category": "happy-path",
+    "scenario": "Step 5 synthesis passes all quality checklist items",
+    "input": "state.json has phase: synthesis. The /research-synthesize sub-skill writes claims.md and narrative.md. Every claim cites at least one source, every Q-number from plan.md appears in the claims map, all unresolved contradictions appear in the narrative, and the narrative directly answers the research question. The user replies 'yes' to proceed.",
+    "expected_output": "state.json is updated to phase: output and progress.synthesis_complete: true. The skill proceeds to Step 6.",
+    "expected_outcome": "pass"
+  },
+  {
+    "case_id": "strata-hp-6",
+    "category": "happy-path",
+    "scenario": "Step 6 output writes both files meeting the binary verification criteria",
+    "input": "state.json has phase: output and the synthesis checklist has passed. The /research-write sub-skill produces summary.md at 420 words and report.md containing all required section headings: Executive Summary, Research Question & Scope, Methodology, Findings, Contradictions & Limitations, Conclusion, and Sources.",
+    "expected_output": "state.json is updated to phase: complete and progress.output_complete: true. The skill proceeds to Step 7.",
+    "expected_outcome": "pass"
+  },
+  {
+    "case_id": "strata-hp-7",
+    "category": "happy-path",
+    "scenario": "Step 7 completion displays the summary after all acceptance checklist items pass",
+    "input": "state.json has phase: complete. summary.md is 410 words. report.md contains all required headings. Every claim in claims.md cites a source by ID. Every Q-number from plan.md appears in claims.md. state.json history has one entry for the completed session.",
+    "expected_output": "The skill displays the Strata research complete summary block including topic, question, confidence, source counts, theme count, claim count, Q coverage, output paths, and limitations. It then asks if the user wants to expand any section.",
+    "expected_outcome": "pass"
+  },
+  {
+    "case_id": "strata-fm-1",
+    "category": "failure-mode",
+    "scenario": "User goes silent mid-workflow and re-invokes Strata in a new session",
+    "input": "Strata was running a sourcing loop in a previous session. The user ended the conversation without completing sourcing. In a new session, the user invokes Strata again without specifying a phase.",
+    "expected_output": "The skill reads state.json, finds phase: sourcing, resumes from Step 3, and does not restart the project from scratch.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-fm-2",
+    "category": "failure-mode",
+    "scenario": "Sources collected are low quality or only weakly relevant",
+    "input": "During the sourcing loop, the /research-source sub-skill returns sources that are all opinion blogs with no citations and low relevance scores. The user asks Strata to proceed.",
+    "expected_output": "The skill flags the quality issue in gaps.md, notes the limitation, and continues without blocking synthesis. It does not halt the workflow on poor sourcing quality alone.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-fm-3",
+    "category": "failure-mode",
+    "scenario": "The research question turns out to be genuinely unanswerable",
+    "input": "After analysis, all Q-numbers remain without supporting evidence. The /research-analyze run concludes there is no available evidence to answer the main research question.",
+    "expected_output": "The skill treats unanswerability as a valid finding, writes it as an inherent limitation in the output, and documents why in gaps.md. It does not block synthesis or output.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-fm-4",
+    "category": "failure-mode",
+    "scenario": "Contradictions in the evidence cannot be resolved",
+    "input": "During synthesis, two highly credible sources make mutually exclusive claims about the research topic. The /research-synthesize sub-skill cannot determine which claim is correct.",
+    "expected_output": "The skill states the contradiction honestly in the narrative, does not pick a side without evidence, and captures the unresolved contradiction in narrative.md.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-fm-5",
+    "category": "failure-mode",
+    "scenario": "A required sub-skill file is not found at the expected path",
+    "input": "Strata attempts to load /research-analyze from .github/skills/research-analyze/SKILL.md during Step 4. The file does not exist at that path.",
+    "expected_output": "The skill shows: 'Sub-skill at .github/skills/research-analyze/SKILL.md not found. Cannot continue this zone until the path is resolved.' Records the error in state.json last_action and halts Step 4. It does not attempt to run analysis without the sub-skill.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-fm-6",
+    "category": "failure-mode",
+    "scenario": "state.json is present but missing required fields and cannot be parsed",
+    "input": "The user resumes a Strata project. state.json exists at the expected path but is missing the 'phase' field and contains only partial JSON.",
+    "expected_output": "The skill shows: 'state.json at [path] is malformed. Attempting recovery.' It infers the last valid phase from existing output files. If no phase can be inferred, it treats the project as new and explains what may be lost.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-fm-7",
+    "category": "failure-mode",
+    "scenario": "User changes the research topic while an existing project is active",
+    "input": "The user has an active Strata project at research/climate-policy/ with phase: analysis. In the same session, the user asks Strata to research a completely different topic: 'cryptocurrency regulation'.",
+    "expected_output": "The skill asks: 'You have an active project at research/climate-policy/. Start a new project for the new topic? The existing project will remain in place.' and waits for explicit user confirmation before proceeding. It does not overwrite or restart the existing project without confirmation.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-rv-1",
+    "category": "rule-violation",
+    "scenario": "Skill skips reading state.json at the start of a session",
+    "input": "Strata is invoked and immediately begins intake without first reading or checking for state.json in the research folder.",
+    "expected_output": "The skill must not proceed past Step 1 without first checking for state.json. Any session that bypasses Step 1 violates the non-negotiable rule and should be rejected.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-rv-2",
+    "category": "rule-violation",
+    "scenario": "A conclusion or interpreted finding is written directly into a source file",
+    "input": "During the sourcing phase, the skill writes the sentence 'This evidence suggests remote work increases productivity by 20%' into a file stored under 01-sources/.",
+    "expected_output": "The skill must not write conclusions or interpretations in source files. Source files are evidence records only. The violation must be rejected and the conclusion must not be written to a source file.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-rv-3",
+    "category": "rule-violation",
+    "scenario": "Analysis content is written directly into an output file",
+    "input": "During Step 6, the skill skips synthesis and writes theme analysis and pattern notes directly into 04-output/report.md without producing claims.md first.",
+    "expected_output": "The skill must not write analysis in output files. Output files must be produced from synthesis artifacts, not from raw analysis. This action must be blocked.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-rv-4",
+    "category": "rule-violation",
+    "scenario": "A claim is written in claims.md without citing any source by ID",
+    "input": "During synthesis, the skill produces a claim: 'Remote work significantly reduces commute stress.' The claim has no source ID citation and references only a general knowledge statement.",
+    "expected_output": "The skill must reject any claim that does not cite at least one source by ID. The synthesis checklist must flag this before proceeding and require the citation to be added.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-rv-5",
+    "category": "rule-violation",
+    "scenario": "A source file is deleted from the research folder",
+    "input": "The skill determines that a source is irrelevant and uses a file deletion operation to remove it from 01-sources/.",
+    "expected_output": "The skill must never delete files. The source must instead be marked as discarded with a reason noted in the file and kept in the folder. The deletion must be stopped.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-rv-6",
+    "category": "rule-violation",
+    "scenario": "Session ends without updating state.json",
+    "input": "The skill completes the sourcing loop and transitions the project to the analysis phase, then returns a response to the user without updating state.json.",
+    "expected_output": "The skill must update state.json before every session ends. Completing a phase transition without persisting the phase change to state.json violates this rule and leaves the project in an inconsistent state for the next session.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-ap-1",
+    "category": "anti-pattern",
+    "scenario": "Conclusions are written into source files during the sourcing phase",
+    "input": "While collecting sources in Step 3, the skill appends a section titled 'Key Takeaways' with interpreted conclusions to a source file in 01-sources/.",
+    "expected_output": "The skill must reject writing conclusions or interpretations into source files. Source files are evidence records only. The skill must remove the takeaways section and keep only factual source content in that file.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-ap-2",
+    "category": "anti-pattern",
+    "scenario": "The brief confirmation gate is skipped and sourcing begins immediately after intake",
+    "input": "After the /research-start sub-skill writes brief.md and plan.md, the skill immediately updates state.json to phase: sourcing and begins Step 3 without asking the user to confirm the brief.",
+    "expected_output": "The skill must ask explicitly: 'Does this brief capture what you need? Reply yes to begin sourcing.' and must not advance to sourcing until the user replies. Advancing without confirmation must be rejected.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-ap-3",
+    "category": "anti-pattern",
+    "scenario": "Sub-skills are called out of zone order — analysis before sourcing",
+    "input": "Strata invokes /research-analyze immediately after intake, before any sourcing has been done, because the user said 'just analyze what you already know'.",
+    "expected_output": "The skill must enforce zone order. Analysis must not be invoked before sourcing has completed. The skill must explain that analysis requires source files produced in Step 3 and must redirect the user to the sourcing step.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-ap-4",
+    "category": "anti-pattern",
+    "scenario": "state.json is not updated after a step transition",
+    "input": "The skill completes Step 4 analysis and proceeds to Step 5 synthesis without updating state.json to phase: synthesis.",
+    "expected_output": "The skill must update state.json after every step transition. Skipping this update causes sessions to conflict or silently restart from the wrong zone. The transition must not complete without persisting the state change.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-ap-5",
+    "category": "anti-pattern",
+    "scenario": "Synthesis and output zones are merged — report.md is written before claims.md is complete",
+    "input": "The skill begins writing 04-output/report.md while /research-synthesize is still running and claims.md is only partially populated.",
+    "expected_output": "The skill must complete and verify claims.md before writing report.md. Merging synthesis and output zones is not permitted. The output step must not start until the synthesis quality checklist has fully passed.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-ap-6",
+    "category": "anti-pattern",
+    "scenario": "Project is marked complete and the Step 7 summary is displayed without running the final acceptance checklist",
+    "input": "After writing output files, the skill displays the Strata research complete summary block without first running through the six-item final acceptance checklist.",
+    "expected_output": "The skill must run all six acceptance checklist items before displaying the completion summary. Displaying the summary without checklist verification must be rejected.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-ap-7",
+    "category": "anti-pattern",
+    "scenario": "A claim is written in claims.md that refers only to general knowledge with no source ID",
+    "input": "During synthesis, the skill writes: 'It is widely understood that remote work reduces office costs.' No source ID is cited. The claim relies on general knowledge rather than a sourced document in 01-sources/.",
+    "expected_output": "The skill must reject claims that are not traceable to a source ID. Speculation and general knowledge are not acceptable claim evidence. The synthesis checklist must fail this item and require a source citation before proceeding.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-ap-8",
+    "category": "anti-pattern",
+    "scenario": "The skill advances past a user gate without receiving explicit user confirmation",
+    "input": "The sourcing gate is reached. Rather than waiting for the user to type 'analyze', the skill interprets the user's previous message about wanting to finish quickly as implicit permission and advances to Step 4.",
+    "expected_output": "The skill must not advance through any user gate without explicit confirmation. Inferring confirmation from prior messages is not acceptable. The skill must re-present the gate prompt and wait for the user's explicit reply.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-mr-1",
+    "category": "must-rule",
+    "scenario": "Skill proceeds to Step 3 even though brief.md is empty after intake",
+    "input": "The /research-start sub-skill runs and creates brief.md in 00-intake/ but the file is empty — no content was written. The skill checks the file and finds it exists.",
+    "expected_output": "The binary verify step in Step 2 must confirm both brief.md and plan.md are non-empty. Finding brief.md empty, the skill must re-run the /research-start sub-skill before advancing to Step 3.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-mr-2",
+    "category": "must-rule",
+    "scenario": "Analysis proceeds to synthesis even though contradictions.md was not written",
+    "input": "After running /research-analyze, themes.md and gaps.md are present and non-empty, but contradictions.md was not created by the sub-skill.",
+    "expected_output": "The binary verify step in Step 4 requires themes.md, contradictions.md, and gaps.md to all exist and be non-empty. Finding contradictions.md absent, the skill must re-run /research-analyze before advancing to synthesis.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-mr-3",
+    "category": "must-rule",
+    "scenario": "Step 6 tries to advance to completion even though report.md is missing the Methodology heading",
+    "input": "After running /research-write, summary.md is 390 words and report.md contains Executive Summary, Research Question & Scope, Findings, Contradictions & Limitations, Conclusion, and Sources — but the Methodology section heading is absent.",
+    "expected_output": "The binary verify step in Step 6 requires report.md to contain all required section headings including Methodology. Finding it missing, the skill must re-run /research-write before updating state.json to phase: complete.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-mr-4",
+    "category": "must-rule",
+    "scenario": "state.json is not updated after a phase transition mid-session",
+    "input": "The skill completes the Step 3 sourcing gate and the user confirms 'analyze'. The skill loads /research-analyze and begins Step 4 but does not update state.json phase from sourcing to analysis before starting analysis work.",
+    "expected_output": "The skill must update state.json to phase: analysis immediately when the Step 3 gate is confirmed, before any Step 4 work begins. Failing to do so leaves the project in an incorrect state for any resumed session.",
+    "expected_outcome": "fail"
+  },
+  {
+    "case_id": "strata-mr-5",
+    "category": "must-rule",
+    "scenario": "Skill begins work in Step 1 without telling the user which phase it is resuming",
+    "input": "Strata is invoked and finds state.json with phase: analysis. The skill loads /research-analyze and begins analysis work without first informing the user that it is resuming from the analysis phase.",
+    "expected_output": "The skill must tell the user which phase it is in before proceeding. When resuming, the skill must display the current phase to the user as described in the Step 1 exit condition, then continue to the correct step.",
+    "expected_outcome": "fail"
+  }
+]
