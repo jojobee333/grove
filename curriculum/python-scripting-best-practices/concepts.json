@@ -1,0 +1,190 @@
+{
+  "slug": "python-scripting-best-practices",
+  "generated": "2026-04-13",
+  "concepts": [
+    {
+      "id": "quality-toolchain",
+      "title": "Python Quality Toolchain",
+      "depends_on": [],
+      "introduced_in": ["L01"],
+      "reinforced_in": ["L02", "L05"],
+      "assessment_sources": ["Q-M01-01", "Q-M01-02"]
+    },
+    {
+      "id": "ruff",
+      "title": "Ruff Linter and Formatter",
+      "depends_on": ["quality-toolchain"],
+      "introduced_in": ["L01"],
+      "reinforced_in": ["L05"],
+      "assessment_sources": []
+    },
+    {
+      "id": "mypy",
+      "title": "Mypy Static Type Checker",
+      "depends_on": ["quality-toolchain"],
+      "introduced_in": ["L01"],
+      "reinforced_in": ["L05"],
+      "assessment_sources": []
+    },
+    {
+      "id": "pytest",
+      "title": "Pytest Test Framework",
+      "depends_on": ["quality-toolchain"],
+      "introduced_in": ["L01"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "pyproject-config",
+      "title": "pyproject.toml as Single Config Hub",
+      "depends_on": ["quality-toolchain"],
+      "introduced_in": ["L02"],
+      "reinforced_in": ["L03"],
+      "assessment_sources": []
+    },
+    {
+      "id": "script-structure",
+      "title": "Universal Script Skeleton",
+      "depends_on": ["pyproject-config"],
+      "introduced_in": ["L03"],
+      "reinforced_in": ["L04", "L07", "L10"],
+      "assessment_sources": []
+    },
+    {
+      "id": "main-guard",
+      "title": "if __name__ == __main__ Guard",
+      "depends_on": ["script-structure"],
+      "introduced_in": ["L03"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "structured-logging",
+      "title": "Structured Logging Over print()",
+      "depends_on": ["script-structure"],
+      "introduced_in": ["L04"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "log-levels",
+      "title": "Logging Levels and basicConfig",
+      "depends_on": ["structured-logging"],
+      "introduced_in": ["L04"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "module-logger",
+      "title": "Module-Level Logger Pattern",
+      "depends_on": ["structured-logging"],
+      "introduced_in": ["L04"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "docstrings",
+      "title": "PEP 257 Google-Style Docstrings",
+      "depends_on": ["quality-toolchain"],
+      "introduced_in": ["L05"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "type-annotations",
+      "title": "Type Annotations for Public Functions",
+      "depends_on": ["mypy"],
+      "introduced_in": ["L05"],
+      "reinforced_in": ["L06", "L12"],
+      "assessment_sources": []
+    },
+    {
+      "id": "type-annotation-policy",
+      "title": "Type Annotation Enforcement Policy",
+      "depends_on": ["type-annotations"],
+      "introduced_in": ["L05"],
+      "reinforced_in": ["L06", "L12"],
+      "assessment_sources": []
+    },
+    {
+      "id": "modern-type-syntax",
+      "title": "Python 3.10+ Type Syntax",
+      "depends_on": ["type-annotations"],
+      "introduced_in": ["L06"],
+      "reinforced_in": ["L12"],
+      "assessment_sources": []
+    },
+    {
+      "id": "pathlib",
+      "title": "pathlib over os.path",
+      "depends_on": ["script-structure"],
+      "introduced_in": ["L07"],
+      "reinforced_in": ["L08"],
+      "assessment_sources": []
+    },
+    {
+      "id": "context-managers",
+      "title": "Context Managers for Resource Safety",
+      "depends_on": ["script-structure"],
+      "introduced_in": ["L07"],
+      "reinforced_in": ["L10"],
+      "assessment_sources": []
+    },
+    {
+      "id": "config-layering",
+      "title": "Layered Config Priority Pattern",
+      "depends_on": ["pathlib"],
+      "introduced_in": ["L08"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "secrets-management",
+      "title": "Secrets in Env Vars, Never Source",
+      "depends_on": ["config-layering"],
+      "introduced_in": ["L08"],
+      "reinforced_in": ["L09"],
+      "assessment_sources": []
+    },
+    {
+      "id": "serialization",
+      "title": "Security-Aware Serialization Format Selection",
+      "depends_on": ["secrets-management"],
+      "introduced_in": ["L09"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "concurrency-model",
+      "title": "Concurrency Model Selection by Task Type",
+      "depends_on": ["script-structure", "context-managers"],
+      "introduced_in": ["L10"],
+      "reinforced_in": ["L11"],
+      "assessment_sources": []
+    },
+    {
+      "id": "asyncio",
+      "title": "asyncio and ThreadPoolExecutor Patterns",
+      "depends_on": ["concurrency-model"],
+      "introduced_in": ["L10"],
+      "reinforced_in": ["L11"],
+      "assessment_sources": []
+    },
+    {
+      "id": "graceful-shutdown",
+      "title": "Graceful Shutdown Pattern",
+      "depends_on": ["asyncio"],
+      "introduced_in": ["L11"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "signal-handling",
+      "title": "SIGTERM and SIGINT Signal Handling",
+      "depends_on": ["graceful-shutdown"],
+      "introduced_in": ["L11"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    }
+  ]
+}

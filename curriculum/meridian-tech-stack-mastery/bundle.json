@@ -1,7 +1,7 @@
 {
-  "version": "2.0",
+  "version": "3.0",
   "slug": "meridian-tech-stack-mastery",
-  "bundled": "2026-04-13T13:58:39.766Z",
+  "bundled": "2026-04-13T16:33:46.106Z",
   "course": {
     "topic": "Meridian Tech Stack Mastery",
     "slug": "meridian-tech-stack-mastery",
@@ -30,7 +30,22 @@
             "strata_claim": "C1",
             "type": "core",
             "estimated_minutes": 15,
-            "description": "The nine strict sub-flags, which ones matter most for the Meridian stack, and how isolatedModules interacts with Vite."
+            "description": "The nine strict sub-flags, which ones matter most for the Meridian stack, and how isolatedModules interacts with Vite.",
+            "prerequisites": [],
+            "teaches_concepts": [
+              "typescript-strict-mode",
+              "strict-sub-flags"
+            ],
+            "reinforces_concepts": [],
+            "mastery_threshold": 0.8,
+            "difficulty": 2,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           },
           {
             "id": "L02",
@@ -38,7 +53,27 @@
             "strata_claim": "C2",
             "type": "applied",
             "estimated_minutes": 15,
-            "description": "How z.infer<>, Drizzle table types, and the Anthropic SDK's MessageParam types each depend on strict mode to work correctly."
+            "description": "How z.infer<>, Drizzle table types, and the Anthropic SDK's MessageParam types each depend on strict mode to work correctly.",
+            "prerequisites": [
+              "L01"
+            ],
+            "teaches_concepts": [
+              "library-strict-dependency",
+              "z-infer",
+              "drizzle-types"
+            ],
+            "reinforces_concepts": [
+              "typescript-strict-mode"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 2,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           }
         ],
         "has_assessment": true
@@ -59,7 +94,26 @@
             "strata_claim": "C4",
             "type": "core",
             "estimated_minutes": 15,
-            "description": "How startTransition, interrupted renders, and StrictMode double-invocation all require immutable state snapshots to be safe."
+            "description": "How startTransition, interrupted renders, and StrictMode double-invocation all require immutable state snapshots to be safe.",
+            "prerequisites": [
+              "L01"
+            ],
+            "teaches_concepts": [
+              "immutability",
+              "concurrent-rendering"
+            ],
+            "reinforces_concepts": [
+              "typescript-strict-mode"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           },
           {
             "id": "L04",
@@ -67,7 +121,26 @@
             "strata_claim": "C6",
             "type": "core",
             "estimated_minutes": 15,
-            "description": "Why CRDT commutativity requires each operation to be an immutable value, and how this connects to Lexical's frozen EditorState."
+            "description": "Why CRDT commutativity requires each operation to be an immutable value, and how this connects to Lexical's frozen EditorState.",
+            "prerequisites": [
+              "L03"
+            ],
+            "teaches_concepts": [
+              "crdt",
+              "yjs"
+            ],
+            "reinforces_concepts": [
+              "immutability"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           }
         ],
         "has_assessment": true
@@ -88,7 +161,27 @@
             "strata_claim": "C5, C7, C8, C11",
             "type": "applied",
             "estimated_minutes": 15,
-            "description": "Drizzle vs Prisma, Express vs Fastify, Lexical vs ProseMirror, direct Anthropic SDK vs LangChain — each resolved through one consistent tradeoff question."
+            "description": "Drizzle vs Prisma, Express vs Fastify, Lexical vs ProseMirror, direct Anthropic SDK vs LangChain — each resolved through one consistent tradeoff question.",
+            "prerequisites": [
+              "L01",
+              "L02"
+            ],
+            "teaches_concepts": [
+              "control-vs-abstraction"
+            ],
+            "reinforces_concepts": [
+              "typescript-strict-mode",
+              "library-strict-dependency"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           }
         ],
         "has_assessment": true
@@ -109,7 +202,29 @@
             "strata_claim": "C2",
             "type": "applied",
             "estimated_minutes": 15,
-            "description": "The full pattern: Drizzle table definition → drizzle-zod createInsertSchema() → Zod validator in Express route → zero manual type declarations."
+            "description": "The full pattern: Drizzle table definition → drizzle-zod createInsertSchema() → Zod validator in Express route → zero manual type declarations.",
+            "prerequisites": [
+              "L01",
+              "L05"
+            ],
+            "teaches_concepts": [
+              "schema-as-type",
+              "drizzle-zod"
+            ],
+            "reinforces_concepts": [
+              "z-infer",
+              "drizzle-types",
+              "control-vs-abstraction"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           },
           {
             "id": "L07",
@@ -117,7 +232,27 @@
             "strata_claim": "C9, C10",
             "type": "applied",
             "estimated_minutes": 15,
-            "description": "How a single Drizzle table definition defines RLS-protected relational columns and a pgvector HNSW-indexed embedding column simultaneously."
+            "description": "How a single Drizzle table definition defines RLS-protected relational columns and a pgvector HNSW-indexed embedding column simultaneously.",
+            "prerequisites": [
+              "L06"
+            ],
+            "teaches_concepts": [
+              "rls",
+              "pgvector"
+            ],
+            "reinforces_concepts": [
+              "schema-as-type",
+              "drizzle-zod"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 4,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           }
         ],
         "has_assessment": true
@@ -138,7 +273,27 @@
             "strata_claim": "C4",
             "type": "core",
             "estimated_minutes": 15,
-            "description": "What the hook does, why Zustand v4 switched to it, and the pattern for connecting an SSE stream to React state without concurrent-mode tearing."
+            "description": "What the hook does, why Zustand v4 switched to it, and the pattern for connecting an SSE stream to React state without concurrent-mode tearing.",
+            "prerequisites": [
+              "L03"
+            ],
+            "teaches_concepts": [
+              "use-sync-external-store",
+              "react-18-state"
+            ],
+            "reinforces_concepts": [
+              "immutability",
+              "concurrent-rendering"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           },
           {
             "id": "L09",
@@ -146,7 +301,25 @@
             "strata_claim": "C3",
             "type": "debate",
             "estimated_minutes": 15,
-            "description": "Why Lexical cannot run on the server, why Yjs providers are client-side, and the specific Next.js App Router features that are incompatible with Meridian's real-time architecture."
+            "description": "Why Lexical cannot run on the server, why Yjs providers are client-side, and the specific Next.js App Router features that are incompatible with Meridian's real-time architecture.",
+            "prerequisites": [
+              "L08"
+            ],
+            "teaches_concepts": [
+              "vite-spa"
+            ],
+            "reinforces_concepts": [
+              "react-18-state",
+              "use-sync-external-store"
+            ],
+            "mastery_threshold": 0.75,
+            "difficulty": 2,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              3,
+              7,
+              14
+            ]
           }
         ],
         "has_assessment": true
@@ -167,7 +340,27 @@
             "strata_claim": "C6",
             "type": "core",
             "estimated_minutes": 15,
-            "description": "CRDT commutativity vs OT central authority, and the direct chain: offline requirement → Yjs (CRDT) → Lexical (@lexical/yjs first-class) → not ProseMirror."
+            "description": "CRDT commutativity vs OT central authority, and the direct chain: offline requirement → Yjs (CRDT) → Lexical (@lexical/yjs first-class) → not ProseMirror.",
+            "prerequisites": [
+              "L04"
+            ],
+            "teaches_concepts": [
+              "ot-vs-crdt"
+            ],
+            "reinforces_concepts": [
+              "crdt",
+              "yjs",
+              "immutability"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           },
           {
             "id": "L11",
@@ -175,7 +368,27 @@
             "strata_claim": "C5",
             "type": "applied",
             "estimated_minutes": 15,
-            "description": "Wiring a Lexical editor to a Y.Doc via @lexical/yjs: provider setup, awareness (cursor presence), and the offline-sync lifecycle."
+            "description": "Wiring a Lexical editor to a Y.Doc via @lexical/yjs: provider setup, awareness (cursor presence), and the offline-sync lifecycle.",
+            "prerequisites": [
+              "L10"
+            ],
+            "teaches_concepts": [
+              "lexical-yjs"
+            ],
+            "reinforces_concepts": [
+              "crdt",
+              "yjs",
+              "ot-vs-crdt"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           }
         ],
         "has_assessment": true
@@ -196,7 +409,27 @@
             "strata_claim": "C12",
             "type": "applied",
             "estimated_minutes": 15,
-            "description": "Ingestion (chunk → embed → pgvector INSERT), Retrieval (embed query → ORDER BY embedding <=> $1), Augmentation (inject into system prompt), Generation (client.messages.stream())."
+            "description": "Ingestion (chunk → embed → pgvector INSERT), Retrieval (embed query → ORDER BY embedding <=> $1), Augmentation (inject into system prompt), Generation (client.messages.stream()).",
+            "prerequisites": [
+              "L07"
+            ],
+            "teaches_concepts": [
+              "rag-pipeline",
+              "anthropic-sdk"
+            ],
+            "reinforces_concepts": [
+              "pgvector",
+              "schema-as-type"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 4,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           },
           {
             "id": "L13",
@@ -204,7 +437,24 @@
             "strata_claim": "C11",
             "type": "debate",
             "estimated_minutes": 15,
-            "description": "What the Anthropic SDK exposes that Vercel AI SDK and LangChain hide, and the conditions under which abstraction would be the right choice instead."
+            "description": "What the Anthropic SDK exposes that Vercel AI SDK and LangChain hide, and the conditions under which abstraction would be the right choice instead.",
+            "prerequisites": [
+              "L12"
+            ],
+            "teaches_concepts": [],
+            "reinforces_concepts": [
+              "anthropic-sdk",
+              "control-vs-abstraction",
+              "rag-pipeline"
+            ],
+            "mastery_threshold": 0.75,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              3,
+              7,
+              14
+            ]
           }
         ],
         "has_assessment": true
@@ -225,7 +475,29 @@
             "strata_claim": "C13",
             "type": "applied",
             "estimated_minutes": 15,
-            "description": "The full request lifecycle: Zod validates body → JWT middleware extracts workspace_id → SET LOCAL sets RLS context → query executes under RLS. Why order matters."
+            "description": "The full request lifecycle: Zod validates body → JWT middleware extracts workspace_id → SET LOCAL sets RLS context → query executes under RLS. Why order matters.",
+            "prerequisites": [
+              "L06",
+              "L07"
+            ],
+            "teaches_concepts": [
+              "security-layering",
+              "jwt-auth",
+              "bcrypt"
+            ],
+            "reinforces_concepts": [
+              "rls",
+              "schema-as-type"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 4,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           },
           {
             "id": "L15",
@@ -233,7 +505,24 @@
             "strata_claim": "C14",
             "type": "debate",
             "estimated_minutes": 15,
-            "description": "The alg:none and RSA-to-HMAC confusion attacks from RFC 8725, the bcrypt vs Argon2id tradeoff, and when to upgrade Meridian's credential hashing."
+            "description": "The alg:none and RSA-to-HMAC confusion attacks from RFC 8725, the bcrypt vs Argon2id tradeoff, and when to upgrade Meridian's credential hashing.",
+            "prerequisites": [
+              "L14"
+            ],
+            "teaches_concepts": [],
+            "reinforces_concepts": [
+              "security-layering",
+              "jwt-auth",
+              "bcrypt"
+            ],
+            "mastery_threshold": 0.75,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              3,
+              7,
+              14
+            ]
           }
         ],
         "has_assessment": true
@@ -254,7 +543,26 @@
             "strata_claim": "C15, C16",
             "type": "applied",
             "estimated_minutes": 15,
-            "description": "Package registry (pnpm workspace:*), task graph (turbo.json pipelines), service runtime (compose.yaml health checks) — each tool's scope, when to add Turborepo, and the Docker Compose health check pattern."
+            "description": "Package registry (pnpm workspace:*), task graph (turbo.json pipelines), service runtime (compose.yaml health checks) — each tool's scope, when to add Turborepo, and the Docker Compose health check pattern.",
+            "prerequisites": [
+              "L01"
+            ],
+            "teaches_concepts": [
+              "pnpm-workspaces",
+              "turborepo"
+            ],
+            "reinforces_concepts": [
+              "typescript-strict-mode"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 4,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           }
         ],
         "has_assessment": true
@@ -326,7 +634,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "typescript-strict-mode",
+        "strict-sub-flags"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-002",
@@ -348,7 +663,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "typescript-strict-mode",
+        "strict-sub-flags"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-003",
@@ -370,7 +692,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "typescript-strict-mode",
+        "strict-sub-flags"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-004",
@@ -392,7 +721,15 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "library-strict-dependency",
+        "z-infer",
+        "drizzle-types"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-005",
@@ -414,7 +751,15 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "library-strict-dependency",
+        "z-infer",
+        "drizzle-types"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-006",
@@ -436,7 +781,15 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "library-strict-dependency",
+        "z-infer",
+        "drizzle-types"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-007",
@@ -458,7 +811,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "immutability",
+        "concurrent-rendering"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-008",
@@ -480,7 +840,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "immutability",
+        "concurrent-rendering"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-009",
@@ -502,7 +869,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "immutability",
+        "concurrent-rendering"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-010",
@@ -524,7 +898,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "crdt",
+        "yjs"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-011",
@@ -547,7 +928,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "crdt",
+        "yjs"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-012",
@@ -569,7 +957,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "crdt",
+        "yjs"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-013",
@@ -594,7 +989,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "control-vs-abstraction"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-014",
@@ -616,7 +1017,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "control-vs-abstraction"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-015",
@@ -638,7 +1045,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "control-vs-abstraction"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-016",
@@ -660,7 +1073,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "control-vs-abstraction"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-017",
@@ -682,7 +1101,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "schema-as-type",
+        "drizzle-zod"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-018",
@@ -705,7 +1131,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "schema-as-type",
+        "drizzle-zod"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-019",
@@ -727,7 +1160,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "rls",
+        "pgvector"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-020",
@@ -750,7 +1190,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "rls",
+        "pgvector"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-021",
@@ -772,7 +1219,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "rls",
+        "pgvector"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-022",
@@ -794,7 +1248,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "use-sync-external-store",
+        "react-18-state"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-023",
@@ -816,7 +1277,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "use-sync-external-store",
+        "react-18-state"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-024",
@@ -838,7 +1306,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "use-sync-external-store",
+        "react-18-state"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-025",
@@ -860,7 +1335,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "vite-spa"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-026",
@@ -882,7 +1363,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "vite-spa"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-027",
@@ -904,7 +1391,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "vite-spa"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-028",
@@ -926,7 +1419,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "ot-vs-crdt"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-029",
@@ -948,7 +1447,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "ot-vs-crdt"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-030",
@@ -971,7 +1476,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "ot-vs-crdt"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-031",
@@ -993,7 +1504,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "lexical-yjs"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-032",
@@ -1015,7 +1532,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "lexical-yjs"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-033",
@@ -1037,7 +1560,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "lexical-yjs"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-034",
@@ -1059,7 +1588,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "rag-pipeline",
+        "anthropic-sdk"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-035",
@@ -1081,7 +1617,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "rag-pipeline",
+        "anthropic-sdk"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-036",
@@ -1104,7 +1647,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "rag-pipeline",
+        "anthropic-sdk"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-037",
@@ -1126,7 +1676,11 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-038",
@@ -1148,7 +1702,11 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-039",
@@ -1170,7 +1728,11 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-040",
@@ -1192,7 +1754,15 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "security-layering",
+        "jwt-auth",
+        "bcrypt"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-041",
@@ -1215,7 +1785,15 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "security-layering",
+        "jwt-auth",
+        "bcrypt"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-042",
@@ -1237,7 +1815,15 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "security-layering",
+        "jwt-auth",
+        "bcrypt"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-043",
@@ -1259,7 +1845,11 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-044",
@@ -1281,7 +1871,11 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-045",
@@ -1303,7 +1897,11 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-046",
@@ -1325,7 +1923,11 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-047",
@@ -1348,7 +1950,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "pnpm-workspaces",
+        "turborepo"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-048",
@@ -1370,7 +1979,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "pnpm-workspaces",
+        "turborepo"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-049",
@@ -1392,7 +2008,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "pnpm-workspaces",
+        "turborepo"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-050",
@@ -1414,7 +2037,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "pnpm-workspaces",
+        "turborepo"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-051",
@@ -1437,7 +2067,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "pnpm-workspaces",
+        "turborepo"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-052",
@@ -1459,7 +2096,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "rls",
+        "pgvector"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-053",
@@ -1481,7 +2125,11 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-054",
@@ -1503,7 +2151,11 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-055",
@@ -1525,7 +2177,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "typescript-strict-mode",
+        "strict-sub-flags"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-056",
@@ -1548,7 +2207,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "schema-as-type",
+        "drizzle-zod"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-057",
@@ -1570,7 +2236,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "use-sync-external-store",
+        "react-18-state"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-058",
@@ -1592,7 +2265,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "ot-vs-crdt"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-059",
@@ -1614,7 +2293,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "immutability",
+        "concurrent-rendering"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-060",
@@ -1637,7 +2323,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "rag-pipeline",
+        "anthropic-sdk"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-061",
@@ -1659,7 +2352,11 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-062",
@@ -1681,7 +2378,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "crdt",
+        "yjs"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-063",
@@ -1703,7 +2407,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "control-vs-abstraction"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-064",
@@ -1725,7 +2435,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "rls",
+        "pgvector"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-065",
@@ -1747,7 +2464,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "lexical-yjs"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-066",
@@ -1769,7 +2492,15 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "library-strict-dependency",
+        "z-infer",
+        "drizzle-types"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-067",
@@ -1791,7 +2522,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "vite-spa"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-068",
@@ -1814,7 +2551,15 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "security-layering",
+        "jwt-auth",
+        "bcrypt"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-069",
@@ -1837,7 +2582,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "ot-vs-crdt"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-070",
@@ -1859,7 +2610,11 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-071",
@@ -1881,7 +2636,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "pnpm-workspaces",
+        "turborepo"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-072",
@@ -1903,7 +2665,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "typescript-strict-mode",
+        "strict-sub-flags"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-073",
@@ -1925,7 +2694,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "use-sync-external-store",
+        "react-18-state"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-074",
@@ -1947,7 +2723,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "immutability",
+        "concurrent-rendering"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-075",
@@ -1969,7 +2752,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "rls",
+        "pgvector"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-076",
@@ -1991,7 +2781,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "pnpm-workspaces",
+        "turborepo"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-077",
@@ -2013,7 +2810,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "rag-pipeline",
+        "anthropic-sdk"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-078",
@@ -2035,7 +2839,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "schema-as-type",
+        "drizzle-zod"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-079",
@@ -2057,7 +2868,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "lexical-yjs"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-080",
@@ -2079,7 +2896,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "rls",
+        "pgvector"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-081",
@@ -2101,7 +2925,15 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "security-layering",
+        "jwt-auth",
+        "bcrypt"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-082",
@@ -2123,7 +2955,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "crdt",
+        "yjs"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-083",
@@ -2145,7 +2984,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "control-vs-abstraction"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-084",
@@ -2167,7 +3012,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "rls",
+        "pgvector"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-085",
@@ -2189,7 +3041,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "rag-pipeline",
+        "anthropic-sdk"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-086",
@@ -2212,7 +3071,15 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "library-strict-dependency",
+        "z-infer",
+        "drizzle-types"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-087",
@@ -2234,7 +3101,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "vite-spa"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-088",
@@ -2256,7 +3129,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "lexical-yjs"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-089",
@@ -2278,7 +3157,15 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "security-layering",
+        "jwt-auth",
+        "bcrypt"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-090",
@@ -2300,7 +3187,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "pnpm-workspaces",
+        "turborepo"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-091",
@@ -2322,7 +3216,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "control-vs-abstraction"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-092",
@@ -2344,7 +3244,11 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-093",
@@ -2366,7 +3270,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "immutability",
+        "concurrent-rendering"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-094",
@@ -2388,7 +3299,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "rls",
+        "pgvector"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-095",
@@ -2410,7 +3328,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "pnpm-workspaces",
+        "turborepo"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-096",
@@ -2433,7 +3358,14 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "schema-as-type",
+        "drizzle-zod"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-097",
@@ -2455,7 +3387,13 @@
         "reviews": 0,
         "next_review": "2026-04-14",
         "lapses": 0
-      }
+      },
+      "concepts": [
+        "ot-vs-crdt"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     }
   ],
   "quizzes": {
@@ -2480,7 +3418,16 @@
           "correct": "B",
           "lesson_ref": "L01",
           "module_ref": "M01",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "typescript-strict-mode",
+            "strict-sub-flags"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L01"
+          ]
         },
         {
           "id": "F02",
@@ -2495,7 +3442,16 @@
           "correct": "B",
           "lesson_ref": "L03",
           "module_ref": "M02",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "immutability",
+            "concurrent-rendering"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L03"
+          ]
         },
         {
           "id": "F03",
@@ -2510,7 +3466,15 @@
           "correct": "B",
           "lesson_ref": "L05",
           "module_ref": "M03",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "control-vs-abstraction"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L05"
+          ]
         },
         {
           "id": "F04",
@@ -2525,7 +3489,16 @@
           "correct": "A",
           "lesson_ref": "L06",
           "module_ref": "M04",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "schema-as-type",
+            "drizzle-zod"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L06"
+          ]
         },
         {
           "id": "F05",
@@ -2540,7 +3513,16 @@
           "correct": "B",
           "lesson_ref": "L07",
           "module_ref": "M04",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "rls",
+            "pgvector"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L07"
+          ]
         },
         {
           "id": "F06",
@@ -2555,7 +3537,16 @@
           "correct": "B",
           "lesson_ref": "L08",
           "module_ref": "M05",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "use-sync-external-store",
+            "react-18-state"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L08"
+          ]
         },
         {
           "id": "F07",
@@ -2570,7 +3561,15 @@
           "correct": "B",
           "lesson_ref": "L09",
           "module_ref": "M05",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "vite-spa"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L09"
+          ]
         },
         {
           "id": "F08",
@@ -2585,7 +3584,15 @@
           "correct": "B",
           "lesson_ref": "L11",
           "module_ref": "M06",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "lexical-yjs"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L11"
+          ]
         },
         {
           "id": "F09",
@@ -2600,7 +3607,16 @@
           "correct": "B",
           "lesson_ref": "L12",
           "module_ref": "M07",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "rag-pipeline",
+            "anthropic-sdk"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L12"
+          ]
         },
         {
           "id": "F10",
@@ -2615,7 +3631,17 @@
           "correct": "C",
           "lesson_ref": "L14",
           "module_ref": "M08",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "security-layering",
+            "jwt-auth",
+            "bcrypt"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L14"
+          ]
         },
         {
           "id": "F11",
@@ -2630,7 +3656,17 @@
           "correct": "B",
           "lesson_ref": "L14",
           "module_ref": "M08",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "security-layering",
+            "jwt-auth",
+            "bcrypt"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L14"
+          ]
         },
         {
           "id": "F12",
@@ -2645,7 +3681,16 @@
           "correct": "B",
           "lesson_ref": "L16",
           "module_ref": "M09",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "pnpm-workspaces",
+            "turborepo"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L16"
+          ]
         },
         {
           "id": "F13",
@@ -2747,7 +3792,16 @@
           "explanation": "strict: true is a shorthand, not a feature. It activates nine individual flags (noImplicitAny, strictNullChecks, strictFunctionTypes, etc.) simultaneously. This distinction matters because you can also enable individual flags selectively, though doing so selectively gives weaker guarantees than enabling all nine.",
           "lesson_ref": "L01",
           "claim_ref": "C1",
-          "difficulty": "recall"
+          "difficulty": "recall",
+          "concepts": [
+            "typescript-strict-mode",
+            "strict-sub-flags"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L01"
+          ]
         },
         {
           "id": "Q02",
@@ -2763,7 +3817,16 @@
           "explanation": "esbuild — Vite's transpilation engine — processes files independently. It cannot see cross-file type information. isolatedModules: true makes TypeScript enforce that each file is self-contained: no const enum declarations cross file boundaries, and type-only imports use import type. Without it, some TypeScript constructs would compile with tsc but silently fail with esbuild.",
           "lesson_ref": "L01",
           "claim_ref": "C1",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "typescript-strict-mode",
+            "strict-sub-flags"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L01"
+          ]
         },
         {
           "id": "Q03",
@@ -2779,7 +3842,16 @@
           "explanation": "Without strictNullChecks, null and undefined are subtypes of every type. A function returning User | null passes type checks anywhere a User is expected — the caller never needs to handle the null case. Meridian's API responses, Drizzle query results, and JWT payload fields all have nullable shapes that require explicit guard handling.",
           "lesson_ref": "L01",
           "claim_ref": "C1",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "typescript-strict-mode",
+            "strict-sub-flags"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L01"
+          ]
         },
         {
           "id": "Q04",
@@ -2795,7 +3867,17 @@
           "explanation": "TypeScript's generic inference requires the curried create<State>()(() => ...) form because it resolves the State generic in two passes: first from the explicit type argument, then from the callback. Without currying, TypeScript resolves the generic from the callback's inferred return type, which causes set to lose its typed constraint and fall back to any.",
           "lesson_ref": "L02",
           "claim_ref": "C2",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "library-strict-dependency",
+            "z-infer",
+            "drizzle-types"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L02"
+          ]
         },
         {
           "id": "Q05",
@@ -2811,7 +3893,17 @@
           "explanation": "Drizzle's table definitions are plain TypeScript objects with type-level metadata. $inferSelect reads this at the type system level — zero codegen, change the table definition and the type updates automatically. Prisma's generated client (node_modules/.prisma) must be regenerated via prisma generate after every schema.prisma change.",
           "lesson_ref": "L02",
           "claim_ref": "C2",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "library-strict-dependency",
+            "z-infer",
+            "drizzle-types"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L02"
+          ]
         },
         {
           "id": "Q06",
@@ -2827,7 +3919,17 @@
           "explanation": "The critical distinction: IDE auto-complete and code review catch what they can see. But when z.infer<> returns any due to a conditional type resolution failure, the editor shows 'any' — which is a valid type. The reviewer sees typed-looking code. The test passes (any is assignable everywhere). The bug is invisible until runtime. This is the silent degradation class that strict mode prevents.",
           "lesson_ref": "L02",
           "claim_ref": "C1",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [
+            "library-strict-dependency",
+            "z-infer",
+            "drizzle-types"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L02"
+          ]
         },
         {
           "id": "Q07",
@@ -2846,7 +3948,17 @@
           },
           "lesson_ref": "L02",
           "claim_ref": "C2",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "library-strict-dependency",
+            "z-infer",
+            "drizzle-types"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L02"
+          ]
         },
         {
           "id": "Q08",
@@ -2866,7 +3978,16 @@
           },
           "lesson_ref": "L06",
           "claim_ref": "C2",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "schema-as-type",
+            "drizzle-zod"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L06"
+          ]
         },
         {
           "id": "Q09",
@@ -2879,7 +4000,13 @@
             "C": "Makes the general argument without specific library evidence"
           },
           "lesson_ref": "L01-L02",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L01-L02"
+          ]
         }
       ]
     },
@@ -2905,7 +4032,16 @@
           "explanation": "React 18's concurrent renderer can interrupt rendering mid-flight to handle a higher-priority update, then resume. If external state is mutable and changes between the interruption and resumption, components rendered before and after the interruption read different values from the 'same' state — different UI sections show inconsistent data. This is only possible with mutable state.",
           "lesson_ref": "L03",
           "claim_ref": "C4",
-          "difficulty": "recall"
+          "difficulty": "recall",
+          "concepts": [
+            "immutability",
+            "concurrent-rendering"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L03"
+          ]
         },
         {
           "id": "Q02",
@@ -2921,7 +4057,16 @@
           "explanation": "The gap problem: React renders, useEffect hasn't run yet to subscribe, state changes. Or: React renders, yields, external state changes, React resumes — useState still holds the old snapshot. useSyncExternalStore calls getSnapshot() during the render itself, guaranteeing the component sees the current state at render time. This is the fundamental fix for external store tearing.",
           "lesson_ref": "L03",
           "claim_ref": "C4",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "immutability",
+            "concurrent-rendering"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L03"
+          ]
         },
         {
           "id": "Q03",
@@ -2937,7 +4082,16 @@
           "explanation": "Commutativity is the key property for offline editing. If A+B = B+A, then two peers who each accumulated different sequences of operations while offline can, upon reconnecting, apply each other's operations in any order and arrive at the same document state. No central authority needs to serialize the operations — correct convergence is guaranteed by the operation structure itself.",
           "lesson_ref": "L04",
           "claim_ref": "C6",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "crdt",
+            "yjs"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L04"
+          ]
         },
         {
           "id": "Q04",
@@ -2953,7 +4107,16 @@
           "explanation": "Zustand's getSnapshot() returns the current state object. If set() mutates the existing object and returns it, getSnapshot() returns the same reference before and after the mutation. React uses reference equality: same reference = no change = no re-render. The user sees a frozen streaming UI even as tokens arrive. The fix: always return a new object from set to produce a new reference.",
           "lesson_ref": "L03",
           "claim_ref": "C4",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "immutability",
+            "concurrent-rendering"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L03"
+          ]
         },
         {
           "id": "Q05",
@@ -2969,7 +4132,16 @@
           "explanation": "Each Yjs operation outside a transaction immediately fires all observers and creates a binary update to broadcast. Two operations = two observer firings = two network updates. Inside transact(), all operations are batched: observers fire exactly once after the transaction commits, and remote peers receive one merged binary update. This is more efficient and produces cleaner observer logic.",
           "lesson_ref": "L04",
           "claim_ref": "C6",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "crdt",
+            "yjs"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L04"
+          ]
         },
         {
           "id": "Q06",
@@ -2985,7 +4157,16 @@
           "explanation": "Lexical's EditorState is read by multiple concurrent consumers: React re-renders it to produce DOM, the @lexical/yjs binding reads it to produce Yjs operations, the undo stack captures it for history. A mutable state could change between these reads. Freezing it means every consumer works from the same stable snapshot, and the editor.update() callback is the exclusive write path.",
           "lesson_ref": "L04",
           "claim_ref": "C5",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [
+            "crdt",
+            "yjs"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L04"
+          ]
         },
         {
           "id": "Q07",
@@ -3004,7 +4185,16 @@
           },
           "lesson_ref": "L03",
           "claim_ref": "C4",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "immutability",
+            "concurrent-rendering"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L03"
+          ]
         },
         {
           "id": "Q08",
@@ -3022,7 +4212,16 @@
           },
           "lesson_ref": "L04",
           "claim_ref": "C6",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "crdt",
+            "yjs"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L04"
+          ]
         },
         {
           "id": "Q09",
@@ -3035,7 +4234,13 @@
             "C": "Makes the connection at a high level without explaining the enforcement mechanisms or failure modes"
           },
           "lesson_ref": "L03-L04",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L03-L04"
+          ]
         }
       ]
     },
@@ -3061,7 +4266,15 @@
           "explanation": "The key insight: every choice between two tools is a choice about how much of a mechanism to expose vs abstract away. The right choice depends on whether Meridian needs direct access to the hidden mechanism. Express vs Fastify, Drizzle vs Prisma, direct Anthropic SDK vs LangChain — each resolves to this same question.",
           "lesson_ref": "L05",
           "claim_ref": "C5",
-          "difficulty": "recall"
+          "difficulty": "recall",
+          "concepts": [
+            "control-vs-abstraction"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L05"
+          ]
         },
         {
           "id": "Q02",
@@ -3077,7 +4290,15 @@
           "explanation": "Three specific blockers: (1) Prisma's $executeRaw for SET LOCAL is awkward — Drizzle's db.execute(sql`SET LOCAL ...`) is idiomatic. (2) pgvector columns in Prisma require extension type workarounds with type loss; Drizzle exposes them natively as typed column definitions. (3) Prisma requires prisma generate after every schema.prisma change — Drizzle's table definitions are plain TypeScript objects that derive types structurally at compile time.",
           "lesson_ref": "L05",
           "claim_ref": "C7",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "control-vs-abstraction"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L05"
+          ]
         },
         {
           "id": "Q03",
@@ -3093,7 +4314,15 @@
           "explanation": "The bottleneck analysis is decisive. A Meridian route that calls PostgreSQL + Anthropic takes 100–5000ms total. The difference between Express (~15k req/s) and Fastify (~65k req/s) matters when routes complete in microseconds — not when they block for 100ms+ on I/O. Where the abstraction layer (Express's complexity) doesn't affect the bottleneck (DB/AI latency), the simpler, more familiar tool wins.",
           "lesson_ref": "L05",
           "claim_ref": "C8",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "control-vs-abstraction"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L05"
+          ]
         },
         {
           "id": "Q04",
@@ -3109,7 +4338,15 @@
           "explanation": "The decision framework: what does the Vercel AI SDK abstract away, and does Meridian need direct access to what it hides? It hides Anthropic-specific streaming events, tool call interfaces, and message format details — abstracting them into a provider-neutral API. If you're staying on one provider, that abstraction buys nothing. The hidden mechanism (Anthropic's specific API surface) is exactly what Meridian already uses directly and well.",
           "lesson_ref": "L05",
           "claim_ref": "C11",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "control-vs-abstraction"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L05"
+          ]
         },
         {
           "id": "Q05",
@@ -3125,7 +4362,15 @@
           "explanation": "The framework is prescriptive, not a blanket 'control always wins.' When the hidden mechanism (SQL, SET LOCAL specifics) is not something you need direct access to, abstraction is the correct choice. The team's SQL gap is a real constraint. Prisma's excellent nested write handling, automatic join management, and high-DX generated client are all valuable when the pgvector/RLS/no-codegen requirements aren't present.",
           "lesson_ref": "L05",
           "claim_ref": "C7",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [
+            "control-vs-abstraction"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L05"
+          ]
         },
         {
           "id": "Q06",
@@ -3144,7 +4389,15 @@
           },
           "lesson_ref": "L05",
           "claim_ref": "C5",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "control-vs-abstraction"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L05"
+          ]
         },
         {
           "id": "Q07",
@@ -3163,7 +4416,15 @@
           },
           "lesson_ref": "L05",
           "claim_ref": "C8",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "control-vs-abstraction"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L05"
+          ]
         },
         {
           "id": "Q08",
@@ -3176,7 +4437,15 @@
             "C": "Makes valid choices but argues from DX or popularity rather than mechanism-access"
           },
           "lesson_ref": "L05",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [
+            "control-vs-abstraction"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L05"
+          ]
         }
       ]
     },
@@ -3202,7 +4471,16 @@
           "explanation": "createInsertSchema() reads the Drizzle table definition and produces a Zod schema that matches the insert type — with column types mapped to Zod validators and server-generated fields (id, created_at) still present by default. Combined with .omit() for server-set fields, this schema can be used directly in an Express route.",
           "lesson_ref": "L06",
           "claim_ref": "C2",
-          "difficulty": "recall"
+          "difficulty": "recall",
+          "concepts": [
+            "schema-as-type",
+            "drizzle-zod"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L06"
+          ]
         },
         {
           "id": "Q02",
@@ -3218,7 +4496,16 @@
           "explanation": "This is a core tenant isolation rule. req.body is user-controlled input — any value can be placed there. workspaceId must come from req.workspace.id, which was set by tenant middleware after verifying the JWT signature and confirming the user's workspace membership. Accepting it from body would allow a user to claim membership in any workspace.",
           "lesson_ref": "L06",
           "claim_ref": "C9",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "schema-as-type",
+            "drizzle-zod"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L06"
+          ]
         },
         {
           "id": "Q03",
@@ -3234,7 +4521,16 @@
           "explanation": "SET LOCAL sets a session variable scoped to the current transaction only. The RLS policy USING clause reads it: workspace_id = current_setting('app.current_workspace_id')::uuid. If SET LOCAL hasn't run, current_setting() returns an empty string, the UUID cast fails or the comparison fails, and the policy blocks all row access. Order is required: SET LOCAL must precede any query it needs to protect.",
           "lesson_ref": "L07",
           "claim_ref": "C9",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "rls",
+            "pgvector"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L07"
+          ]
         },
         {
           "id": "Q04",
@@ -3250,7 +4546,16 @@
           "explanation": "Defense-in-depth means no single failure creates a security breach. RLS at the database level operates independently of application code — even a severely buggy route handler can't bypass it if the SET LOCAL is correct. The explicit WHERE clause operates independently of RLS — even if RLS is temporarily misconfigured or SET LOCAL wasn't run, the application filter prevents data leakage. Two independent failures are required.",
           "lesson_ref": "L07",
           "claim_ref": "C9",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "rls",
+            "pgvector"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L07"
+          ]
         },
         {
           "id": "Q05",
@@ -3266,7 +4571,16 @@
           "explanation": "This is a critical security distinction for any pooled connection architecture. SET applies to the database session (the connection itself). When the connection is returned to the pool and reused by the next request (potentially from a different workspace), the previous workspace's context is still active. SET LOCAL is transaction-scoped — it disappears when the transaction ends or is committed, leaving the connection clean for the pool.",
           "lesson_ref": "L07",
           "claim_ref": "C9",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "rls",
+            "pgvector"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L07"
+          ]
         },
         {
           "id": "Q06",
@@ -3282,7 +4596,16 @@
           "explanation": "Vector similarity search is a fundamentally different problem from exact lookup or range queries B-trees solve. Cosine distance (the <=> operator) measures the angle between 1536-dimensional vectors — there's no linear ordering to index. HNSW builds a hierarchical graph of approximate neighbours, enabling O(log n) nearest-neighbour queries at the cost of not guaranteeing the absolute nearest neighbours.",
           "lesson_ref": "L07",
           "claim_ref": "C10",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [
+            "rls",
+            "pgvector"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L07"
+          ]
         },
         {
           "id": "Q07",
@@ -3301,7 +4624,16 @@
           },
           "lesson_ref": "L06",
           "claim_ref": "C2",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "schema-as-type",
+            "drizzle-zod"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L06"
+          ]
         },
         {
           "id": "Q08",
@@ -3319,7 +4651,16 @@
           },
           "lesson_ref": "L07",
           "claim_ref": "C10",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "rls",
+            "pgvector"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L07"
+          ]
         },
         {
           "id": "Q09",
@@ -3332,7 +4673,13 @@
             "C": "Correctly identifies the principle but doesn't trace specific derivation chains or bug classes"
           },
           "lesson_ref": "L06-L07",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L06-L07"
+          ]
         }
       ]
     },
@@ -3358,7 +4705,16 @@
           "explanation": "subscribe(listener): React registers a callback it will invoke when the external store changes, triggering a re-render. It must return a cleanup function. getSnapshot(): React calls this during rendering to read the current state. If getSnapshot returns the same reference between renders, React skips reconciliation. The separation of 'when to re-render' (subscribe) from 'what to render' (getSnapshot) is the key design.",
           "lesson_ref": "L08",
           "claim_ref": "C4",
-          "difficulty": "recall"
+          "difficulty": "recall",
+          "concepts": [
+            "use-sync-external-store",
+            "react-18-state"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L08"
+          ]
         },
         {
           "id": "Q02",
@@ -3374,7 +4730,16 @@
           "explanation": "The issue: `getSnapshot = () => ({ a: state.a, b: state.b })` creates a new object reference on every call. useSyncExternalStore uses reference equality: new reference = state changed = re-render. This causes the component to re-render on EVERY store update, even unrelated ones. useShallow wraps with a shallow comparison: it returns the previous reference if all selected values are equal (===), preventing spurious re-renders.",
           "lesson_ref": "L08",
           "claim_ref": "C4",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "use-sync-external-store",
+            "react-18-state"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L08"
+          ]
         },
         {
           "id": "Q03",
@@ -3390,7 +4755,15 @@
           "explanation": "Lexical is architecturally DOM-dependent at its core — it's designed as a browser editor. document.createElement creates the DOM nodes Lexical manages, MutationObserver watches for DOM changes, and the Selection API manages cursor position. Next.js Server Components execute in Node.js where none of these APIs exist. There's no workaround that preserves Server Component semantics; the only option is ssr: false in a Client Component.",
           "lesson_ref": "L09",
           "claim_ref": "C3",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "vite-spa"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L09"
+          ]
         },
         {
           "id": "Q04",
@@ -3406,7 +4779,16 @@
           "explanation": "The complete chain: (1) EventSource.onmessage receives delta chunk. (2) appendChunk calls Zustand's set() with a function that returns a new state object (key: new object, not mutation). (3) Zustand calls its useSyncExternalStore listeners, triggering React's re-render machinery. (4) React calls getSnapshot() — new object reference confirms state changed. (5) React re-renders the streaming component with the updated accumulated content.",
           "lesson_ref": "L08",
           "claim_ref": "C4",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "use-sync-external-store",
+            "react-18-state"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L08"
+          ]
         },
         {
           "id": "Q05",
@@ -3422,7 +4804,15 @@
           "explanation": "Server Components execute, render to HTML, and terminate. They have no persistent lifecycle — no useEffect, no cleanup, no component instance that persists. Y.WebsocketProvider needs to maintain a persistent connection, handle reconnection events, sync awareness state, and be cleaned up on unmount. All of this requires client-side lifecycle management inside useEffect. This is why WebSocket providers belong in Client Components.",
           "lesson_ref": "L09",
           "claim_ref": "C3",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "vite-spa"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L09"
+          ]
         },
         {
           "id": "Q06",
@@ -3438,7 +4828,15 @@
           "explanation": "The SPA trade-off: the initial HTML shell contains almost no content, so search engine crawlers see a mostly empty page. For Meridian's authenticated workspace, this is acceptable — workspace content is private and has no SEO value. But a product with public pages (marketing site, public shared notes, documentation) would lose SEO entirely. The SSR benefit only applies where public crawlability matters.",
           "lesson_ref": "L09",
           "claim_ref": "C3",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [
+            "vite-spa"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L09"
+          ]
         },
         {
           "id": "Q07",
@@ -3457,7 +4855,16 @@
           },
           "lesson_ref": "L08",
           "claim_ref": "C4",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "use-sync-external-store",
+            "react-18-state"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L08"
+          ]
         },
         {
           "id": "Q08",
@@ -3476,7 +4883,15 @@
           },
           "lesson_ref": "L09",
           "claim_ref": "C3",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "vite-spa"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L09"
+          ]
         },
         {
           "id": "Q09",
@@ -3489,7 +4904,13 @@
             "C": "States that React 18 requires these choices without explaining the concurrent rendering mechanism"
           },
           "lesson_ref": "L08-L09",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L08-L09"
+          ]
         }
       ]
     },
@@ -3515,7 +4936,15 @@
           "explanation": "The core distinction: OT's correctness requires a central server to act as the total order arbiter — it sees every operation and computes the required transformation. Two OT clients can't merge operations without going through this central server first. CRDT operations carry their own identity (client ID + Lamport clock) and the math guarantees that any subset applied in any order produces the same result — no central coordinator required.",
           "lesson_ref": "L10",
           "claim_ref": "C6",
-          "difficulty": "recall"
+          "difficulty": "recall",
+          "concepts": [
+            "ot-vs-crdt"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L10"
+          ]
         },
         {
           "id": "Q02",
@@ -3531,7 +4960,15 @@
           "explanation": "This is a critical conceptual distinction. y-websocket is a dumb relay — it receives binary Yjs update blobs and broadcasts them to all connected clients in the same room. It has no understanding of document content, no conflict resolution logic, and no storage. The CRDT property of Yjs means correctness is guaranteed by the operation structure, not the relay's intelligence.",
           "lesson_ref": "L10",
           "claim_ref": "C6",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "ot-vs-crdt"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L10"
+          ]
         },
         {
           "id": "Q03",
@@ -3547,7 +4984,15 @@
           "explanation": "The chain of constraints: offline editing → needs conflict-free convergence without central server → CRDT algorithm → Yjs implementation → editor must integrate with Yjs → the quality of that integration matters for a production workspace product. @lexical/yjs is first-party (Meta develops both) — it's tested, supported, and updated together. y-prosemirror is maintained by a third party, creating a dependency risk for a core architectural integration.",
           "lesson_ref": "L10",
           "claim_ref": "C5",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "ot-vs-crdt"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L10"
+          ]
         },
         {
           "id": "Q04",
@@ -3563,7 +5008,15 @@
           "explanation": "This is one of CRDT's key practical benefits. The Y.Doc continues accepting local operations offline — they're valid CRDT operations with unique identities. WebsocketProvider maintains an internal queue of unsent updates. On reconnect, it automatically flushes the queue. Remote peers apply incoming updates using Yjs's merge algorithm — because CRDT operations are commutative, the order in which queued vs live edits are applied doesn't matter.",
           "lesson_ref": "L11",
           "claim_ref": "C6",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "lexical-yjs"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L11"
+          ]
         },
         {
           "id": "Q05",
@@ -3579,7 +5032,15 @@
           "explanation": "With CollaborationPlugin, Yjs is the authoritative source of document state. The plugin bootstraps the editor from the Y.XmlFragment, which either contains the current collaborative document state (if other peers are connected or y-indexeddb has a local cache) or starts empty. Any pre-loaded editorState would be overwritten by this — but setting it to non-null first would cause a brief flash of wrong content or a state conflict.",
           "lesson_ref": "L11",
           "claim_ref": "C5",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "lexical-yjs"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L11"
+          ]
         },
         {
           "id": "Q06",
@@ -3595,7 +5056,15 @@
           "explanation": "CRDT handles the correctness concern: any operation set applied in any order converges. But practical infrastructure needs remain: (1) A server enables peer discovery — two users editing the same doc need a meeting point. (2) When all peers go offline, a server stores the document state. (3) A peer reconnecting after a week would need to replay thousands of individual operations — a server-stored snapshot enables efficient sync. These are infrastructure concerns, not algorithmic ones.",
           "lesson_ref": "L10",
           "claim_ref": "C6",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [
+            "ot-vs-crdt"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L10"
+          ]
         },
         {
           "id": "Q07",
@@ -3614,7 +5083,15 @@
           },
           "lesson_ref": "L11",
           "claim_ref": "C5",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "lexical-yjs"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L11"
+          ]
         },
         {
           "id": "Q08",
@@ -3633,7 +5110,13 @@
           },
           "lesson_ref": "L10-L11",
           "claim_ref": "C5",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L10-L11"
+          ]
         },
         {
           "id": "Q09",
@@ -3646,7 +5129,13 @@
             "C": "High-level lifecycle described but component responsibilities not clearly attributed"
           },
           "lesson_ref": "L10-L11",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L10-L11"
+          ]
         }
       ]
     },
@@ -3672,7 +5161,16 @@
           "explanation": "Ingestion: chunk text, embed each chunk, store chunk content + vector in pgvector. Retrieval: embed the user's query, find nearest chunks via cosine distance. Augmentation: inject retrieved chunks into the system prompt as context. Generation: send the augmented prompt to the LLM and stream the response back. Each stage is distinct and sequentially dependent.",
           "lesson_ref": "L12",
           "claim_ref": "C12",
-          "difficulty": "recall"
+          "difficulty": "recall",
+          "concepts": [
+            "rag-pipeline",
+            "anthropic-sdk"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L12"
+          ]
         },
         {
           "id": "Q02",
@@ -3688,7 +5186,16 @@
           "explanation": "The system prompt persists across every turn in the conversation. Injecting context there means all subsequent responses can reference it without repeating the retrieval snippets. If context is injected into the user message instead, it repeats in the conversation history on every turn, inflating token usage and cluttering the displayed conversation. The system prompt is the correct single location for injected workspace memory.",
           "lesson_ref": "L12",
           "claim_ref": "C12",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "rag-pipeline",
+            "anthropic-sdk"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L12"
+          ]
         },
         {
           "id": "Q03",
@@ -3704,7 +5211,16 @@
           "explanation": "This is a dual-scope security requirement. workspace_id provides tenant isolation (no cross-tenant leakage). user_id provides individual privacy within a tenant. Personal AI memory — notes, context, preferences ingested for a specific user — should not be accessible to other members of the same workspace. Both filters are always required for any memory retrieval query.",
           "lesson_ref": "L12",
           "claim_ref": "C12",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "rag-pipeline",
+            "anthropic-sdk"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L12"
+          ]
         },
         {
           "id": "Q04",
@@ -3720,7 +5236,13 @@
           "explanation": "The Anthropic streaming event discriminated union: events have a top-level type field. During text generation, the event is content_block_delta. The delta object has its own type field — text_delta for text, input_json_delta for tool input streaming. The actual text chunk is at event.delta.text. This two-level type discrimination ('content_block_delta' then 'text_delta') is important to get right when forwarding chunks to SSE clients.",
           "lesson_ref": "L13",
           "claim_ref": "C11",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L13"
+          ]
         },
         {
           "id": "Q05",
@@ -3736,7 +5258,13 @@
           "explanation": "Provider portability is the Vercel AI SDK's core value proposition. Switching from `anthropic.messages.create()` to `openai.chat.completions.create()` requires rewriting every AI call site because the interfaces differ. The Vercel AI SDK wraps both behind a common interface. This matters if you need multi-provider support. For Meridian (single provider, single-provider commitment), the abstraction adds indirection at every call site without providing the benefit it's designed for.",
           "lesson_ref": "L13",
           "claim_ref": "C11",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L13"
+          ]
         },
         {
           "id": "Q06",
@@ -3752,7 +5280,16 @@
           "explanation": "This is the fundamental architectural distinction. Fine-tuning is a static snapshot of knowledge baked into weights — it goes stale the moment a user adds a new document. RAG is dynamic — it retrieves content that exists right now, at the moment the user asks a question. For a workspace with continuously evolving content (notes, pages, memories), fine-tuning would require constant re-training at prohibitive cost and would still lag behind live content.",
           "lesson_ref": "L12",
           "claim_ref": "C12",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [
+            "rag-pipeline",
+            "anthropic-sdk"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L12"
+          ]
         },
         {
           "id": "Q07",
@@ -3772,7 +5309,16 @@
           },
           "lesson_ref": "L12",
           "claim_ref": "C12",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "rag-pipeline",
+            "anthropic-sdk"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L12"
+          ]
         },
         {
           "id": "Q08",
@@ -3791,7 +5337,13 @@
           },
           "lesson_ref": "L13",
           "claim_ref": "C11",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L13"
+          ]
         },
         {
           "id": "Q09",
@@ -3804,7 +5356,13 @@
             "C": "Acknowledges the migration risk without proposal for mitigation"
           },
           "lesson_ref": "L13",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L13"
+          ]
         }
       ]
     },
@@ -3830,7 +5388,17 @@
           "explanation": "The dependency chain is strict: Zod validates the request has correct shape (before any other processing). JWT verifies identity and extracts workspaceId from the verified payload. SET LOCAL uses that workspaceId to set the RLS context — it needs the verified JWT workspaceId to do its job. If SET LOCAL ran before JWT middleware, there would be no verified workspaceId available to set. RLS then enforces isolation automatically on all subsequent queries.",
           "lesson_ref": "L14",
           "claim_ref": "C13",
-          "difficulty": "recall"
+          "difficulty": "recall",
+          "concepts": [
+            "security-layering",
+            "jwt-auth",
+            "bcrypt"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L14"
+          ]
         },
         {
           "id": "Q02",
@@ -3846,7 +5414,17 @@
           "explanation": "This is the fundamental source-of-trust distinction. User-supplied values (body, params, query) are attacker-controlled. A user can send any JSON body with any workspaceId and claim they belong to that workspace. The JWT, however, was issued by the server after verifying membership and signed with the server's secret. Only the server can produce a valid JWT — the workspaceId in a valid JWT is the server's trusted statement.",
           "lesson_ref": "L14",
           "claim_ref": "C9",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "security-layering",
+            "jwt-auth",
+            "bcrypt"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L14"
+          ]
         },
         {
           "id": "Q03",
@@ -3862,7 +5440,13 @@
           "explanation": "alg:none is a real attack documented in RFC 8725. Some JWT libraries, when not given an explicit algorithm restriction, accept tokens claiming alg:none and skip verification entirely — the token signature (or lack thereof) is never checked. The attacker can forge arbitrary claims (userId, workspaceId, role) and the server accepts them. Explicitly passing algorithms: ['HS256'] to jwt.verify() ensures only HS256-signed tokens are accepted.",
           "lesson_ref": "L15",
           "claim_ref": "C13",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L15"
+          ]
         },
         {
           "id": "Q04",
@@ -3878,7 +5462,13 @@
           "explanation": "This is the key confusion attack. RS256 uses asymmetric keys — public key to verify, private key to sign. If the server publishes its public key (common practice) and an attacker creates an HS256 token using that public key as the symmetric HMAC secret, a naive library that accepts both algorithm types might successfully 'verify' it using the public key. Since only one algorithm is expected, specifying it explicitly closes the attack vector entirely.",
           "lesson_ref": "L15",
           "claim_ref": "C13",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L15"
+          ]
         },
         {
           "id": "Q05",
@@ -3894,7 +5484,13 @@
           "explanation": "bcrypt's cost is an exponent: cost N = 2^N iterations. Each increment doubles the work. Cost 12 = 4,096 iterations ≈ 300ms. Cost 13 = 8,192 iterations ≈ 600ms. The UX impact on legitimate users is a slightly slower login (still sub-second). The security benefit: anyone trying to brute-force password hashes offline now needs twice as much compute per attempt.",
           "lesson_ref": "L15",
           "claim_ref": "C14",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L15"
+          ]
         },
         {
           "id": "Q06",
@@ -3910,7 +5506,13 @@
           "explanation": "OWASP's password hashing guidance recommends Argon2id first, then bcrypt (cost ≥12) as the acceptable legacy choice. bcrypt's weakness relative to Argon2id is that it's not memory-hard — GPU cracking is more efficient. But at cost 12, it's still expensive enough to make offline attacks impractical for most threat models. Characterizing it as a vulnerability would overstate the risk; characterizing it as the ideal choice would overstate security.",
           "lesson_ref": "L15",
           "claim_ref": "C14",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L15"
+          ]
         },
         {
           "id": "Q07",
@@ -3929,7 +5531,17 @@
           },
           "lesson_ref": "L14",
           "claim_ref": "C13",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "security-layering",
+            "jwt-auth",
+            "bcrypt"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L14"
+          ]
         },
         {
           "id": "Q08",
@@ -3948,7 +5560,13 @@
           },
           "lesson_ref": "L15",
           "claim_ref": "C13",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L15"
+          ]
         },
         {
           "id": "Q09",
@@ -3961,7 +5579,13 @@
             "C": "Describes the layers correctly but without specific attack surface mapping"
           },
           "lesson_ref": "L14-L15",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L14-L15"
+          ]
         }
       ]
     },
@@ -3987,7 +5611,16 @@
           "explanation": "The three tools are complementary, not competing. pnpm workspaces manages the package registry — which packages exist in the monorepo, how they link to each other, and how their node_modules are deduplicated. Turborepo manages the task execution graph — which tasks in which packages have dependencies, what their build outputs are, and which results can be cached. Docker Compose manages the running service topology — containers, ports, volumes, health checks, service startup order.",
           "lesson_ref": "L16",
           "claim_ref": "C15",
-          "difficulty": "recall"
+          "difficulty": "recall",
+          "concepts": [
+            "pnpm-workspaces",
+            "turborepo"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L16"
+          ]
         },
         {
           "id": "Q02",
@@ -4003,7 +5636,16 @@
           "explanation": "workspace:* is pnpm's local package linking protocol. When @meridian/server has `\"@meridian/db\": \"workspace:*\"`, pnpm symlinks node_modules/@meridian/db to the local db/ package directory. Any change to db/ is immediately visible to server/ during development without any publish/install cycle. This is what makes monorepo cross-package development practical.",
           "lesson_ref": "L16",
           "claim_ref": "C15",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "pnpm-workspaces",
+            "turborepo"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L16"
+          ]
         },
         {
           "id": "Q03",
@@ -4019,7 +5661,16 @@
           "explanation": "Turborepo adds overhead (configuration complexity, turbo.json maintenance). The signal: sequential builds of packages that could be parallel, causing measurable feedback lag. For Meridian (2 packages + db), the signal is: pnpm build runs db first (correct), then client and server sequentially even though they could build in parallel after db. Turborepo's pipeline with dependsOn: ['^build'] enables this parallelism with caching. Adding it speculatively before the bottleneck materializes is premature complexity.",
           "lesson_ref": "L16",
           "claim_ref": "C15",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "pnpm-workspaces",
+            "turborepo"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L16"
+          ]
         },
         {
           "id": "Q04",
@@ -4035,7 +5686,16 @@
           "explanation": "The caret prefix means 'in dependencies.' dependsOn: ['^build'] says: before running this package's build task, first ensure build has completed in all packages that this package depends on. This is what creates the correct dependency chain: @meridian/server's build waits for @meridian/db's build to complete, because server depends on db. Without the caret, dependsOn: ['build'] would mean 'run build in this same package first' — a self-dependency that usually doesn't make sense.",
           "lesson_ref": "L16",
           "claim_ref": "C15",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "pnpm-workspaces",
+            "turborepo"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L16"
+          ]
         },
         {
           "id": "Q05",
@@ -4051,7 +5711,16 @@
           "explanation": "Container started ≠ service ready. The postgres container starts the database process in ~100ms, but PostgreSQL itself takes 2–10 seconds to initialize, run WAL recovery, and begin accepting connections. Without condition: service_healthy, depends_on sees the container is 'up' (process running) and starts the server container, which immediately tries to connect to postgres and fails. pg_isready in the healthcheck exits 0 only when postgres is accepting connections.",
           "lesson_ref": "L16",
           "claim_ref": "C16",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "pnpm-workspaces",
+            "turborepo"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L16"
+          ]
         },
         {
           "id": "Q06",
@@ -4070,7 +5739,16 @@
           },
           "lesson_ref": "L16",
           "claim_ref": "C16",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "pnpm-workspaces",
+            "turborepo"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L16"
+          ]
         },
         {
           "id": "Q07",
@@ -4089,7 +5767,16 @@
           },
           "lesson_ref": "L16",
           "claim_ref": "C16",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "pnpm-workspaces",
+            "turborepo"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L16"
+          ]
         },
         {
           "id": "Q08",
@@ -4102,7 +5789,16 @@
             "C": "Argues all three are necessary without differentiating their scopes"
           },
           "lesson_ref": "L16",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [
+            "pnpm-workspaces",
+            "turborepo"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L16"
+          ]
         }
       ]
     }
@@ -4342,5 +6038,514 @@
         }
       ]
     }
+  },
+  "concepts": {
+    "slug": "meridian-tech-stack-mastery",
+    "generated": "2026-04-13",
+    "concepts": [
+      {
+        "id": "typescript-strict-mode",
+        "title": "TypeScript Strict Mode",
+        "depends_on": [],
+        "introduced_in": [
+          "L01"
+        ],
+        "reinforced_in": [
+          "L02",
+          "L03",
+          "L05"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "strict-sub-flags",
+        "title": "TypeScript Strict Sub-Flags",
+        "depends_on": [
+          "typescript-strict-mode"
+        ],
+        "introduced_in": [
+          "L01"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "library-strict-dependency",
+        "title": "Libraries That Depend on Strict Mode",
+        "depends_on": [
+          "typescript-strict-mode"
+        ],
+        "introduced_in": [
+          "L02"
+        ],
+        "reinforced_in": [
+          "L05"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "z-infer",
+        "title": "Zod z.infer<> Type Derivation",
+        "depends_on": [
+          "typescript-strict-mode"
+        ],
+        "introduced_in": [
+          "L02"
+        ],
+        "reinforced_in": [
+          "L06"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "drizzle-types",
+        "title": "Drizzle ORM Table Types",
+        "depends_on": [
+          "typescript-strict-mode"
+        ],
+        "introduced_in": [
+          "L02"
+        ],
+        "reinforced_in": [
+          "L06",
+          "L07"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "immutability",
+        "title": "Immutability as Architectural Principle",
+        "depends_on": [
+          "typescript-strict-mode"
+        ],
+        "introduced_in": [
+          "L03"
+        ],
+        "reinforced_in": [
+          "L04",
+          "L08",
+          "L10"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "concurrent-rendering",
+        "title": "React 18 Concurrent Rendering",
+        "depends_on": [
+          "immutability"
+        ],
+        "introduced_in": [
+          "L03"
+        ],
+        "reinforced_in": [
+          "L08"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "crdt",
+        "title": "CRDT Algorithm and Commutativity",
+        "depends_on": [
+          "immutability"
+        ],
+        "introduced_in": [
+          "L04"
+        ],
+        "reinforced_in": [
+          "L10",
+          "L11"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "yjs",
+        "title": "Yjs CRDT Library",
+        "depends_on": [
+          "crdt"
+        ],
+        "introduced_in": [
+          "L04"
+        ],
+        "reinforced_in": [
+          "L10",
+          "L11"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "control-vs-abstraction",
+        "title": "Control vs Abstraction Tradeoff",
+        "depends_on": [
+          "library-strict-dependency"
+        ],
+        "introduced_in": [
+          "L05"
+        ],
+        "reinforced_in": [
+          "L06",
+          "L13"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "schema-as-type",
+        "title": "Schema-as-Type: Define Once, Derive Everywhere",
+        "depends_on": [
+          "z-infer",
+          "drizzle-types"
+        ],
+        "introduced_in": [
+          "L06"
+        ],
+        "reinforced_in": [
+          "L07",
+          "L14"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "drizzle-zod",
+        "title": "drizzle-zod createInsertSchema Pattern",
+        "depends_on": [
+          "schema-as-type"
+        ],
+        "introduced_in": [
+          "L06"
+        ],
+        "reinforced_in": [
+          "L07"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "rls",
+        "title": "PostgreSQL Row-Level Security",
+        "depends_on": [
+          "schema-as-type"
+        ],
+        "introduced_in": [
+          "L07"
+        ],
+        "reinforced_in": [
+          "L14"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "pgvector",
+        "title": "pgvector HNSW Index",
+        "depends_on": [
+          "rls"
+        ],
+        "introduced_in": [
+          "L07"
+        ],
+        "reinforced_in": [
+          "L12"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "use-sync-external-store",
+        "title": "useSyncExternalStore Hook",
+        "depends_on": [
+          "concurrent-rendering"
+        ],
+        "introduced_in": [
+          "L08"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "react-18-state",
+        "title": "React 18 External State Integration",
+        "depends_on": [
+          "use-sync-external-store"
+        ],
+        "introduced_in": [
+          "L08"
+        ],
+        "reinforced_in": [
+          "L09"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "vite-spa",
+        "title": "Vite SPA as Correct Meridian Architecture",
+        "depends_on": [
+          "react-18-state"
+        ],
+        "introduced_in": [
+          "L09"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "ot-vs-crdt",
+        "title": "OT vs CRDT Algorithm Comparison",
+        "depends_on": [
+          "crdt"
+        ],
+        "introduced_in": [
+          "L10"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "lexical-yjs",
+        "title": "@lexical/yjs Integration",
+        "depends_on": [
+          "yjs",
+          "ot-vs-crdt"
+        ],
+        "introduced_in": [
+          "L11"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "rag-pipeline",
+        "title": "Four-Stage RAG Pipeline",
+        "depends_on": [
+          "pgvector"
+        ],
+        "introduced_in": [
+          "L12"
+        ],
+        "reinforced_in": [
+          "L13"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "anthropic-sdk",
+        "title": "Direct Anthropic SDK Usage",
+        "depends_on": [
+          "rag-pipeline"
+        ],
+        "introduced_in": [
+          "L12"
+        ],
+        "reinforced_in": [
+          "L13"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "security-layering",
+        "title": "Four-Layer Defense-in-Depth Security",
+        "depends_on": [
+          "schema-as-type",
+          "rls"
+        ],
+        "introduced_in": [
+          "L14"
+        ],
+        "reinforced_in": [
+          "L15"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "jwt-auth",
+        "title": "JWT and Refresh Token Security",
+        "depends_on": [
+          "security-layering"
+        ],
+        "introduced_in": [
+          "L14"
+        ],
+        "reinforced_in": [
+          "L15"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "bcrypt",
+        "title": "bcrypt Password Hashing",
+        "depends_on": [
+          "security-layering"
+        ],
+        "introduced_in": [
+          "L14"
+        ],
+        "reinforced_in": [
+          "L15"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "pnpm-workspaces",
+        "title": "pnpm Workspaces and workspace:* Linking",
+        "depends_on": [
+          "typescript-strict-mode"
+        ],
+        "introduced_in": [
+          "L16"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "turborepo",
+        "title": "Turborepo Task Graph Caching",
+        "depends_on": [
+          "pnpm-workspaces"
+        ],
+        "introduced_in": [
+          "L16"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      }
+    ]
+  },
+  "adaptiveRules": {
+    "slug": "meridian-tech-stack-mastery",
+    "generated": "2026-04-13",
+    "progression_rules": {
+      "unlock_next_lesson_if_mastery_above": 0.75,
+      "suggest_remediation_if_two_failures": true,
+      "allow_skip_with_mastery_above": 0.9
+    },
+    "review_policy": {
+      "default_intervals_days": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "max_daily_reviews": 20,
+      "decay_threshold_days": 21,
+      "confidence_weight_low": 0.5,
+      "confidence_weight_medium": 1,
+      "confidence_weight_high": 1.5
+    },
+    "mastery_defaults": {
+      "foundational": 0.75,
+      "core": 0.8,
+      "applied": 0.8,
+      "debate": 0.75,
+      "gap": 0.75
+    },
+    "remediation_policy": {
+      "trigger_on_quiz_score_below": 0.6,
+      "max_remediation_cycles": 2,
+      "remediation_card_count": 5
+    }
+  },
+  "learningPaths": {
+    "slug": "meridian-tech-stack-mastery",
+    "generated": "2026-04-13",
+    "paths": [
+      {
+        "id": "default-path",
+        "title": "Complete Course",
+        "description": "All 16 lessons in recommended pedagogical order.",
+        "entry_condition": {},
+        "sequence": [
+          "L01",
+          "L02",
+          "L03",
+          "L04",
+          "L05",
+          "L06",
+          "L07",
+          "L08",
+          "L09",
+          "L10",
+          "L11",
+          "L12",
+          "L13",
+          "L14",
+          "L15",
+          "L16"
+        ]
+      },
+      {
+        "id": "fast-track",
+        "title": "Fast Track — Core Architecture",
+        "description": "Skip debate lessons. Covers the primary architectural patterns and implementation paths.",
+        "entry_condition": {
+          "background": "intermediate"
+        },
+        "sequence": [
+          "L01",
+          "L02",
+          "L03",
+          "L04",
+          "L05",
+          "L06",
+          "L07",
+          "L08",
+          "L10",
+          "L11",
+          "L12",
+          "L14",
+          "L16"
+        ]
+      },
+      {
+        "id": "backend-path",
+        "title": "Backend and Data Layer Path",
+        "description": "Focus on server-side: TypeScript, schema-as-type, RLS, pgvector, RAG, and security.",
+        "entry_condition": {
+          "role": "backend"
+        },
+        "sequence": [
+          "L01",
+          "L02",
+          "L05",
+          "L06",
+          "L07",
+          "L12",
+          "L13",
+          "L14",
+          "L15",
+          "L16"
+        ]
+      },
+      {
+        "id": "frontend-path",
+        "title": "Frontend and Realtime Path",
+        "description": "Focus on client-side: React 18, immutability, collaborative editing, and AI streaming.",
+        "entry_condition": {
+          "role": "frontend"
+        },
+        "sequence": [
+          "L01",
+          "L02",
+          "L03",
+          "L04",
+          "L05",
+          "L08",
+          "L09",
+          "L10",
+          "L11",
+          "L12"
+        ]
+      },
+      {
+        "id": "security-deep-dive",
+        "title": "Security Deep Dive",
+        "description": "Full security focus path including schema, RLS, authentication, and attack vectors.",
+        "entry_condition": {
+          "interest": "security"
+        },
+        "sequence": [
+          "L01",
+          "L05",
+          "L06",
+          "L07",
+          "L14",
+          "L15"
+        ]
+      }
+    ]
   }
 }

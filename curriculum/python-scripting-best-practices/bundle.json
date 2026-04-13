@@ -1,7 +1,7 @@
 {
-  "version": "2.0",
+  "version": "3.0",
   "slug": "python-scripting-best-practices",
-  "bundled": "2026-04-13T13:58:39.903Z",
+  "bundled": "2026-04-13T16:33:45.985Z",
   "course": {
     "topic": "Python Scripting Best Practices",
     "slug": "python-scripting-best-practices",
@@ -31,7 +31,24 @@
             "strata_claim": "C1, C11",
             "type": "core",
             "estimated_minutes": 12,
-            "description": "Why the three-tool quality stack (ruff, mypy, pytest) is non-negotiable, how each tool fills a unique gap, and how to configure all three in pyproject.toml"
+            "description": "Why the three-tool quality stack (ruff, mypy, pytest) is non-negotiable, how each tool fills a unique gap, and how to configure all three in pyproject.toml",
+            "prerequisites": [],
+            "teaches_concepts": [
+              "quality-toolchain",
+              "ruff",
+              "mypy",
+              "pytest"
+            ],
+            "reinforces_concepts": [],
+            "mastery_threshold": 0.8,
+            "difficulty": 1,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           },
           {
             "id": "L02",
@@ -39,7 +56,25 @@
             "strata_claim": "C2",
             "type": "core",
             "estimated_minutes": 12,
-            "description": "How pyproject.toml serves as both the dev-tool configuration hub and the runtime config source (via tomllib), and why this reduces cognitive overhead"
+            "description": "How pyproject.toml serves as both the dev-tool configuration hub and the runtime config source (via tomllib), and why this reduces cognitive overhead",
+            "prerequisites": [
+              "L01"
+            ],
+            "teaches_concepts": [
+              "pyproject-config"
+            ],
+            "reinforces_concepts": [
+              "quality-toolchain"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 2,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           }
         ],
         "has_assessment": true
@@ -61,7 +96,26 @@
             "strata_claim": "C5",
             "type": "core",
             "estimated_minutes": 12,
-            "description": "The if __name__ == '__main__' guard, the main() execution sequence (parse → log → validate → dispatch), and why this pattern makes scripts testable and importable"
+            "description": "The if __name__ == '__main__' guard, the main() execution sequence (parse → log → validate → dispatch), and why this pattern makes scripts testable and importable",
+            "prerequisites": [
+              "L01"
+            ],
+            "teaches_concepts": [
+              "script-structure",
+              "main-guard"
+            ],
+            "reinforces_concepts": [
+              "pyproject-config"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 2,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           },
           {
             "id": "L04",
@@ -69,7 +123,27 @@
             "strata_claim": "C4",
             "type": "core",
             "estimated_minutes": 12,
-            "description": "Module-level loggers, logging.basicConfig() in main(), the library/script distinction, and how to expose --log-level as a CLI argument"
+            "description": "Module-level loggers, logging.basicConfig() in main(), the library/script distinction, and how to expose --log-level as a CLI argument",
+            "prerequisites": [
+              "L03"
+            ],
+            "teaches_concepts": [
+              "structured-logging",
+              "log-levels",
+              "module-logger"
+            ],
+            "reinforces_concepts": [
+              "script-structure"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 2,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           }
         ],
         "has_assessment": true
@@ -91,7 +165,29 @@
             "strata_claim": "C3",
             "type": "core",
             "estimated_minutes": 12,
-            "description": "PEP 257 Google-style docstrings (summary + Args/Returns/Raises), type annotation requirements for public functions in new code, and how ruff enforces both"
+            "description": "PEP 257 Google-style docstrings (summary + Args/Returns/Raises), type annotation requirements for public functions in new code, and how ruff enforces both",
+            "prerequisites": [
+              "L01"
+            ],
+            "teaches_concepts": [
+              "docstrings",
+              "type-annotations",
+              "type-annotation-policy"
+            ],
+            "reinforces_concepts": [
+              "quality-toolchain",
+              "ruff",
+              "mypy"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 2,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           },
           {
             "id": "L06",
@@ -99,7 +195,26 @@
             "strata_claim": "C10",
             "type": "applied",
             "estimated_minutes": 12,
-            "description": "The modern annotation vocabulary — str | None, list[T], TypedDict for dict structures, Protocol for structural typing, Final for constants — and when to use each"
+            "description": "The modern annotation vocabulary — str | None, list[T], TypedDict for dict structures, Protocol for structural typing, Final for constants — and when to use each",
+            "prerequisites": [
+              "L05"
+            ],
+            "teaches_concepts": [
+              "modern-type-syntax"
+            ],
+            "reinforces_concepts": [
+              "type-annotations",
+              "type-annotation-policy"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           }
         ],
         "has_assessment": true
@@ -121,7 +236,26 @@
             "strata_claim": "C7, C8",
             "type": "core",
             "estimated_minutes": 12,
-            "description": "pathlib.Path replacing os.path, the with-statement requirement for all resources, and why TemporaryDirectory is safer than mktemp()"
+            "description": "pathlib.Path replacing os.path, the with-statement requirement for all resources, and why TemporaryDirectory is safer than mktemp()",
+            "prerequisites": [
+              "L03"
+            ],
+            "teaches_concepts": [
+              "pathlib",
+              "context-managers"
+            ],
+            "reinforces_concepts": [
+              "script-structure"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 2,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           },
           {
             "id": "L08",
@@ -129,7 +263,26 @@
             "strata_claim": "C6",
             "type": "applied",
             "estimated_minutes": 12,
-            "description": "The layered config priority (CLI > env > file > default), tomllib for TOML, configparser for INI, and os.environ.get() for secrets"
+            "description": "The layered config priority (CLI > env > file > default), tomllib for TOML, configparser for INI, and os.environ.get() for secrets",
+            "prerequisites": [
+              "L07"
+            ],
+            "teaches_concepts": [
+              "config-layering",
+              "secrets-management"
+            ],
+            "reinforces_concepts": [
+              "pathlib"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           }
         ],
         "has_assessment": true
@@ -150,7 +303,25 @@
             "strata_claim": "C9",
             "type": "core",
             "estimated_minutes": 10,
-            "description": "The format-to-trust-level mapping: json/csv for external data, TOML for developer config, pickle only for internal trusted caches — and why this matters for security"
+            "description": "The format-to-trust-level mapping: json/csv for external data, TOML for developer config, pickle only for internal trusted caches — and why this matters for security",
+            "prerequisites": [
+              "L08"
+            ],
+            "teaches_concepts": [
+              "serialization"
+            ],
+            "reinforces_concepts": [
+              "secrets-management"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 2,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           }
         ],
         "has_assessment": true
@@ -172,7 +343,28 @@
             "strata_claim": "C12",
             "type": "applied",
             "estimated_minutes": 12,
-            "description": "Task-type-based selection (IO-bound → asyncio or threads, CPU-bound → ProcessPoolExecutor), asyncio.to_thread() as the bridge, and TaskGroup vs gather() for Python 3.11+"
+            "description": "Task-type-based selection (IO-bound → asyncio or threads, CPU-bound → ProcessPoolExecutor), asyncio.to_thread() as the bridge, and TaskGroup vs gather() for Python 3.11+",
+            "prerequisites": [
+              "L03",
+              "L07"
+            ],
+            "teaches_concepts": [
+              "concurrency-model",
+              "asyncio"
+            ],
+            "reinforces_concepts": [
+              "script-structure",
+              "context-managers"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 4,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           },
           {
             "id": "L11",
@@ -180,7 +372,27 @@
             "strata_claim": "C13",
             "type": "applied",
             "estimated_minutes": 12,
-            "description": "Registering SIGTERM/SIGINT handlers, handling CancelledError in finally blocks in asyncio tasks, and letting executor with-blocks drain pending work"
+            "description": "Registering SIGTERM/SIGINT handlers, handling CancelledError in finally blocks in asyncio tasks, and letting executor with-blocks drain pending work",
+            "prerequisites": [
+              "L10"
+            ],
+            "teaches_concepts": [
+              "graceful-shutdown",
+              "signal-handling"
+            ],
+            "reinforces_concepts": [
+              "concurrency-model",
+              "asyncio"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 4,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
           }
         ],
         "has_assessment": true
@@ -201,7 +413,25 @@
             "strata_claim": "C3 (debate context)",
             "type": "debate",
             "estimated_minutes": 12,
-            "description": "PEP 484 vs Google Style Guide on annotation enforcement — the historical context, the real resolution, and how to present both sides fairly to a team adopting types incrementally"
+            "description": "PEP 484 vs Google Style Guide on annotation enforcement — the historical context, the real resolution, and how to present both sides fairly to a team adopting types incrementally",
+            "prerequisites": [
+              "L05",
+              "L06"
+            ],
+            "teaches_concepts": [],
+            "reinforces_concepts": [
+              "type-annotations",
+              "type-annotation-policy",
+              "modern-type-syntax"
+            ],
+            "mastery_threshold": 0.75,
+            "difficulty": 2,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              3,
+              7,
+              14
+            ]
           },
           {
             "id": "L13",
@@ -209,7 +439,19 @@
             "strata_claim": "G010, G011, G012, G013",
             "type": "gap",
             "estimated_minutes": 10,
-            "description": "The four open gaps — dataclasses, packaging/distribution, dependency management, pre-commit hooks — why they're out of scope, and where to go next"
+            "description": "The four open gaps — dataclasses, packaging/distribution, dependency management, pre-commit hooks — why they're out of scope, and where to go next",
+            "prerequisites": [
+              "L01"
+            ],
+            "teaches_concepts": [],
+            "reinforces_concepts": [],
+            "mastery_threshold": 0.75,
+            "difficulty": 1,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              7,
+              14
+            ]
           }
         ],
         "has_assessment": false
@@ -263,7 +505,16 @@
         "claim-C1",
         "type-definition",
         "toolchain"
-      ]
+      ],
+      "concepts": [
+        "quality-toolchain",
+        "ruff",
+        "mypy",
+        "pytest"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-002",
@@ -279,7 +530,16 @@
         "claim-C1",
         "type-claim",
         "toolchain"
-      ]
+      ],
+      "concepts": [
+        "quality-toolchain",
+        "ruff",
+        "mypy",
+        "pytest"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-003",
@@ -295,7 +555,16 @@
         "claim-C11",
         "type-application",
         "mypy"
-      ]
+      ],
+      "concepts": [
+        "quality-toolchain",
+        "ruff",
+        "mypy",
+        "pytest"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-004",
@@ -311,7 +580,16 @@
         "claim-C1",
         "type-distinction",
         "toolchain"
-      ]
+      ],
+      "concepts": [
+        "quality-toolchain",
+        "ruff",
+        "mypy",
+        "pytest"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-005",
@@ -327,7 +605,16 @@
         "claim-C2",
         "type-application",
         "pyproject"
-      ]
+      ],
+      "concepts": [
+        "quality-toolchain",
+        "ruff",
+        "mypy",
+        "pytest"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-006",
@@ -344,7 +631,16 @@
         "type-application",
         "ruff",
         "docstrings"
-      ]
+      ],
+      "concepts": [
+        "quality-toolchain",
+        "ruff",
+        "mypy",
+        "pytest"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-007",
@@ -360,7 +656,13 @@
         "claim-C2",
         "type-definition",
         "pyproject"
-      ]
+      ],
+      "concepts": [
+        "pyproject-config"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-008",
@@ -376,7 +678,13 @@
         "claim-C2",
         "type-claim",
         "pyproject"
-      ]
+      ],
+      "concepts": [
+        "pyproject-config"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-009",
@@ -392,7 +700,13 @@
         "claim-C2",
         "type-distinction",
         "tomllib"
-      ]
+      ],
+      "concepts": [
+        "pyproject-config"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-010",
@@ -408,7 +722,13 @@
         "claim-C2",
         "type-application",
         "configparser"
-      ]
+      ],
+      "concepts": [
+        "pyproject-config"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-011",
@@ -424,7 +744,13 @@
         "claim-C2",
         "type-application",
         "tomllib"
-      ]
+      ],
+      "concepts": [
+        "pyproject-config"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-012",
@@ -440,7 +766,14 @@
         "claim-C5",
         "type-definition",
         "structure"
-      ]
+      ],
+      "concepts": [
+        "script-structure",
+        "main-guard"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-013",
@@ -456,7 +789,14 @@
         "claim-C5",
         "type-claim",
         "testability"
-      ]
+      ],
+      "concepts": [
+        "script-structure",
+        "main-guard"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-014",
@@ -472,7 +812,14 @@
         "claim-C5",
         "type-application",
         "structure"
-      ]
+      ],
+      "concepts": [
+        "script-structure",
+        "main-guard"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-015",
@@ -488,7 +835,14 @@
         "claim-C5",
         "type-application",
         "asyncio"
-      ]
+      ],
+      "concepts": [
+        "script-structure",
+        "main-guard"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-016",
@@ -504,7 +858,14 @@
         "claim-C5",
         "type-distinction",
         "structure"
-      ]
+      ],
+      "concepts": [
+        "script-structure",
+        "main-guard"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-017",
@@ -520,7 +881,14 @@
         "claim-C4",
         "type-application",
         "logging"
-      ]
+      ],
+      "concepts": [
+        "script-structure",
+        "main-guard"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-018",
@@ -536,7 +904,15 @@
         "claim-C4",
         "type-definition",
         "logging"
-      ]
+      ],
+      "concepts": [
+        "structured-logging",
+        "log-levels",
+        "module-logger"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-019",
@@ -552,7 +928,15 @@
         "claim-C4",
         "type-claim",
         "logging"
-      ]
+      ],
+      "concepts": [
+        "structured-logging",
+        "log-levels",
+        "module-logger"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-020",
@@ -568,7 +952,15 @@
         "claim-C4",
         "type-distinction",
         "logging"
-      ]
+      ],
+      "concepts": [
+        "structured-logging",
+        "log-levels",
+        "module-logger"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-021",
@@ -585,7 +977,15 @@
         "type-application",
         "logging",
         "performance"
-      ]
+      ],
+      "concepts": [
+        "structured-logging",
+        "log-levels",
+        "module-logger"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-022",
@@ -602,7 +1002,15 @@
         "type-application",
         "logging",
         "library"
-      ]
+      ],
+      "concepts": [
+        "structured-logging",
+        "log-levels",
+        "module-logger"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-023",
@@ -618,7 +1026,15 @@
         "claim-C3",
         "type-definition",
         "documentation"
-      ]
+      ],
+      "concepts": [
+        "docstrings",
+        "type-annotations",
+        "type-annotation-policy"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-024",
@@ -634,7 +1050,15 @@
         "claim-C3",
         "type-claim",
         "documentation"
-      ]
+      ],
+      "concepts": [
+        "docstrings",
+        "type-annotations",
+        "type-annotation-policy"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-025",
@@ -651,7 +1075,15 @@
         "type-distinction",
         "documentation",
         "types"
-      ]
+      ],
+      "concepts": [
+        "docstrings",
+        "type-annotations",
+        "type-annotation-policy"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-026",
@@ -667,7 +1099,15 @@
         "claim-C3",
         "type-application",
         "documentation"
-      ]
+      ],
+      "concepts": [
+        "docstrings",
+        "type-annotations",
+        "type-annotation-policy"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-027",
@@ -684,7 +1124,15 @@
         "type-application",
         "ruff",
         "docstrings"
-      ]
+      ],
+      "concepts": [
+        "docstrings",
+        "type-annotations",
+        "type-annotation-policy"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-028",
@@ -701,7 +1149,13 @@
         "type-definition",
         "typing",
         "TypedDict"
-      ]
+      ],
+      "concepts": [
+        "modern-type-syntax"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-029",
@@ -718,7 +1172,13 @@
         "type-claim",
         "typing",
         "python310"
-      ]
+      ],
+      "concepts": [
+        "modern-type-syntax"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-030",
@@ -735,7 +1195,13 @@
         "type-application",
         "typing",
         "Protocol"
-      ]
+      ],
+      "concepts": [
+        "modern-type-syntax"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-031",
@@ -751,7 +1217,13 @@
         "claim-C10",
         "type-distinction",
         "typing"
-      ]
+      ],
+      "concepts": [
+        "modern-type-syntax"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-032",
@@ -768,7 +1240,13 @@
         "type-application",
         "typing",
         "Final"
-      ]
+      ],
+      "concepts": [
+        "modern-type-syntax"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-033",
@@ -785,7 +1263,13 @@
         "type-application",
         "mypy",
         "strict"
-      ]
+      ],
+      "concepts": [
+        "modern-type-syntax"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-034",
@@ -801,7 +1285,14 @@
         "claim-C7",
         "type-definition",
         "pathlib"
-      ]
+      ],
+      "concepts": [
+        "pathlib",
+        "context-managers"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-035",
@@ -817,7 +1308,14 @@
         "claim-C8",
         "type-claim",
         "context-managers"
-      ]
+      ],
+      "concepts": [
+        "pathlib",
+        "context-managers"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-036",
@@ -834,7 +1332,14 @@
         "type-distinction",
         "tempfile",
         "security"
-      ]
+      ],
+      "concepts": [
+        "pathlib",
+        "context-managers"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-037",
@@ -850,7 +1355,14 @@
         "claim-C7",
         "type-application",
         "pathlib"
-      ]
+      ],
+      "concepts": [
+        "pathlib",
+        "context-managers"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-038",
@@ -866,7 +1378,14 @@
         "claim-C7",
         "type-application",
         "pathlib"
-      ]
+      ],
+      "concepts": [
+        "pathlib",
+        "context-managers"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-039",
@@ -883,7 +1402,14 @@
         "type-application",
         "context-managers",
         "contextlib"
-      ]
+      ],
+      "concepts": [
+        "pathlib",
+        "context-managers"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-040",
@@ -899,7 +1425,14 @@
         "claim-C6",
         "type-definition",
         "configuration"
-      ]
+      ],
+      "concepts": [
+        "config-layering",
+        "secrets-management"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-041",
@@ -916,7 +1449,14 @@
         "type-claim",
         "security",
         "secrets"
-      ]
+      ],
+      "concepts": [
+        "config-layering",
+        "secrets-management"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-042",
@@ -933,7 +1473,14 @@
         "type-distinction",
         "configuration",
         "tomllib"
-      ]
+      ],
+      "concepts": [
+        "config-layering",
+        "secrets-management"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-043",
@@ -949,7 +1496,14 @@
         "claim-C6",
         "type-application",
         "configuration"
-      ]
+      ],
+      "concepts": [
+        "config-layering",
+        "secrets-management"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-044",
@@ -966,7 +1520,14 @@
         "type-application",
         "security",
         "secrets"
-      ]
+      ],
+      "concepts": [
+        "config-layering",
+        "secrets-management"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-045",
@@ -982,7 +1543,14 @@
         "claim-C2",
         "type-application",
         "tomllib"
-      ]
+      ],
+      "concepts": [
+        "config-layering",
+        "secrets-management"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-046",
@@ -999,7 +1567,13 @@
         "type-definition",
         "serialization",
         "security"
-      ]
+      ],
+      "concepts": [
+        "serialization"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-047",
@@ -1016,7 +1590,13 @@
         "type-claim",
         "pickle",
         "security"
-      ]
+      ],
+      "concepts": [
+        "serialization"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-048",
@@ -1033,7 +1613,13 @@
         "type-distinction",
         "pickle",
         "security"
-      ]
+      ],
+      "concepts": [
+        "serialization"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-049",
@@ -1050,7 +1636,13 @@
         "type-application",
         "json",
         "security"
-      ]
+      ],
+      "concepts": [
+        "serialization"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-050",
@@ -1067,7 +1659,13 @@
         "type-application",
         "pickle",
         "ruff"
-      ]
+      ],
+      "concepts": [
+        "serialization"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-051",
@@ -1084,7 +1682,14 @@
         "type-definition",
         "concurrency",
         "GIL"
-      ]
+      ],
+      "concepts": [
+        "concurrency-model",
+        "asyncio"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-052",
@@ -1101,7 +1706,14 @@
         "type-claim",
         "asyncio",
         "CPU-bound"
-      ]
+      ],
+      "concepts": [
+        "concurrency-model",
+        "asyncio"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-053",
@@ -1118,7 +1730,14 @@
         "type-distinction",
         "concurrency",
         "executors"
-      ]
+      ],
+      "concepts": [
+        "concurrency-model",
+        "asyncio"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-054",
@@ -1135,7 +1754,14 @@
         "type-application",
         "asyncio",
         "threads"
-      ]
+      ],
+      "concepts": [
+        "concurrency-model",
+        "asyncio"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-055",
@@ -1152,7 +1778,14 @@
         "type-application",
         "asyncio",
         "TaskGroup"
-      ]
+      ],
+      "concepts": [
+        "concurrency-model",
+        "asyncio"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-056",
@@ -1169,7 +1802,14 @@
         "type-application",
         "asyncio",
         "ProcessPoolExecutor"
-      ]
+      ],
+      "concepts": [
+        "concurrency-model",
+        "asyncio"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-057",
@@ -1186,7 +1826,14 @@
         "type-application",
         "concurrency",
         "decision"
-      ]
+      ],
+      "concepts": [
+        "concurrency-model",
+        "asyncio"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-058",
@@ -1203,7 +1850,14 @@
         "type-definition",
         "shutdown",
         "signals"
-      ]
+      ],
+      "concepts": [
+        "graceful-shutdown",
+        "signal-handling"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-059",
@@ -1220,7 +1874,14 @@
         "type-claim",
         "asyncio",
         "cancellation"
-      ]
+      ],
+      "concepts": [
+        "graceful-shutdown",
+        "signal-handling"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-060",
@@ -1237,7 +1898,14 @@
         "type-application",
         "shutdown",
         "signals"
-      ]
+      ],
+      "concepts": [
+        "graceful-shutdown",
+        "signal-handling"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-061",
@@ -1254,7 +1922,14 @@
         "type-distinction",
         "shutdown",
         "windows"
-      ]
+      ],
+      "concepts": [
+        "graceful-shutdown",
+        "signal-handling"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-062",
@@ -1271,7 +1946,14 @@
         "type-application",
         "ProcessPoolExecutor",
         "shutdown"
-      ]
+      ],
+      "concepts": [
+        "graceful-shutdown",
+        "signal-handling"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-063",
@@ -1288,7 +1970,14 @@
         "type-application",
         "asyncio",
         "cleanup"
-      ]
+      ],
+      "concepts": [
+        "graceful-shutdown",
+        "signal-handling"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-064",
@@ -1306,7 +1995,11 @@
         "types",
         "PEP484",
         "debate"
-      ]
+      ],
+      "concepts": [],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-065",
@@ -1324,7 +2017,11 @@
         "types",
         "PEP484",
         "debate"
-      ]
+      ],
+      "concepts": [],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
     },
     {
       "id": "CARD-066",
@@ -1342,7 +2039,11 @@
         "types",
         "teaching",
         "debate"
-      ]
+      ],
+      "concepts": [],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-067",
@@ -1358,7 +2059,11 @@
         "type-definition",
         "gaps",
         "scope"
-      ]
+      ],
+      "concepts": [],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
     },
     {
       "id": "CARD-068",
@@ -1374,7 +2079,11 @@
         "type-application",
         "gaps",
         "dependency-management"
-      ]
+      ],
+      "concepts": [],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     },
     {
       "id": "CARD-069",
@@ -1390,7 +2099,11 @@
         "type-application",
         "gaps",
         "pre-commit"
-      ]
+      ],
+      "concepts": [],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
     }
   ],
   "quizzes": {
@@ -1416,7 +2129,15 @@
           "explanation": "ruff, mypy, and pytest all support pyproject.toml configuration under [tool.ruff], [tool.mypy], and [tool.pytest.ini_options] respectively. Separate config files still work but add unnecessary fragmentation. A, C, and D are factually incorrect.",
           "lesson_ref": "L02",
           "claim_ref": "C2",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "pyproject-config"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L02"
+          ]
         },
         {
           "id": "Q02",
@@ -1432,7 +2153,18 @@
           "explanation": "Ruff is a linter/formatter — it checks style, formatting, and some static code issues but does not perform type inference. Mypy is a static type checker — it would flag `result.upper()` as a potential AttributeError because result could be None. This illustrates why both tools are necessary.",
           "lesson_ref": "L01",
           "claim_ref": "C1",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [
+            "quality-toolchain",
+            "ruff",
+            "mypy",
+            "pytest"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L01"
+          ]
         },
         {
           "id": "Q03",
@@ -1448,7 +2180,18 @@
           "explanation": "The cost of adopting mypy --strict scales with codebase size. Starting from the first commit means the 'annotation debt' is always zero — every added function must be annotated before the check passes. A, C, and D are incorrect.",
           "lesson_ref": "L01",
           "claim_ref": "C11",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "quality-toolchain",
+            "ruff",
+            "mypy",
+            "pytest"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L01"
+          ]
         },
         {
           "id": "Q04",
@@ -1464,7 +2207,15 @@
           "explanation": "tomllib.load() requires a binary file object — it validates UTF-8 encoding at the binary level. Opening in text mode ('r') raises a TypeError. D is wrong because tomllib is specifically designed for TOML files. A is incorrect because TOML and JSON are different formats.",
           "lesson_ref": "L02",
           "claim_ref": "C2",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "pyproject-config"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L02"
+          ]
         },
         {
           "id": "Q05",
@@ -1480,7 +2231,18 @@
           "explanation": "The NullHandler pattern is the correct library pattern — it discards records by default but allows the importing application to configure its own handlers for the library's logger. A, C, and D all configure logging from within the library, which overrides the importing application's logging setup.",
           "lesson_ref": "L01",
           "claim_ref": "C4",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "quality-toolchain",
+            "ruff",
+            "mypy",
+            "pytest"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L01"
+          ]
         },
         {
           "id": "Q06",
@@ -1496,7 +2258,18 @@
           "explanation": "Ruff can check annotation syntax and flag missing annotations, but it does not perform type inference — it cannot verify that a function receiving str | None is called safely. Mypy performs full static type checking including cross-file inference. They serve different purposes.",
           "lesson_ref": "L01",
           "claim_ref": "C1",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [
+            "quality-toolchain",
+            "ruff",
+            "mypy",
+            "pytest"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L01"
+          ]
         },
         {
           "id": "Q07",
@@ -1514,7 +2287,15 @@
           },
           "lesson_ref": "L02",
           "claim_ref": "C2",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "pyproject-config"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L02"
+          ]
         },
         {
           "id": "Q08",
@@ -1532,7 +2313,18 @@
           },
           "lesson_ref": "L01",
           "claim_ref": "C1",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "quality-toolchain",
+            "ruff",
+            "mypy",
+            "pytest"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L01"
+          ]
         },
         {
           "id": "Q09",
@@ -1545,7 +2337,13 @@
             "C": "Lists tools with descriptions but does not distinguish failure modes or address objections"
           },
           "lesson_ref": "L01-L02",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L01-L02"
+          ]
         }
       ]
     },
@@ -1571,7 +2369,16 @@
           "explanation": "Without the `if __name__ == '__main__'` guard, `main()` is a module-level call that runs on every import. When the test file imports from myscript, `main()` executes immediately, triggering all its side effects (network calls, file writes, etc.). This is why the guard is required for testability.",
           "lesson_ref": "L03",
           "claim_ref": "C5",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "script-structure",
+            "main-guard"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L03"
+          ]
         },
         {
           "id": "Q02",
@@ -1587,7 +2394,16 @@
           "explanation": "logging.basicConfig() is a no-op if root logger handlers already exist. If called before argument parsing, it uses the default level (WARNING). The subsequent call with args.log_level is ignored. This means --log-level DEBUG would have no effect, breaking level-controlled observability.",
           "lesson_ref": "L03",
           "claim_ref": "C5",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [
+            "script-structure",
+            "main-guard"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L03"
+          ]
         },
         {
           "id": "Q03",
@@ -1603,7 +2419,17 @@
           "explanation": "print() always produces output and carries no metadata. Logging output can be filtered by level at runtime (--log-level WARNING suppresses INFO), automatically includes timestamp and source module, and can be redirected to files/rotating handlers. B is partially true but not the primary issue. D is a minor concern, not the core difference.",
           "lesson_ref": "L04",
           "claim_ref": "C4",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "structured-logging",
+            "log-levels",
+            "module-logger"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L04"
+          ]
         },
         {
           "id": "Q04",
@@ -1619,7 +2445,16 @@
           "explanation": "asyncio.run(main()) is the canonical pattern for async scripts since Python 3.7. It creates an event loop, runs the coroutine to completion, and closes the loop. asyncio.run() is not deprecated — loop.run_until_complete() is the older pattern it replaced.",
           "lesson_ref": "L03",
           "claim_ref": "C5",
-          "difficulty": "recall"
+          "difficulty": "recall",
+          "concepts": [
+            "script-structure",
+            "main-guard"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L03"
+          ]
         },
         {
           "id": "Q05",
@@ -1635,7 +2470,17 @@
           "explanation": "basicConfig() configures the root logger, which is shared across the entire process. A library calling basicConfig() runs before the importing application can configure its own logging. The application's subsequent basicConfig() call is a no-op (handlers already exist), so the library has permanently configured all logging, including the application's own loggers.",
           "lesson_ref": "L04",
           "claim_ref": "C4",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [
+            "structured-logging",
+            "log-levels",
+            "module-logger"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L04"
+          ]
         },
         {
           "id": "Q06",
@@ -1651,7 +2496,17 @@
           "explanation": "With %-style formatting, the string is only built if the message will actually be emitted. At WARNING level, DEBUG messages are discarded before formatting — expensive_fn() is still called (that's the argument), but str() conversion is deferred. With f-strings (A and D), the full string is built and expensive_fn() is evaluated before the logger even checks the level.",
           "lesson_ref": "L04",
           "claim_ref": "C4",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "structured-logging",
+            "log-levels",
+            "module-logger"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L04"
+          ]
         },
         {
           "id": "Q07",
@@ -1670,7 +2525,16 @@
           },
           "lesson_ref": "L03",
           "claim_ref": "C5",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "script-structure",
+            "main-guard"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L03"
+          ]
         },
         {
           "id": "Q08",
@@ -1688,7 +2552,17 @@
           },
           "lesson_ref": "L04",
           "claim_ref": "C4",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "structured-logging",
+            "log-levels",
+            "module-logger"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L04"
+          ]
         },
         {
           "id": "Q09",
@@ -1701,7 +2575,13 @@
             "C": "Simply restates that the skeleton is best practice without engaging with the specific objection"
           },
           "lesson_ref": "L03-L04",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L03-L04"
+          ]
         }
       ]
     },
@@ -1727,7 +2607,17 @@
           "explanation": "Type annotations are machine-verifiable contracts about types. Docstrings communicate intent, expected behavior in edge cases, and reasoning that no type checker can verify. `list[str]` tells mypy the return type; it does not tell a human reader whether an empty list means 'no results found' or 'something went wrong'.",
           "lesson_ref": "L05",
           "claim_ref": "C3",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "docstrings",
+            "type-annotations",
+            "type-annotation-policy"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L05"
+          ]
         },
         {
           "id": "Q02",
@@ -1743,7 +2633,15 @@
           "explanation": "TypedDict defines a dict with named, typed keys — mypy verifies that callers provide all required keys with correct types. dict[str, Any] loses all type information. dict[str, str | int | bool] allows any key name. Mapping[str, object] is too broad. TypedDict is the precise tool for dicts with known shapes.",
           "lesson_ref": "L06",
           "claim_ref": "C10",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "modern-type-syntax"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L06"
+          ]
         },
         {
           "id": "Q03",
@@ -1759,7 +2657,15 @@
           "explanation": "PEP 604 (Python 3.10) introduced `X | Y` as equivalent to `Union[X, Y]` and `Optional[X]`. `str | None` is the modern preferred form — shorter and requires no imports. B and C are backwards. D is wrong — & is intersection (not in standard typing), | is union.",
           "lesson_ref": "L06",
           "claim_ref": "C10",
-          "difficulty": "recall"
+          "difficulty": "recall",
+          "concepts": [
+            "modern-type-syntax"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L06"
+          ]
         },
         {
           "id": "Q04",
@@ -1775,7 +2681,15 @@
           "explanation": "Protocol enables structural typing — any class with a matching write() method satisfies the Protocol, without inheritance. Union with specific types is brittle (misses future classes). ABC requires all writable classes to explicitly inherit from it. Any loses all type safety.",
           "lesson_ref": "L06",
           "claim_ref": "C10",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "modern-type-syntax"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L06"
+          ]
         },
         {
           "id": "Q05",
@@ -1791,7 +2705,17 @@
           "explanation": "The 'D' ruff rule group includes D100 (missing docstring in public module), D101, D102, D103 for classes and functions. A missing public function docstring triggers a lint error that fails `ruff check`. A, C, and D are incorrect.",
           "lesson_ref": "L05",
           "claim_ref": "C3",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "docstrings",
+            "type-annotations",
+            "type-annotation-policy"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L05"
+          ]
         },
         {
           "id": "Q06",
@@ -1807,7 +2731,15 @@
           "explanation": "Final[T] is a typing construct telling mypy to flag reassignment as a type error. It does not affect Python runtime behavior — Python has no built-in constant enforcement. The annotation serves two purposes: static analysis prevention of reassignment, and a signal to human readers that the value is intended as a constant.",
           "lesson_ref": "L06",
           "claim_ref": "C10",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "modern-type-syntax"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L06"
+          ]
         },
         {
           "id": "Q07",
@@ -1826,7 +2758,17 @@
           },
           "lesson_ref": "L05",
           "claim_ref": "C3",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "docstrings",
+            "type-annotations",
+            "type-annotation-policy"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L05"
+          ]
         },
         {
           "id": "Q08",
@@ -1845,7 +2787,15 @@
           },
           "lesson_ref": "L06",
           "claim_ref": "C10",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "modern-type-syntax"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L06"
+          ]
         },
         {
           "id": "Q09",
@@ -1858,7 +2808,13 @@
             "C": "Restates that all three are important without distinguishing their different purposes"
           },
           "lesson_ref": "L05-L06",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L05-L06"
+          ]
         }
       ]
     },
@@ -1884,7 +2840,16 @@
           "explanation": "String concatenation fails when base_dir has a trailing slash, or subdir has a leading slash, or on Windows. `pathlib.Path` with the `/` operator handles all cases correctly, is cross-platform, and is part of the standard library since Python 3.4. os.path.join() also works but is less readable than pathlib.",
           "lesson_ref": "L07",
           "claim_ref": "C7",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "pathlib",
+            "context-managers"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L07"
+          ]
         },
         {
           "id": "Q02",
@@ -1900,7 +2865,16 @@
           "explanation": "If an exception is raised before f.close() is reached, the close() call is skipped and the file handle leaks until the garbage collector collects the object — which may be indefinitely in CPython with circular references. The `with` statement's __exit__ is guaranteed to run even when exceptions occur, making it the correct pattern.",
           "lesson_ref": "L07",
           "claim_ref": "C8",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "pathlib",
+            "context-managers"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L07"
+          ]
         },
         {
           "id": "Q03",
@@ -1916,7 +2890,16 @@
           "explanation": "mktemp() has two problems: 1) TOCTOU race condition between name generation and file creation (B), and 2) no automatic cleanup (C). Use `tempfile.NamedTemporaryFile()` (as a context manager) or `tempfile.TemporaryDirectory()` which create the resource atomically and clean up on __exit__.",
           "lesson_ref": "L07",
           "claim_ref": "C8",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [
+            "pathlib",
+            "context-managers"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L07"
+          ]
         },
         {
           "id": "Q04",
@@ -1932,7 +2915,16 @@
           "explanation": "The four-tier configuration priority stack from highest to lowest is: CLI > environment variables > config file > hardcoded defaults. CLI flags always win because they represent the user's explicit, per-run intent. The script must implement this ordering in code — it does not happen automatically.",
           "lesson_ref": "L08",
           "claim_ref": "C6",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "config-layering",
+            "secrets-management"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L08"
+          ]
         },
         {
           "id": "Q05",
@@ -1948,7 +2940,16 @@
           "explanation": "Once a secret is committed to a git repository, it exists in the git history permanently — even if the file is later deleted and a new commit pushes an empty secret. Secrets belong in environment variables only. The risk is not file permissions (D) but version control exposure.",
           "lesson_ref": "L08",
           "claim_ref": "C6",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "config-layering",
+            "secrets-management"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L08"
+          ]
         },
         {
           "id": "Q06",
@@ -1964,7 +2965,16 @@
           "explanation": "`parents=True` creates all intermediate directories in the path. `exist_ok=True` suppresses the FileExistsError if the directory already exists. Without `parents=True`, mkdir() fails if parent directories don't exist. makedirs() and create() are not pathlib methods.",
           "lesson_ref": "L07",
           "claim_ref": "C7",
-          "difficulty": "recall"
+          "difficulty": "recall",
+          "concepts": [
+            "pathlib",
+            "context-managers"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L07"
+          ]
         },
         {
           "id": "Q07",
@@ -1981,7 +2991,16 @@
           },
           "lesson_ref": "L08",
           "claim_ref": "C6",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "config-layering",
+            "secrets-management"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L08"
+          ]
         },
         {
           "id": "Q08",
@@ -2000,7 +3019,16 @@
           },
           "lesson_ref": "L07",
           "claim_ref": "C7",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "pathlib",
+            "context-managers"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L07"
+          ]
         },
         {
           "id": "Q09",
@@ -2013,7 +3041,16 @@
             "C": "Simply re-asserts that env vars are best practice without engaging with the specific argument"
           },
           "lesson_ref": "L08",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [
+            "config-layering",
+            "secrets-management"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L08"
+          ]
         }
       ]
     },
@@ -2039,7 +3076,15 @@
           "explanation": "pickle deserialization executes Python code embedded in the payload via the __reduce__ protocol. An attacker who controls the payload can execute arbitrary system commands. The pickle documentation explicitly warns: 'Never unpickle data that could have come from an untrusted source.' This is not theoretical — pickle RCE exploits are well-documented.",
           "lesson_ref": "L09",
           "claim_ref": "C9",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "serialization"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L09"
+          ]
         },
         {
           "id": "Q02",
@@ -2055,7 +3100,15 @@
           "explanation": "The trust-level rule is the key: pickle is safe for internal caching between trusted processes on the same machine. The risk is when pickle data crosses a trust boundary (network transmission, user-supplied files). A local ML model cache written and read by the same process is within the safe envelope — the recommendation is to document this explicitly with a comment.",
           "lesson_ref": "L09",
           "claim_ref": "C9",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "serialization"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L09"
+          ]
         },
         {
           "id": "Q03",
@@ -2071,7 +3124,15 @@
           "explanation": "Suppress security warnings on the specific line only, with an explanatory comment: `pickle.load(f)  # noqa: S301 — internal cache, written by this process only`. Disabling project-wide (B) would suppress the check on future unsafe uses. `# type: ignore` (A) suppresses mypy, not ruff. D doesn't suppress anything.",
           "lesson_ref": "L09",
           "claim_ref": "C9",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "serialization"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L09"
+          ]
         },
         {
           "id": "Q04",
@@ -2087,7 +3148,15 @@
           "explanation": "JSON is the correct choice: the data originates from untrusted users (pickle is excluded on security grounds), the data is going to an external API (JSON is the universal HTTP API data format), and json.dumps()/json.loads() are in the standard library. TOML and INI are for configuration, not data exchange.",
           "lesson_ref": "L09",
           "claim_ref": "C9",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "serialization"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L09"
+          ]
         },
         {
           "id": "Q05",
@@ -2103,7 +3172,15 @@
           "explanation": "JSON is a pure data format. The json module only parses data structures (strings, numbers, lists, dicts, booleans, null) — it cannot execute code in any Python version. The worst-case outcome from malicious JSON is a parsing exception or unexpected data values, both of which can be handled defensively.",
           "lesson_ref": "L09",
           "claim_ref": "C9",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "serialization"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L09"
+          ]
         },
         {
           "id": "Q06",
@@ -2121,7 +3198,15 @@
           },
           "lesson_ref": "L09",
           "claim_ref": "C9",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "serialization"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L09"
+          ]
         },
         {
           "id": "Q07",
@@ -2139,7 +3224,15 @@
           },
           "lesson_ref": "L09",
           "claim_ref": "C9",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [
+            "serialization"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L09"
+          ]
         }
       ]
     },
@@ -2165,7 +3258,16 @@
           "explanation": "File compression is CPU-bound (pure computation). The GIL prevents threads from parallelizing CPU-bound Python code — all threads share one interpreter. ProcessPoolExecutor spawns separate processes, each with their own GIL, enabling true CPU parallelism. asyncio is cooperative and would block the event loop on CPU-heavy work.",
           "lesson_ref": "L10",
           "claim_ref": "C12",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "concurrency-model",
+            "asyncio"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L10"
+          ]
         },
         {
           "id": "Q02",
@@ -2181,7 +3283,16 @@
           "explanation": "CancelledError is the propagation mechanism for structured concurrency. If caught and swallowed, the calling TaskGroup or gather() receives a normal completion — not a cancellation. The group may continue waiting for other tasks, and the cancellation chain is broken. Always: `except CancelledError: cleanup(); raise`.",
           "lesson_ref": "L11",
           "claim_ref": "C13",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [
+            "graceful-shutdown",
+            "signal-handling"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L11"
+          ]
         },
         {
           "id": "Q03",
@@ -2197,7 +3308,16 @@
           "explanation": "HTTP fetching is I/O-bound — the process is waiting for network responses. asyncio handles thousands of concurrent waits on a single thread with minimal overhead. 1000 threads (A) consume gigabytes of stack space. 1000 processes (B) is far too heavy for I/O. Sequential (D) serializes 1000 waits rather than overlapping them.",
           "lesson_ref": "L10",
           "claim_ref": "C12",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "concurrency-model",
+            "asyncio"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L10"
+          ]
         },
         {
           "id": "Q04",
@@ -2213,7 +3333,16 @@
           "explanation": "asyncio.to_thread() runs the blocking function in a ThreadPoolExecutor, yielding control to the event loop while it waits. Calling it directly (A) blocks the entire event loop for all other coroutines. Simply wrapping it in async def (C) doesn't make it async. create_task() (D) requires a coroutine, not a regular function.",
           "lesson_ref": "L10",
           "claim_ref": "C12",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "concurrency-model",
+            "asyncio"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L10"
+          ]
         },
         {
           "id": "Q05",
@@ -2229,7 +3358,16 @@
           "explanation": "Without a SIGTERM handler, the default action is immediate process termination (SIGTERM's default disposition). No finally blocks run, no context managers are exited, no pending work is flushed. Kubernetes sends SIGTERM, waits for a configurable grace period (default 30s), then sends SIGKILL. A graceful handler must be registered explicitly.",
           "lesson_ref": "L11",
           "claim_ref": "C13",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "graceful-shutdown",
+            "signal-handling"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L11"
+          ]
         },
         {
           "id": "Q06",
@@ -2245,7 +3383,16 @@
           "explanation": "TaskGroup implements structured concurrency: if one task raises, all others are cancelled (via CancelledError) before the exception propagates. asyncio.gather() without return_exceptions=False completes remaining tasks and returns normally — exceptions from completed tasks are returned as results. TaskGroup's behaviour is generally safer for fan-out work.",
           "lesson_ref": "L10",
           "claim_ref": "C12",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "concurrency-model",
+            "asyncio"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L10"
+          ]
         },
         {
           "id": "Q07",
@@ -2261,7 +3408,16 @@
           "explanation": "loop.add_signal_handler() is not available on Windows — it is a UNIX-specific API. On Windows, use signal.signal(signal.SIGINT, handler) for keyboard interrupt (Ctrl+C), which is the primary graceful shutdown mechanism on Windows. SIGTERM cannot be registered on Windows.",
           "lesson_ref": "L11",
           "claim_ref": "C13",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "graceful-shutdown",
+            "signal-handling"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L11"
+          ]
         },
         {
           "id": "Q08",
@@ -2279,7 +3435,16 @@
           },
           "lesson_ref": "L10",
           "claim_ref": "C12",
-          "difficulty": "comprehension"
+          "difficulty": "comprehension",
+          "concepts": [
+            "concurrency-model",
+            "asyncio"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L10"
+          ]
         },
         {
           "id": "Q09",
@@ -2298,7 +3463,16 @@
           },
           "lesson_ref": "L11",
           "claim_ref": "C13",
-          "difficulty": "application"
+          "difficulty": "application",
+          "concepts": [
+            "graceful-shutdown",
+            "signal-handling"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L11"
+          ]
         },
         {
           "id": "Q10",
@@ -2311,7 +3485,13 @@
             "C": "Uses one concurrency model for all stages without justifying the choice based on workload type"
           },
           "lesson_ref": "L10-L11",
-          "difficulty": "analysis"
+          "difficulty": "analysis",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L10-L11"
+          ]
         }
       ]
     }
@@ -2489,5 +3669,442 @@
         }
       ]
     }
+  },
+  "concepts": {
+    "slug": "python-scripting-best-practices",
+    "generated": "2026-04-13",
+    "concepts": [
+      {
+        "id": "quality-toolchain",
+        "title": "Python Quality Toolchain",
+        "depends_on": [],
+        "introduced_in": [
+          "L01"
+        ],
+        "reinforced_in": [
+          "L02",
+          "L05"
+        ],
+        "assessment_sources": [
+          "Q-M01-01",
+          "Q-M01-02"
+        ]
+      },
+      {
+        "id": "ruff",
+        "title": "Ruff Linter and Formatter",
+        "depends_on": [
+          "quality-toolchain"
+        ],
+        "introduced_in": [
+          "L01"
+        ],
+        "reinforced_in": [
+          "L05"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "mypy",
+        "title": "Mypy Static Type Checker",
+        "depends_on": [
+          "quality-toolchain"
+        ],
+        "introduced_in": [
+          "L01"
+        ],
+        "reinforced_in": [
+          "L05"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "pytest",
+        "title": "Pytest Test Framework",
+        "depends_on": [
+          "quality-toolchain"
+        ],
+        "introduced_in": [
+          "L01"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "pyproject-config",
+        "title": "pyproject.toml as Single Config Hub",
+        "depends_on": [
+          "quality-toolchain"
+        ],
+        "introduced_in": [
+          "L02"
+        ],
+        "reinforced_in": [
+          "L03"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "script-structure",
+        "title": "Universal Script Skeleton",
+        "depends_on": [
+          "pyproject-config"
+        ],
+        "introduced_in": [
+          "L03"
+        ],
+        "reinforced_in": [
+          "L04",
+          "L07",
+          "L10"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "main-guard",
+        "title": "if __name__ == __main__ Guard",
+        "depends_on": [
+          "script-structure"
+        ],
+        "introduced_in": [
+          "L03"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "structured-logging",
+        "title": "Structured Logging Over print()",
+        "depends_on": [
+          "script-structure"
+        ],
+        "introduced_in": [
+          "L04"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "log-levels",
+        "title": "Logging Levels and basicConfig",
+        "depends_on": [
+          "structured-logging"
+        ],
+        "introduced_in": [
+          "L04"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "module-logger",
+        "title": "Module-Level Logger Pattern",
+        "depends_on": [
+          "structured-logging"
+        ],
+        "introduced_in": [
+          "L04"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "docstrings",
+        "title": "PEP 257 Google-Style Docstrings",
+        "depends_on": [
+          "quality-toolchain"
+        ],
+        "introduced_in": [
+          "L05"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "type-annotations",
+        "title": "Type Annotations for Public Functions",
+        "depends_on": [
+          "mypy"
+        ],
+        "introduced_in": [
+          "L05"
+        ],
+        "reinforced_in": [
+          "L06",
+          "L12"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "type-annotation-policy",
+        "title": "Type Annotation Enforcement Policy",
+        "depends_on": [
+          "type-annotations"
+        ],
+        "introduced_in": [
+          "L05"
+        ],
+        "reinforced_in": [
+          "L06",
+          "L12"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "modern-type-syntax",
+        "title": "Python 3.10+ Type Syntax",
+        "depends_on": [
+          "type-annotations"
+        ],
+        "introduced_in": [
+          "L06"
+        ],
+        "reinforced_in": [
+          "L12"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "pathlib",
+        "title": "pathlib over os.path",
+        "depends_on": [
+          "script-structure"
+        ],
+        "introduced_in": [
+          "L07"
+        ],
+        "reinforced_in": [
+          "L08"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "context-managers",
+        "title": "Context Managers for Resource Safety",
+        "depends_on": [
+          "script-structure"
+        ],
+        "introduced_in": [
+          "L07"
+        ],
+        "reinforced_in": [
+          "L10"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "config-layering",
+        "title": "Layered Config Priority Pattern",
+        "depends_on": [
+          "pathlib"
+        ],
+        "introduced_in": [
+          "L08"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "secrets-management",
+        "title": "Secrets in Env Vars, Never Source",
+        "depends_on": [
+          "config-layering"
+        ],
+        "introduced_in": [
+          "L08"
+        ],
+        "reinforced_in": [
+          "L09"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "serialization",
+        "title": "Security-Aware Serialization Format Selection",
+        "depends_on": [
+          "secrets-management"
+        ],
+        "introduced_in": [
+          "L09"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "concurrency-model",
+        "title": "Concurrency Model Selection by Task Type",
+        "depends_on": [
+          "script-structure",
+          "context-managers"
+        ],
+        "introduced_in": [
+          "L10"
+        ],
+        "reinforced_in": [
+          "L11"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "asyncio",
+        "title": "asyncio and ThreadPoolExecutor Patterns",
+        "depends_on": [
+          "concurrency-model"
+        ],
+        "introduced_in": [
+          "L10"
+        ],
+        "reinforced_in": [
+          "L11"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "graceful-shutdown",
+        "title": "Graceful Shutdown Pattern",
+        "depends_on": [
+          "asyncio"
+        ],
+        "introduced_in": [
+          "L11"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "signal-handling",
+        "title": "SIGTERM and SIGINT Signal Handling",
+        "depends_on": [
+          "graceful-shutdown"
+        ],
+        "introduced_in": [
+          "L11"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      }
+    ]
+  },
+  "adaptiveRules": {
+    "slug": "python-scripting-best-practices",
+    "generated": "2026-04-13",
+    "progression_rules": {
+      "unlock_next_lesson_if_mastery_above": 0.75,
+      "suggest_remediation_if_two_failures": true,
+      "allow_skip_with_mastery_above": 0.9
+    },
+    "review_policy": {
+      "default_intervals_days": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "max_daily_reviews": 20,
+      "decay_threshold_days": 21,
+      "confidence_weight_low": 0.5,
+      "confidence_weight_medium": 1,
+      "confidence_weight_high": 1.5
+    },
+    "mastery_defaults": {
+      "foundational": 0.75,
+      "core": 0.8,
+      "applied": 0.8,
+      "debate": 0.75,
+      "gap": 0.75
+    },
+    "remediation_policy": {
+      "trigger_on_quiz_score_below": 0.6,
+      "max_remediation_cycles": 2,
+      "remediation_card_count": 5
+    }
+  },
+  "learningPaths": {
+    "slug": "python-scripting-best-practices",
+    "generated": "2026-04-13",
+    "paths": [
+      {
+        "id": "default-path",
+        "title": "Complete Course",
+        "description": "All lessons in recommended pedagogical order.",
+        "entry_condition": {},
+        "sequence": [
+          "L01",
+          "L02",
+          "L03",
+          "L04",
+          "L05",
+          "L06",
+          "L07",
+          "L08",
+          "L09",
+          "L10",
+          "L11",
+          "L12",
+          "L13"
+        ]
+      },
+      {
+        "id": "fast-track",
+        "title": "Fast Track — Core Practices Only",
+        "description": "Skip debate and gap lessons. Covers the seven essential production patterns.",
+        "entry_condition": {
+          "background": "intermediate"
+        },
+        "sequence": [
+          "L01",
+          "L02",
+          "L03",
+          "L04",
+          "L05",
+          "L07",
+          "L08",
+          "L09",
+          "L10",
+          "L11"
+        ]
+      },
+      {
+        "id": "teach-others",
+        "title": "Teach-Others Path",
+        "description": "Full course including debate lessons for use when preparing to train a team.",
+        "entry_condition": {
+          "goal": "teach others"
+        },
+        "sequence": [
+          "L01",
+          "L02",
+          "L03",
+          "L04",
+          "L05",
+          "L06",
+          "L07",
+          "L08",
+          "L09",
+          "L10",
+          "L11",
+          "L12",
+          "L13"
+        ]
+      },
+      {
+        "id": "security-focus",
+        "title": "Security-First Path",
+        "description": "Deep-dive on secrets, serialization, and configuration security.",
+        "entry_condition": {
+          "interest": "security"
+        },
+        "sequence": [
+          "L01",
+          "L02",
+          "L03",
+          "L07",
+          "L08",
+          "L09",
+          "L10",
+          "L11"
+        ]
+      }
+    ]
   }
 }

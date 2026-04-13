@@ -54,8 +54,7 @@ Every question must have a defensible correct answer traceable to Strata researc
       "lesson_ref": "L01",
       "claim_ref": "C1",
       "difficulty": "recall | comprehension | application | analysis"
-    },
-    {
+    },    {
       "id": "Q02",
       "type": "short_answer",
       "question": "Question text",
@@ -89,8 +88,23 @@ Every question must have a defensible correct answer traceable to Strata researc
 }
 ```
 
-## Writing good MCQ questions
+## `lesson_ref` is required on every MCQ
 
+`lesson_ref` is not just for traceability — it is the key the bundler (`build-bundle.mjs`) uses
+to enrich each MCQ question at build time with adaptive metadata:
+
+- `concepts` — derived from the lesson's `teaches_concepts` in `course.json`
+- `cognitive_level` — derived from the question's Bloom's `difficulty`
+- `weight` — calculated from cognitive level + lesson difficulty
+- `remediation_lesson_ids` — filled from the lesson's `prerequisites` chain
+
+**Every MCQ question must have `lesson_ref`. Short-answer and essay entries do not need it
+(the bundler skips non-MCQ types for adaptive enrichment).**
+
+If a MCQ question is missing `lesson_ref`, its adaptive metadata will be empty and the app
+cannot direct the learner back to the relevant lesson when they answer incorrectly.
+
+## Writing good MCQ questions
 **The stem (question) must:**
 - Be answerable without reading the options
 - Test understanding, not word-spotting

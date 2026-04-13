@@ -96,6 +96,12 @@ Source: contradictions.md
 }
 ```
 
+> **Do NOT add `concepts`, `cognitive_level`, `weight`, or `reviewable` fields to cards manually.**
+> These are injected automatically by `build-bundle.mjs` at build time using the lesson's
+> `teaches_concepts` from `course.json`. The `lesson` field on each card is the key the
+> bundler uses to look up the lesson and derive its adaptive metadata.
+> Authoring these fields manually will have no effect — the bundler overwrites them.
+
 The `sr` block is the SM-2 spaced repetition state. The Grove app updates this
 as the learner reviews cards. Initial values are always: interval 1, ease 2.5, reviews 0.
 

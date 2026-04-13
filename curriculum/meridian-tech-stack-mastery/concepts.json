@@ -1,0 +1,214 @@
+{
+  "slug": "meridian-tech-stack-mastery",
+  "generated": "2026-04-13",
+  "concepts": [
+    {
+      "id": "typescript-strict-mode",
+      "title": "TypeScript Strict Mode",
+      "depends_on": [],
+      "introduced_in": ["L01"],
+      "reinforced_in": ["L02", "L03", "L05"],
+      "assessment_sources": []
+    },
+    {
+      "id": "strict-sub-flags",
+      "title": "TypeScript Strict Sub-Flags",
+      "depends_on": ["typescript-strict-mode"],
+      "introduced_in": ["L01"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "library-strict-dependency",
+      "title": "Libraries That Depend on Strict Mode",
+      "depends_on": ["typescript-strict-mode"],
+      "introduced_in": ["L02"],
+      "reinforced_in": ["L05"],
+      "assessment_sources": []
+    },
+    {
+      "id": "z-infer",
+      "title": "Zod z.infer<> Type Derivation",
+      "depends_on": ["typescript-strict-mode"],
+      "introduced_in": ["L02"],
+      "reinforced_in": ["L06"],
+      "assessment_sources": []
+    },
+    {
+      "id": "drizzle-types",
+      "title": "Drizzle ORM Table Types",
+      "depends_on": ["typescript-strict-mode"],
+      "introduced_in": ["L02"],
+      "reinforced_in": ["L06", "L07"],
+      "assessment_sources": []
+    },
+    {
+      "id": "immutability",
+      "title": "Immutability as Architectural Principle",
+      "depends_on": ["typescript-strict-mode"],
+      "introduced_in": ["L03"],
+      "reinforced_in": ["L04", "L08", "L10"],
+      "assessment_sources": []
+    },
+    {
+      "id": "concurrent-rendering",
+      "title": "React 18 Concurrent Rendering",
+      "depends_on": ["immutability"],
+      "introduced_in": ["L03"],
+      "reinforced_in": ["L08"],
+      "assessment_sources": []
+    },
+    {
+      "id": "crdt",
+      "title": "CRDT Algorithm and Commutativity",
+      "depends_on": ["immutability"],
+      "introduced_in": ["L04"],
+      "reinforced_in": ["L10", "L11"],
+      "assessment_sources": []
+    },
+    {
+      "id": "yjs",
+      "title": "Yjs CRDT Library",
+      "depends_on": ["crdt"],
+      "introduced_in": ["L04"],
+      "reinforced_in": ["L10", "L11"],
+      "assessment_sources": []
+    },
+    {
+      "id": "control-vs-abstraction",
+      "title": "Control vs Abstraction Tradeoff",
+      "depends_on": ["library-strict-dependency"],
+      "introduced_in": ["L05"],
+      "reinforced_in": ["L06", "L13"],
+      "assessment_sources": []
+    },
+    {
+      "id": "schema-as-type",
+      "title": "Schema-as-Type: Define Once, Derive Everywhere",
+      "depends_on": ["z-infer", "drizzle-types"],
+      "introduced_in": ["L06"],
+      "reinforced_in": ["L07", "L14"],
+      "assessment_sources": []
+    },
+    {
+      "id": "drizzle-zod",
+      "title": "drizzle-zod createInsertSchema Pattern",
+      "depends_on": ["schema-as-type"],
+      "introduced_in": ["L06"],
+      "reinforced_in": ["L07"],
+      "assessment_sources": []
+    },
+    {
+      "id": "rls",
+      "title": "PostgreSQL Row-Level Security",
+      "depends_on": ["schema-as-type"],
+      "introduced_in": ["L07"],
+      "reinforced_in": ["L14"],
+      "assessment_sources": []
+    },
+    {
+      "id": "pgvector",
+      "title": "pgvector HNSW Index",
+      "depends_on": ["rls"],
+      "introduced_in": ["L07"],
+      "reinforced_in": ["L12"],
+      "assessment_sources": []
+    },
+    {
+      "id": "use-sync-external-store",
+      "title": "useSyncExternalStore Hook",
+      "depends_on": ["concurrent-rendering"],
+      "introduced_in": ["L08"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "react-18-state",
+      "title": "React 18 External State Integration",
+      "depends_on": ["use-sync-external-store"],
+      "introduced_in": ["L08"],
+      "reinforced_in": ["L09"],
+      "assessment_sources": []
+    },
+    {
+      "id": "vite-spa",
+      "title": "Vite SPA as Correct Meridian Architecture",
+      "depends_on": ["react-18-state"],
+      "introduced_in": ["L09"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "ot-vs-crdt",
+      "title": "OT vs CRDT Algorithm Comparison",
+      "depends_on": ["crdt"],
+      "introduced_in": ["L10"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "lexical-yjs",
+      "title": "@lexical/yjs Integration",
+      "depends_on": ["yjs", "ot-vs-crdt"],
+      "introduced_in": ["L11"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "rag-pipeline",
+      "title": "Four-Stage RAG Pipeline",
+      "depends_on": ["pgvector"],
+      "introduced_in": ["L12"],
+      "reinforced_in": ["L13"],
+      "assessment_sources": []
+    },
+    {
+      "id": "anthropic-sdk",
+      "title": "Direct Anthropic SDK Usage",
+      "depends_on": ["rag-pipeline"],
+      "introduced_in": ["L12"],
+      "reinforced_in": ["L13"],
+      "assessment_sources": []
+    },
+    {
+      "id": "security-layering",
+      "title": "Four-Layer Defense-in-Depth Security",
+      "depends_on": ["schema-as-type", "rls"],
+      "introduced_in": ["L14"],
+      "reinforced_in": ["L15"],
+      "assessment_sources": []
+    },
+    {
+      "id": "jwt-auth",
+      "title": "JWT and Refresh Token Security",
+      "depends_on": ["security-layering"],
+      "introduced_in": ["L14"],
+      "reinforced_in": ["L15"],
+      "assessment_sources": []
+    },
+    {
+      "id": "bcrypt",
+      "title": "bcrypt Password Hashing",
+      "depends_on": ["security-layering"],
+      "introduced_in": ["L14"],
+      "reinforced_in": ["L15"],
+      "assessment_sources": []
+    },
+    {
+      "id": "pnpm-workspaces",
+      "title": "pnpm Workspaces and workspace:* Linking",
+      "depends_on": ["typescript-strict-mode"],
+      "introduced_in": ["L16"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "turborepo",
+      "title": "Turborepo Task Graph Caching",
+      "depends_on": ["pnpm-workspaces"],
+      "introduced_in": ["L16"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    }
+  ]
+}

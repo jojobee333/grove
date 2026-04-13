@@ -27,7 +27,14 @@
           "strata_claim": "C1, C11",
           "type": "core",
           "estimated_minutes": 12,
-          "description": "Why the three-tool quality stack (ruff, mypy, pytest) is non-negotiable, how each tool fills a unique gap, and how to configure all three in pyproject.toml"
+          "description": "Why the three-tool quality stack (ruff, mypy, pytest) is non-negotiable, how each tool fills a unique gap, and how to configure all three in pyproject.toml",
+          "prerequisites": [],
+          "teaches_concepts": ["quality-toolchain", "ruff", "mypy", "pytest"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.80,
+          "difficulty": 1,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         },
         {
           "id": "L02",
@@ -35,7 +42,14 @@
           "strata_claim": "C2",
           "type": "core",
           "estimated_minutes": 12,
-          "description": "How pyproject.toml serves as both the dev-tool configuration hub and the runtime config source (via tomllib), and why this reduces cognitive overhead"
+          "description": "How pyproject.toml serves as both the dev-tool configuration hub and the runtime config source (via tomllib), and why this reduces cognitive overhead",
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["pyproject-config"],
+          "reinforces_concepts": ["quality-toolchain"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         }
       ],
       "has_assessment": true
@@ -57,7 +71,14 @@
           "strata_claim": "C5",
           "type": "core",
           "estimated_minutes": 12,
-          "description": "The if __name__ == '__main__' guard, the main() execution sequence (parse → log → validate → dispatch), and why this pattern makes scripts testable and importable"
+          "description": "The if __name__ == '__main__' guard, the main() execution sequence (parse \u2192 log \u2192 validate \u2192 dispatch), and why this pattern makes scripts testable and importable",
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["script-structure", "main-guard"],
+          "reinforces_concepts": ["pyproject-config"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         },
         {
           "id": "L04",
@@ -65,7 +86,14 @@
           "strata_claim": "C4",
           "type": "core",
           "estimated_minutes": 12,
-          "description": "Module-level loggers, logging.basicConfig() in main(), the library/script distinction, and how to expose --log-level as a CLI argument"
+          "description": "Module-level loggers, logging.basicConfig() in main(), the library/script distinction, and how to expose --log-level as a CLI argument",
+          "prerequisites": ["L03"],
+          "teaches_concepts": ["structured-logging", "log-levels", "module-logger"],
+          "reinforces_concepts": ["script-structure"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         }
       ],
       "has_assessment": true
@@ -87,7 +115,14 @@
           "strata_claim": "C3",
           "type": "core",
           "estimated_minutes": 12,
-          "description": "PEP 257 Google-style docstrings (summary + Args/Returns/Raises), type annotation requirements for public functions in new code, and how ruff enforces both"
+          "description": "PEP 257 Google-style docstrings (summary + Args/Returns/Raises), type annotation requirements for public functions in new code, and how ruff enforces both",
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["docstrings", "type-annotations", "type-annotation-policy"],
+          "reinforces_concepts": ["quality-toolchain", "ruff", "mypy"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         },
         {
           "id": "L06",
@@ -95,7 +130,14 @@
           "strata_claim": "C10",
           "type": "applied",
           "estimated_minutes": 12,
-          "description": "The modern annotation vocabulary — str | None, list[T], TypedDict for dict structures, Protocol for structural typing, Final for constants — and when to use each"
+          "description": "The modern annotation vocabulary \u2014 str | None, list[T], TypedDict for dict structures, Protocol for structural typing, Final for constants \u2014 and when to use each",
+          "prerequisites": ["L05"],
+          "teaches_concepts": ["modern-type-syntax"],
+          "reinforces_concepts": ["type-annotations", "type-annotation-policy"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         }
       ],
       "has_assessment": true
@@ -117,7 +159,14 @@
           "strata_claim": "C7, C8",
           "type": "core",
           "estimated_minutes": 12,
-          "description": "pathlib.Path replacing os.path, the with-statement requirement for all resources, and why TemporaryDirectory is safer than mktemp()"
+          "description": "pathlib.Path replacing os.path, the with-statement requirement for all resources, and why TemporaryDirectory is safer than mktemp()",
+          "prerequisites": ["L03"],
+          "teaches_concepts": ["pathlib", "context-managers"],
+          "reinforces_concepts": ["script-structure"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         },
         {
           "id": "L08",
@@ -125,7 +174,14 @@
           "strata_claim": "C6",
           "type": "applied",
           "estimated_minutes": 12,
-          "description": "The layered config priority (CLI > env > file > default), tomllib for TOML, configparser for INI, and os.environ.get() for secrets"
+          "description": "The layered config priority (CLI > env > file > default), tomllib for TOML, configparser for INI, and os.environ.get() for secrets",
+          "prerequisites": ["L07"],
+          "teaches_concepts": ["config-layering", "secrets-management"],
+          "reinforces_concepts": ["pathlib"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         }
       ],
       "has_assessment": true
@@ -146,7 +202,14 @@
           "strata_claim": "C9",
           "type": "core",
           "estimated_minutes": 10,
-          "description": "The format-to-trust-level mapping: json/csv for external data, TOML for developer config, pickle only for internal trusted caches — and why this matters for security"
+          "description": "The format-to-trust-level mapping: json/csv for external data, TOML for developer config, pickle only for internal trusted caches \u2014 and why this matters for security",
+          "prerequisites": ["L08"],
+          "teaches_concepts": ["serialization"],
+          "reinforces_concepts": ["secrets-management"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         }
       ],
       "has_assessment": true
@@ -168,7 +231,14 @@
           "strata_claim": "C12",
           "type": "applied",
           "estimated_minutes": 12,
-          "description": "Task-type-based selection (IO-bound → asyncio or threads, CPU-bound → ProcessPoolExecutor), asyncio.to_thread() as the bridge, and TaskGroup vs gather() for Python 3.11+"
+          "description": "Task-type-based selection (IO-bound \u2192 asyncio or threads, CPU-bound \u2192 ProcessPoolExecutor), asyncio.to_thread() as the bridge, and TaskGroup vs gather() for Python 3.11+",
+          "prerequisites": ["L03", "L07"],
+          "teaches_concepts": ["concurrency-model", "asyncio"],
+          "reinforces_concepts": ["script-structure", "context-managers"],
+          "mastery_threshold": 0.80,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         },
         {
           "id": "L11",
@@ -176,7 +246,14 @@
           "strata_claim": "C13",
           "type": "applied",
           "estimated_minutes": 12,
-          "description": "Registering SIGTERM/SIGINT handlers, handling CancelledError in finally blocks in asyncio tasks, and letting executor with-blocks drain pending work"
+          "description": "Registering SIGTERM/SIGINT handlers, handling CancelledError in finally blocks in asyncio tasks, and letting executor with-blocks drain pending work",
+          "prerequisites": ["L10"],
+          "teaches_concepts": ["graceful-shutdown", "signal-handling"],
+          "reinforces_concepts": ["concurrency-model", "asyncio"],
+          "mastery_threshold": 0.80,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         }
       ],
       "has_assessment": true
@@ -197,7 +274,14 @@
           "strata_claim": "C3 (debate context)",
           "type": "debate",
           "estimated_minutes": 12,
-          "description": "PEP 484 vs Google Style Guide on annotation enforcement — the historical context, the real resolution, and how to present both sides fairly to a team adopting types incrementally"
+          "description": "PEP 484 vs Google Style Guide on annotation enforcement \u2014 the historical context, the real resolution, and how to present both sides fairly to a team adopting types incrementally",
+          "prerequisites": ["L05", "L06"],
+          "teaches_concepts": [],
+          "reinforces_concepts": ["type-annotations", "type-annotation-policy", "modern-type-syntax"],
+          "mastery_threshold": 0.75,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [3, 7, 14]
         },
         {
           "id": "L13",
@@ -205,7 +289,14 @@
           "strata_claim": "G010, G011, G012, G013",
           "type": "gap",
           "estimated_minutes": 10,
-          "description": "The four open gaps — dataclasses, packaging/distribution, dependency management, pre-commit hooks — why they're out of scope, and where to go next"
+          "description": "The four open gaps \u2014 dataclasses, packaging/distribution, dependency management, pre-commit hooks \u2014 why they're out of scope, and where to go next",
+          "prerequisites": ["L01"],
+          "teaches_concepts": [],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.75,
+          "difficulty": 1,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7, 14]
         }
       ],
       "has_assessment": false

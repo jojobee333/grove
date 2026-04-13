@@ -26,7 +26,14 @@
           "strata_claim": "C1",
           "type": "core",
           "estimated_minutes": 15,
-          "description": "The nine strict sub-flags, which ones matter most for the Meridian stack, and how isolatedModules interacts with Vite."
+          "description": "The nine strict sub-flags, which ones matter most for the Meridian stack, and how isolatedModules interacts with Vite.",
+          "prerequisites": [],
+          "teaches_concepts": ["typescript-strict-mode", "strict-sub-flags"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         },
         {
           "id": "L02",
@@ -34,7 +41,14 @@
           "strata_claim": "C2",
           "type": "applied",
           "estimated_minutes": 15,
-          "description": "How z.infer<>, Drizzle table types, and the Anthropic SDK's MessageParam types each depend on strict mode to work correctly."
+          "description": "How z.infer<>, Drizzle table types, and the Anthropic SDK's MessageParam types each depend on strict mode to work correctly.",
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["library-strict-dependency", "z-infer", "drizzle-types"],
+          "reinforces_concepts": ["typescript-strict-mode"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         }
       ],
       "has_assessment": true
@@ -55,7 +69,14 @@
           "strata_claim": "C4",
           "type": "core",
           "estimated_minutes": 15,
-          "description": "How startTransition, interrupted renders, and StrictMode double-invocation all require immutable state snapshots to be safe."
+          "description": "How startTransition, interrupted renders, and StrictMode double-invocation all require immutable state snapshots to be safe.",
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["immutability", "concurrent-rendering"],
+          "reinforces_concepts": ["typescript-strict-mode"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         },
         {
           "id": "L04",
@@ -63,7 +84,14 @@
           "strata_claim": "C6",
           "type": "core",
           "estimated_minutes": 15,
-          "description": "Why CRDT commutativity requires each operation to be an immutable value, and how this connects to Lexical's frozen EditorState."
+          "description": "Why CRDT commutativity requires each operation to be an immutable value, and how this connects to Lexical's frozen EditorState.",
+          "prerequisites": ["L03"],
+          "teaches_concepts": ["crdt", "yjs"],
+          "reinforces_concepts": ["immutability"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         }
       ],
       "has_assessment": true
@@ -84,7 +112,14 @@
           "strata_claim": "C5, C7, C8, C11",
           "type": "applied",
           "estimated_minutes": 15,
-          "description": "Drizzle vs Prisma, Express vs Fastify, Lexical vs ProseMirror, direct Anthropic SDK vs LangChain — each resolved through one consistent tradeoff question."
+          "description": "Drizzle vs Prisma, Express vs Fastify, Lexical vs ProseMirror, direct Anthropic SDK vs LangChain \u2014 each resolved through one consistent tradeoff question.",
+          "prerequisites": ["L01", "L02"],
+          "teaches_concepts": ["control-vs-abstraction"],
+          "reinforces_concepts": ["typescript-strict-mode", "library-strict-dependency"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         }
       ],
       "has_assessment": true
@@ -105,7 +140,14 @@
           "strata_claim": "C2",
           "type": "applied",
           "estimated_minutes": 15,
-          "description": "The full pattern: Drizzle table definition → drizzle-zod createInsertSchema() → Zod validator in Express route → zero manual type declarations."
+          "description": "The full pattern: Drizzle table definition \u2192 drizzle-zod createInsertSchema() \u2192 Zod validator in Express route \u2192 zero manual type declarations.",
+          "prerequisites": ["L01", "L05"],
+          "teaches_concepts": ["schema-as-type", "drizzle-zod"],
+          "reinforces_concepts": ["z-infer", "drizzle-types", "control-vs-abstraction"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         },
         {
           "id": "L07",
@@ -113,7 +155,14 @@
           "strata_claim": "C9, C10",
           "type": "applied",
           "estimated_minutes": 15,
-          "description": "How a single Drizzle table definition defines RLS-protected relational columns and a pgvector HNSW-indexed embedding column simultaneously."
+          "description": "How a single Drizzle table definition defines RLS-protected relational columns and a pgvector HNSW-indexed embedding column simultaneously.",
+          "prerequisites": ["L06"],
+          "teaches_concepts": ["rls", "pgvector"],
+          "reinforces_concepts": ["schema-as-type", "drizzle-zod"],
+          "mastery_threshold": 0.80,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         }
       ],
       "has_assessment": true
@@ -134,7 +183,14 @@
           "strata_claim": "C4",
           "type": "core",
           "estimated_minutes": 15,
-          "description": "What the hook does, why Zustand v4 switched to it, and the pattern for connecting an SSE stream to React state without concurrent-mode tearing."
+          "description": "What the hook does, why Zustand v4 switched to it, and the pattern for connecting an SSE stream to React state without concurrent-mode tearing.",
+          "prerequisites": ["L03"],
+          "teaches_concepts": ["use-sync-external-store", "react-18-state"],
+          "reinforces_concepts": ["immutability", "concurrent-rendering"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         },
         {
           "id": "L09",
@@ -142,7 +198,14 @@
           "strata_claim": "C3",
           "type": "debate",
           "estimated_minutes": 15,
-          "description": "Why Lexical cannot run on the server, why Yjs providers are client-side, and the specific Next.js App Router features that are incompatible with Meridian's real-time architecture."
+          "description": "Why Lexical cannot run on the server, why Yjs providers are client-side, and the specific Next.js App Router features that are incompatible with Meridian's real-time architecture.",
+          "prerequisites": ["L08"],
+          "teaches_concepts": ["vite-spa"],
+          "reinforces_concepts": ["react-18-state", "use-sync-external-store"],
+          "mastery_threshold": 0.75,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [3, 7, 14]
         }
       ],
       "has_assessment": true
@@ -163,7 +226,14 @@
           "strata_claim": "C6",
           "type": "core",
           "estimated_minutes": 15,
-          "description": "CRDT commutativity vs OT central authority, and the direct chain: offline requirement → Yjs (CRDT) → Lexical (@lexical/yjs first-class) → not ProseMirror."
+          "description": "CRDT commutativity vs OT central authority, and the direct chain: offline requirement \u2192 Yjs (CRDT) \u2192 Lexical (@lexical/yjs first-class) \u2192 not ProseMirror.",
+          "prerequisites": ["L04"],
+          "teaches_concepts": ["ot-vs-crdt"],
+          "reinforces_concepts": ["crdt", "yjs", "immutability"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         },
         {
           "id": "L11",
@@ -171,7 +241,14 @@
           "strata_claim": "C5",
           "type": "applied",
           "estimated_minutes": 15,
-          "description": "Wiring a Lexical editor to a Y.Doc via @lexical/yjs: provider setup, awareness (cursor presence), and the offline-sync lifecycle."
+          "description": "Wiring a Lexical editor to a Y.Doc via @lexical/yjs: provider setup, awareness (cursor presence), and the offline-sync lifecycle.",
+          "prerequisites": ["L10"],
+          "teaches_concepts": ["lexical-yjs"],
+          "reinforces_concepts": ["crdt", "yjs", "ot-vs-crdt"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         }
       ],
       "has_assessment": true
@@ -192,7 +269,14 @@
           "strata_claim": "C12",
           "type": "applied",
           "estimated_minutes": 15,
-          "description": "Ingestion (chunk → embed → pgvector INSERT), Retrieval (embed query → ORDER BY embedding <=> $1), Augmentation (inject into system prompt), Generation (client.messages.stream())."
+          "description": "Ingestion (chunk \u2192 embed \u2192 pgvector INSERT), Retrieval (embed query \u2192 ORDER BY embedding <=> $1), Augmentation (inject into system prompt), Generation (client.messages.stream()).",
+          "prerequisites": ["L07"],
+          "teaches_concepts": ["rag-pipeline", "anthropic-sdk"],
+          "reinforces_concepts": ["pgvector", "schema-as-type"],
+          "mastery_threshold": 0.80,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         },
         {
           "id": "L13",
@@ -200,7 +284,14 @@
           "strata_claim": "C11",
           "type": "debate",
           "estimated_minutes": 15,
-          "description": "What the Anthropic SDK exposes that Vercel AI SDK and LangChain hide, and the conditions under which abstraction would be the right choice instead."
+          "description": "What the Anthropic SDK exposes that Vercel AI SDK and LangChain hide, and the conditions under which abstraction would be the right choice instead.",
+          "prerequisites": ["L12"],
+          "teaches_concepts": [],
+          "reinforces_concepts": ["anthropic-sdk", "control-vs-abstraction", "rag-pipeline"],
+          "mastery_threshold": 0.75,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [3, 7, 14]
         }
       ],
       "has_assessment": true
@@ -221,7 +312,14 @@
           "strata_claim": "C13",
           "type": "applied",
           "estimated_minutes": 15,
-          "description": "The full request lifecycle: Zod validates body → JWT middleware extracts workspace_id → SET LOCAL sets RLS context → query executes under RLS. Why order matters."
+          "description": "The full request lifecycle: Zod validates body \u2192 JWT middleware extracts workspace_id \u2192 SET LOCAL sets RLS context \u2192 query executes under RLS. Why order matters.",
+          "prerequisites": ["L06", "L07"],
+          "teaches_concepts": ["security-layering", "jwt-auth", "bcrypt"],
+          "reinforces_concepts": ["rls", "schema-as-type"],
+          "mastery_threshold": 0.80,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         },
         {
           "id": "L15",
@@ -229,7 +327,14 @@
           "strata_claim": "C14",
           "type": "debate",
           "estimated_minutes": 15,
-          "description": "The alg:none and RSA-to-HMAC confusion attacks from RFC 8725, the bcrypt vs Argon2id tradeoff, and when to upgrade Meridian's credential hashing."
+          "description": "The alg:none and RSA-to-HMAC confusion attacks from RFC 8725, the bcrypt vs Argon2id tradeoff, and when to upgrade Meridian's credential hashing.",
+          "prerequisites": ["L14"],
+          "teaches_concepts": [],
+          "reinforces_concepts": ["security-layering", "jwt-auth", "bcrypt"],
+          "mastery_threshold": 0.75,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [3, 7, 14]
         }
       ],
       "has_assessment": true
@@ -250,7 +355,14 @@
           "strata_claim": "C15, C16",
           "type": "applied",
           "estimated_minutes": 15,
-          "description": "Package registry (pnpm workspace:*), task graph (turbo.json pipelines), service runtime (compose.yaml health checks) — each tool's scope, when to add Turborepo, and the Docker Compose health check pattern."
+          "description": "Package registry (pnpm workspace:*), task graph (turbo.json pipelines), service runtime (compose.yaml health checks) \u2014 each tool's scope, when to add Turborepo, and the Docker Compose health check pattern.",
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["pnpm-workspaces", "turborepo"],
+          "reinforces_concepts": ["typescript-strict-mode"],
+          "mastery_threshold": 0.80,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
         }
       ],
       "has_assessment": true

@@ -7,7 +7,10 @@
       "total_modules": 7,
       "total_lessons": 13,
       "total_cards": 69,
-      "generated": "2026-04-12"
+      "total_questions": 53,
+      "generated": "2026-04-12",
+      "adaptive": true,
+      "bundle_version": "3.0"
     },
     {
       "slug": "meridian-tech-stack-mastery",
@@ -16,7 +19,10 @@
       "total_modules": 9,
       "total_lessons": 16,
       "total_cards": 97,
-      "generated": "2026-04-13"
+      "total_questions": 96,
+      "generated": "2026-04-13",
+      "adaptive": true,
+      "bundle_version": "3.0"
     }
   ]
 }

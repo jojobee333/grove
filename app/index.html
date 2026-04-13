@@ -163,6 +163,17 @@
   .mt-4 { margin-top: 1rem; }
   .text-muted { color: var(--muted); font-size: 13px; }
   .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+
+  /* Mastery heatmap (Phase C) */
+  .mastery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+  .mastery-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 12px; }
+  .mastery-card.locked { opacity: 0.4; }
+  .mastery-bar-wrap { height: 5px; background: var(--border); border-radius: 99px; overflow: hidden; margin-top: 4px; }
+  .mastery-bar-fill { height: 100%; border-radius: 99px; transition: width 0.4s; }
+  .badge-red { background: var(--danger-light); color: var(--danger); }
+
+  /* Learning paths (Phase C) */
+  .path-active { border-color: var(--accent) !important; background: var(--accent-light); }
 </style>
 </head>
 <body>
@@ -189,15 +200,22 @@
       <button class="nav-item" onclick="showView('cards')" id="nav-cards">
         <span class="nav-dot" id="dot-cards"></span> Flashcards
       </button>
+      <button class="nav-item" onclick="showView('progress')" id="nav-progress" style="display:none">
+        <span class="nav-dot" id="dot-progress"></span> My progress
+      </button>
+      <button class="nav-item" onclick="showView('paths')" id="nav-paths" style="display:none">
+        <span class="nav-dot" id="dot-paths"></span> Learning paths
+      </button>
 
       <div class="nav-section">Modules</div>
       <div id="module-nav"></div>
     </div>
 
     <div id="load-prompt" style="margin-top:1rem">
-      <p style="font-size:13px;margin-bottom:0.75rem">Load a Grove curriculum to begin.</p>
-      <button class="btn" onclick="document.getElementById('file-input').click()">Load course.json</button>
+      <p style="font-size:13px;margin-bottom:0.75rem">Load a curriculum to begin.</p>
+      <button class="btn" onclick="document.getElementById('file-input').click()">Load bundle.json</button>
       <input type="file" id="file-input" accept=".json" onchange="loadCourse(event)" style="display:none">
+      <p style="font-size:11px;color:var(--muted);margin-top:0.5rem">bundle.json includes everything. course.json also works.</p>
     </div>
   </nav>
 
@@ -223,6 +241,10 @@ let assessments = {};
 let progress = {};
 let cardSession = { queue: [], current: 0, flipped: false };
 let quizState = { answers: {}, submitted: false };
+let bundle = null;        // v3 bundle (loaded from bundle.json)
+let concepts = { concepts: [] };
+let adaptiveRules = {};
+let learningPaths = { paths: [] };
 
 function saveProgress() {
   if (!course) return;
@@ -233,9 +255,10 @@ function loadProgress() {
   if (!course) return;
   const saved = localStorage.getItem('grove_progress_' + course.slug);
   progress = saved ? JSON.parse(saved) : { lessons: {}, cards: {}, quizzes: {} };
-  if (!progress.lessons) progress.lessons = {};
-  if (!progress.cards) progress.cards = {};
-  if (!progress.quizzes) progress.quizzes = {};
+  if (!progress.lessons)       progress.lessons       = {};
+  if (!progress.cards)         progress.cards         = {};
+  if (!progress.quizzes)       progress.quizzes       = {};
+  if (!progress.conceptMastery) progress.conceptMastery = {};
 }
 
 // ── FILE LOADING ───────────────────────────────────────────
@@ -245,17 +268,49 @@ function loadCourse(event) {
   const reader = new FileReader();
   reader.onload = e => {
     try {
-      course = JSON.parse(e.target.result);
-      loadProgress();
-      buildSidebar();
-      showView('plan');
-      document.getElementById('course-meta').style.display = 'block';
-      document.getElementById('load-prompt').style.display = 'none';
+      const data = JSON.parse(e.target.result);
+      // Detect v3 bundle (has version + course keys) vs plain course.json
+      if (data.version && data.course) {
+        initFromBundle(data);
+      } else {
+        course = data;
+        loadProgress();
+        buildSidebar();
+        showView('plan');
+        document.getElementById('course-meta').style.display = 'block';
+        document.getElementById('load-prompt').style.display = 'none';
+      }
     } catch(err) {
-      alert('Could not parse course.json: ' + err.message);
+      alert('Could not parse file: ' + err.message);
     }
   };
   reader.readAsText(file);
+}
+
+function initFromBundle(data) {
+  bundle = data;
+  course = data.course;
+  concepts = data.concepts || { concepts: [] };
+  adaptiveRules = data.adaptiveRules || {};
+  learningPaths = data.learningPaths || { paths: [] };
+  // Pre-populate assessments so no per-module file loading is needed
+  Object.assign(assessments, data.quizzes || {});
+  loadProgress();
+  // Initialize SR on all cards and merge saved state
+  cards = (data.cards || []).map(c => {
+    const sr = { ease: 2.5, interval: 0, reviews: 0, lapses: 0, next_review: null };
+    const saved = progress.cards[c.id];
+    if (saved) Object.assign(sr, saved);
+    return { ...c, sr };
+  });
+  buildSidebar();
+  showView('plan');
+  document.getElementById('course-meta').style.display = 'block';
+  document.getElementById('load-prompt').style.display = 'none';
+  const nprog = document.getElementById('nav-progress');
+  const npath = document.getElementById('nav-paths');
+  if (nprog) nprog.style.display = '';
+  if (npath) npath.style.display = '';
 }
 
 function loadCards(file) {
@@ -264,8 +319,9 @@ function loadCards(file) {
     try {
       const data = JSON.parse(e.target.result);
       cards = data.cards || [];
-      // Merge saved SR state
+      // Merge saved SR state (initialize SR if not present in source file)
       cards.forEach(c => {
+        if (!c.sr) c.sr = { ease: 2.5, interval: 0, reviews: 0, lapses: 0, next_review: null };
         if (progress.cards[c.id]) Object.assign(c.sr, progress.cards[c.id]);
       });
       showView('cards');
@@ -283,6 +339,248 @@ function loadQuiz(file, moduleId) {
     } catch(err) { alert('Could not parse quiz file'); }
   };
   reader.readAsText(file);
+}
+
+// ── PLANNER (Phase B) ──────────────────────────────────────
+function computeNextSteps() {
+  if (!bundle) return { nextLessons: [], weakConcepts: [], reviewQueue: [] };
+  const completedLessons = new Set(Object.keys(progress.lessons || {}));
+  const conceptMastery   = progress.conceptMastery || {};
+  const rules = adaptiveRules.progression_rules || {};
+
+  // Respect selected learning path: restrict candidates to path lesson IDs
+  const selectedPath = progress.selectedPath || null;
+  let pathLessonIds = null;
+  if (selectedPath) {
+    const p = (learningPaths.paths || []).find(p => p.id === selectedPath);
+    if (p?.lessons) pathLessonIds = new Set(p.lessons);
+  }
+
+  // Milestone mastery gate — concepts taught by completed lessons
+  const milestoneLessonIds = new Set(course.learning_plan?.milestone_lessons || []);
+  const introducedConcepts = new Set();
+  for (const m of course.modules || []) {
+    for (const l of m.lessons || []) {
+      if (completedLessons.has(l.id))
+        (l.teaches_concepts || []).forEach(cid => introducedConcepts.add(cid));
+    }
+  }
+
+  // Unlockable lessons: prerequisites met, not yet completed
+  const nextLessons = [];
+  const blockedByMastery = [];
+  for (const m of course.modules || []) {
+    for (const l of m.lessons || []) {
+      if (completedLessons.has(l.id)) continue;
+      if (pathLessonIds && !pathLessonIds.has(l.id)) continue;
+      const prereqs    = l.prerequisites    || [];
+      const unlockRule = l.unlock_rule ?? 'all_prerequisites_mastered';
+      let unlocked = prereqs.length === 0;
+      if (!unlocked && unlockRule === 'all_prerequisites_mastered')
+        unlocked = prereqs.every(pid => completedLessons.has(pid));
+      else if (!unlocked && unlockRule === 'any_prerequisite_mastered')
+        unlocked = prereqs.some(pid => completedLessons.has(pid));
+      if (!unlocked) continue;
+      // Milestone mastery gate: requires avg concept mastery >= threshold
+      if (milestoneLessonIds.has(l.id) && introducedConcepts.size > 0) {
+        const threshold = l.mastery_threshold ?? 0.75;
+        const scores    = [...introducedConcepts].map(cid => conceptMastery[cid] ?? 0);
+        const avg       = scores.reduce((s, v) => s + v, 0) / scores.length;
+        if (avg < threshold) {
+          const mod = course.modules.find(mod => mod.lessons?.some(x => x.id === l.id));
+          blockedByMastery.push({ ...l, avgMastery: avg, threshold, moduleName: mod?.title || '' });
+          continue;
+        }
+      }
+      nextLessons.push(l);
+    }
+  }
+
+  // Weak concepts: introduced (lesson completed) but mastery below 0.6
+  const weakConcepts = [];
+  for (const c of concepts.concepts || []) {
+    const introduced = (c.introduced_in || []).some(lid => completedLessons.has(lid));
+    if (!introduced) continue;
+    const mastery = conceptMastery[c.id] ?? 0;
+    if (mastery < 0.6) weakConcepts.push({ ...c, mastery });
+  }
+  weakConcepts.sort((a, b) => a.mastery - b.mastery);
+
+  // Cards due for review today
+  const reviewQueue = (cards || []).filter(c => {
+    const sr = progress.cards[c.id] ?? c.sr;
+    if (!sr?.next_review) return false;
+    return new Date(sr.next_review) <= new Date();
+  });
+
+  return { nextLessons, weakConcepts, reviewQueue, blockedByMastery };
+}
+
+// ── MASTERY TRACKING ───────────────────────────────────────
+function updateConceptMasteryFromQuiz(moduleId) {
+  if (!bundle) return;
+  const quiz = assessments[moduleId];
+  if (!quiz) return;
+  if (!progress.conceptMastery) progress.conceptMastery = {};
+  for (const q of quiz.questions || []) {
+    if (q.type !== 'mcq') continue;
+    const chosen = quizState.answers[q.id];
+    if (chosen === undefined) continue;
+    const correct = chosen === q.correct;
+    const weight  = q.weight ?? 0.75;
+    for (const cid of q.concepts || []) {
+      const current = progress.conceptMastery[cid] ?? 0.5;
+      const delta   = correct ? weight * 0.15 : -(weight * 0.10);
+      progress.conceptMastery[cid] = Math.max(0, Math.min(1, current + delta));
+    }
+  }
+}
+
+function updateConceptMasteryFromCard(card, quality) {
+  if (!bundle) return;
+  if (!progress.conceptMastery) progress.conceptMastery = {};
+  const weight = card.weight ?? 0.5;
+  const delta  = quality >= 4 ? weight * 0.12 : quality >= 3 ? weight * 0.05 : -(weight * 0.08);
+  for (const cid of card.concepts || []) {
+    const current = progress.conceptMastery[cid] ?? 0.5;
+    progress.conceptMastery[cid] = Math.max(0, Math.min(1, current + delta));
+  }
+}
+
+// ── ADAPTIVE VIEWS (Phase C) ─────────────────────────────
+function renderProgress() {
+  const main = document.getElementById('main');
+  if (!bundle) {
+    main.innerHTML = '<div class="card"><p>Load a bundle.json to see your progress.</p></div>';
+    return;
+  }
+
+  const mastery      = progress.conceptMastery || {};
+  const allLessons   = course.modules.flatMap(m => m.lessons || []);
+  const doneLessons  = Object.keys(progress.lessons || {});
+  const completedSet = new Set(doneLessons);
+
+  // Annotate each concept with live mastery + introduced flag
+  const conceptList = (concepts.concepts || []).map(c => ({
+    ...c,
+    mastery:    mastery[c.id] ?? 0,
+    introduced: (c.introduced_in || []).some(lid => completedSet.has(lid))
+  }));
+  const introduced  = conceptList.filter(c => c.introduced);
+  const avgMastery  = introduced.length
+    ? Math.round(introduced.reduce((s, c) => s + c.mastery, 0) / introduced.length * 100)
+    : 0;
+  const strongCount = introduced.filter(c => c.mastery >= 0.7).length;
+  const weakCount   = introduced.filter(c => c.mastery  <  0.5).length;
+
+  // Build per-module concept sections
+  const sections = (course.modules || []).map(mod => {
+    const seen = new Set();
+    const modConcepts = [];
+    for (const l of mod.lessons || []) {
+      for (const c of conceptList.filter(c => (c.introduced_in || []).includes(l.id))) {
+        if (!seen.has(c.id)) { seen.add(c.id); modConcepts.push(c); }
+      }
+    }
+    if (!modConcepts.length) return '';
+    const cards = modConcepts.map(c => {
+      const pct   = Math.round(c.mastery * 100);
+      const color = c.mastery >= 0.7 ? 'var(--accent)' : c.mastery >= 0.5 ? 'var(--warn)' : 'var(--danger)';
+      const badge = !c.introduced
+        ? `<span class="badge badge-gray">Locked</span>`
+        : c.mastery >= 0.7 ? `<span class="badge badge-green">${pct}%</span>`
+        : c.mastery >= 0.5 ? `<span class="badge badge-amber">${pct}%</span>`
+        :                    `<span class="badge badge-red">${pct}%</span>`;
+      return `
+        <div class="mastery-card${c.introduced ? '' : ' locked'}">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px">
+            <div style="font-size:13px;font-weight:500;line-height:1.3">${c.title}</div>
+            ${badge}
+          </div>
+          <div class="mastery-bar-wrap">
+            <div class="mastery-bar-fill" style="width:${c.introduced ? pct : 0}%;background:${color}"></div>
+          </div>
+        </div>`;
+    }).join('');
+    return `<div style="margin-bottom:2rem"><h2>${mod.title}</h2><div class="mastery-grid" style="margin-top:0.75rem">${cards}</div></div>`;
+  }).join('');
+
+  main.innerHTML = `
+    <h1>My progress</h1>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:1.5rem;margin-top:0.5rem">
+      <div class="card card-sm" style="flex:1;min-width:130px;text-align:center">
+        <div style="font-size:26px;font-weight:700;color:var(--accent)">${doneLessons.length}/${allLessons.length}</div>
+        <div class="text-muted">Lessons done</div>
+      </div>
+      <div class="card card-sm" style="flex:1;min-width:130px;text-align:center">
+        <div style="font-size:26px;font-weight:700;color:var(--accent)">${avgMastery}%</div>
+        <div class="text-muted">Avg mastery</div>
+      </div>
+      <div class="card card-sm" style="flex:1;min-width:130px;text-align:center">
+        <div style="font-size:26px;font-weight:700;color:var(--accent)">${strongCount}</div>
+        <div class="text-muted">Mastered</div>
+      </div>
+      <div class="card card-sm" style="flex:1;min-width:130px;text-align:center">
+        <div style="font-size:26px;font-weight:700;color:var(--danger)">${weakCount}</div>
+        <div class="text-muted">Weak areas</div>
+      </div>
+    </div>
+    ${sections || '<div class="card"><p>Complete some lessons to unlock concept tracking.</p></div>'}
+  `;
+}
+
+function renderPaths() {
+  const main   = document.getElementById('main');
+  if (!bundle) {
+    main.innerHTML = '<div class="card"><p>Load a bundle.json to see learning paths.</p></div>';
+    return;
+  }
+
+  const paths    = learningPaths.paths || [];
+  const selected = progress.selectedPath || null;
+
+  if (!paths.length) {
+    main.innerHTML = '<h1>Learning paths</h1><div class="card"><p>No learning paths defined for this course.</p></div>';
+    return;
+  }
+
+  const pathCards = paths.map(p => {
+    const isActive  = p.id === selected;
+    const lessonIds = p.lessons || [];
+    const doneCount = lessonIds.filter(lid => progress.lessons[lid]).length;
+    const pct       = lessonIds.length ? Math.round(doneCount / lessonIds.length * 100) : 0;
+    const focusBadges = (p.focus_areas || []).map(f => `<span class="badge badge-gray">${f}</span>`).join('');
+    return `
+      <div class="card${isActive ? ' path-active' : ''}" style="margin-bottom:1rem">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0.5rem">
+          <h2 style="margin-bottom:0">${p.title}</h2>
+          ${isActive ? '<span class="badge badge-green">&#10003; Active</span>' : ''}
+        </div>
+        <p style="margin-bottom:0.75rem">${p.description || ''}</p>
+        <div class="progress-wrap" style="margin-bottom:0.75rem">
+          <div class="progress-label"><span>${doneCount}/${lessonIds.length} lessons</span><span>${pct}%</span></div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        </div>
+        ${focusBadges ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:0.75rem">${focusBadges}</div>` : ''}
+        <div class="btn-row" style="margin-top:0">
+          ${isActive
+            ? `<button class="btn" onclick="selectPath(null)">Deselect</button>`
+            : `<button class="btn btn-primary" onclick="selectPath('${p.id}')">Select this path</button>`}
+        </div>
+      </div>`;
+  }).join('');
+
+  main.innerHTML = `
+    <h1>Learning paths</h1>
+    <p style="margin-bottom:1.5rem">Choose a path to focus your \u201cWhat\u2019s next?\u201d recommendations on a specific track.</p>
+    ${pathCards}
+  `;
+}
+
+function selectPath(pathId) {
+  progress.selectedPath = pathId || null;
+  saveProgress();
+  renderPaths();
 }
 
 // ── SIDEBAR ────────────────────────────────────────────────
@@ -318,12 +616,14 @@ function updateOverallProgress() {
 
 // ── VIEWS ──────────────────────────────────────────────────
 function showView(view) {
-  ['plan','cards'].forEach(v => {
+  ['plan','cards','progress','paths'].forEach(v => {
     const el = document.getElementById('nav-' + v);
     if (el) el.classList.toggle('active', v === view);
   });
-  if (view === 'plan') renderPlan();
-  if (view === 'cards') renderCards();
+  if (view === 'plan')     renderPlan();
+  if (view === 'cards')    renderCards();
+  if (view === 'progress') renderProgress();
+  if (view === 'paths')    renderPaths();
 }
 
 function showModule(moduleId) {
@@ -337,17 +637,67 @@ function showModule(moduleId) {
 function renderPlan() {
   const m = document.getElementById('main');
   const lp = course.learning_plan || {};
-  m.innerHTML = `
-    <h1>${course.topic}</h1>
-    <p style="margin-bottom:1.5rem">${course.summary || ''}</p>
-    <div class="flex gap-8 items-center mb-4" style="flex-wrap:wrap">
-      <span class="badge badge-green">${course.total_lessons} lessons</span>
-      <span class="badge badge-gray">${Math.round((course.total_estimated_hours || 0) * 60)} min total</span>
-      <span class="badge badge-amber">${lp.suggested_schedule || ''}</span>
-    </div>
-    <div class="module-grid">
-      ${(course.modules || []).map(renderModuleCard).join('')}
-    </div>
+
+  // Adaptive panel — only when bundle is loaded
+  let adaptiveHtml = '';
+  let masteryGateHtml = '';
+  if (bundle) {
+    const { nextLessons, weakConcepts, reviewQueue, blockedByMastery } = computeNextSteps();
+    const completedCount = Object.keys(progress.lessons || {}).length;
+    let nextHtml = '';
+    if (nextLessons.length > 0) {
+      const next = nextLessons[0];
+      const mod  = course.modules.find(mod => mod.lessons?.some(l => l.id === next.id));
+      nextHtml = `
+        <div style="margin-bottom:${reviewQueue.length || weakConcepts.length ? '12px' : '0'}">
+          <div class="text-muted" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px">Recommended next</div>
+          <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border-radius:var(--radius);cursor:pointer" onclick="showLesson('${next.id}','${mod?.id || ''}')">
+            <div style="width:32px;height:32px;border-radius:50%;background:var(--accent);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0">${next.id}</div>
+            <div style="flex:1">
+              <div style="font-size:14px;font-weight:500;color:var(--text)">${next.title}</div>
+              <div class="text-muted">${next.estimated_minutes}m &middot; difficulty ${next.difficulty ?? '&mdash;'}</div>
+            </div>
+            <span style="color:var(--accent)">&#8594;</span>
+          </div>
+        </div>`;
+    } else if (completedCount === 0) {
+      nextHtml = `<div style="margin-bottom:${reviewQueue.length || weakConcepts.length ? '12px' : '0'};padding:10px 12px;background:var(--surface);border-radius:var(--radius);font-size:14px;color:var(--muted)">Complete your first lesson to unlock personalized recommendations.</div>`;
+    } else {
+      nextHtml = `<div style="padding:10px 12px;background:var(--surface);border-radius:var(--radius);font-size:14px;font-weight:500;color:var(--accent-text)">All available lessons unlocked!</div>`;
+    }
+    const reviewHtml = reviewQueue.length > 0 ? `
+      <div style="margin-bottom:${weakConcepts.length ? '12px' : '0'}">
+        <div class="text-muted" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px">Cards due for review</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--surface);border-radius:var(--radius)">
+          <span style="font-size:14px;color:var(--text)">${reviewQueue.length} card${reviewQueue.length !== 1 ? 's' : ''} due today</span>
+          <button class="btn btn-primary" onclick="showView('cards')" style="padding:6px 12px;font-size:13px">Review</button>
+        </div>
+      </div>` : '';
+    const weakHtml = weakConcepts.length > 0 ? `
+      <div>
+        <div class="text-muted" style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px">Weak areas</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">${weakConcepts.slice(0, 6).map(c => `<span class="badge badge-amber" title="${Math.round((c.mastery||0)*100)}% mastery">${c.title}</span>`).join('')}</div>
+      </div>` : '';
+    const masteryGateHtml = blockedByMastery.length > 0 ? `
+      <div class="card" style="margin-bottom:1.5rem;background:var(--warn-light);border-color:var(--warn)">
+        <h2 style="margin-bottom:12px;color:var(--warn)">Milestone gate</h2>
+        ${blockedByMastery.map(l => `
+        <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border-radius:var(--radius);margin-bottom:8px">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--warn);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0">&#128274;</div>
+          <div style="flex:1">
+            <div style="font-size:14px;font-weight:500;color:var(--text)">${l.title}</div>
+            <div class="text-muted">Avg mastery ${Math.round(l.avgMastery*100)}% &mdash; need ${Math.round(l.threshold*100)}%</div>
+          </div>
+        </div>
+        <p style="font-size:13px;color:var(--warn);margin:4px 0 0">Take the ${l.moduleName} quiz or review flashcards to unlock this milestone.</p>`).join('')}
+      </div>` : '';
+    adaptiveHtml = `<div class="card" style="margin-bottom:1.5rem;background:var(--accent-light);border-color:var(--accent)">
+      <h2 style="margin-bottom:12px;color:var(--accent-text)">What's next?</h2>
+      ${nextHtml}${reviewHtml}${weakHtml}
+    </div>`;
+  }
+
+  const flashcardRow = bundle ? '' : `
     <div class="card" style="margin-top:1rem">
       <div class="flex justify-between items-center">
         <div>
@@ -359,7 +709,21 @@ function renderPlan() {
           <input type="file" id="cards-input" accept=".json" onchange="loadCards(this.files[0])" style="display:none">
         </div>
       </div>
+    </div>`;
+
+  m.innerHTML = `
+    <h1>${course.topic}</h1>
+    <p style="margin-bottom:1.5rem">${course.summary || ''}</p>
+    <div class="flex gap-8 items-center mb-4" style="flex-wrap:wrap">
+      <span class="badge badge-green">${course.total_lessons} lessons</span>
+      <span class="badge badge-gray">${Math.round((course.total_estimated_hours || 0) * 60)} min total</span>
+      <span class="badge badge-amber">${lp.suggested_schedule || ''}</span>
     </div>
+    ${adaptiveHtml}${masteryGateHtml}
+    <div class="module-grid">
+      ${(course.modules || []).map(renderModuleCard).join('')}
+    </div>
+    ${flashcardRow}
   `;
   updateOverallProgress();
 }
@@ -458,13 +822,14 @@ function showLesson(lessonId, moduleId) {
     <h1 style="margin-bottom:1rem">${l.title}</h1>
 
     <div id="lesson-body" class="card lesson-content">
+      ${(bundle?.lessons?.[lessonId]) ? simpleMarkdown(bundle.lessons[lessonId]) : `
       <div style="text-align:center;color:var(--muted);padding:2rem">
         <p>Load the lesson file to read it.</p>
         <button class="btn mt-4" onclick="document.getElementById('lesson-file-input').click()">
           Load ${lessonId}.md
         </button>
         <input type="file" id="lesson-file-input" accept=".md" onchange="loadLessonFile(event,'${lessonId}','${moduleId}')" style="display:none">
-      </div>
+      </div>`}
     </div>
 
     <div class="lesson-nav">
@@ -531,6 +896,7 @@ function renderCards() {
   }
 
   const due = cards.filter(c => {
+    if (!c.sr) c.sr = { ease: 2.5, interval: 0, reviews: 0, lapses: 0, next_review: null };
     if (!c.sr.next_review) return true;
     return new Date(c.sr.next_review) <= new Date();
   });
@@ -621,6 +987,7 @@ function rateCard(quality) {
   next.setDate(next.getDate() + sr.interval);
   sr.next_review = next.toISOString().split('T')[0];
 
+  updateConceptMasteryFromCard(card, quality);
   progress.cards[card.id] = { ...sr };
   saveProgress();
 
@@ -748,6 +1115,7 @@ function submitQuiz(moduleId) {
   const passed = score === null || score >= quiz.passing_score;
 
   progress.quizzes[moduleId] = { score, date: new Date().toISOString(), passed };
+  updateConceptMasteryFromQuiz(moduleId);
   saveProgress();
 
   const result = document.getElementById('quiz-result');

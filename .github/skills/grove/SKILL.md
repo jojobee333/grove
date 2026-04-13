@@ -120,12 +120,21 @@ Rules:
 
 ## Step 7 — Build the bundle
 
-After all content is generated, write a single `curriculum/[topic-slug]/bundle.json`
-that contains everything the Grove app needs in one file:
+After all content is generated, run the bundler to produce a single v3 bundle:
+
+```
+node build-bundle.mjs [topic-slug]
+```
+
+The bundler reads `course.json`, all lesson `.md` files, `cards.json`,
+`assessments/`, and the three v3 adaptive artifacts (if present), then writes
+`curriculum/[topic-slug]/bundle.json`.
+
+The v3 bundle shape:
 
 ```json
 {
-  "version": "2.0",
+  "version": "3.0",
   "slug":    "[topic-slug]",
   "bundled": "<ISO timestamp>",
   "course":  { /* course.json contents */ },
@@ -134,48 +143,107 @@ that contains everything the Grove app needs in one file:
     "L01": "# full markdown content of L01",
     "L02": "# full markdown content of L02"
   },
-  "cards": [ /* cards array from cards.json */ ],
+  "cards": [ /* enriched cards (concepts, cognitive_level, weight, reviewable added) */ ],
   "quizzes": {
-    "M01": { /* quiz-M01.json contents */ },
-    "M02": { /* quiz-M02.json contents */ }
+    "M01": { /* quiz-M01.json with enriched questions */ }
   },
   "modchecks": {
-    "M01": { /* modcheck-M01.json contents — title + questions[{id,q,a}] */ },
-    "M02": { /* modcheck-M02.json contents */ }
-  }
+    "M01": { /* modcheck-M01.json */ }
+  },
+  "concepts":      { /* concepts.json contents  — empty shell if file missing */ },
+  "adaptiveRules": { /* adaptive-rules.json      — empty object if file missing */ },
+  "learningPaths": { /* learning-paths.json      — {paths:[]} if file missing */ }
 }
 ```
 
-Rules for building the bundle:
-- `lessons` keys are lesson IDs (L01, L02 …), values are the full raw markdown string
-- `cards` is the `cards` array from `cards.json` (strip top-level wrapper)
-- `quizzes` keys are module IDs (M01, M02 …) mapped from `assessments/quiz-M01.json`
-- `modchecks` keys are module IDs (M01, M02 …) mapped from `assessments/modcheck-M01.json`
-- If `assessments/` does not exist, set `"quizzes": {}` and `"modchecks": {}`
+Also update (or create) `curriculum/index.json` — the bundler handles this automatically.
 
-Also update (or create) `curriculum/index.json` with this course entry:
+**If the v3 adaptive artifacts are missing**, generate them before running the bundler:
+
+### Step 7a — Generate `concepts.json`
+
+Create `curriculum/[topic-slug]/concepts.json`:
 
 ```json
 {
-  "courses": [
+  "slug": "[topic-slug]",
+  "concepts": [
     {
-      "slug": "[topic-slug]",
-      "title": "[course.topic]",
-      "description": "[course.summary, max 160 chars]",
-      "total_modules": N,
-      "total_lessons": N,
-      "total_cards": N,
-      "generated": "YYYY-MM-DD"
+      "id": "concept-id",
+      "title": "Human-readable title",
+      "depends_on": ["other-concept-id"],
+      "introduced_in": ["L01"],
+      "reinforced_in": ["L03", "L05"],
+      "assessment_sources": ["M01"]
     }
   ]
 }
 ```
 
-Merge into existing array — don't overwrite other courses.
+Derive one concept per distinct `teaches_concepts` entry across all lessons.
+Use the `concepts.schema.json` in `schemas/` for reference.
 
-**Shortcut**: if the user is running from the grove repo, they can also run:
+### Step 7b — Generate `learning-paths.json`
+
+Create `curriculum/[topic-slug]/learning-paths.json`:
+
+```json
+{
+  "slug": "[topic-slug]",
+  "generated": "YYYY-MM-DD",
+  "paths": [
+    {
+      "id": "default-path",
+      "title": "Complete Course",
+      "description": "All lessons in recommended order.",
+      "lessons": ["L01", "L02", "..."],
+      "focus_areas": []
+    }
+  ]
+}
 ```
-node build-bundle.mjs [topic-slug]
+
+Always include a `default-path` with all lessons. Add 1–3 tailored paths based on
+the learner's stated goal (e.g. fast-track, teach-others, security-focus).
+
+### Step 7c — Generate `adaptive-rules.json`
+
+Create `curriculum/[topic-slug]/adaptive-rules.json`:
+
+```json
+{
+  "slug": "[topic-slug]",
+  "progression_rules": {
+    "unlock_threshold": 0.75,
+    "remediation_trigger": { "consecutive_failures": 2 }
+  },
+  "review_policy": {
+    "intervals_days": [1, 3, 7, 14],
+    "max_daily_reviews": 20,
+    "decay_after_days": 21
+  },
+  "mastery_defaults": {
+    "core": 0.80,
+    "applied": 0.80,
+    "debate": 0.75,
+    "gap": 0.75
+  },
+  "remediation_policy": {
+    "suggest_lessons":        true,
+    "suggest_flashcard_review": true
+  }
+}
+```
+
+### Step 7d — Ensure course.json has v3 lesson fields
+
+Every lesson in `course.json` must have:
+`prerequisites`, `teaches_concepts`, `reinforces_concepts`, `mastery_threshold`,
+`difficulty` (1–5), `unlock_rule`, `review_after_days`.
+
+If any are missing, run the migration script first:
+```
+node scripts/migrate-course-v2-to-v3.mjs [topic-slug]
 ```
 
 ## Step 8 — Final output
@@ -197,6 +265,8 @@ Curriculum:
   Flashcards:  N cards
   Assessments: N quizzes (N questions total)
   Mod checks:  N retention checks (3–5 questions each)
+  Concepts:    N adaptive concepts
+  Paths:       N learning paths
 
 Files:
   → curriculum/[slug]/course.json
@@ -205,13 +275,17 @@ Files:
   → curriculum/[slug]/assessments/quiz-*.json
   → curriculum/[slug]/assessments/modcheck-*.json
   → curriculum/[slug]/learner.json
-  → curriculum/[slug]/bundle.json   ← single-file app bundle
-  → curriculum/index.json           ← course registry
+  → curriculum/[slug]/concepts.json       ← adaptive concept graph
+  → curriculum/[slug]/learning-paths.json ← learner paths
+  → curriculum/[slug]/adaptive-rules.json ← progression rules
+  → curriculum/[slug]/bundle.json         ← single-file v3 app bundle
+  → curriculum/index.json                 ← course registry
 
 To study:
   1. cd grove/
   2. npx serve .
   3. Open http://localhost:3000
+  4. Click "Load bundle.json" and select curriculum/[slug]/bundle.json
 ────────────────────────────────────────
 ```
 
@@ -223,15 +297,18 @@ curriculum/
 └── [topic-slug]/
     ├── state.json          ← Grove session state
     ├── learner.json        ← learner profile
-    ├── course.json         ← master outline + learning plan
-    ├── bundle.json         ← single-file bundle for the app ← NEW
+    ├── course.json         ← master outline + learning plan (v3 lesson fields)
+    ├── bundle.json         ← single-file v3 bundle for the app
+    ├── concepts.json       ← adaptive concept graph (v3)
+    ├── learning-paths.json ← learner path definitions (v3)
+    ├── adaptive-rules.json ← progression + review rules (v3)
     ├── lessons/
     │   ├── L01-[slug].md   ← source markdown (also embedded in bundle)
     │   └── L0N-[slug].md
     ├── cards.json          ← full flashcard deck (also embedded in bundle)
     └── assessments/
-        ├── quiz-M01.json   ← one full quiz per module (also embedded in bundle)
+        ├── quiz-M01.json       ← one full quiz per module (also embedded in bundle)
         ├── quiz-M0N.json
-        ├── modcheck-M01.json   ← 3–5 short retention Qs per module  ← NEW
+        ├── modcheck-M01.json   ← 3–5 short retention Qs per module
         └── modcheck-M0N.json
 ```

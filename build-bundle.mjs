@@ -34,6 +34,35 @@ function readText(path) {
   catch { return null; }
 }
 
+/*g* Map card type to cognitive level for auto-enrichment. */
+function cognitiveLevel(cardType) {
+  if (cardType === 'definition' || cardType === 'context') return 'recall';
+  if (cardType === 'application' || cardType === 'synthesis') return 'application';
+  return 'comprehension'; // claim, distinction, comparison, debate, etc.
+}
+
+/** Map card type to default mastery weight for auto-enrichment. */
+function defaultWeight(cardType) {
+  if (cardType === 'definition' || cardType === 'context') return 0.5;
+  if (cardType === 'application' || cardType === 'synthesis') return 1.0;
+  return 0.75;
+}
+
+/** Map quiz question difficulty field to cognitive level. */
+function quizCognitiveLevel(difficulty) {
+  const d = (difficulty ?? '').toLowerCase();
+  if (d === 'knowledge' || d === 'recall') return 'recall';
+  if (d === 'application' || d === 'synthesis' || d === 'evaluation') return 'application';
+  return 'comprehension'; // comprehension, analysis, and default
+}
+
+/** Map cognitive level to default weight for quiz question mastery scoring. */
+function quizWeight(cogLevel) {
+  if (cogLevel === 'recall') return 0.5;
+  if (cogLevel === 'application') return 1.0;
+  return 0.75;
+}
+
 /**
  * Parse the Strata source index table into a map of { SID -> { title, url } }.
  * Walks up from the grove curriculum folder to find the vault research folder.
@@ -154,6 +183,16 @@ for (const id of allLessonIds) {
 const cardsData = readJSON(join(base, 'cards.json'));
 const cards = cardsData?.cards ?? [];
 
+// ── Adaptive learning artifacts (v3) ─────────────────────────────────────────
+const conceptsData  = readJSON(join(base, 'concepts.json'))       ?? { concepts: [] };
+const adaptiveRules = readJSON(join(base, 'adaptive-rules.json')) ?? {};
+const learningPaths = readJSON(join(base, 'learning-paths.json')) ?? { paths: [] };
+
+if (conceptsData.concepts.length)
+  console.log(`  ✓ concepts.json: ${conceptsData.concepts.length} concepts`);
+else
+  console.warn('  ⚠ concepts.json not found — adaptive concept tracking disabled');
+
 // ── Quizzes ─────────────────────────────────────────────────────────────────
 const quizzes    = {};
 const modchecks  = {};
@@ -173,17 +212,118 @@ if (existsSync(assessmentsDir)) {
   }
 }
 
+// ── v3 Schema validation ─────────────────────────────────────────────────────
+{
+  const errs = [];
+  const allLessonIds = new Set(course.modules.flatMap(m => (m.lessons ?? []).map(l => l.id)));
+  const allConceptIds = new Set((conceptsData.concepts ?? []).map(c => c.id));
+  const hasConceptGraph = allConceptIds.size > 0;
+
+  for (const m of course.modules) {
+    for (const l of m.lessons ?? []) {
+      if (!l.id) { errs.push(`lesson missing id in module ${m.id}`); continue; }
+      if (l.teaches_concepts !== undefined && !Array.isArray(l.teaches_concepts))
+        errs.push(`${l.id}: teaches_concepts must be an array`);
+      if (l.review_after_days !== undefined && !Array.isArray(l.review_after_days))
+        errs.push(`${l.id}: review_after_days must be an array`);
+      for (const prereq of l.prerequisites ?? []) {
+        if (!allLessonIds.has(prereq))
+          errs.push(`${l.id}: prerequisite "${prereq}" does not exist`);
+      }
+      if (hasConceptGraph) {
+        for (const cid of [...(l.teaches_concepts ?? []), ...(l.reinforces_concepts ?? [])]) {
+          if (!allConceptIds.has(cid))
+            errs.push(`${l.id}: concept "${cid}" not in concepts.json`);
+        }
+      }
+    }
+  }
+
+  for (const card of cards) {
+    if (hasConceptGraph) {
+      for (const cid of card.concepts ?? []) {
+        if (!allConceptIds.has(cid))
+          errs.push(`${card.id}: concept "${cid}" not in concepts.json`);
+      }
+    }
+    for (const lid of card.remediation_lesson_ids ?? []) {
+      if (!allLessonIds.has(lid))
+        errs.push(`${card.id}: remediation_lesson_id "${lid}" does not exist`);
+    }
+  }
+
+  for (const [key, assessment] of [...Object.entries(quizzes), ...Object.entries(modchecks)]) {
+    for (const q of assessment.questions ?? []) {
+      if (hasConceptGraph) {
+        for (const cid of q.concepts ?? []) {
+          if (!allConceptIds.has(cid))
+            errs.push(`${key}/${q.id}: concept "${cid}" not in concepts.json`);
+        }
+      }
+      for (const lid of q.remediation_lesson_ids ?? []) {
+        if (!allLessonIds.has(lid))
+          errs.push(`${key}/${q.id}: remediation_lesson_id "${lid}" does not exist`);
+      }
+    }
+  }
+
+  if (errs.length) {
+    console.error('\n❌ Curriculum validation failed:');
+    for (const e of errs) console.error(`  • ${e}`);
+    process.exit(1);
+  }
+  console.log('  ✓ v3 schema validation passed');
+}
+
+// ── Auto-enrich cards with derived v3 fields (if not already explicit) ────────
+const lessonConceptMap = {};
+for (const m of course.modules) {
+  for (const l of m.lessons ?? []) {
+    lessonConceptMap[l.id] = l.teaches_concepts ?? [];
+  }
+}
+const enrichedCards = cards.map(card => ({
+  ...card,
+  concepts:        card.concepts        ?? lessonConceptMap[card.lesson] ?? [],
+  cognitive_level: card.cognitive_level ?? cognitiveLevel(card.type),
+  weight:          card.weight          ?? defaultWeight(card.type),
+  reviewable:      card.reviewable      ?? true,
+}));
+
+// ── Auto-enrich quiz questions with derived v3 fields ────────────────────────
+function enrichQuestions(questions) {
+  return (questions ?? []).map(q => {
+    if (!q.lesson_ref) return q; // modcheck short-answers have no lesson_ref: skip
+    const cogLevel = quizCognitiveLevel(q.difficulty);
+    return {
+      ...q,
+      concepts:               q.concepts               ?? lessonConceptMap[q.lesson_ref] ?? [],
+      cognitive_level:        q.cognitive_level        ?? cogLevel,
+      weight:                 q.weight                 ?? quizWeight(cogLevel),
+      remediation_lesson_ids: q.remediation_lesson_ids ?? [q.lesson_ref],
+    };
+  });
+}
+
+const enrichedQuizzes = {};
+for (const [k, v] of Object.entries(quizzes)) {
+  enrichedQuizzes[k] = { ...v, questions: enrichQuestions(v.questions) };
+}
+
 // ── Build bundle ─────────────────────────────────────────────────────────────
 const bundle = {
-  version: '2.0',
+  version: '3.0',
   slug,
   bundled: new Date().toISOString(),
   course,
   learner: learner ?? {},
   lessons,
-  cards,
-  quizzes,
+  cards: enrichedCards,
+  quizzes: enrichedQuizzes,
   modchecks,
+  concepts:      conceptsData,
+  adaptiveRules,
+  learningPaths,
 };
 
 const bundlePath = join(base, 'bundle.json');
@@ -191,9 +331,11 @@ writeFileSync(bundlePath, JSON.stringify(bundle, null, 2), 'utf8');
 console.log(`✓ bundle.json written → curriculum/${slug}/bundle.json`);
 console.log(`  Modules:   ${course.modules?.length ?? 0}`);
 console.log(`  Lessons:   ${allLessonIds.length} (${Object.values(lessons).filter(Boolean).length} with content)`);
-console.log(`  Cards:     ${cards.length}`);
-console.log(`  Quizzes:   ${Object.keys(quizzes).length}`);
+console.log(`  Cards:      ${enrichedCards.length}`);
+console.log(`  Quizzes:    ${Object.keys(enrichedQuizzes).length}`);
 console.log(`  Mod checks: ${Object.keys(modchecks).length}`);
+console.log(`  Concepts:   ${conceptsData.concepts?.length ?? 0}`);
+console.log(`  Paths:      ${learningPaths.paths?.length ?? 0}`);
 
 // ── Update curriculum/index.json ─────────────────────────────────────────────
 const indexPath = resolve('curriculum/index.json');
@@ -206,8 +348,11 @@ const entry = {
   description: (course.summary ?? '').slice(0, 160),
   total_modules: course.modules?.length ?? 0,
   total_lessons: allLessonIds.length,
-  total_cards: cards.length,
+  total_cards: enrichedCards.length,
+  total_questions: Object.values(enrichedQuizzes).reduce((n, q) => n + (q.questions?.length ?? 0), 0),
   generated: course.generated ?? new Date().toISOString().slice(0, 10),
+  adaptive:       (conceptsData.concepts?.length ?? 0) > 0,
+  bundle_version: '3.0',
 };
 
 const existingIdx = index.courses.findIndex(c => c.slug === slug);

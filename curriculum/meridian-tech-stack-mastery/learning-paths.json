@@ -1,0 +1,41 @@
+{
+  "slug": "meridian-tech-stack-mastery",
+  "generated": "2026-04-13",
+  "paths": [
+    {
+      "id": "default-path",
+      "title": "Complete Course",
+      "description": "All 16 lessons in recommended pedagogical order.",
+      "entry_condition": {},
+      "sequence": ["L01", "L02", "L03", "L04", "L05", "L06", "L07", "L08", "L09", "L10", "L11", "L12", "L13", "L14", "L15", "L16"]
+    },
+    {
+      "id": "fast-track",
+      "title": "Fast Track — Core Architecture",
+      "description": "Skip debate lessons. Covers the primary architectural patterns and implementation paths.",
+      "entry_condition": { "background": "intermediate" },
+      "sequence": ["L01", "L02", "L03", "L04", "L05", "L06", "L07", "L08", "L10", "L11", "L12", "L14", "L16"]
+    },
+    {
+      "id": "backend-path",
+      "title": "Backend and Data Layer Path",
+      "description": "Focus on server-side: TypeScript, schema-as-type, RLS, pgvector, RAG, and security.",
+      "entry_condition": { "role": "backend" },
+      "sequence": ["L01", "L02", "L05", "L06", "L07", "L12", "L13", "L14", "L15", "L16"]
+    },
+    {
+      "id": "frontend-path",
+      "title": "Frontend and Realtime Path",
+      "description": "Focus on client-side: React 18, immutability, collaborative editing, and AI streaming.",
+      "entry_condition": { "role": "frontend" },
+      "sequence": ["L01", "L02", "L03", "L04", "L05", "L08", "L09", "L10", "L11", "L12"]
+    },
+    {
+      "id": "security-deep-dive",
+      "title": "Security Deep Dive",
+      "description": "Full security focus path including schema, RLS, authentication, and attack vectors.",
+      "entry_condition": { "interest": "security" },
+      "sequence": ["L01", "L05", "L06", "L07", "L14", "L15"]
+    }
+  ]
+}

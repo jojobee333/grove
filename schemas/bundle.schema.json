@@ -1,0 +1,112 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://grove.app/schemas/bundle.schema.json",
+  "title": "Grove Bundle",
+  "description": "Schema for curriculum/<slug>/bundle.json (v3) — produced by build-bundle.mjs",
+  "type": "object",
+  "required": ["version", "slug", "bundled", "course", "lessons", "cards", "quizzes", "modchecks", "concepts", "adaptiveRules", "learningPaths"],
+  "additionalProperties": true,
+  "properties": {
+    "version":  { "type": "string", "const": "3.0" },
+    "slug":     { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "bundled":  { "type": "string", "format": "date-time" },
+    "course":   { "$ref": "course.schema.json" },
+    "learner":  { "type": "object" },
+    "lessons": {
+      "type": "object",
+      "description": "Map of lessonId → rendered markdown string",
+      "additionalProperties": { "type": "string" }
+    },
+    "cards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "front", "back", "module", "lesson", "type", "cognitive_level", "weight", "reviewable"],
+        "properties": {
+          "id":              { "type": "string" },
+          "front":           { "type": "string" },
+          "back":            { "type": "string" },
+          "module":          { "type": "string" },
+          "lesson":          { "type": "string" },
+          "type":            { "type": "string" },
+          "source_ref":      { "type": "string" },
+          "concepts":        { "type": "array", "items": { "type": "string" } },
+          "cognitive_level": { "type": "string", "enum": ["recall","comprehension","application"] },
+          "weight":          { "type": "number", "minimum": 0, "maximum": 1 },
+          "reviewable":      { "type": "boolean" }
+        }
+      }
+    },
+    "quizzes": {
+      "type": "object",
+      "description": "Map of moduleId → quiz object with enriched questions",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["module_id", "title", "questions"],
+        "properties": {
+          "module_id":    { "type": "string" },
+          "title":        { "type": "string" },
+          "passing_score": { "type": "integer" },
+          "questions": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "type", "question"],
+              "properties": {
+                "id":                    { "type": "string" },
+                "type":                  { "type": "string", "enum": ["mcq","short_answer","essay"] },
+                "question":              { "type": "string" },
+                "correct":               { "type": "string" },
+                "concepts":              { "type": "array", "items": { "type": "string" } },
+                "cognitive_level":       { "type": "string", "enum": ["recall","comprehension","application"] },
+                "weight":                { "type": "number" },
+                "remediation_lesson_ids": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "modchecks": {
+      "type": "object",
+      "description": "Map of moduleId → modcheck quiz object (short-answer only)"
+    },
+    "concepts": {
+      "type": "object",
+      "required": ["slug", "concepts"],
+      "properties": {
+        "slug":     { "type": "string" },
+        "concepts": { "type": "array" }
+      }
+    },
+    "adaptiveRules": {
+      "type": "object",
+      "properties": {
+        "progression_rules": { "type": "object" },
+        "review_policy":     { "type": "object" },
+        "mastery_defaults":  { "type": "object" },
+        "remediation_policy": { "type": "object" }
+      }
+    },
+    "learningPaths": {
+      "type": "object",
+      "required": ["paths"],
+      "properties": {
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "title", "description", "lessons"],
+            "properties": {
+              "id":          { "type": "string" },
+              "title":       { "type": "string" },
+              "description": { "type": "string" },
+              "lessons":     { "type": "array", "items": { "type": "string" } },
+              "focus_areas": { "type": "array", "items": { "type": "string" } }
+            }
+          }
+        }
+      }
+    }
+  }
+}

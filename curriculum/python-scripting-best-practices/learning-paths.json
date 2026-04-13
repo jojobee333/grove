@@ -1,0 +1,34 @@
+{
+  "slug": "python-scripting-best-practices",
+  "generated": "2026-04-13",
+  "paths": [
+    {
+      "id": "default-path",
+      "title": "Complete Course",
+      "description": "All lessons in recommended pedagogical order.",
+      "entry_condition": {},
+      "sequence": ["L01", "L02", "L03", "L04", "L05", "L06", "L07", "L08", "L09", "L10", "L11", "L12", "L13"]
+    },
+    {
+      "id": "fast-track",
+      "title": "Fast Track — Core Practices Only",
+      "description": "Skip debate and gap lessons. Covers the seven essential production patterns.",
+      "entry_condition": { "background": "intermediate" },
+      "sequence": ["L01", "L02", "L03", "L04", "L05", "L07", "L08", "L09", "L10", "L11"]
+    },
+    {
+      "id": "teach-others",
+      "title": "Teach-Others Path",
+      "description": "Full course including debate lessons for use when preparing to train a team.",
+      "entry_condition": { "goal": "teach others" },
+      "sequence": ["L01", "L02", "L03", "L04", "L05", "L06", "L07", "L08", "L09", "L10", "L11", "L12", "L13"]
+    },
+    {
+      "id": "security-focus",
+      "title": "Security-First Path",
+      "description": "Deep-dive on secrets, serialization, and configuration security.",
+      "entry_condition": { "interest": "security" },
+      "sequence": ["L01", "L02", "L03", "L07", "L08", "L09", "L10", "L11"]
+    }
+  ]
+}

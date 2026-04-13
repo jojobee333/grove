@@ -89,7 +89,14 @@ Read `curriculum/[slug]/learner.json`:
           "strata_claim": "C1",
           "type": "core | applied | frontier | debate | gap",
           "estimated_minutes": 20,
-          "description": "One sentence: what this lesson covers"
+          "description": "One sentence: what this lesson covers",
+          "difficulty": 2,
+          "prerequisites": [],
+          "teaches_concepts": ["concept-slug"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": 7
         }
       ],
       "has_assessment": true
@@ -114,3 +121,24 @@ Use Bloom's taxonomy verbs appropriate to the goal:
 - **Pass an exam**: recall, list, match, distinguish, calculate
 
 Avoid "understand" and "know" as objectives — they are not measurable.
+
+## v3 lesson fields reference
+
+Every lesson in `course.json` must include these adaptive fields (v3 schema):
+
+| Field | Type | Notes |
+|---|---|---|
+| `difficulty` | integer 1–5 | Default by type: core=2, applied=3, frontier=4, debate=3, gap=3 |
+| `prerequisites` | string[] | Lesson IDs (`L0N`) that must be completed before this lesson unlocks |
+| `teaches_concepts` | string[] | Concept slugs this lesson *introduces* — drives card/quiz enrichment |
+| `reinforces_concepts` | string[] | Concept slugs this lesson *revisits* (secondary coverage) |
+| `mastery_threshold` | float 0–1 | Minimum average mastery score before lesson is counted complete (default 0.7) |
+| `unlock_rule` | string | `"all_prerequisites_mastered"` or `"none"` (for the first lessons in a module) |
+| `review_after_days` | integer | Days after completion before app flags this lesson for review (default 7) |
+
+**`teaches_concepts` is the most important field.** The bundler (`build-bundle.mjs`) uses it to
+enrich every flashcard and MCQ question in that lesson with `concepts`, `cognitive_level`, and `weight`.
+If a lesson has no `teaches_concepts`, its cards and questions will not have adaptive metadata.
+
+Concept slugs must match IDs defined in `curriculum/[slug]/concepts.json`.
+After generating `course.json`, run `node scripts/validate-curriculum.mjs [slug]` to check compliance.

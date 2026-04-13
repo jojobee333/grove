@@ -1,0 +1,29 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://grove.app/schemas/concepts.schema.json",
+  "title": "Grove Concepts",
+  "description": "Schema for curriculum/<slug>/concepts.json (v3)",
+  "type": "object",
+  "required": ["slug", "concepts"],
+  "additionalProperties": false,
+  "properties": {
+    "slug":     { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "concepts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "title", "depends_on", "introduced_in", "reinforced_in"],
+        "additionalProperties": false,
+        "properties": {
+          "id":                 { "type": "string", "pattern": "^[a-z0-9-]+$" },
+          "title":              { "type": "string", "minLength": 1 },
+          "depends_on":         { "type": "array", "items": { "type": "string" } },
+          "introduced_in":      { "type": "array", "items": { "type": "string" } },
+          "reinforced_in":      { "type": "array", "items": { "type": "string" } },
+          "assessment_sources": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    }
+  }
+}
