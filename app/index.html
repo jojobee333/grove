@@ -113,6 +113,9 @@
   .lesson-content li { margin-bottom: 0.3rem; font-size: 14px; }
   .lesson-content blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; color: var(--muted); font-style: italic; margin: 1rem 0; }
   .lesson-content code { font-family: monospace; font-size: 13px; background: var(--border); padding: 1px 5px; border-radius: 4px; }
+  .lesson-content pre { background: var(--surface-raised, #f4f4f0); border: 1px solid var(--border); border-radius: 6px; padding: 1rem 1.2rem; overflow-x: auto; margin: 1rem 0; }
+  .lesson-content pre code { background: none; padding: 0; font-size: 13px; line-height: 1.6; }
+  .lesson-content a { color: var(--accent); text-decoration: underline; }
   .lesson-nav { display: flex; justify-content: space-between; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border); }
 
   /* Flashcard */
@@ -887,7 +890,15 @@ function loadLessonFile(event, lessonId, moduleId) {
 }
 
 function simpleMarkdown(md) {
-  return md
+  // Extract fenced code blocks into placeholders so later transforms can't corrupt them
+  const blocks = [];
+  md = md.replace(/```[\w]*\n?([\s\S]*?)```/g, (_, code) => {
+    const html = '<pre><code>' + code.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</code></pre>';
+    blocks.push(html);
+    return `\x00BLOCK${blocks.length - 1}\x00`;
+  });
+
+  md = md
     .replace(/^# (.+)$/gm, '<h2>$1</h2>')
     .replace(/^## (.+)$/gm, '<h2>$1</h2>')
     .replace(/^### (.+)$/gm, '<h3>$1</h3>')
@@ -900,8 +911,11 @@ function simpleMarkdown(md) {
     })
     .replace(/^- (.+)$/gm, '<li>$1</li>')
     .replace(/(<li>.*<\/li>\n?)+/g, s => '<ul>' + s + '</ul>')
-    .replace(/^(?!<[hul]|\s*$)(.+)$/gm, '<p>$1</p>')
+    .replace(/^(?!<[hul\x00]|\s*$)(.+)$/gm, '<p>$1</p>')
     .replace(/\n{3,}/g, '\n\n');
+
+  // Restore code blocks
+  return md.replace(/\x00BLOCK(\d+)\x00/g, (_, i) => blocks[+i]);
 }
 
 function getModuleForLesson(lessonId) {
