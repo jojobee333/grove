@@ -196,6 +196,7 @@ else
 // ── Quizzes ─────────────────────────────────────────────────────────────────
 const quizzes    = {};
 const modchecks  = {};
+const codeChallenges = {};
 const assessmentsDir = join(base, 'assessments');
 if (existsSync(assessmentsDir)) {
   const files = readdirSync(assessmentsDir).filter(f => f.endsWith('.json'));
@@ -205,6 +206,9 @@ if (existsSync(assessmentsDir)) {
     // modcheck-M01.json → modchecks
     const mcMatch = file.match(/modcheck-([A-Z0-9]+)\.json$/i);
     if (mcMatch) { modchecks[mcMatch[1]] = data; continue; }
+    // code-challenge-M01.json → codeChallenges
+    const ccMatch = file.match(/code-challenge-([A-Z0-9]+)\.json$/i);
+    if (ccMatch) { codeChallenges[ccMatch[1]] = data; continue; }
     // quiz-M01.json → quizzes
     const qMatch = file.match(/quiz-([A-Z0-9]+)\.json$/i);
     const moduleId = qMatch?.[1] ?? file.replace('.json', '');
@@ -267,6 +271,34 @@ if (existsSync(assessmentsDir)) {
     }
   }
 
+  for (const [key, challengeSet] of Object.entries(codeChallenges)) {
+    for (const challenge of challengeSet.challenges ?? []) {
+      if (!challenge.id) { errs.push(`${key}: challenge missing id`); continue; }
+      if (challenge.language && !['python', 'javascript'].includes(challenge.language))
+        errs.push(`${key}/${challenge.id}: language must be "python" or "javascript"`);
+      if (!Array.isArray(challenge.test_cases) || challenge.test_cases.length === 0)
+        errs.push(`${key}/${challenge.id}: must have at least one test case`);
+      for (const tc of challenge.test_cases ?? []) {
+        if (!tc.name || !tc.input || !tc.expected_output || !tc.visibility)
+          errs.push(`${key}/${challenge.id}: test case missing required fields (name, input, expected_output, visibility)`);
+      }
+      if (!challenge.starter_code && !challenge.solution_template)
+        errs.push(`${key}/${challenge.id}: must have starter_code or solution_template`);
+      if (hasConceptGraph) {
+        for (const cid of challenge.concepts ?? []) {
+          if (!allConceptIds.has(cid))
+            errs.push(`${key}/${challenge.id}: concept "${cid}" not in concepts.json`);
+        }
+      }
+      if (challenge.lesson_ref && !allLessonIds.has(challenge.lesson_ref))
+        errs.push(`${key}/${challenge.id}: lesson_ref "${challenge.lesson_ref}" does not exist`);
+      for (const lid of challenge.remediation_lesson_ids ?? []) {
+        if (!allLessonIds.has(lid))
+          errs.push(`${key}/${challenge.id}: remediation_lesson_id "${lid}" does not exist`);
+      }
+    }
+  }
+
   if (errs.length) {
     console.error('\n❌ Curriculum validation failed:');
     for (const e of errs) console.error(`  • ${e}`);
@@ -310,6 +342,23 @@ for (const [k, v] of Object.entries(quizzes)) {
   enrichedQuizzes[k] = { ...v, questions: enrichQuestions(v.questions) };
 }
 
+// ── Auto-enrich code challenges with derived v3 fields ──────────────────────────
+function enrichChallenges(challenges) {
+  return (challenges ?? []).map(c => ({
+    ...c,
+    concepts:               c.concepts               ?? (c.lesson_ref ? lessonConceptMap[c.lesson_ref] : []) ?? [],
+    cognitive_level:        c.cognitive_level        ?? 'application',
+    weight:                 c.weight                 ?? 1.0,
+    pass_criteria:          c.pass_criteria          ?? 0.70,
+    remediation_lesson_ids: c.remediation_lesson_ids ?? (c.lesson_ref ? [c.lesson_ref] : []),
+  }));
+}
+
+const enrichedCodeChallenges = {};
+for (const [k, v] of Object.entries(codeChallenges)) {
+  enrichedCodeChallenges[k] = { ...v, challenges: enrichChallenges(v.challenges) };
+}
+
 // ── Build bundle ─────────────────────────────────────────────────────────────
 const bundle = {
   version: '3.0',
@@ -321,6 +370,7 @@ const bundle = {
   cards: enrichedCards,
   quizzes: enrichedQuizzes,
   modchecks,
+  codeChallenges: enrichedCodeChallenges,
   concepts:      conceptsData,
   adaptiveRules,
   learningPaths,
@@ -334,6 +384,7 @@ console.log(`  Lessons:   ${allLessonIds.length} (${Object.values(lessons).filte
 console.log(`  Cards:      ${enrichedCards.length}`);
 console.log(`  Quizzes:    ${Object.keys(enrichedQuizzes).length}`);
 console.log(`  Mod checks: ${Object.keys(modchecks).length}`);
+console.log(`  Code challenges: ${Object.keys(enrichedCodeChallenges).length}`);
 console.log(`  Concepts:   ${conceptsData.concepts?.length ?? 0}`);
 console.log(`  Paths:      ${learningPaths.paths?.length ?? 0}`);
 

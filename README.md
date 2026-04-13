@@ -58,6 +58,7 @@ This writes `curriculum/<slug>/bundle.json`.
 | **Course** | Module + lesson list; click a lesson to read it |
 | **Cards** | Spaced-repetition flashcard review (SM-2 scheduler) |
 | **Quiz** | Module assessments with MCQ + short answer |
+| **Code challenges** | In-browser coding problems with WASM test execution (Python + JS) |
 | **My progress** | Concept mastery heatmap; per-module coverage stats |
 | **Learning paths** | Pick a guided path (e.g. "Fast track", "Deep dive") |
 | **What's next?** | Adaptive planner — next lessons, weak concepts, review queue |
@@ -92,6 +93,7 @@ curriculum/
     bundle.json          # Built artifact — load this in the app
     lessons/             # Lesson markdown files (L01-slug.md …)
     assessments/         # Quiz JSON files (quiz-M01.json …)
+                         # Code challenges (code-challenge-M01.json …)
     cards.json           # Flashcard deck
     learner.json         # Learner profile (goal, background, session time)
 ```
@@ -101,3 +103,27 @@ curriculum/
 ## Adding a new course
 
 Use the `/grove` Copilot skill (requires Strata research artifacts) or follow the checklist in [.github/ISSUE_TEMPLATE/new-course.md](.github/ISSUE_TEMPLATE/new-course.md).
+
+### Copilot skills
+
+| Skill | Purpose |
+|---|---|
+| `/grove` | Full course generation from Strata research artifacts |
+| `/grove-lessons` | Generate lesson markdown files |
+| `/grove-cards` | Generate flashcard deck |
+| `/grove-assess` | Generate MCQ + short-answer quizzes |
+| `/grove-code-challenges` | Generate test-case based coding challenges (Python + JS) |
+| `/grove-map` | Generate concept graph and adaptive rules |
+| `/strata` | Run structured research pipeline; optionally generates code challenges at end |
+
+### Adding code challenges to an existing course
+
+1. Run `/grove-code-challenges <slug> <moduleId>` — or write `assessments/code-challenge-M<NN>.json` manually
+2. Each challenge is a named function; test cases provide input expressions and expected outputs
+3. The in-browser engine runs Python challenges via Pyodide (WASM) and JS via `Function()`
+4. Validate and rebuild:
+   ```sh
+   node scripts/validate-curriculum.mjs <slug>
+   node build-bundle.mjs <slug>
+   ```
+5. Load the bundle in the app — a **Code challenges** nav item appears automatically

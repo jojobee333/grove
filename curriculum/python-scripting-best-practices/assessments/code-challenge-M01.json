@@ -1,0 +1,128 @@
+{
+  "id": "code-challenge-M01",
+  "type": "module",
+  "module": "M01",
+  "title": "Coding Challenge: Python Quality Toolchain",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `validate_tool_config(config)` that takes a dictionary representing a pyproject.toml tool section and returns True if it contains all three required quality tools (ruff, mypy, pytest), False otherwise. The config dict has keys like 'tool.ruff', 'tool.mypy', 'tool.pytest.ini_options'.",
+      "starter_code": "def validate_tool_config(config):\n    \"\"\"\n    Check if config dict contains all three required quality tools.\n    Args:\n        config: dict with keys like 'tool.ruff', 'tool.mypy', 'tool.pytest.ini_options'\n    Returns:\n        bool: True if all three tools present, False otherwise\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "All three tools present",
+          "input": "{'tool.ruff': {}, 'tool.mypy': {}, 'tool.pytest.ini_options': {}}",
+          "expected_output": "True",
+          "visibility": "visible"
+        },
+        {
+          "name": "Missing pytest",
+          "input": "{'tool.ruff': {}, 'tool.mypy': {}}",
+          "expected_output": "False",
+          "visibility": "visible"
+        },
+        {
+          "name": "Empty config",
+          "input": "{}",
+          "expected_output": "False",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Only one tool",
+          "input": "{'tool.ruff': {}}",
+          "expected_output": "False",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["quality-toolchain", "ruff", "mypy", "pytest"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L01",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L01"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `count_mypy_violations(annotations)` that takes a list of function signatures (as strings) and returns the number that would fail `mypy --strict` due to missing return type annotations. A signature fails if it doesn't contain ' -> ' (the return type annotation marker). Example: 'def foo():' fails, 'def foo() -> int:' passes.",
+      "starter_code": "def count_mypy_violations(annotations):\n    \"\"\"\n    Count how many function signatures lack return type annotations.\n    Args:\n        annotations: list of function signature strings\n    Returns:\n        int: number of signatures missing ' -> '\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Two violations",
+          "input": "['def foo():', 'def bar() -> int:', 'def baz():']",
+          "expected_output": "2",
+          "visibility": "visible"
+        },
+        {
+          "name": "All annotated",
+          "input": "['def foo() -> str:', 'def bar() -> int:']",
+          "expected_output": "0",
+          "visibility": "visible"
+        },
+        {
+          "name": "All missing",
+          "input": "['def foo():', 'def bar():', 'def baz():']",
+          "expected_output": "3",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Empty list",
+          "input": "[]",
+          "expected_output": "0",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["mypy", "type-annotations"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L01",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L01", "L05"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `select_modern_union_syntax(type_str)` that takes a type annotation string and returns True if it uses modern Python 3.10+ union syntax (with |), False if it uses old Optional/Union syntax. Examples: 'str | None' returns True, 'Optional[str]' returns False, 'Union[str, int]' returns False.",
+      "starter_code": "def select_modern_union_syntax(type_str):\n    \"\"\"\n    Check if type annotation uses modern union syntax.\n    Args:\n        type_str: string representing a type annotation\n    Returns:\n        bool: True if uses |, False if uses Optional or Union\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Modern syntax with |",
+          "input": "'str | None'",
+          "expected_output": "True",
+          "visibility": "visible"
+        },
+        {
+          "name": "Old Optional syntax",
+          "input": "'Optional[str]'",
+          "expected_output": "False",
+          "visibility": "visible"
+        },
+        {
+          "name": "Old Union syntax",
+          "input": "'Union[str, int]'",
+          "expected_output": "False",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Modern multi-union",
+          "input": "'str | int | None'",
+          "expected_output": "True",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["ruff", "modern-type-syntax"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L01",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L01", "L06"]
+    }
+  ]
+}

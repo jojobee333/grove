@@ -57,3 +57,16 @@ research/
 | `/research-analyze` | 02-analysis | Theme and contradiction analysis |
 | `/research-synthesize` | 03-synthesis | Claims and narrative |
 | `/research-write` | 04-output | Final deliverables |
+| `/grove-code-challenges` | 05-grove (optional) | Generate Grove coding exercises from synthesis |
+
+## Optional Grove integration
+
+After output is written, Strata can generate test-case based coding challenges for Grove.
+This step runs only when a matching Grove curriculum exists and the user requests it.
+
+The generation reads `03-synthesis/claims.md` and converts programmable concepts into
+`curriculum/<slug>/assessments/code-challenge-M*.json` files compatible with Grove's
+offline WASM-based coding engine.
+
+See `.github/skills/grove-code-challenges/SKILL.md` for the required output format and rules.
+See Step 6b in `SKILL.md` for the full generation algorithm.

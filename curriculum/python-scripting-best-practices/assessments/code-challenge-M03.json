@@ -1,0 +1,128 @@
+{
+  "id": "code-challenge-M03",
+  "type": "module",
+  "module": "M03",
+  "title": "Coding Challenge: Type System Mastery",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `modernize_type_annotation(old)` that converts old-style type annotations to modern Python 3.10+ syntax. Replace 'Optional[X]' with 'X | None', 'List[X]' with 'list[X]', and 'Dict[K, V]' with 'dict[K, V]'. Return the modernized string.",
+      "starter_code": "def modernize_type_annotation(old):\n    \"\"\"\n    Convert old typing syntax to Python 3.10+ syntax.\n    Args:\n        old: string with old-style type annotation\n    Returns:\n        str: modernized annotation\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Optional to union",
+          "input": "'Optional[str]'",
+          "expected_output": "str | None",
+          "visibility": "visible"
+        },
+        {
+          "name": "List to lowercase",
+          "input": "'List[int]'",
+          "expected_output": "list[int]",
+          "visibility": "visible"
+        },
+        {
+          "name": "Dict to lowercase",
+          "input": "'Dict[str, int]'",
+          "expected_output": "dict[str, int]",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Already modern",
+          "input": "'str | None'",
+          "expected_output": "str | None",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["modern-type-syntax", "type-annotations"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L06",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L06"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `validate_config_keys(cfg)` that takes a dictionary and returns True if it has exactly the keys 'host' (str), 'port' (int), and 'debug' (bool) with correct types, False otherwise. This simulates TypedDict validation at runtime.",
+      "starter_code": "def validate_config_keys(cfg):\n    \"\"\"\n    Validate config dict has required keys with correct types.\n    Args:\n        cfg: dict to validate\n    Returns:\n        bool: True if has host:str, port:int, debug:bool, False otherwise\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Valid config",
+          "input": "{'host': 'localhost', 'port': 8080, 'debug': True}",
+          "expected_output": "True",
+          "visibility": "visible"
+        },
+        {
+          "name": "Missing key",
+          "input": "{'host': 'localhost', 'port': 8080}",
+          "expected_output": "False",
+          "visibility": "visible"
+        },
+        {
+          "name": "Wrong type for port",
+          "input": "{'host': 'localhost', 'port': '8080', 'debug': True}",
+          "expected_output": "False",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Extra key",
+          "input": "{'host': 'localhost', 'port': 8080, 'debug': True, 'timeout': 30}",
+          "expected_output": "False",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["type-annotations", "modern-type-syntax"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L06",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L06"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `has_close_method(obj)` that returns True if the given object has a callable 'close' attribute, False otherwise. This simulates Protocol structural typing check at runtime.",
+      "starter_code": "def has_close_method(obj):\n    \"\"\"\n    Check if object implements the Closeable protocol (has close method).\n    Args:\n        obj: object to check\n    Returns:\n        bool: True if has callable 'close', False otherwise\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Object with close",
+          "input": "type('File', (), {'close': lambda self: None})()",
+          "expected_output": "True",
+          "visibility": "visible"
+        },
+        {
+          "name": "Object without close",
+          "input": "{'data': 'value'}",
+          "expected_output": "False",
+          "visibility": "visible"
+        },
+        {
+          "name": "Close not callable",
+          "input": "type('Broken', (), {'close': 'not a method'})()",
+          "expected_output": "False",
+          "visibility": "hidden"
+        },
+        {
+          "name": "None object",
+          "input": "None",
+          "expected_output": "False",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["type-annotations", "modern-type-syntax"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L06",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L06"]
+    }
+  ]
+}

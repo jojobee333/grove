@@ -40,6 +40,9 @@ assignees: []
 - [ ] **Step 5** — Flashcards generated → `curriculum/[slug]/cards.json`
 - [ ] **Step 6** — Assessments generated → `curriculum/[slug]/assessments/quiz-*.json`
   - [ ] Modchecks generated → `curriculum/[slug]/assessments/modcheck-*.json`
+- [ ] **Step 6b** — Code challenges (optional) → `curriculum/[slug]/assessments/code-challenge-*.json`
+  - [ ] Each challenge includes starter code + ≥2 test cases (visible + hidden)
+  - [ ] Challenges map to module concepts for mastery tracking
 
 ### v3 adaptive artifacts
 - [ ] **Step 7a** — `concepts.json` created (concept graph with `introduced_in`, `reinforced_in`, `depends_on`)

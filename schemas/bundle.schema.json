@@ -4,7 +4,7 @@
   "title": "Grove Bundle",
   "description": "Schema for curriculum/<slug>/bundle.json (v3) — produced by build-bundle.mjs",
   "type": "object",
-  "required": ["version", "slug", "bundled", "course", "lessons", "cards", "quizzes", "modchecks", "concepts", "adaptiveRules", "learningPaths"],
+  "required": ["version", "slug", "bundled", "course", "lessons", "cards", "quizzes", "modchecks", "concepts", "adaptiveRules", "learningPaths", "codeChallenges"],
   "additionalProperties": true,
   "properties": {
     "version":  { "type": "string", "const": "3.0" },
@@ -70,6 +70,52 @@
     "modchecks": {
       "type": "object",
       "description": "Map of moduleId → modcheck quiz object (short-answer only)"
+    },
+    "codeChallenges": {
+      "type": "object",
+      "description": "Map of moduleId → code challenge collection with coding exercises",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["module_id", "title", "challenges"],
+        "properties": {
+          "module_id":    { "type": "string" },
+          "title":        { "type": "string" },
+          "challenges": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "type", "language", "prompt", "starter_code", "test_cases"],
+              "properties": {
+                "id":                    { "type": "string" },
+                "type":                  { "type": "string", "const": "code-challenge" },
+                "language":              { "type": "string", "enum": ["python", "javascript"] },
+                "prompt":                { "type": "string" },
+                "starter_code":          { "type": "string" },
+                "test_cases": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["name", "input", "expected_output", "visibility"],
+                    "properties": {
+                      "name":              { "type": "string" },
+                      "input":             { "type": "string" },
+                      "expected_output":   { "type": "string" },
+                      "visibility":        { "type": "string", "enum": ["visible", "hidden"] }
+                    }
+                  }
+                },
+                "concepts":              { "type": "array", "items": { "type": "string" } },
+                "cognitive_level":       { "type": "string", "enum": ["application", "synthesis"] },
+                "weight":                { "type": "number", "minimum": 0 },
+                "difficulty":            { "type": "integer", "minimum": 1, "maximum": 5 },
+                "lesson_ref":            { "type": "string" },
+                "pass_criteria":         { "type": "number", "minimum": 0, "maximum": 1 },
+                "remediation_lesson_ids": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          }
+        }
+      }
     },
     "concepts": {
       "type": "object",

@@ -1,0 +1,128 @@
+{
+  "id": "code-challenge-M04",
+  "type": "module",
+  "module": "M04",
+  "title": "Coding Challenge: Schema-as-Type with Zod",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `validateDocumentInput(doc)` that returns true if the input object has a non-empty string 'title' property AND an optional boolean 'isPublished' property (if present, must be boolean). Return false otherwise. This simulates Zod schema validation.",
+      "starter_code": "function validateDocumentInput(doc) {\n  // Validate: title is non-empty string, isPublished is optional boolean\n  // Returns true if valid, false otherwise\n}\n",
+      "test_cases": [
+        {
+          "name": "Valid with title only",
+          "input": "{ title: 'My Document' }",
+          "expected_output": "true",
+          "visibility": "visible"
+        },
+        {
+          "name": "Valid with both fields",
+          "input": "{ title: 'Published Doc', isPublished: true }",
+          "expected_output": "true",
+          "visibility": "visible"
+        },
+        {
+          "name": "Empty title fails",
+          "input": "{ title: '' }",
+          "expected_output": "false",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Wrong type for isPublished",
+          "input": "{ title: 'Doc', isPublished: 'yes' }",
+          "expected_output": "false",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["z-infer", "schema-as-type"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L06",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L06"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `inferFieldType(schema)` that takes a simplified Drizzle column definition object and returns the inferred TypeScript type as a string. The object has a 'type' property ('text'|'int'|'bool') and an optional 'nullable' boolean. Return 'string', 'number', 'boolean', or add ' | null' if nullable is true.",
+      "starter_code": "function inferFieldType(schema) {\n  // Infer TS type from Drizzle column: {type: 'text'|'int'|'bool', nullable?: boolean}\n  // Returns: 'string', 'number', 'boolean', or with ' | null' if nullable\n}\n",
+      "test_cases": [
+        {
+          "name": "Non-null text",
+          "input": "{ type: 'text', nullable: false }",
+          "expected_output": "string",
+          "visibility": "visible"
+        },
+        {
+          "name": "Nullable int",
+          "input": "{ type: 'int', nullable: true }",
+          "expected_output": "number | null",
+          "visibility": "visible"
+        },
+        {
+          "name": "Non-null bool",
+          "input": "{ type: 'bool' }",
+          "expected_output": "boolean",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Nullable text",
+          "input": "{ type: 'text', nullable: true }",
+          "expected_output": "string | null",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["drizzle-types", "schema-as-type"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L06",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L06"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `countOmittedFields(schema)` that takes an object with a 'fields' array and an 'omit' array of field names, and returns how many fields would remain after omitting. This simulates the .omit() pattern used when deriving CreateSchema from table definitions (omit server-generated fields like id, createdAt).",
+      "starter_code": "function countOmittedFields(schema) {\n  // Count fields remaining after omit\n  // schema: { fields: string[], omit: string[] }\n  // Returns: number of fields NOT in omit list\n}\n",
+      "test_cases": [
+        {
+          "name": "Omit two fields",
+          "input": "{ fields: ['id', 'title', 'content', 'createdAt'], omit: ['id', 'createdAt'] }",
+          "expected_output": "2",
+          "visibility": "visible"
+        },
+        {
+          "name": "Omit none",
+          "input": "{ fields: ['title', 'content'], omit: [] }",
+          "expected_output": "2",
+          "visibility": "visible"
+        },
+        {
+          "name": "Omit all",
+          "input": "{ fields: ['id', 'timestamp'], omit: ['id', 'timestamp'] }",
+          "expected_output": "0",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Omit non-existent",
+          "input": "{ fields: ['title'], omit: ['id', 'other'] }",
+          "expected_output": "1",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["z-infer", "drizzle-types", "schema-as-type"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L06",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L06"]
+    }
+  ]
+}

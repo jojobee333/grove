@@ -152,9 +152,43 @@ if (existsSync(assessmentsDir)) {
   console.log('\nassessments/');
   const files = readdirSync(assessmentsDir).filter(f => f.endsWith('.json'));
   let totalQuestions = 0;
+  let totalChallenges = 0;
   for (const file of files) {
     const data = readJSON(join(assessmentsDir, file));
     if (!data) continue;
+
+    // Handle code challenges
+    if (file.match(/code-challenge-/i)) {
+      for (const challenge of data.challenges ?? []) {
+        if (!challenge.id) { err(`${file}: challenge missing id`); continue; }
+        totalChallenges++;
+        if (challenge.language && !['python', 'javascript'].includes(challenge.language))
+          err(`${file}/${challenge.id}: language must be "python" or "javascript"`);
+        if (!Array.isArray(challenge.test_cases) || challenge.test_cases.length === 0)
+          err(`${file}/${challenge.id}: must have at least one test case`);
+        for (const tc of challenge.test_cases ?? []) {
+          if (!tc.name || !tc.input || !tc.expected_output || !tc.visibility)
+            err(`${file}/${challenge.id}: test case missing required fields`);
+        }
+        if (!challenge.starter_code && !challenge.solution_template)
+          err(`${file}/${challenge.id}: must have starter_code or solution_template`);
+        if (hasConceptGraph) {
+          for (const cid of challenge.concepts ?? []) {
+            if (!allConceptIds.has(cid))
+              err(`${file}/${challenge.id}: concept "${cid}" not found in concepts.json`);
+          }
+        }
+        if (challenge.lesson_ref && !allLessons[challenge.lesson_ref])
+          err(`${file}/${challenge.id}: lesson_ref "${challenge.lesson_ref}" does not exist`);
+        for (const lid of challenge.remediation_lesson_ids ?? []) {
+          if (!allLessons[lid])
+            err(`${file}/${challenge.id}: remediation_lesson_id "${lid}" does not exist`);
+        }
+      }
+      continue;
+    }
+
+    // Handle regular questions
     for (const q of data.questions ?? []) {
       if (!q.id) { err(`${file}: question missing id`); continue; }
       totalQuestions++;
@@ -174,7 +208,11 @@ if (existsSync(assessmentsDir)) {
       }
     }
   }
-  ok(`${totalQuestions} questions across ${files.length} assessment files checked`);
+  if (totalChallenges > 0) {
+    ok(`${totalQuestions} questions and ${totalChallenges} code challenges across ${files.length} assessment files checked`);
+  } else {
+    ok(`${totalQuestions} questions across ${files.length} assessment files checked`);
+  }
 }
 
 // ── Validate learning-paths.json ────────────────────────────────────────────

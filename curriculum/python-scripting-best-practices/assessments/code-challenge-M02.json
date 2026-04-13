@@ -1,0 +1,94 @@
+{
+  "id": "code-challenge-M02",
+  "type": "module",
+  "module": "M02",
+  "title": "Coding Challenge: Script Structure and Observability",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `parse_log_line(line)` that parses a single log line in the format `LEVEL:MESSAGE` and returns a tuple `(level, message)`. If the line does not match the format, return `('UNKNOWN', line.strip())`.",
+      "starter_code": "def parse_log_line(line):\n    \"\"\"\n    Parse a log line in the format 'LEVEL:MESSAGE'.\n    Returns a tuple (level, message).\n    If the format is invalid, return ('UNKNOWN', line.strip()).\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Parses INFO line",
+          "input": "'INFO:Server started'",
+          "expected_output": "('INFO', 'Server started')",
+          "visibility": "visible"
+        },
+        {
+          "name": "Parses ERROR line",
+          "input": "'ERROR:Connection refused'",
+          "expected_output": "('ERROR', 'Connection refused')",
+          "visibility": "visible"
+        },
+        {
+          "name": "Handles invalid format",
+          "input": "'not a valid log line'",
+          "expected_output": "('UNKNOWN', 'not a valid log line')",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Handles WARNING with spaces in message",
+          "input": "'WARNING:Disk space is low'",
+          "expected_output": "('WARNING', 'Disk space is low')",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["script-structure", "structured-logging"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L03",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L03", "L04"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `get_log_level(severity)` that returns the appropriate Python logging level name as a string. Map: severity 0-1 → `'DEBUG'`, 2-3 → `'INFO'`, 4-6 → `'WARNING'`, 7-9 → `'ERROR'`, 10+ → `'CRITICAL'`.",
+      "starter_code": "def get_log_level(severity):\n    \"\"\"\n    Convert a numeric severity to a Python logging level name.\n    0-1: DEBUG, 2-3: INFO, 4-6: WARNING, 7-9: ERROR, 10+: CRITICAL\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "severity 0 → DEBUG",
+          "input": "0",
+          "expected_output": "DEBUG",
+          "visibility": "visible"
+        },
+        {
+          "name": "severity 3 → INFO",
+          "input": "3",
+          "expected_output": "INFO",
+          "visibility": "visible"
+        },
+        {
+          "name": "severity 5 → WARNING",
+          "input": "5",
+          "expected_output": "WARNING",
+          "visibility": "hidden"
+        },
+        {
+          "name": "severity 8 → ERROR",
+          "input": "8",
+          "expected_output": "ERROR",
+          "visibility": "hidden"
+        },
+        {
+          "name": "severity 15 → CRITICAL",
+          "input": "15",
+          "expected_output": "CRITICAL",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["structured-logging", "log-levels", "module-logger"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L04",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L04"]
+    }
+  ]
+}

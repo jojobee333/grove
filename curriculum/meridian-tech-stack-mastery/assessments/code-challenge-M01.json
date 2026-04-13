@@ -1,0 +1,128 @@
+{
+  "id": "code-challenge-M01",
+  "type": "module",
+  "module": "M01",
+  "title": "Coding Challenge: TypeScript Strict Mode Fundamentals",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `countStrictFlags(config)` that takes a tsconfig.json compilerOptions object and returns the number of strict mode sub-flags that are explicitly set to true. Count only these nine flags: noImplicitAny, strictNullChecks, strictFunctionTypes, strictBindCallApply, strictPropertyInitialization, noImplicitThis, alwaysStrict, useUnknownInCatchVariables, exactOptionalPropertyTypes.",
+      "starter_code": "function countStrictFlags(config) {\n  // Count how many of the nine strict sub-flags are true\n  // config is an object like { noImplicitAny: true, strictNullChecks: false, ... }\n}\n",
+      "test_cases": [
+        {
+          "name": "Two flags enabled",
+          "input": "{ noImplicitAny: true, strictNullChecks: true }",
+          "expected_output": "2",
+          "visibility": "visible"
+        },
+        {
+          "name": "No flags",
+          "input": "{}",
+          "expected_output": "0",
+          "visibility": "visible"
+        },
+        {
+          "name": "All nine flags",
+          "input": "{ noImplicitAny: true, strictNullChecks: true, strictFunctionTypes: true, strictBindCallApply: true, strictPropertyInitialization: true, noImplicitThis: true, alwaysStrict: true, useUnknownInCatchVariables: true, exactOptionalPropertyTypes: true }",
+          "expected_output": "9",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Mixed true and false",
+          "input": "{ noImplicitAny: true, strictNullChecks: false, strictFunctionTypes: true }",
+          "expected_output": "2",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["typescript-strict-mode", "strict-sub-flags"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L01",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L01"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `hasCriticalFlags(config)` that returns true if a tsconfig compilerOptions object has BOTH noImplicitAny and strictNullChecks set to true (the two critical flags for Meridian), false otherwise.",
+      "starter_code": "function hasCriticalFlags(config) {\n  // Check if both noImplicitAny and strictNullChecks are true\n  // These are the two critical flags for library type safety\n}\n",
+      "test_cases": [
+        {
+          "name": "Both critical flags present",
+          "input": "{ noImplicitAny: true, strictNullChecks: true }",
+          "expected_output": "true",
+          "visibility": "visible"
+        },
+        {
+          "name": "Missing strictNullChecks",
+          "input": "{ noImplicitAny: true }",
+          "expected_output": "false",
+          "visibility": "visible"
+        },
+        {
+          "name": "Both false",
+          "input": "{ noImplicitAny: false, strictNullChecks: false }",
+          "expected_output": "false",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Only strictNullChecks",
+          "input": "{ strictNullChecks: true }",
+          "expected_output": "false",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["typescript-strict-mode", "strict-sub-flags", "library-strict-dependency"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L01",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L01", "L02"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `isViteReady(config)` that returns true if a tsconfig has both strict:true AND isolatedModules:true (required for Vite), false otherwise. Check the exact property names.",
+      "starter_code": "function isViteReady(config) {\n  // Check if config has strict: true AND isolatedModules: true\n  // Both are required for Vite + Meridian stack\n}\n",
+      "test_cases": [
+        {
+          "name": "Both required flags",
+          "input": "{ strict: true, isolatedModules: true }",
+          "expected_output": "true",
+          "visibility": "visible"
+        },
+        {
+          "name": "Missing isolatedModules",
+          "input": "{ strict: true }",
+          "expected_output": "false",
+          "visibility": "visible"
+        },
+        {
+          "name": "Missing strict",
+          "input": "{ isolatedModules: true }",
+          "expected_output": "false",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Empty config",
+          "input": "{}",
+          "expected_output": "false",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["typescript-strict-mode"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L01",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L01"]
+    }
+  ]
+}

@@ -140,7 +140,7 @@ for (const slug of SLUGS) {
   test(`${slug}: bundle has required top-level keys`, () => {
     if (!existsSync(bundlePath)) return;
     const bundle = JSON.parse(readFileSync(bundlePath, 'utf8'));
-    for (const key of ['course', 'lessons', 'cards', 'quizzes', 'modchecks', 'concepts', 'adaptiveRules', 'learningPaths']) {
+    for (const key of ['course', 'lessons', 'cards', 'quizzes', 'modchecks', 'codeChallenges', 'concepts', 'adaptiveRules', 'learningPaths']) {
       assert.ok(key in bundle, `Missing key: ${key}`);
     }
   });
@@ -167,6 +167,26 @@ for (const slug of SLUGS) {
       assert.ok(Array.isArray(q.concepts),                `${q.id}: missing concepts`);
       assert.ok(typeof q.weight === 'number',             `${q.id}: missing weight`);
       assert.ok(Array.isArray(q.remediation_lesson_ids),  `${q.id}: missing remediation_lesson_ids`);
+    }
+  });
+
+  test(`${slug}: code challenges have v3 enrichment fields`, () => {
+    if (!existsSync(bundlePath)) return;
+    const bundle = JSON.parse(readFileSync(bundlePath, 'utf8'));
+    const challenges = Object.values(bundle.codeChallenges || {}).flatMap(c => c.challenges || []);
+    if (challenges.length === 0) return; // Skip if no code challenges
+    for (const c of challenges) {
+      assert.ok(c.id, `challenge missing id`);
+      assert.ok(['python', 'javascript'].includes(c.language), `${c.id}: invalid language`);
+      assert.ok(c.prompt, `${c.id}: missing prompt`);
+      assert.ok(c.starter_code || c.solution_template, `${c.id}: missing starter_code or solution_template`);
+      assert.ok(Array.isArray(c.test_cases), `${c.id}: missing test_cases`);
+      assert.ok(c.test_cases.length > 0, `${c.id}: empty test_cases`);
+      assert.ok(Array.isArray(c.concepts), `${c.id}: missing concepts`);
+      assert.ok(['application', 'synthesis'].includes(c.cognitive_level), `${c.id}: invalid cognitive_level`);
+      assert.ok(typeof c.weight === 'number', `${c.id}: missing weight`);
+      assert.ok(typeof c.pass_criteria === 'number', `${c.id}: missing pass_criteria`);
+      assert.ok(Array.isArray(c.remediation_lesson_ids), `${c.id}: missing remediation_lesson_ids`);
     }
   });
 

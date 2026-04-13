@@ -4,6 +4,50 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Grove</title>
+<!-- Pyodide: Python in the browser via WebAssembly (lazy-loaded on first Python challenge) -->
+<script>
+  window._pyodidePromise = null;
+  function loadPyodide() {
+    if (window._pyodidePromise) return window._pyodidePromise;
+    window._pyodidePromise = new Promise((resolve, reject) => {
+      const s = document.createElement('script');
+      s.src = 'https://cdn.jsdelivr.net/pyodide/v0.27.0/full/pyodide.js';
+      s.onload = () => window.loadPyodide({ indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.27.0/full/' }).then(resolve).catch(reject);
+      s.onerror = () => reject(new Error('Failed to load Pyodide'));
+      document.head.appendChild(s);
+    });
+    return window._pyodidePromise;
+  }
+</script>
+<!-- CodeMirror: syntax-highlighted code editor (lazy-loaded on first code challenge) -->
+<script>
+  window._cmEditors = {};
+  window._cmPromise = null;
+  function loadCodeMirror() {
+    if (window._cmPromise) return window._cmPromise;
+    window._cmPromise = new Promise((resolve, reject) => {
+      const base = 'https://cdn.jsdelivr.net/npm/codemirror@5.65.19';
+      const link = document.createElement('link');
+      link.rel = 'stylesheet'; link.href = `${base}/lib/codemirror.min.css`;
+      document.head.appendChild(link);
+      const s = document.createElement('script');
+      s.src = `${base}/lib/codemirror.min.js`;
+      s.onload = () => {
+        let loaded = 0;
+        const done = () => { if (++loaded === 2) resolve(window.CodeMirror); };
+        const fail = () => reject(new Error('CodeMirror mode load failed'));
+        ['mode/python/python.min.js', 'mode/javascript/javascript.min.js'].forEach(path => {
+          const m = document.createElement('script');
+          m.src = `${base}/${path}`; m.onload = done; m.onerror = fail;
+          document.head.appendChild(m);
+        });
+      };
+      s.onerror = () => reject(new Error('CodeMirror failed to load'));
+      document.head.appendChild(s);
+    });
+    return window._cmPromise;
+  }
+</script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -179,6 +223,52 @@
 
   /* Learning paths (Phase C) */
   .path-active { border-color: var(--accent) !important; background: var(--accent-light); }
+
+  /* Code challenges */
+  .code-challenge-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 12px; }
+  .code-editor { margin: 1rem 0; }
+  .code-editor textarea { display: none; } /* hidden once CM upgrades it; visible as fallback */
+
+  /* CodeMirror — always dark */
+  .CodeMirror {
+    height: auto; min-height: 200px;
+    font-family: 'Courier New', Consolas, monospace; font-size: 13px; line-height: 1.6;
+    border: 1px solid rgba(255,255,255,0.1); border-radius: var(--radius);
+    background: #1e1e1e !important; color: #d4d4d4 !important;
+  }
+  .CodeMirror-scroll { min-height: 200px; }
+  .CodeMirror-gutters { background: #1e1e1e !important; border-right: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius) 0 0 var(--radius); }
+  .CodeMirror-linenumber { color: #5a5a5a !important; padding: 0 10px; }
+  .CodeMirror-cursor { border-left: 2px solid #d4d4d4 !important; }
+  .CodeMirror-selected { background: #264f78 !important; }
+  .CodeMirror-focused .CodeMirror-selected { background: #264f78 !important; }
+  .CodeMirror-focused { border-color: var(--accent); }
+  /* Syntax tokens */
+  .cm-keyword  { color: #569cd6 !important; font-weight: bold; }
+  .cm-def      { color: #dcdcaa !important; }
+  .cm-variable, .cm-variable-2 { color: #9cdcfe !important; }
+  .cm-property { color: #9cdcfe !important; }
+  .cm-operator { color: #d4d4d4; }
+  .cm-string, .cm-string-2 { color: #ce9178 !important; }
+  .cm-comment  { color: #6a9955 !important; font-style: italic; }
+  .cm-number   { color: #b5cea8 !important; }
+  .cm-atom     { color: #569cd6 !important; }
+  .cm-builtin  { color: #4ec9b0 !important; }
+  .test-cases-visible { font-size: 13px; margin: 1rem 0; padding: 12px; background: var(--bg); border-radius: var(--radius); border-left: 3px solid var(--accent); }
+  .test-case { margin-bottom: 8px; padding: 8px 0; }
+  .test-case-name { font-weight: 500; color: var(--text); }
+  .test-case-info { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .run-tests-btn { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: var(--radius); cursor: pointer; font-weight: 500; font-size: 14px; margin-top: 8px; }
+  .run-tests-btn:hover { opacity: 0.9; }
+  .test-results { margin-top: 1rem; padding: 12px; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); max-height: 300px; overflow-y: auto; }
+  .test-result { padding: 8px 0; font-size: 13px; border-bottom: 1px solid var(--border); }
+  .test-result:last-child { border-bottom: none; }
+  .test-result.passed { color: var(--accent); font-weight: 500; }
+  .test-result.failed { color: var(--danger); font-weight: 500; }
+  .test-result-summary { font-weight: 500; padding: 12px 0; }
+  .test-result-summary.all-passed { color: var(--accent); }
+  .test-result-summary.some-failed { color: var(--warn); }
+
 </style>
 </head>
 <body>
@@ -207,6 +297,9 @@
       </button>
       <button class="nav-item" onclick="showView('cards')" id="nav-cards">
         <span class="nav-dot" id="dot-cards"></span> Flashcards
+      </button>
+      <button class="nav-item" onclick="showView('code')" id="nav-code" style="display:none">
+        <span class="nav-dot" id="dot-code"></span> Code challenges
       </button>
       <button class="nav-item" onclick="showView('progress')" id="nav-progress" style="display:none">
         <span class="nav-dot" id="dot-progress"></span> My progress
@@ -261,11 +354,12 @@ function saveProgress() {
 function loadProgress() {
   if (!course) return;
   const saved = localStorage.getItem('grove_progress_' + course.slug);
-  progress = saved ? JSON.parse(saved) : { lessons: {}, cards: {}, quizzes: {} };
-  if (!progress.lessons)       progress.lessons       = {};
-  if (!progress.cards)         progress.cards         = {};
-  if (!progress.quizzes)       progress.quizzes       = {};
-  if (!progress.conceptMastery) progress.conceptMastery = {};
+  progress = saved ? JSON.parse(saved) : { lessons: {}, cards: {}, quizzes: {}, codeChallenges: {} };
+  if (!progress.lessons)         progress.lessons         = {};
+  if (!progress.cards)           progress.cards           = {};
+  if (!progress.quizzes)         progress.quizzes         = {};
+  if (!progress.codeChallenges)  progress.codeChallenges  = {};
+  if (!progress.conceptMastery)  progress.conceptMastery  = {};
 }
 
 // ── FILE LOADING ───────────────────────────────────────────
@@ -314,8 +408,11 @@ function initFromBundle(data) {
   if (bundleBadge) bundleBadge.style.display = '';
   const nprog = document.getElementById('nav-progress');
   const npath = document.getElementById('nav-paths');
+  const ncode = document.getElementById('nav-code');
   if (nprog) nprog.style.display = '';
   if (npath) npath.style.display = '';
+  const hasChallenges = Object.values(data.codeChallenges || {}).some(m => m.challenges?.length > 0);
+  if (ncode) ncode.style.display = hasChallenges ? '' : 'none';
 }
 
 function loadCards(file) {
@@ -447,6 +544,24 @@ function updateConceptMasteryFromCard(card, quality) {
   const weight = card.weight ?? 0.5;
   const delta  = quality >= 4 ? weight * 0.12 : quality >= 3 ? weight * 0.05 : -(weight * 0.08);
   for (const cid of card.concepts || []) {
+    const current = progress.conceptMastery[cid] ?? 0.5;
+    progress.conceptMastery[cid] = Math.max(0, Math.min(1, current + delta));
+  }
+}
+
+function updateConceptMasteryFromCodeChallenge(moduleId, challengeId, testsPassed, testsTotal) {
+  if (!bundle) return;
+  if (!progress.conceptMastery) progress.conceptMastery = {};
+  if (!bundle.codeChallenges?.[moduleId]) return;
+  const challenge = bundle.codeChallenges[moduleId].challenges?.find(c => c.id === challengeId);
+  if (!challenge) return;
+  // Code challenges are worth more mastery: +20% for full pass, +5% for partial, -15% for fail
+  const weight = challenge.weight ?? 1.0;
+  const passRatio = testsTotal > 0 ? testsPassed / testsTotal : 0;
+  const isPassed = passRatio >= (challenge.pass_criteria ?? 0.70);
+  const isPartial = passRatio > 0.5 && !isPassed;
+  const delta = isPassed ? weight * 0.20 : isPartial ? weight * 0.05 : -(weight * 0.15);
+  for (const cid of challenge.concepts || []) {
     const current = progress.conceptMastery[cid] ?? 0.5;
     progress.conceptMastery[cid] = Math.max(0, Math.min(1, current + delta));
   }
@@ -621,12 +736,13 @@ function updateOverallProgress() {
 
 // ── VIEWS ──────────────────────────────────────────────────
 function showView(view) {
-  ['plan','cards','progress','paths'].forEach(v => {
+  ['plan','cards','code','progress','paths'].forEach(v => {
     const el = document.getElementById('nav-' + v);
     if (el) el.classList.toggle('active', v === view);
   });
   if (view === 'plan')     renderPlan();
   if (view === 'cards')    renderCards();
+  if (view === 'code')     renderCodeView();
   if (view === 'progress') renderProgress();
   if (view === 'paths')    renderPaths();
 }
@@ -1048,6 +1164,239 @@ function rateCard(quality) {
   renderCard();
 }
 
+// ── CODE CHALLENGES VIEW ───────────────────────────────────
+function renderCodeView() {
+  const main = document.getElementById('main');
+  if (!bundle) {
+    main.innerHTML = '<div class="card"><p>Load a bundle.json to see code challenges.</p></div>';
+    return;
+  }
+
+  const allChallenges = [];
+  for (const mod of course.modules || []) {
+    const set = bundle.codeChallenges?.[mod.id];
+    if (!set?.challenges?.length) continue;
+    for (const c of set.challenges) {
+      const saved = progress.codeChallenges?.[mod.id]?.[c.id];
+      allChallenges.push({ moduleId: mod.id, moduleTitle: mod.title, challenge: c, done: saved?.passed ?? false, testsPassed: saved?.testsPassed, testsTotal: saved?.testsTotal });
+    }
+  }
+
+  if (!allChallenges.length) {
+    main.innerHTML = '<div class="card"><h1>Code Challenges</h1><p class="text-muted">No code challenges found in this bundle.</p></div>';
+    return;
+  }
+
+  const totalDone = allChallenges.filter(x => x.done).length;
+  const langBadge = lang => `<span class="badge ${lang === 'python' ? 'badge-green' : 'badge-amber'}">${lang}</span>`;
+
+  const cards = allChallenges.map(({ moduleId, moduleTitle, challenge, done, testsPassed, testsTotal }) => {
+    const statusIcon = done ? '✓' : '○';
+    const statusStyle = done ? 'color:var(--accent);font-weight:600' : 'color:var(--muted)';
+    const sub = (testsPassed !== undefined)
+      ? `<span class="text-muted" style="font-size:12px">${testsPassed}/${testsTotal} tests passed</span>`
+      : `<span class="text-muted" style="font-size:12px">${challenge.test_cases?.length ?? 0} test cases</span>`;
+    return `
+      <div class="module-card" onclick="showChallenge('${moduleId}','${challenge.id}')" style="cursor:pointer">
+        <div class="module-header">
+          <span class="module-title" style="font-size:14px">${challenge.id} — ${challenge.prompt.slice(0, 60)}${challenge.prompt.length > 60 ? '…' : ''}</span>
+          <span style="${statusStyle}">${statusIcon}</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;margin-top:4px">
+          ${langBadge(challenge.language)}
+          <span class="text-muted" style="font-size:12px">${moduleTitle}</span>
+          ${sub}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  main.innerHTML = `
+    <h1>Code Challenges</h1>
+    <p class="text-muted">${totalDone} of ${allChallenges.length} completed</p>
+    <div class="progress-wrap" style="margin:1rem 0">
+      <div class="progress-bar"><div class="progress-fill" style="width:${allChallenges.length ? Math.round(totalDone/allChallenges.length*100) : 0}%"></div></div>
+    </div>
+    <div class="module-grid" style="margin-top:1.5rem">${cards}</div>
+  `;
+}
+
+function showChallenge(moduleId, challengeId) {
+  const main = document.getElementById('main');
+  const set = bundle?.codeChallenges?.[moduleId];
+  const challenge = set?.challenges?.find(c => c.id === challengeId);
+  if (!challenge) return;
+
+  // Update sidebar active state
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const ncode = document.getElementById('nav-code');
+  if (ncode) ncode.classList.add('active');
+
+  const saved = progress.codeChallenges?.[moduleId]?.[challengeId];
+  const savedCode = quizState.answers?.[challengeId]?.code || challenge.starter_code || '';
+  const visibleTests = challenge.test_cases.filter(t => t.visibility === 'visible');
+  const hiddenCount  = challenge.test_cases.filter(t => t.visibility === 'hidden').length;
+
+  const testsList = visibleTests.map(t => `
+    <div class="test-case">
+      <div class="test-case-name">📋 ${t.name}</div>
+      <div class="test-case-info"><strong>Expected:</strong> ${t.expected_output}</div>
+    </div>
+  `).join('');
+
+  const statusBanner = saved?.passed
+    ? `<div style="padding:10px 14px;background:var(--accent-light);border:1px solid var(--accent);border-radius:var(--radius);font-size:13px;color:var(--accent-text);margin-bottom:1rem">✓ Completed — ${saved.testsPassed}/${saved.testsTotal} tests passed</div>`
+    : '';
+
+  main.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
+      <button class="btn" onclick="renderCodeView()" style="font-size:12px;padding:5px 10px">← All challenges</button>
+      <span class="badge badge-${challenge.language === 'python' ? 'green' : 'amber'}">${challenge.language}</span>
+    </div>
+    <h1 style="font-size:20px;margin-bottom:0.5rem">${challengeId}</h1>
+    ${statusBanner}
+    <div class="card card-sm" style="margin-bottom:1rem">
+      <div class="question-text" style="font-size:15px">${challenge.prompt}</div>
+      <p class="text-muted" style="margin-top:8px;margin-bottom:0">Pass threshold: ${Math.round((challenge.pass_criteria ?? 0.70) * 100)}% · ${challenge.test_cases.length} tests (${hiddenCount} hidden)</p>
+    </div>
+    <div class="code-editor">
+      <textarea id="code-${challengeId}" placeholder="Write your solution…" data-challenge="${challengeId}">${savedCode}</textarea>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+      <button class="run-tests-btn" onclick="runChallengeTests('${moduleId}','${challengeId}')">Run visible tests</button>
+      <button class="run-tests-btn" style="background:var(--text)" onclick="submitChallenge('${moduleId}','${challengeId}')">Submit all tests</button>
+    </div>
+    <div class="test-cases-visible" style="margin-top:1rem">
+      <strong style="display:block;margin-bottom:8px">Visible test cases:</strong>
+      ${testsList || '<em>No visible test cases</em>'}
+    </div>
+    <div class="test-results" id="tests-${challengeId}" style="display:none"></div>
+  `;
+  initCodeEditor(challengeId, challenge.language, savedCode);
+}
+
+async function initCodeEditor(challengeId, language, code) {
+  if (window._cmEditors[challengeId]) {
+    window._cmEditors[challengeId].toTextArea();
+    delete window._cmEditors[challengeId];
+  }
+  try {
+    const CM = await loadCodeMirror();
+    const el = document.getElementById(`code-${challengeId}`);
+    if (!el) return; // user navigated away while CM was loading
+    el.style.display = ''; // briefly show textarea while replacing
+    const cm = CM.fromTextArea(el, {
+      mode: language === 'python' ? 'python' : 'javascript',
+      lineNumbers: true,
+      indentUnit: language === 'python' ? 4 : 2,
+      tabSize:    language === 'python' ? 4 : 2,
+      indentWithTabs: false,
+      lineWrapping: false,
+      autofocus: true,
+      extraKeys: {
+        Tab:          cm => cm.execCommand('indentMore'),
+        'Shift-Tab':  cm => cm.execCommand('indentLess'),
+      }
+    });
+    cm.setValue(code);
+    window._cmEditors[challengeId] = cm;
+  } catch (err) {
+    console.warn('CodeMirror unavailable, using plain textarea:', err);
+    const el = document.getElementById(`code-${challengeId}`);
+    if (el) el.style.display = '';
+  }
+}
+
+function getEditorCode(challengeId) {
+  const cm = window._cmEditors?.[challengeId];
+  if (cm) return cm.getValue();
+  const el = document.getElementById(`code-${challengeId}`);
+  return el ? el.value : '';
+}
+
+async function runChallengeTests(moduleId, challengeId) {
+  const challenge = bundle?.codeChallenges?.[moduleId]?.challenges?.find(c => c.id === challengeId);
+  const resultsEl = document.getElementById(`tests-${challengeId}`);
+  const btn       = document.querySelector(`button[onclick="runChallengeTests('${moduleId}','${challengeId}')"]`);
+  if (!challenge || !resultsEl) return;
+
+  const code = getEditorCode(challengeId).trim();
+  if (!code) { alert('Please enter some code first.'); return; }
+
+  const fnName = detectFunctionName(code, challenge.language);
+  if (!fnName) {
+    resultsEl.style.display = 'block';
+    resultsEl.innerHTML = `<div class="test-result failed">✗ Could not detect a function. Define one like: <code>def solution(...):</code></div>`;
+    return;
+  }
+
+  resultsEl.style.display = 'block';
+  resultsEl.innerHTML = `<div style="color:var(--muted);font-size:13px">⏳ Running ${challenge.language === 'python' ? 'Python (loading WASM…)' : 'JavaScript'} tests…</div>`;
+  if (btn) btn.disabled = true;
+
+  try {
+    const visibleTests = challenge.test_cases.filter(t => t.visibility === 'visible');
+    const results = challenge.language === 'python'
+      ? await evalPython(code, visibleTests, fnName)
+      : await evalJavaScript(code, visibleTests, fnName);
+    resultsEl.innerHTML = renderTestResults(results, challengeId);
+    quizState.answers[challengeId] = { code, language: challenge.language, fnName };
+  } catch (err) {
+    resultsEl.innerHTML = `<div class="test-result failed">✗ ${err.message}</div>`;
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+async function submitChallenge(moduleId, challengeId) {
+  const challenge = bundle?.codeChallenges?.[moduleId]?.challenges?.find(c => c.id === challengeId);
+  const resultsEl = document.getElementById(`tests-${challengeId}`);
+  const btn       = document.querySelector(`button[onclick="submitChallenge('${moduleId}','${challengeId}')"]`);
+  if (!challenge) return;
+
+  const code = getEditorCode(challengeId).trim();
+  if (!code) { alert('Please enter some code first.'); return; }
+
+  const fnName = detectFunctionName(code, challenge.language);
+  if (!fnName) {
+    if (resultsEl) { resultsEl.style.display = 'block'; resultsEl.innerHTML = `<div class="test-result failed">✗ Could not detect a function.</div>`; }
+    return;
+  }
+
+  if (resultsEl) { resultsEl.style.display = 'block'; resultsEl.innerHTML = `<div style="color:var(--muted);font-size:13px">⏳ Running all tests…</div>`; }
+  if (btn) btn.disabled = true;
+
+  try {
+    const results = challenge.language === 'python'
+      ? await evalPython(code, challenge.test_cases, fnName)
+      : await evalJavaScript(code, challenge.test_cases, fnName);
+
+    if (resultsEl) resultsEl.innerHTML = renderTestResults(results, challengeId);
+
+    const testsPassed = results.filter(r => r.passed).length;
+    const passed = testsPassed >= challenge.test_cases.length * (challenge.pass_criteria ?? 0.70);
+    updateConceptMasteryFromCodeChallenge(moduleId, challengeId, testsPassed, challenge.test_cases.length);
+
+    if (!progress.codeChallenges)              progress.codeChallenges = {};
+    if (!progress.codeChallenges[moduleId])    progress.codeChallenges[moduleId] = {};
+    progress.codeChallenges[moduleId][challengeId] = { passed, testsPassed, testsTotal: challenge.test_cases.length, date: new Date().toISOString() };
+    saveProgress();
+
+    // Update dot in sidebar
+    const dotCode = document.getElementById('dot-code');
+    if (dotCode) {
+      const allDone = Object.values(bundle.codeChallenges || {})
+        .flatMap(m => m.challenges || [])
+        .every(c => progress.codeChallenges?.[moduleId]?.[c.id]?.passed);
+      dotCode.className = 'nav-dot' + (allDone ? ' done' : ' current');
+    }
+  } catch (err) {
+    if (resultsEl) resultsEl.innerHTML = `<div class="test-result failed">✗ ${err.message}</div>`;
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
 // ── ASSESSMENT ─────────────────────────────────────────────
 function promptQuiz(moduleId) {
   if (assessments[moduleId]) { showQuiz(moduleId); return; }
@@ -1072,10 +1421,18 @@ function showQuiz(moduleId) {
   quizState = { answers: {}, submitted: false };
 
   const main = document.getElementById('main');
-  const questions = (quiz.questions || []).map((q, i) => renderQuestion(q, i)).join('');
+  const questions = (quiz.questions || []).map((q, i) => renderQuestion(q, i + 1)).join('');
+  const hasChallenges = (bundle?.codeChallenges?.[moduleId]?.challenges?.length ?? 0) > 0;
+  const challengesHint = hasChallenges
+    ? `<div style="margin-top:1rem;padding:10px 14px;background:var(--accent-light);border-radius:var(--radius);font-size:13px">
+         💻 This module has <strong>code challenges</strong> — find them under <strong>Code challenges</strong> in the sidebar.
+       </div>`
+    : '';
+
   main.innerHTML = `
     <h1>${quiz.title}</h1>
     <p class="text-muted">${quiz.questions?.length} questions · Passing: ${quiz.passing_score}%</p>
+    ${challengesHint}
     <div style="margin-top:1.5rem">${questions}</div>
     <div class="btn-row">
       <button class="btn btn-primary" onclick="submitQuiz('${moduleId}')">Submit</button>
@@ -1139,6 +1496,121 @@ function selectOption(qId, key) {
   if (sel) sel.classList.add('selected');
 }
 
+// ── CODE EXECUTION ENGINE ──────────────────────────────────
+function detectFunctionName(code, language) {
+  // Extract the first function name defined in the starter code
+  const pattern = language === 'python'
+    ? /^def\s+([a-zA-Z_]\w*)\s*\(/m
+    : /^(?:function\s+([a-zA-Z_]\w*)|(?:const|let|var)\s+([a-zA-Z_]\w*)\s*=\s*(?:function|\())/m;
+  const m = code.match(pattern);
+  return m ? (m[1] || m[2]) : null;
+}
+
+async function evalJavaScript(code, testCases, fnName) {
+  const results = [];
+  for (const tc of testCases) {
+    try {
+      // Build a function that defines the learner's code then calls it
+      const runner = new Function(`${code}\nreturn String(${fnName}(${tc.input}));`);
+      const actual = runner();
+      const passed = actual.trim() === String(tc.expected_output).trim();
+      results.push({ name: tc.name, passed, actual, expected: tc.expected_output, visibility: tc.visibility });
+    } catch (err) {
+      results.push({ name: tc.name, passed: false, actual: `Error: ${err.message}`, expected: tc.expected_output, visibility: tc.visibility });
+    }
+  }
+  return results;
+}
+
+async function evalPython(code, testCases, fnName) {
+  const results = [];
+  let pyodide;
+  try {
+    pyodide = await loadPyodide();
+  } catch (e) {
+    return testCases.map(tc => ({ name: tc.name, passed: false, actual: 'Pyodide failed to load (check internet for first-time setup)', expected: tc.expected_output, visibility: tc.visibility }));
+  }
+  for (const tc of testCases) {
+    try {
+      const script = `${code}\nstr(${fnName}(${tc.input}))`;
+      const actual = pyodide.runPython(script);
+      const passed = String(actual).trim() === String(tc.expected_output).trim();
+      results.push({ name: tc.name, passed, actual: String(actual), expected: tc.expected_output, visibility: tc.visibility });
+    } catch (err) {
+      const msg = err.message?.split('\n').pop() || err.message;
+      results.push({ name: tc.name, passed: false, actual: `Error: ${msg}`, expected: tc.expected_output, visibility: tc.visibility });
+    }
+  }
+  return results;
+}
+
+function renderTestResults(results, challengeId) {
+  const passed = results.filter(r => r.passed).length;
+  const total  = results.length;
+  const allPassed = passed === total;
+  const summaryClass = allPassed ? 'all-passed' : 'some-failed';
+  const summaryIcon  = allPassed ? '✓' : '✗';
+
+  const rows = results.map(r => {
+    const icon = r.passed ? '✓' : '✗';
+    const cls  = r.passed ? 'passed' : 'failed';
+    const hidden = r.visibility === 'hidden' ? ' <span style="font-size:11px;opacity:0.6">(hidden)</span>' : '';
+    const detail = r.passed ? '' : `<div style="font-size:11px;margin-top:2px;color:var(--muted)">Got: <code>${r.actual}</code> · Expected: <code>${r.expected}</code></div>`;
+    return `<div class="test-result ${cls}">${icon} ${r.name}${hidden}${detail}</div>`;
+  }).join('');
+
+  return `
+    <div class="test-result-summary ${summaryClass}">${summaryIcon} ${passed}/${total} tests passed</div>
+    ${rows}
+  `;
+}
+
+async function runCodeTests(challengeId) {
+  const resultsEl = document.getElementById(`tests-${challengeId}`);
+  const btn       = document.querySelector(`button[onclick="runCodeTests('${challengeId}')"]`);
+  if (!resultsEl) return;
+
+  const code = getEditorCode(challengeId).trim();
+  if (!code) { alert('Please enter some code before running tests.'); return; }
+
+  // Find this challenge in the bundle
+  let challenge = null;
+  for (const mod of Object.values(bundle?.codeChallenges || {})) {
+    const found = (mod.challenges || []).find(c => c.id === challengeId);
+    if (found) { challenge = found; break; }
+  }
+  if (!challenge) { resultsEl.style.display = 'block'; resultsEl.innerHTML = '<p>Challenge not found.</p>'; return; }
+
+  const fnName = detectFunctionName(code, challenge.language);
+  if (!fnName) {
+    resultsEl.style.display = 'block';
+    resultsEl.innerHTML = `<div class="test-result failed">✗ Could not detect a function name. Define a function like: <code>def solution(...):</code></div>`;
+    return;
+  }
+
+  // Show loading state
+  resultsEl.style.display = 'block';
+  resultsEl.innerHTML = `<div style="color:var(--muted);font-size:13px">⏳ Running ${challenge.language === 'python' ? 'Python (loading WASM…)' : 'JavaScript'} tests…</div>`;
+  if (btn) btn.disabled = true;
+
+  // Only run visible tests on "Run Tests", hidden tests run on Submit
+  const visibleTests = challenge.test_cases.filter(t => t.visibility === 'visible');
+
+  try {
+    const results = challenge.language === 'python'
+      ? await evalPython(code, visibleTests, fnName)
+      : await evalJavaScript(code, visibleTests, fnName);
+
+    resultsEl.innerHTML = renderTestResults(results, challengeId);
+    const passed = results.filter(r => r.passed).length;
+    quizState.answers[challengeId] = { code, language: challenge.language, fnName, visiblePassed: passed, visibleTotal: visibleTests.length };
+  } catch (err) {
+    resultsEl.innerHTML = `<div class="test-result failed">✗ Execution error: ${err.message}</div>`;
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
 function submitQuiz(moduleId) {
   const quiz = assessments[moduleId];
   const mcqs = (quiz.questions || []).filter(q => q.type === 'mcq');
@@ -1169,8 +1641,8 @@ function submitQuiz(moduleId) {
 
   progress.quizzes[moduleId] = { score, date: new Date().toISOString(), passed };
   updateConceptMasteryFromQuiz(moduleId);
-  saveProgress();
 
+  saveProgress();
   const result = document.getElementById('quiz-result');
   if (result) {
     result.style.display = 'block';

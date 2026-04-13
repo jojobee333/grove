@@ -192,6 +192,66 @@ Update `state.json` → `phase: complete`, `progress.output_complete: true`.
 
 ---
 
+## Step 6b — Grove code challenges (optional)
+
+**Entry:** Step 6 output verified. User invokes `/grove-code-challenges` or explicitly asks
+to generate coding exercises from this research.  
+**Exit:** One `code-challenge-M*.json` file written per applicable module.
+
+This step is **optional and only runs when the research topic maps to a Grove curriculum.**
+Strata can recognize this when:
+- A `curriculum/<slug>/` folder exists matching or closely matching the research topic slug
+- The user explicitly asks: "generate code challenges from this research"
+
+### How to identify programmable concepts
+
+Read `03-synthesis/claims.md` and look for claims that describe **how** something works
+(not just that it exists). These are candidates for code challenges. Signals:
+- Claims that involve algorithms, transformations, or data processing steps
+- Claims tested with concrete inputs and outputs (parsing, mapping, calculating)
+- Claims referencing a named function, method, or API the learner should be able to call
+- Learning objectives phrased as "the learner should be able to write…" or "implement…"
+
+Skip claims that are purely **declarative** (facts about the world, history, definitions).
+Those belong in MCQ quizzes, not code challenges.
+
+### Generation algorithm
+
+1. **Read the curriculum structure**: Load `curriculum/<slug>/course.json` to get module and lesson IDs, `concepts.json` for valid concept IDs
+2. **Match claims to modules**: For each module, identify which claims from `03-synthesis/claims.md` correspond to that module's lessons
+3. **Design challenges**: For each module with ≥1 programmable claim:
+   - Write 1–3 function-based challenges (see format in `.github/skills/grove-code-challenges/SKILL.md`)
+   - Each challenge tests one specific skill derived from a claim
+   - Use the same `lesson_ref` as the claim's source lesson
+4. **Write test cases**: 2 visible + 2–3 hidden per challenge; verify expected outputs by tracing through a correct solution in your head or via code
+5. **Write file**: `curriculum/<slug>/assessments/code-challenge-M<NN>.json`
+
+### Linking research to curriculum
+
+The research topic slug and curriculum slug may differ. Common mappings:
+- Research `python-scripting-best-practices` → curriculum `python-scripting-best-practices` (same)
+- Research `python-logging-patterns` → curriculum `python-scripting-best-practices` (subset)
+
+If no curriculum folder matches, ask the user: "No Grove curriculum found matching this research.
+Which curriculum slug should I write challenges to? (or 'skip' to skip Grove integration)"
+
+### Output format
+
+Follows the format in `.github/skills/grove-code-challenges/SKILL.md` exactly.
+Run the authoring checklist from that skill before writing each file.
+
+After writing, tell the user:
+```
+Generated N code challenges across N modules:
+  → curriculum/<slug>/assessments/code-challenge-M01.json (N challenges)
+  → curriculum/<slug>/assessments/code-challenge-M02.json (N challenges)
+
+Run: node scripts/validate-curriculum.mjs <slug>
+     node build-bundle.mjs <slug>
+```
+
+---
+
 ## Step 7 — Completion
 
 **Entry:** Final acceptance checklist passes (see below).  

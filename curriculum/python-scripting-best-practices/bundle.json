@@ -1,7 +1,7 @@
 {
   "version": "3.0",
   "slug": "python-scripting-best-practices",
-  "bundled": "2026-04-13T16:33:45.985Z",
+  "bundled": "2026-04-13T20:58:50.822Z",
   "course": {
     "topic": "Python Scripting Best Practices",
     "slug": "python-scripting-best-practices",
@@ -3666,6 +3666,544 @@
           "id": "MC07-3",
           "q": "When teaching a contested best practice, what should you do when the evidence from your research runs out before a clear answer emerges?",
           "a": "State the known evidence and its limits explicitly. Describe the tradeoffs as they currently stand, name what would change the answer (e.g. team size, codebase age, Python version), and direct learners to the primary sources. Do not fabricate a consensus that does not exist."
+        }
+      ]
+    }
+  },
+  "codeChallenges": {
+    "M01": {
+      "id": "code-challenge-M01",
+      "type": "module",
+      "module": "M01",
+      "title": "Coding Challenge: Python Quality Toolchain",
+      "challenges": [
+        {
+          "id": "CC01",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `validate_tool_config(config)` that takes a dictionary representing a pyproject.toml tool section and returns True if it contains all three required quality tools (ruff, mypy, pytest), False otherwise. The config dict has keys like 'tool.ruff', 'tool.mypy', 'tool.pytest.ini_options'.",
+          "starter_code": "def validate_tool_config(config):\n    \"\"\"\n    Check if config dict contains all three required quality tools.\n    Args:\n        config: dict with keys like 'tool.ruff', 'tool.mypy', 'tool.pytest.ini_options'\n    Returns:\n        bool: True if all three tools present, False otherwise\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "All three tools present",
+              "input": "{'tool.ruff': {}, 'tool.mypy': {}, 'tool.pytest.ini_options': {}}",
+              "expected_output": "True",
+              "visibility": "visible"
+            },
+            {
+              "name": "Missing pytest",
+              "input": "{'tool.ruff': {}, 'tool.mypy': {}}",
+              "expected_output": "False",
+              "visibility": "visible"
+            },
+            {
+              "name": "Empty config",
+              "input": "{}",
+              "expected_output": "False",
+              "visibility": "hidden"
+            },
+            {
+              "name": "Only one tool",
+              "input": "{'tool.ruff': {}}",
+              "expected_output": "False",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "quality-toolchain",
+            "ruff",
+            "mypy",
+            "pytest"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 2,
+          "lesson_ref": "L01",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L01"
+          ]
+        },
+        {
+          "id": "CC02",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `count_mypy_violations(annotations)` that takes a list of function signatures (as strings) and returns the number that would fail `mypy --strict` due to missing return type annotations. A signature fails if it doesn't contain ' -> ' (the return type annotation marker). Example: 'def foo():' fails, 'def foo() -> int:' passes.",
+          "starter_code": "def count_mypy_violations(annotations):\n    \"\"\"\n    Count how many function signatures lack return type annotations.\n    Args:\n        annotations: list of function signature strings\n    Returns:\n        int: number of signatures missing ' -> '\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "Two violations",
+              "input": "['def foo():', 'def bar() -> int:', 'def baz():']",
+              "expected_output": "2",
+              "visibility": "visible"
+            },
+            {
+              "name": "All annotated",
+              "input": "['def foo() -> str:', 'def bar() -> int:']",
+              "expected_output": "0",
+              "visibility": "visible"
+            },
+            {
+              "name": "All missing",
+              "input": "['def foo():', 'def bar():', 'def baz():']",
+              "expected_output": "3",
+              "visibility": "hidden"
+            },
+            {
+              "name": "Empty list",
+              "input": "[]",
+              "expected_output": "0",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "mypy",
+            "type-annotations"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 2,
+          "lesson_ref": "L01",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L01",
+            "L05"
+          ]
+        },
+        {
+          "id": "CC03",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `select_modern_union_syntax(type_str)` that takes a type annotation string and returns True if it uses modern Python 3.10+ union syntax (with |), False if it uses old Optional/Union syntax. Examples: 'str | None' returns True, 'Optional[str]' returns False, 'Union[str, int]' returns False.",
+          "starter_code": "def select_modern_union_syntax(type_str):\n    \"\"\"\n    Check if type annotation uses modern union syntax.\n    Args:\n        type_str: string representing a type annotation\n    Returns:\n        bool: True if uses |, False if uses Optional or Union\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "Modern syntax with |",
+              "input": "'str | None'",
+              "expected_output": "True",
+              "visibility": "visible"
+            },
+            {
+              "name": "Old Optional syntax",
+              "input": "'Optional[str]'",
+              "expected_output": "False",
+              "visibility": "visible"
+            },
+            {
+              "name": "Old Union syntax",
+              "input": "'Union[str, int]'",
+              "expected_output": "False",
+              "visibility": "hidden"
+            },
+            {
+              "name": "Modern multi-union",
+              "input": "'str | int | None'",
+              "expected_output": "True",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "ruff",
+            "modern-type-syntax"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 2,
+          "lesson_ref": "L01",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L01",
+            "L06"
+          ]
+        }
+      ]
+    },
+    "M02": {
+      "id": "code-challenge-M02",
+      "type": "module",
+      "module": "M02",
+      "title": "Coding Challenge: Script Structure and Observability",
+      "challenges": [
+        {
+          "id": "CC01",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `parse_log_line(line)` that parses a single log line in the format `LEVEL:MESSAGE` and returns a tuple `(level, message)`. If the line does not match the format, return `('UNKNOWN', line.strip())`.",
+          "starter_code": "def parse_log_line(line):\n    \"\"\"\n    Parse a log line in the format 'LEVEL:MESSAGE'.\n    Returns a tuple (level, message).\n    If the format is invalid, return ('UNKNOWN', line.strip()).\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "Parses INFO line",
+              "input": "'INFO:Server started'",
+              "expected_output": "('INFO', 'Server started')",
+              "visibility": "visible"
+            },
+            {
+              "name": "Parses ERROR line",
+              "input": "'ERROR:Connection refused'",
+              "expected_output": "('ERROR', 'Connection refused')",
+              "visibility": "visible"
+            },
+            {
+              "name": "Handles invalid format",
+              "input": "'not a valid log line'",
+              "expected_output": "('UNKNOWN', 'not a valid log line')",
+              "visibility": "hidden"
+            },
+            {
+              "name": "Handles WARNING with spaces in message",
+              "input": "'WARNING:Disk space is low'",
+              "expected_output": "('WARNING', 'Disk space is low')",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "script-structure",
+            "structured-logging"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 2,
+          "lesson_ref": "L03",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L03",
+            "L04"
+          ]
+        },
+        {
+          "id": "CC02",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `get_log_level(severity)` that returns the appropriate Python logging level name as a string. Map: severity 0-1 → `'DEBUG'`, 2-3 → `'INFO'`, 4-6 → `'WARNING'`, 7-9 → `'ERROR'`, 10+ → `'CRITICAL'`.",
+          "starter_code": "def get_log_level(severity):\n    \"\"\"\n    Convert a numeric severity to a Python logging level name.\n    0-1: DEBUG, 2-3: INFO, 4-6: WARNING, 7-9: ERROR, 10+: CRITICAL\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "severity 0 → DEBUG",
+              "input": "0",
+              "expected_output": "DEBUG",
+              "visibility": "visible"
+            },
+            {
+              "name": "severity 3 → INFO",
+              "input": "3",
+              "expected_output": "INFO",
+              "visibility": "visible"
+            },
+            {
+              "name": "severity 5 → WARNING",
+              "input": "5",
+              "expected_output": "WARNING",
+              "visibility": "hidden"
+            },
+            {
+              "name": "severity 8 → ERROR",
+              "input": "8",
+              "expected_output": "ERROR",
+              "visibility": "hidden"
+            },
+            {
+              "name": "severity 15 → CRITICAL",
+              "input": "15",
+              "expected_output": "CRITICAL",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "structured-logging",
+            "log-levels",
+            "module-logger"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 2,
+          "lesson_ref": "L04",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L04"
+          ]
+        }
+      ]
+    },
+    "M03": {
+      "id": "code-challenge-M03",
+      "type": "module",
+      "module": "M03",
+      "title": "Coding Challenge: Type System Mastery",
+      "challenges": [
+        {
+          "id": "CC01",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `modernize_type_annotation(old)` that converts old-style type annotations to modern Python 3.10+ syntax. Replace 'Optional[X]' with 'X | None', 'List[X]' with 'list[X]', and 'Dict[K, V]' with 'dict[K, V]'. Return the modernized string.",
+          "starter_code": "def modernize_type_annotation(old):\n    \"\"\"\n    Convert old typing syntax to Python 3.10+ syntax.\n    Args:\n        old: string with old-style type annotation\n    Returns:\n        str: modernized annotation\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "Optional to union",
+              "input": "'Optional[str]'",
+              "expected_output": "str | None",
+              "visibility": "visible"
+            },
+            {
+              "name": "List to lowercase",
+              "input": "'List[int]'",
+              "expected_output": "list[int]",
+              "visibility": "visible"
+            },
+            {
+              "name": "Dict to lowercase",
+              "input": "'Dict[str, int]'",
+              "expected_output": "dict[str, int]",
+              "visibility": "hidden"
+            },
+            {
+              "name": "Already modern",
+              "input": "'str | None'",
+              "expected_output": "str | None",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "modern-type-syntax",
+            "type-annotations"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 3,
+          "lesson_ref": "L06",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L06"
+          ]
+        },
+        {
+          "id": "CC02",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `validate_config_keys(cfg)` that takes a dictionary and returns True if it has exactly the keys 'host' (str), 'port' (int), and 'debug' (bool) with correct types, False otherwise. This simulates TypedDict validation at runtime.",
+          "starter_code": "def validate_config_keys(cfg):\n    \"\"\"\n    Validate config dict has required keys with correct types.\n    Args:\n        cfg: dict to validate\n    Returns:\n        bool: True if has host:str, port:int, debug:bool, False otherwise\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "Valid config",
+              "input": "{'host': 'localhost', 'port': 8080, 'debug': True}",
+              "expected_output": "True",
+              "visibility": "visible"
+            },
+            {
+              "name": "Missing key",
+              "input": "{'host': 'localhost', 'port': 8080}",
+              "expected_output": "False",
+              "visibility": "visible"
+            },
+            {
+              "name": "Wrong type for port",
+              "input": "{'host': 'localhost', 'port': '8080', 'debug': True}",
+              "expected_output": "False",
+              "visibility": "hidden"
+            },
+            {
+              "name": "Extra key",
+              "input": "{'host': 'localhost', 'port': 8080, 'debug': True, 'timeout': 30}",
+              "expected_output": "False",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "type-annotations",
+            "modern-type-syntax"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 3,
+          "lesson_ref": "L06",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L06"
+          ]
+        },
+        {
+          "id": "CC03",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `has_close_method(obj)` that returns True if the given object has a callable 'close' attribute, False otherwise. This simulates Protocol structural typing check at runtime.",
+          "starter_code": "def has_close_method(obj):\n    \"\"\"\n    Check if object implements the Closeable protocol (has close method).\n    Args:\n        obj: object to check\n    Returns:\n        bool: True if has callable 'close', False otherwise\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "Object with close",
+              "input": "type('File', (), {'close': lambda self: None})()",
+              "expected_output": "True",
+              "visibility": "visible"
+            },
+            {
+              "name": "Object without close",
+              "input": "{'data': 'value'}",
+              "expected_output": "False",
+              "visibility": "visible"
+            },
+            {
+              "name": "Close not callable",
+              "input": "type('Broken', (), {'close': 'not a method'})()",
+              "expected_output": "False",
+              "visibility": "hidden"
+            },
+            {
+              "name": "None object",
+              "input": "None",
+              "expected_output": "False",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "type-annotations",
+            "modern-type-syntax"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 3,
+          "lesson_ref": "L06",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L06"
+          ]
+        }
+      ]
+    },
+    "M04": {
+      "id": "code-challenge-M04",
+      "type": "module",
+      "module": "M04",
+      "title": "Coding Challenge: pathlib and Resource Management",
+      "challenges": [
+        {
+          "id": "CC01",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `join_paths(parts)` that takes a tuple of path parts (base, *components) and returns the joined path as a string using pathlib-style joining. For example, ('/home', 'user', 'file.txt') should return '/home/user/file.txt'.",
+          "starter_code": "def join_paths(parts):\n    \"\"\"\n    Join path components using pathlib / operator semantics.\n    Args:\n        parts: tuple of (base, *components) path strings\n    Returns:\n        str: joined path\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "Three components",
+              "input": "('/home', 'user', 'file.txt')",
+              "expected_output": "/home/user/file.txt",
+              "visibility": "visible"
+            },
+            {
+              "name": "Two components",
+              "input": "('/tmp', 'data.json')",
+              "expected_output": "/tmp/data.json",
+              "visibility": "visible"
+            },
+            {
+              "name": "Single component",
+              "input": "('/root',)",
+              "expected_output": "/root",
+              "visibility": "hidden"
+            },
+            {
+              "name": "Four components",
+              "input": "('/var', 'log', 'app', 'error.log')",
+              "expected_output": "/var/log/app/error.log",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "pathlib"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 2,
+          "lesson_ref": "L07",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L07"
+          ]
+        },
+        {
+          "id": "CC02",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `extract_parent(path_str)` that takes a file path string and returns the parent directory path. Use pathlib semantics. For example, '/home/user/file.txt' returns '/home/user'.",
+          "starter_code": "def extract_parent(path_str):\n    \"\"\"\n    Extract parent directory from path using pathlib .parent.\n    Args:\n        path_str: file path as string\n    Returns:\n        str: parent directory path\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "File in nested dir",
+              "input": "'/home/user/file.txt'",
+              "expected_output": "/home/user",
+              "visibility": "visible"
+            },
+            {
+              "name": "File in root-level dir",
+              "input": "'/tmp/data.json'",
+              "expected_output": "/tmp",
+              "visibility": "visible"
+            },
+            {
+              "name": "Deep nesting",
+              "input": "'/var/log/app/error.log'",
+              "expected_output": "/var/log/app",
+              "visibility": "hidden"
+            },
+            {
+              "name": "Root file",
+              "input": "'/config.toml'",
+              "expected_output": "/",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "pathlib"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 2,
+          "lesson_ref": "L07",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L07"
+          ]
+        },
+        {
+          "id": "CC03",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `count_context_managers(code_lines)` that takes a list of Python code lines and returns the number that use context managers (lines containing 'with ' as a statement start, not in strings). This identifies proper resource management patterns.",
+          "starter_code": "def count_context_managers(code_lines):\n    \"\"\"\n    Count lines that use with statements for context managers.\n    Args:\n        code_lines: list of code line strings\n    Returns:\n        int: number of lines starting with 'with '\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "Two with statements",
+              "input": "['with open(f) as file:', '    data = file.read()', 'with lock:', '    process()']",
+              "expected_output": "2",
+              "visibility": "visible"
+            },
+            {
+              "name": "No context managers",
+              "input": "['f = open(file)', 'data = f.read()', 'f.close()']",
+              "expected_output": "0",
+              "visibility": "visible"
+            },
+            {
+              "name": "All with statements",
+              "input": "['with A():', 'with B():', 'with C():']",
+              "expected_output": "3",
+              "visibility": "hidden"
+            },
+            {
+              "name": "Mixed code",
+              "input": "['import os', 'with open(f):', 'with db.connect():', 'return result']",
+              "expected_output": "2",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "context-managers"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 2,
+          "lesson_ref": "L07",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L07"
+          ]
         }
       ]
     }

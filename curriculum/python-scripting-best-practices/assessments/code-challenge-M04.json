@@ -1,0 +1,128 @@
+{
+  "id": "code-challenge-M04",
+  "type": "module",
+  "module": "M04",
+  "title": "Coding Challenge: pathlib and Resource Management",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `join_paths(parts)` that takes a tuple of path parts (base, *components) and returns the joined path as a string using pathlib-style joining. For example, ('/home', 'user', 'file.txt') should return '/home/user/file.txt'.",
+      "starter_code": "def join_paths(parts):\n    \"\"\"\n    Join path components using pathlib / operator semantics.\n    Args:\n        parts: tuple of (base, *components) path strings\n    Returns:\n        str: joined path\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Three components",
+          "input": "('/home', 'user', 'file.txt')",
+          "expected_output": "/home/user/file.txt",
+          "visibility": "visible"
+        },
+        {
+          "name": "Two components",
+          "input": "('/tmp', 'data.json')",
+          "expected_output": "/tmp/data.json",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single component",
+          "input": "('/root',)",
+          "expected_output": "/root",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Four components",
+          "input": "('/var', 'log', 'app', 'error.log')",
+          "expected_output": "/var/log/app/error.log",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["pathlib"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L07",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L07"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `extract_parent(path_str)` that takes a file path string and returns the parent directory path. Use pathlib semantics. For example, '/home/user/file.txt' returns '/home/user'.",
+      "starter_code": "def extract_parent(path_str):\n    \"\"\"\n    Extract parent directory from path using pathlib .parent.\n    Args:\n        path_str: file path as string\n    Returns:\n        str: parent directory path\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "File in nested dir",
+          "input": "'/home/user/file.txt'",
+          "expected_output": "/home/user",
+          "visibility": "visible"
+        },
+        {
+          "name": "File in root-level dir",
+          "input": "'/tmp/data.json'",
+          "expected_output": "/tmp",
+          "visibility": "visible"
+        },
+        {
+          "name": "Deep nesting",
+          "input": "'/var/log/app/error.log'",
+          "expected_output": "/var/log/app",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Root file",
+          "input": "'/config.toml'",
+          "expected_output": "/",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["pathlib"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L07",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L07"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `count_context_managers(code_lines)` that takes a list of Python code lines and returns the number that use context managers (lines containing 'with ' as a statement start, not in strings). This identifies proper resource management patterns.",
+      "starter_code": "def count_context_managers(code_lines):\n    \"\"\"\n    Count lines that use with statements for context managers.\n    Args:\n        code_lines: list of code line strings\n    Returns:\n        int: number of lines starting with 'with '\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Two with statements",
+          "input": "['with open(f) as file:', '    data = file.read()', 'with lock:', '    process()']",
+          "expected_output": "2",
+          "visibility": "visible"
+        },
+        {
+          "name": "No context managers",
+          "input": "['f = open(file)', 'data = f.read()', 'f.close()']",
+          "expected_output": "0",
+          "visibility": "visible"
+        },
+        {
+          "name": "All with statements",
+          "input": "['with A():', 'with B():', 'with C():']",
+          "expected_output": "3",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Mixed code",
+          "input": "['import os', 'with open(f):', 'with db.connect():', 'return result']",
+          "expected_output": "2",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["context-managers"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L07",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L07"]
+    }
+  ]
+}
