@@ -1,0 +1,26 @@
+{
+  "module": "M03",
+  "title": "Documentation and the Type System — Quick Check",
+  "questions": [
+    {
+      "id": "MC03-1",
+      "q": "What are the three sections of a Google-style docstring, and which is the only mandatory one?",
+      "a": "Summary line, Args, Returns (and optionally Raises). The one-line summary is the only mandatory section; Args/Returns are required whenever parameters or return values exist."
+    },
+    {
+      "id": "MC03-2",
+      "q": "How do you express 'a string or None' in Python 3.10+ annotation syntax, and what did you write in Python 3.9?",
+      "a": "Python 3.10+: `str | None`. Python 3.9 and earlier: `Optional[str]` (imported from typing)."
+    },
+    {
+      "id": "MC03-3",
+      "q": "What does `Protocol` let you express that a regular base class cannot?",
+      "a": "Protocol enables structural typing — a class satisfies the protocol if it has the right methods/attributes, without inheriting from it. This allows duck-typing contracts to be statically verified by mypy."
+    },
+    {
+      "id": "MC03-4",
+      "q": "Resolve the apparent conflict between PEP 484 ('annotations are never mandatory') and the Google Style Guide ('annotate all new public code').",
+      "a": "PEP 484 sets a language-level policy that the interpreter never requires annotations; it does not prohibit teams from requiring them. The Google Style Guide is a team-level convention that imposes a higher standard for predictability and tooling support."
+    }
+  ]
+}

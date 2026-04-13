@@ -1,0 +1,157 @@
+{
+  "id": "quiz-M05",
+  "type": "module",
+  "module": "M05",
+  "title": "Assessment: React 18 + Zustand — The Client State Integration Contract",
+  "generated": "2026-04-13",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What are the two required arguments to `useSyncExternalStore`, and what does React use each one for?",
+      "options": {
+        "A": "getInitialState (loads initial state) and getSnapshot (reads current state)",
+        "B": "subscribe (React registers a listener to call when store changes, triggering re-render) and getSnapshot (React reads current state during the render itself — used for reference equality)",
+        "C": "onStoreUpdate (called when store changes) and getState (reads the full store)",
+        "D": "connect (attaches React to the store) and select (picks a slice of state)"
+      },
+      "correct": "B",
+      "explanation": "subscribe(listener): React registers a callback it will invoke when the external store changes, triggering a re-render. It must return a cleanup function. getSnapshot(): React calls this during rendering to read the current state. If getSnapshot returns the same reference between renders, React skips reconciliation. The separation of 'when to re-render' (subscribe) from 'what to render' (getSnapshot) is the key design.",
+      "lesson_ref": "L08",
+      "claim_ref": "C4",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "When does a Zustand selector cause unnecessary re-renders, and what does `useShallow` do to fix it?",
+      "options": {
+        "A": "When the selector is defined inline — useShallow memoizes the selector function",
+        "B": "When the selector returns a new object every call (e.g. `s => ({ a: s.a, b: s.b })`), React sees a new reference on every snapshot and re-renders even when values are unchanged. useShallow wraps the selector in shallow equality — only re-renders when a selected property value changes",
+        "C": "When the selector accesses more than three state properties — useShallow batches the reads",
+        "D": "When the selector is asynchronous — useShallow handles the Promise resolution"
+      },
+      "correct": "B",
+      "explanation": "The issue: `getSnapshot = () => ({ a: state.a, b: state.b })` creates a new object reference on every call. useSyncExternalStore uses reference equality: new reference = state changed = re-render. This causes the component to re-render on EVERY store update, even unrelated ones. useShallow wraps with a shallow comparison: it returns the previous reference if all selected values are equal (===), preventing spurious re-renders.",
+      "lesson_ref": "L08",
+      "claim_ref": "C4",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "Why can't Lexical be used in a Next.js Server Component?",
+      "options": {
+        "A": "Lexical's license prohibits server-side usage",
+        "B": "Next.js Server Components don't support React hooks, and Lexical uses hooks internally",
+        "C": "Lexical's core depends on DOM APIs (document.createElement, MutationObserver, Selection) that don't exist in Node.js — even passive operations trigger the DOM-dependent reconciler",
+        "D": "Lexical requires WebSockets which are not available in the Next.js Edge runtime"
+      },
+      "correct": "C",
+      "explanation": "Lexical is architecturally DOM-dependent at its core — it's designed as a browser editor. document.createElement creates the DOM nodes Lexical manages, MutationObserver watches for DOM changes, and the Selection API manages cursor position. Next.js Server Components execute in Node.js where none of these APIs exist. There's no workaround that preserves Server Component semantics; the only option is ssr: false in a Client Component.",
+      "lesson_ref": "L09",
+      "claim_ref": "C3",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "Trace the complete data flow when an SSE streaming AI response connects to a React component via Zustand in React 18 concurrent mode.",
+      "options": {
+        "A": "EventSource fires → React directly re-renders → Zustand captures the new state after render",
+        "B": "EventSource fires onmessage with delta → appendChunk calls Zustand set() producing NEW state object → Zustand notifies useSyncExternalStore subscriber → React calls getSnapshot() seeing new reference → React re-renders with updated content",
+        "C": "EventSource fires → Zustand mutates state → React detects mutation via proxy → re-renders",
+        "D": "EventSource fires → stored in a ref → React polls the ref on an interval → re-renders when changed"
+      },
+      "correct": "B",
+      "explanation": "The complete chain: (1) EventSource.onmessage receives delta chunk. (2) appendChunk calls Zustand's set() with a function that returns a new state object (key: new object, not mutation). (3) Zustand calls its useSyncExternalStore listeners, triggering React's re-render machinery. (4) React calls getSnapshot() — new object reference confirms state changed. (5) React re-renders the streaming component with the updated accumulated content.",
+      "lesson_ref": "L08",
+      "claim_ref": "C4",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "Why can't a `y-websocket` WebsocketProvider be instantiated in a Next.js Server Component?",
+      "options": {
+        "A": "WebSocket connections are blocked by Next.js's CORS policy in Server Components",
+        "B": "Y.WebsocketProvider creates a persistent connection with an ongoing lifecycle (reconnect, sync, awareness). Server Components are stateless — they render once and exit with no lifecycle to maintain a persistent connection",
+        "C": "WebSockets require HTTP/2 which Next.js Server Components don't support",
+        "D": "The y-websocket package is not compatible with the Node.js version used by Next.js"
+      },
+      "correct": "B",
+      "explanation": "Server Components execute, render to HTML, and terminate. They have no persistent lifecycle — no useEffect, no cleanup, no component instance that persists. Y.WebsocketProvider needs to maintain a persistent connection, handle reconnection events, sync awareness state, and be cleaned up on unmount. All of this requires client-side lifecycle management inside useEffect. This is why WebSocket providers belong in Client Components.",
+      "lesson_ref": "L09",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "Meridian chooses Vite SPA over Next.js App Router, accepting that the initial HTML served by the CDN is an empty shell. Under what specific conditions would this trade-off NOT be acceptable?",
+      "options": {
+        "A": "When the application has more than 50,000 users",
+        "B": "When public-facing pages need to be crawlable by search engines for SEO — landing pages, public shared documents, blog content. SSR/SSG generates real HTML, enabling crawling",
+        "C": "When the application needs authentication — Vite SPA can't secure routes",
+        "D": "When real-time collaborative features are present — Next.js handles WebSockets better"
+      },
+      "correct": "B",
+      "explanation": "The SPA trade-off: the initial HTML shell contains almost no content, so search engine crawlers see a mostly empty page. For Meridian's authenticated workspace, this is acceptable — workspace content is private and has no SEO value. But a product with public pages (marketing site, public shared notes, documentation) would lose SEO entirely. The SSR benefit only applies where public crawlability matters.",
+      "lesson_ref": "L09",
+      "claim_ref": "C3",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "Implement a Zustand store slice for AI streaming that avoids the mutation pitfall and correctly handles React 18 concurrent mode. Show the store definition and explain why each design choice is correct.",
+      "answer_key": {
+        "required_points": [
+          "create<AiState>()((set) => ...) — curried form required for TypeScript strict mode",
+          "appendChunk uses set(state => ({ ...state, content: state.content + chunk })) — spread to create new object, function form to avoid stale closure",
+          "setStreaming: (v) => set({ isStreaming: v }) — simple value, spread-merge handled by Zustand",
+          "Every set() call produces a new object reference — reference inequality triggers React re-render"
+        ],
+        "acceptable_variations": "May use immer middleware with produce() if noted",
+        "full_credit": "Correct curried form, spread-to-new-object pattern, function form of set for accumulation, explanation of why reference creates trigger re-render",
+        "partial_credit": "Correct general structure but uses mutation or non-curried form"
+      },
+      "lesson_ref": "L08",
+      "claim_ref": "C4",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "A developer wants to use Lexical in a Next.js app. Describe the workaround, and then explain why it proves Vite SPA was the right choice for Meridian.",
+      "answer_key": {
+        "required_points": [
+          "Workaround: dynamic(() => import('./LexicalEditor'), { ssr: false }) to disable SSR for the editor component",
+          "This means: no SSR for the core feature (the editor), initial page load is a blank shell for the editor area",
+          "The developer opted out of Next.js's primary value proposition (SSR/SEO) for the single most important component",
+          "Conclusion: they added Next.js's routing and framework overhead while losing its SSR benefit for what matters most — the opposite of a good trade-off"
+        ],
+        "acceptable_variations": "May describe as 'paying the SSR cost without getting SSR's benefit'",
+        "full_credit": "Describes the workaround correctly and explains why it defeats the purpose of Next.js for this use case",
+        "partial_credit": "Describes the workaround without connecting it to the trade-off argument"
+      },
+      "lesson_ref": "L09",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "essay",
+      "prompt": "Zustand v4's switch to `useSyncExternalStore`, Lexical's frozen EditorState, and the requirement that Vite SPA avoids SSR — all three choices are driven by the same constraint: React 18's concurrent rendering model. Explain the constraint, and show how each of the three choices is a direct response to it.",
+      "guidance": "Strong responses define the concurrent rendering constraint (interruptible renders, multiple renders of the same component at different time slices), then trace how each choice addresses it: Zustand avoids the useState+useEffect gap; immutable EditorState avoids reading different values in the same render; SSR-first frameworks can't maintain the client-side concurrent lifecycle.",
+      "rubric": {
+        "A": "Correctly defines the concurrent constraint and traces all three choices as direct responses with specific mechanisms",
+        "B": "Correctly defines the constraint and traces two of three choices",
+        "C": "States that React 18 requires these choices without explaining the concurrent rendering mechanism"
+      },
+      "lesson_ref": "L08-L09",
+      "difficulty": "analysis"
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "id": "quiz-M09",
+  "type": "module",
+  "module": "M09",
+  "title": "Assessment: Monorepo Tooling — Three Scopes, One Project",
+  "generated": "2026-04-13",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What are the three distinct scopes managed by pnpm workspaces, Turborepo, and Docker Compose respectively?",
+      "options": {
+        "A": "pnpm: file system; Turborepo: CI pipelines; Docker Compose: container images",
+        "B": "pnpm: package registry (which packages exist, how they link); Turborepo: task graph (build/test/lint dependency and caching); Docker Compose: service runtime (which processes run, health checks, network topology)",
+        "C": "pnpm: dependency resolution; Turborepo: source code management; Docker Compose: deployment orchestration",
+        "D": "All three manage the same scope — they are alternative tools for the same problem"
+      },
+      "correct": "B",
+      "explanation": "The three tools are complementary, not competing. pnpm workspaces manages the package registry — which packages exist in the monorepo, how they link to each other, and how their node_modules are deduplicated. Turborepo manages the task execution graph — which tasks in which packages have dependencies, what their build outputs are, and which results can be cached. Docker Compose manages the running service topology — containers, ports, volumes, health checks, service startup order.",
+      "lesson_ref": "L16",
+      "claim_ref": "C15",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "What does `workspace:*` mean in a pnpm package.json dependency declaration, and what problem does it solve in a monorepo?",
+      "options": {
+        "A": "Install the latest version of this package from the npm registry",
+        "B": "Link to the local workspace package at the current version, without publishing to a registry. Changes to the local package are immediately available to dependents without version bumping or publishing",
+        "C": "Install all versions of the package and let pnpm select the most compatible one",
+        "D": "Wildcard that installs the package and all its peer dependencies automatically"
+      },
+      "correct": "B",
+      "explanation": "workspace:* is pnpm's local package linking protocol. When @meridian/server has `\"@meridian/db\": \"workspace:*\"`, pnpm symlinks node_modules/@meridian/db to the local db/ package directory. Any change to db/ is immediately visible to server/ during development without any publish/install cycle. This is what makes monorepo cross-package development practical.",
+      "lesson_ref": "L16",
+      "claim_ref": "C15",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "What is the observable signal that should trigger adding Turborepo to an existing pnpm workspace?",
+      "options": {
+        "A": "When the monorepo has more than 5 packages",
+        "B": "When pnpm build tasks have dependency relationships AND sequential execution is noticeably bottlenecking developer feedback — specifically when independent packages (server, client) must both wait for db to build but then build sequentially instead of in parallel",
+        "C": "Turborepo should always be added from the start — there's no reason to wait",
+        "D": "When CI build minutes exceed a cost threshold"
+      },
+      "correct": "B",
+      "explanation": "Turborepo adds overhead (configuration complexity, turbo.json maintenance). The signal: sequential builds of packages that could be parallel, causing measurable feedback lag. For Meridian (2 packages + db), the signal is: pnpm build runs db first (correct), then client and server sequentially even though they could build in parallel after db. Turborepo's pipeline with dependsOn: ['^build'] enables this parallelism with caching. Adding it speculatively before the bottleneck materializes is premature complexity.",
+      "lesson_ref": "L16",
+      "claim_ref": "C15",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "What does `dependsOn: ['^build']` in a Turborepo pipeline mean, and how does it differ from `dependsOn: ['build']`?",
+      "options": {
+        "A": "^build: run build for all packages in parallel; build: run build sequentially",
+        "B": "^build: run build in all workspace dependencies of this package first (upstream deps); build (no caret): run build in this same package first (self-dependency)",
+        "C": "^build: run build for all packages with a caret version specifier; build: run build for all packages",
+        "D": "^build: run a production build; build: run a development build"
+      },
+      "correct": "B",
+      "explanation": "The caret prefix means 'in dependencies.' dependsOn: ['^build'] says: before running this package's build task, first ensure build has completed in all packages that this package depends on. This is what creates the correct dependency chain: @meridian/server's build waits for @meridian/db's build to complete, because server depends on db. Without the caret, dependsOn: ['build'] would mean 'run build in this same package first' — a self-dependency that usually doesn't make sense.",
+      "lesson_ref": "L16",
+      "claim_ref": "C15",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "Why does Docker Compose's `depends_on` need `condition: service_healthy` rather than just listing the service name?",
+      "options": {
+        "A": "service_healthy enables Docker to pre-pull images before starting dependent containers",
+        "B": "Without the condition, depends_on only waits for the container process to start (milliseconds), not for the service to be ready (e.g. PostgreSQL accepting connections). service_healthy waits until the health check command exits 0, ensuring postgres is actually ready before server attempts a connection",
+        "C": "service_healthy is required to enable Docker's health monitoring dashboard",
+        "D": "Without service_healthy, Docker Compose ignores the depends_on directive entirely"
+      },
+      "correct": "B",
+      "explanation": "Container started ≠ service ready. The postgres container starts the database process in ~100ms, but PostgreSQL itself takes 2–10 seconds to initialize, run WAL recovery, and begin accepting connections. Without condition: service_healthy, depends_on sees the container is 'up' (process running) and starts the server container, which immediately tries to connect to postgres and fails. pg_isready in the healthcheck exits 0 only when postgres is accepting connections.",
+      "lesson_ref": "L16",
+      "claim_ref": "C16",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "short_answer",
+      "question": "Why is the `node_modules` volume exclusion pattern (`- /app/node_modules`) critical in Docker Compose development bind mounts? What bug does it prevent?",
+      "answer_key": {
+        "required_points": [
+          "The bind mount maps the host project directory into the container — including the host's node_modules",
+          "Host node_modules are compiled for the host OS (Windows/macOS binaries). The container runs Linux — host binaries don't work",
+          "The exclusion `- /app/node_modules` tells Docker to preserve the container's own node_modules as a Docker-managed anonymous volume, preventing the host bind mount from overwriting it",
+          "Without it: the container crashes with 'exec format error' or missing binary errors when trying to run Node.js modules with native bindings"
+        ],
+        "acceptable_variations": "May describe as 'native module platform mismatch'",
+        "full_credit": "Identifies the host-vs-container OS mismatch, explains the anonymous volume mechanism, and describes the failure mode without the exclusion",
+        "partial_credit": "Identifies that node_modules should be excluded without explaining why (OS mismatch + anonymous volume)"
+      },
+      "lesson_ref": "L16",
+      "claim_ref": "C16",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "Write the complete Docker Compose health check for a postgres service, and write the correct `depends_on` block for a server service that depends on it.",
+      "answer_key": {
+        "required_points": [
+          "postgres healthcheck: test: ['CMD-SHELL', 'pg_isready -U meridian'], interval: 5s, timeout: 5s, retries: 10",
+          "server depends_on: { postgres: { condition: service_healthy } }",
+          "pg_isready exits 0 when PostgreSQL is accepting connections, non-zero otherwise",
+          "retries: 10 with 5s interval = up to 50s wait — sufficient for PostgreSQL cold start"
+        ],
+        "acceptable_variations": "Username in pg_isready may vary; interval/timeout/retries values may vary reasonably",
+        "full_credit": "Correct healthcheck block and correct depends_on with condition: service_healthy",
+        "partial_credit": "Correct healthcheck but depends_on missing the condition, or vice versa"
+      },
+      "lesson_ref": "L16",
+      "claim_ref": "C16",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q08",
+      "type": "essay",
+      "prompt": "A new developer joins the Meridian project and asks: 'Why do we have three separate tools for the monorepo — pnpm, Turborepo, and Docker Compose? Can we simplify to just one?' Provide a structured response explaining why each tool is necessary, what gap would appear if any one were removed, and under what conditions a team COULD legitimately simplify.",
+      "guidance": "Strong responses map each tool to a scope (package registry, task graph, service runtime) that the others don't cover. 'What gap' section should be concrete: no workspace:* linking without pnpm, no cached parallel builds without Turborepo (though this gap may be small for 2-package repos), no health-check-dependent startup ordering without Compose. Simplification path should be realistic.",
+      "rubric": {
+        "A": "Each tool's scope clearly mapped, specific gap described for each removal scenario, realistic simplification conditions identified (e.g. Turborepo is optional for small repos)",
+        "B": "Scope and gap covered for each tool but simplification analysis is weak",
+        "C": "Argues all three are necessary without differentiating their scopes"
+      },
+      "lesson_ref": "L16",
+      "difficulty": "analysis"
+    }
+  ]
+}

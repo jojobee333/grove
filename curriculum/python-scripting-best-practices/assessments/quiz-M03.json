@@ -1,0 +1,157 @@
+{
+  "id": "quiz-M03",
+  "type": "module",
+  "module": "M03",
+  "title": "Assessment: Documentation and the Type System",
+  "generated": "2026-04-12",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "A function's return type is annotated as `list[str]`. Mypy reports no errors. A docstring says 'Returns an empty list if no results found.' Is the annotation sufficient on its own?",
+      "options": {
+        "A": "Yes — list[str] implies the empty list case; no docstring is needed",
+        "B": "No — the annotation verifies the type is correct, but the docstring communicates intent and edge cases (empty list vs. None vs. exception) that mypy cannot verify",
+        "C": "No — list[str] is ambiguous; you should use list[str] | None to cover the empty case",
+        "D": "Yes — mypy's strict mode automatically generates docstrings from type annotations"
+      },
+      "correct": "B",
+      "explanation": "Type annotations are machine-verifiable contracts about types. Docstrings communicate intent, expected behavior in edge cases, and reasoning that no type checker can verify. `list[str]` tells mypy the return type; it does not tell a human reader whether an empty list means 'no results found' or 'something went wrong'.",
+      "lesson_ref": "L05",
+      "claim_ref": "C3",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "You are annotating a function that accepts a configuration dictionary with known keys: host (str), port (int), and debug (bool). Which typing construct most precisely represents this parameter?",
+      "options": {
+        "A": "dict[str, Any]",
+        "B": "dict[str, str | int | bool]",
+        "C": "TypedDict with fields: host: str, port: int, debug: bool",
+        "D": "Mapping[str, object]"
+      },
+      "correct": "C",
+      "explanation": "TypedDict defines a dict with named, typed keys — mypy verifies that callers provide all required keys with correct types. dict[str, Any] loses all type information. dict[str, str | int | bool] allows any key name. Mapping[str, object] is too broad. TypedDict is the precise tool for dicts with known shapes.",
+      "lesson_ref": "L06",
+      "claim_ref": "C10",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "Which of these type annotation changes is correct when migrating code from Python 3.8 to Python 3.10+?",
+      "options": {
+        "A": "Change `Optional[str]` to `str | None` — equivalent syntax, new form preferred",
+        "B": "Change `str | None` to `Optional[str]` — the pipe syntax is only valid in Python 3.12+",
+        "C": "Change `list[str]` to `List[str]` — the lowercase form was deprecated in 3.10",
+        "D": "Change `Union[str, int]` to `str & int` — the & operator is the new union syntax"
+      },
+      "correct": "A",
+      "explanation": "PEP 604 (Python 3.10) introduced `X | Y` as equivalent to `Union[X, Y]` and `Optional[X]`. `str | None` is the modern preferred form — shorter and requires no imports. B and C are backwards. D is wrong — & is intersection (not in standard typing), | is union.",
+      "lesson_ref": "L06",
+      "claim_ref": "C10",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "A function should accept any object that has a `.write(data: bytes) -> None` method, regardless of class hierarchy. Which typing construct is best suited?",
+      "options": {
+        "A": "Union[io.FileIO, io.BytesIO, socket.socket]",
+        "B": "A Protocol class with a `write(self, data: bytes) -> None` method",
+        "C": "ABC with an abstract write() method that all writable classes must inherit",
+        "D": "Any — the function should accept any type to maximize flexibility"
+      },
+      "correct": "B",
+      "explanation": "Protocol enables structural typing — any class with a matching write() method satisfies the Protocol, without inheritance. Union with specific types is brittle (misses future classes). ABC requires all writable classes to explicitly inherit from it. Any loses all type safety.",
+      "lesson_ref": "L06",
+      "claim_ref": "C10",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "Ruff is configured with `select = ['D']`. A public function has no docstring. What happens?",
+      "options": {
+        "A": "Nothing — the 'D' rule group only checks docstring formatting, not presence",
+        "B": "A lint error is raised (D100-series) flagging the missing docstring, failing the ruff check step",
+        "C": "Ruff automatically generates a placeholder docstring",
+        "D": "A warning is emitted but the CI check still passes"
+      },
+      "correct": "B",
+      "explanation": "The 'D' ruff rule group includes D100 (missing docstring in public module), D101, D102, D103 for classes and functions. A missing public function docstring triggers a lint error that fails `ruff check`. A, C, and D are incorrect.",
+      "lesson_ref": "L05",
+      "claim_ref": "C3",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "What does `MAX_RETRIES: Final = 3` communicate to mypy and to human readers?",
+      "options": {
+        "A": "The variable is a class attribute and cannot be used outside the class",
+        "B": "The variable is read-only after assignment — mypy flags any subsequent reassignment as a type error, and the annotation signals to readers it is a constant",
+        "C": "The value is computed at runtime and cannot be changed by the interpreter",
+        "D": "Final is equivalent to const in other languages and enforced by the Python runtime"
+      },
+      "correct": "B",
+      "explanation": "Final[T] is a typing construct telling mypy to flag reassignment as a type error. It does not affect Python runtime behavior — Python has no built-in constant enforcement. The annotation serves two purposes: static analysis prevention of reassignment, and a signal to human readers that the value is intended as a constant.",
+      "lesson_ref": "L06",
+      "claim_ref": "C10",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "Explain the 'docstring first' practice: what it means, why it is recommended, and what evidence supports it.",
+      "answer_key": {
+        "required_points": [
+          "Write the docstring (Args, Returns, Raises sections) before writing the implementation",
+          "Forces clarification of the function contract before implementation decisions are made",
+          "Prevents documentation debt — function is hardest to document after implementation details are forgotten",
+          "Supported by Google Style Guide requirement for all public functions"
+        ],
+        "acceptable_variations": "May describe it as 'contract-first design'. The debt prevention argument is the key.",
+        "full_credit": "Explains the practice, the reasoning (contract clarification + debt prevention), and references the professional consensus.",
+        "partial_credit": "Describes the practice without explaining the reasoning, or cites only one benefit."
+      },
+      "lesson_ref": "L05",
+      "claim_ref": "C3",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "A codebase uses Python 3.11. Rewrite the following signature in idiomatic Python 3.10+ style, and explain each change:\n\n```python\nfrom typing import Optional, List, Dict\ndef find_records(ids: List[int], limit: Optional[int] = None) -> Dict[str, List[str]]:\n```",
+      "answer_key": {
+        "required_points": [
+          "Remove `from typing import Optional, List, Dict`",
+          "Change `List[int]` to `list[int]`",
+          "Change `Optional[int]` to `int | None`",
+          "Change `Dict[str, List[str]]` to `dict[str, list[str]]`"
+        ],
+        "acceptable_variations": "Result: `def find_records(ids: list[int], limit: int | None = None) -> dict[str, list[str]]:`",
+        "full_credit": "All four changes made with correct syntax and at least one explanation of why (PEP 604 / built-in generics in 3.9+).",
+        "partial_credit": "Correct syntax with no explanation, or some changes made but not all."
+      },
+      "lesson_ref": "L06",
+      "claim_ref": "C10",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "essay",
+      "prompt": "You are onboarding a new Python developer who asks: 'If I have comprehensive tests and they all pass, why do I also need type annotations and docstrings? The tests prove the code works.' Write a response that distinguishes what tests verify versus what annotations and docstrings provide, using concrete examples.",
+      "guidance": "A strong response distinguishes three separate feedback mechanisms: tests verify runtime behavior, annotations verify type contracts statically before running, docstrings communicate intent and edge cases that neither tests nor annotations express. Should use a concrete example where passing tests don't prevent a type error or where the documented intent differs from the implementation.",
+      "rubric": {
+        "A": "Clearly distinguishes all three mechanisms with concrete examples, explains what each uniquely catches, and makes a coherent case for using all three without dismissing the objection",
+        "B": "Distinguishes two of three mechanisms with examples, or covers all three without concrete examples",
+        "C": "Restates that all three are important without distinguishing their different purposes"
+      },
+      "lesson_ref": "L05-L06",
+      "difficulty": "analysis"
+    }
+  ]
+}

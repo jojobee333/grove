@@ -1,0 +1,156 @@
+{
+  "id": "quiz-M02",
+  "type": "module",
+  "module": "M02",
+  "title": "Assessment: Immutability — The Architectural Principle Behind Three Layers",
+  "generated": "2026-04-13",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What is 'state tearing' in React 18?",
+      "options": {
+        "A": "When React discards state during a hot module replacement cycle",
+        "B": "When a component's `setState` call conflicts with another concurrent `setState`",
+        "C": "When different parts of the UI simultaneously display different versions of the same state due to mutation during an interrupted concurrent render",
+        "D": "When React fails to commit a render because a state update was too large"
+      },
+      "correct": "C",
+      "explanation": "React 18's concurrent renderer can interrupt rendering mid-flight to handle a higher-priority update, then resume. If external state is mutable and changes between the interruption and resumption, components rendered before and after the interruption read different values from the 'same' state — different UI sections show inconsistent data. This is only possible with mutable state.",
+      "lesson_ref": "L03",
+      "claim_ref": "C4",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Why does Zustand use `useSyncExternalStore` rather than the older `useState + useEffect` pattern for subscribing to store changes?",
+      "options": {
+        "A": "useState + useEffect is deprecated in React 18",
+        "B": "The useState + useEffect pair can be gapped by concurrent rendering — React can start a render, yield, then resume after external state has mutated, causing the component to read stale data. useSyncExternalStore reads state atomically during the render itself",
+        "C": "useSyncExternalStore is significantly more performant for large state trees",
+        "D": "useEffect cleanup functions don't work correctly with external stores"
+      },
+      "correct": "B",
+      "explanation": "The gap problem: React renders, useEffect hasn't run yet to subscribe, state changes. Or: React renders, yields, external state changes, React resumes — useState still holds the old snapshot. useSyncExternalStore calls getSnapshot() during the render itself, guaranteeing the component sees the current state at render time. This is the fundamental fix for external store tearing.",
+      "lesson_ref": "L03",
+      "claim_ref": "C4",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "What mathematical property of CRDT operations enables offline collaborative editing without a central server?",
+      "options": {
+        "A": "Idempotency: applying the same operation twice produces the same result as applying it once",
+        "B": "Commutativity: applying operation A then B produces the same result as B then A, so two offline peers can apply each other's accumulated operations in any order and converge",
+        "C": "Associativity: operations can be grouped in any way without changing the result",
+        "D": "Monotonicity: operations only add information, never remove it"
+      },
+      "correct": "B",
+      "explanation": "Commutativity is the key property for offline editing. If A+B = B+A, then two peers who each accumulated different sequences of operations while offline can, upon reconnecting, apply each other's operations in any order and arrive at the same document state. No central authority needs to serialize the operations — correct convergence is guaranteed by the operation structure itself.",
+      "lesson_ref": "L04",
+      "claim_ref": "C6",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "A Zustand AI streaming store uses mutation: `set(s => { s.content += delta; return s; })` instead of `set(s => ({ ...s, content: s.content + delta }))`. In React 18 concurrent mode, what is the most likely observable consequence?",
+      "options": {
+        "A": "A TypeScript compile error because the return type doesn't match",
+        "B": "Zustand throws a runtime error when mutation is detected",
+        "C": "getSnapshot() returns the same object reference even after the content changes, so React's reference equality check doesn't see a change — the streaming UI fails to update even as content accumulates",
+        "D": "Infinite re-renders because the reference changes on every call"
+      },
+      "correct": "C",
+      "explanation": "Zustand's getSnapshot() returns the current state object. If set() mutates the existing object and returns it, getSnapshot() returns the same reference before and after the mutation. React uses reference equality: same reference = no change = no re-render. The user sees a frozen streaming UI even as tokens arrive. The fix: always return a new object from set to produce a new reference.",
+      "lesson_ref": "L03",
+      "claim_ref": "C4",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "You call two Yjs operations outside a `ydoc.transact()` call. What is the observable difference vs wrapping them in `ydoc.transact()`?",
+      "options": {
+        "A": "Operations outside transact() execute in an undefined order; transact() guarantees sequential execution",
+        "B": "Operations outside transact() produce two separate binary update messages for remote peers and fire observers twice. Inside transact(), observers fire once and peers receive one merged update",
+        "C": "Operations outside transact() are not persisted; transact() provides durability",
+        "D": "There is no observable difference — transact() is optional syntactic sugar"
+      },
+      "correct": "B",
+      "explanation": "Each Yjs operation outside a transaction immediately fires all observers and creates a binary update to broadcast. Two operations = two observer firings = two network updates. Inside transact(), all operations are batched: observers fire exactly once after the transaction commits, and remote peers receive one merged binary update. This is more efficient and produces cleaner observer logic.",
+      "lesson_ref": "L04",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "Lexical freezes `EditorState` after every `editor.update()` call. What deeper constraint forces this design choice?",
+      "options": {
+        "A": "React's reconciler requires all props to be immutable objects",
+        "B": "Frozen state enables faster JSON serialization for network sync",
+        "C": "The editor must support multiple simultaneous readers (React renderer, Yjs sync layer, undo history) — if state could be mutated while being read, readers would see inconsistent intermediate states. Immutability makes every snapshot a stable, safe read target.",
+        "D": "JavaScript's Object.freeze() has better GC performance than mutable objects"
+      },
+      "correct": "C",
+      "explanation": "Lexical's EditorState is read by multiple concurrent consumers: React re-renders it to produce DOM, the @lexical/yjs binding reads it to produce Yjs operations, the undo stack captures it for history. A mutable state could change between these reads. Freezing it means every consumer works from the same stable snapshot, and the editor.update() callback is the exclusive write path.",
+      "lesson_ref": "L04",
+      "claim_ref": "C5",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "Describe the `getSnapshot` immutability contract for `useSyncExternalStore`. What must `getSnapshot()` return when state hasn't changed, and what breaks if it returns a new reference on every call?",
+      "answer_key": {
+        "required_points": [
+          "Contract: getSnapshot() must return the SAME object reference if state hasn't changed",
+          "React uses reference equality to determine if a re-render is needed",
+          "If getSnapshot() returns a new reference on every call: React perpetually thinks state changed and re-renders infinitely",
+          "If getSnapshot() returns old references after state actually changes: React won't re-render when it should — UI goes stale"
+        ],
+        "acceptable_variations": "May describe as 'referential stability' or 'stable identity for unchanged state'",
+        "full_credit": "Correctly states both halves: same reference for no-change, and explains both failure modes (new-ref-every-time vs stale-ref-on-change)",
+        "partial_credit": "Correctly states the stable-reference requirement but doesn't describe both failure modes"
+      },
+      "lesson_ref": "L03",
+      "claim_ref": "C4",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "What are Yjs tombstones, why can't they be garbage collected in a pure CRDT model, and what mitigation exists for long-lived documents?",
+      "answer_key": {
+        "required_points": [
+          "Tombstones: records of deleted items that persist after deletion",
+          "Why they can't be GC'd: a peer that hasn't received the delete yet needs the operation identity to converge correctly — removing the tombstone breaks convergence for late-arriving peers",
+          "Mitigation: periodic snapshot-and-truncate — serialize current document state to a binary snapshot, reset the Y.Doc from snapshot, discard operation history. This caps memory at the cost of full history."
+        ],
+        "acceptable_variations": "May describe the mitigation as 'snapshotting' or 'compaction'",
+        "full_credit": "Correctly defines tombstones, explains the convergence constraint that prevents GC, and describes the snapshot mitigation",
+        "partial_credit": "Correctly defines tombstones and the GC constraint but doesn't cover mitigation"
+      },
+      "lesson_ref": "L04",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "essay",
+      "prompt": "The same principle — immutable values, copy-on-write mutations — governs React 18's concurrent renderer, Lexical's EditorState, and Yjs's CRDT operations. Explain why this convergence isn't a coincidence. What common constraint forces all three systems to adopt immutability, and how does each system enforce it?",
+      "guidance": "Strong responses identify the common constraint (multiple concurrent readers at different points in time), trace how each system enforces immutability (React: useSyncExternalStore contract; Lexical: frozen EditorState; Yjs: immutable operation objects with unique identity), and explain why mutation creates a specific class of bug in each system.",
+      "rubric": {
+        "A": "Identifies the shared constraint (concurrent/distributed reads), traces each system's enforcement mechanism, explains the specific failure mode that mutation enables in each case",
+        "B": "Identifies the shared principle and correctly traces two of three systems' enforcement mechanisms",
+        "C": "Makes the connection at a high level without explaining the enforcement mechanisms or failure modes"
+      },
+      "lesson_ref": "L03-L04",
+      "difficulty": "analysis"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "module": "M07",
+  "title": "Teaching Complications and Honest Limits — Quick Check",
+  "questions": [
+    {
+      "id": "MC07-1",
+      "q": "How do you present the PEP 484 vs Google Style Guide annotation debate to a team without dismissing either position?",
+      "a": "Frame them as operating at different levels: PEP 484 is a language specification that keeps Python flexible across all use cases; the Google Style Guide is a team-level engineering standard that trades flexibility for consistency and tooling reliability. Both are correct in their own context. Your team gets to choose where it sits on that spectrum."
+    },
+    {
+      "id": "MC07-2",
+      "q": "Name the three open research gaps from this course and what a learner should do to address each.",
+      "a": "1. dataclasses vs attrs/pydantic — read PEP 557 and the attrs/pydantic docs to compare. 2. Packaging scripts as installable tools — read the pyproject.toml [project.scripts] and pipx documentation. 3. pre-commit hooks for automated enforcement — read the pre-commit.com docs and the ruff pre-commit hook setup."
+    },
+    {
+      "id": "MC07-3",
+      "q": "When teaching a contested best practice, what should you do when the evidence from your research runs out before a clear answer emerges?",
+      "a": "State the known evidence and its limits explicitly. Describe the tradeoffs as they currently stand, name what would change the answer (e.g. team size, codebase age, Python version), and direct learners to the primary sources. Do not fabricate a consensus that does not exist."
+    }
+  ]
+}

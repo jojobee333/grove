@@ -1,0 +1,31 @@
+{
+  "module": "M08",
+  "title": "Security Engineering — Four Independent Layers — Quick Check",
+  "questions": [
+    {
+      "id": "MC08-1",
+      "q": "Name Meridian's four security layers in the order a request passes through them, and state what category of attack each layer is primarily responsible for blocking.",
+      "a": "1. Input validation (Zod at route entry) — blocks malformed requests, type coercion attacks, injection via unexpected input shapes. 2. Authentication (JWT verification middleware) — blocks unauthenticated requests; ensures the request comes from a real, active session. 3. Application-level tenant isolation (workspace_id in every query + tenant middleware) — blocks one authenticated user from reading another workspace's data. 4. Database-level RLS (SET LOCAL + USING policy) — blocks tenant leakage even if the application layer has a bug, providing an independent enforcement point at the database."
+    },
+    {
+      "id": "MC08-2",
+      "q": "Why is `SET LOCAL` required (not `SET`) when setting `app.current_workspace_id` before a database query in a connection-pooled environment?",
+      "a": "Connection pools reuse database connections across requests. `SET` persists a session variable for the lifetime of the connection — a workspace_id set by Request A would still be active when Request B reuses that connection, causing cross-tenant data leakage. `SET LOCAL` scopes the variable to the current transaction only; when the transaction commits or rolls back, the variable resets to null. This is the mechanism that makes per-request tenant context safe in a pooled environment."
+    },
+    {
+      "id": "MC08-3",
+      "q": "What is defense in depth, and why is it specifically important for Meridian's multi-tenant architecture?",
+      "a": "Defense in depth means security is enforced by multiple independent layers, each capable of catching what the others miss. For Meridian's multi-tenant architecture it is critical because: (1) a bug in a single query that omits workspace_id would leak cross-tenant data WITHOUT defense in depth; (2) WITH defense in depth (RLS), even if the application layer omits the WHERE clause, the database policy rejects the query. No single code change (adding a new route, forgetting a WHERE clause) can produce a tenant isolation breach — two independent layers must both fail simultaneously."
+    },
+    {
+      "id": "MC08-4",
+      "q": "Why does bcrypt's configurable cost factor provide protection against hardware advances that fixed-iteration hashing algorithms (like MD5) don't?",
+      "a": "MD5 and SHA-family algorithms were designed for speed — they execute in nanoseconds even on old hardware. As GPU hardware improves, attackers can test billions of hashes per second. The cost factor cannot be changed after deployment without rehashing all passwords. Bcrypt's cost factor is configurable: as hardware gets faster, you increase the cost factor, keeping the compute time per hash constant at ~250ms. When old hashes are presented at login, they can be rehashed with the new cost factor transparently, providing ongoing protection against hardware advances."
+    },
+    {
+      "id": "MC08-5",
+      "q": "What is a JWT short expiry strategy and why does it improve security compared to a long-lived single token?",
+      "a": "Short expiry strategy: access tokens expire in 15 minutes; a refresh token (stored in an httpOnly cookie, not localStorage) is used to issue new access tokens without requiring re-login. Security benefit: if an access token is stolen (e.g. via XSS, log exposure), it is only valid for 15 minutes. A long-lived token (e.g. 30 days) grants an attacker persistent access for 30 days after compromise. Refresh tokens stored in httpOnly cookies cannot be read by JavaScript, preventing the most common XSS-based token theft vector."
+    }
+  ]
+}

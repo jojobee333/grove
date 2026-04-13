@@ -1,0 +1,126 @@
+{
+  "id": "quiz-M05",
+  "type": "module",
+  "module": "M05",
+  "title": "Assessment: Data Serialization",
+  "generated": "2026-04-12",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "An application receives a binary payload from an HTTP POST request and deserializes it with `pickle.loads(data)`. What is the security risk?",
+      "options": {
+        "A": "pickle.loads() is slower than json.loads() for large payloads",
+        "B": "pickle.loads() executes arbitrary Python code embedded in the payload — a crafted payload is a remote code execution (RCE) vulnerability",
+        "C": "pickle.loads() only works with Python objects; binary HTTP data must be base64-decoded first",
+        "D": "There is no risk — pickle is part of the Python standard library and is sandboxed"
+      },
+      "correct": "B",
+      "explanation": "pickle deserialization executes Python code embedded in the payload via the __reduce__ protocol. An attacker who controls the payload can execute arbitrary system commands. The pickle documentation explicitly warns: 'Never unpickle data that could have come from an untrusted source.' This is not theoretical — pickle RCE exploits are well-documented.",
+      "lesson_ref": "L09",
+      "claim_ref": "C9",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "A script caches a trained ML model to disk with pickle for performance. The cache file lives in a local directory and is only ever loaded by the same script on the same machine. Is this a security concern?",
+      "options": {
+        "A": "Yes — all pickle usage is inherently insecure regardless of context",
+        "B": "Yes — trained models must use the joblib format, not pickle",
+        "C": "No — if the file was written by the same trusted process and loaded only on the same machine with no network transmission, this is within the safe use envelope for pickle",
+        "D": "No — pickle is always safe when the file extension is .pkl"
+      },
+      "correct": "C",
+      "explanation": "The trust-level rule is the key: pickle is safe for internal caching between trusted processes on the same machine. The risk is when pickle data crosses a trust boundary (network transmission, user-supplied files). A local ML model cache written and read by the same process is within the safe envelope — the recommendation is to document this explicitly with a comment.",
+      "lesson_ref": "L09",
+      "claim_ref": "C9",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "Ruff reports a S301 security warning on a line that uses `pickle.load()`. The use is a legitimate internal cache, not a security risk. What is the correct response?",
+      "options": {
+        "A": "Add `# type: ignore` to suppress all type and lint warnings on the line",
+        "B": "Disable the S301 rule project-wide in [tool.ruff.lint] ignore",
+        "C": "Add `# noqa: S301` on the specific line with a comment explaining why the use is safe",
+        "D": "Rename pickle.load() to a helper function to avoid the warning"
+      },
+      "correct": "C",
+      "explanation": "Suppress security warnings on the specific line only, with an explanatory comment: `pickle.load(f)  # noqa: S301 — internal cache, written by this process only`. Disabling project-wide (B) would suppress the check on future unsafe uses. `# type: ignore` (A) suppresses mypy, not ruff. D doesn't suppress anything.",
+      "lesson_ref": "L09",
+      "claim_ref": "C9",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "A script needs to store user-submitted survey responses — structured data with known fields — to send to an external analytics API. Which serialization format is most appropriate?",
+      "options": {
+        "A": "pickle — the fastest serialization method in the standard library",
+        "B": "JSON — safe for untrusted-origin data, universally accepted by HTTP APIs, standard library support",
+        "C": "TOML — designed for structured data with typed values",
+        "D": "INI — the simplest format for key-value data"
+      },
+      "correct": "B",
+      "explanation": "JSON is the correct choice: the data originates from untrusted users (pickle is excluded on security grounds), the data is going to an external API (JSON is the universal HTTP API data format), and json.dumps()/json.loads() are in the standard library. TOML and INI are for configuration, not data exchange.",
+      "lesson_ref": "L09",
+      "claim_ref": "C9",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "What happens when `json.loads()` receives a maliciously crafted JSON string designed to cause harm?",
+      "options": {
+        "A": "It executes embedded JavaScript from the JSON payload",
+        "B": "It raises json.JSONDecodeError if the string is malformed, or parses valid JSON into Python objects — it cannot execute code",
+        "C": "It raises a SecurityWarning and drops the payload automatically",
+        "D": "The behavior depends on the Python version — Python 3.11+ has a sandboxed JSON parser"
+      },
+      "correct": "B",
+      "explanation": "JSON is a pure data format. The json module only parses data structures (strings, numbers, lists, dicts, booleans, null) — it cannot execute code in any Python version. The worst-case outcome from malicious JSON is a parsing exception or unexpected data values, both of which can be handled defensively.",
+      "lesson_ref": "L09",
+      "claim_ref": "C9",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q06",
+      "type": "short_answer",
+      "question": "Describe the serialization format selection rule based on trust level. Give one concrete example format for each trust tier.",
+      "answer_key": {
+        "required_points": [
+          "Untrusted input (external/network): JSON or CSV — safe to deserialize because they cannot execute code",
+          "Trusted authors (developer config): TOML or INI — for config files written by developers",
+          "Trusted internal processes only: pickle — for caching between processes on same machine, never over network"
+        ],
+        "acceptable_variations": "May describe the tiers as 'external data', 'developer config', 'internal caching'. Format examples may vary as long as they map correctly to trust levels.",
+        "full_credit": "All three tiers identified with a format example and rationale for each.",
+        "partial_credit": "Two tiers correct, or all three tiers without rationale."
+      },
+      "lesson_ref": "L09",
+      "claim_ref": "C9",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "A colleague argues: 'We should ban pickle entirely from the codebase — if any use is dangerous, the safest policy is zero tolerance.' Write a response that evaluates this policy, identifying where it is reasonable and where it may be unnecessarily restrictive.",
+      "answer_key": {
+        "required_points": [
+          "The zero-tolerance policy is reasonable for network-facing code, user-supplied data, and any data that crosses a trust boundary",
+          "It is overly restrictive for legitimate internal use cases: ML model caching, IPC between trusted processes, test fixtures",
+          "The better policy: require documented justification (noqa comment) for any pickle use, and prohibit pickle for any data originating outside the process boundary"
+        ],
+        "acceptable_variations": "May advocate for zero tolerance with a strong argument. Key is engaging with the trade-off rather than simply agreeing or disagreeing.",
+        "full_credit": "Identifies valid cases for both sides of the argument with specific examples, proposes a nuanced policy.",
+        "partial_credit": "Only defends one side without engaging with the other."
+      },
+      "lesson_ref": "L09",
+      "claim_ref": "C9",
+      "difficulty": "analysis"
+    }
+  ]
+}

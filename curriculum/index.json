@@ -1,0 +1,22 @@
+{
+  "courses": [
+    {
+      "slug": "python-scripting-best-practices",
+      "title": "Python Scripting Best Practices",
+      "description": "A 13-lesson course that equips an intermediate Python developer to explain, justify, and demonstrate every production-quality scripting best practice — from too",
+      "total_modules": 7,
+      "total_lessons": 13,
+      "total_cards": 69,
+      "generated": "2026-04-12"
+    },
+    {
+      "slug": "meridian-tech-stack-mastery",
+      "title": "Meridian Tech Stack Mastery",
+      "description": "Master the architecture, technology choices, and engineering tradeoffs behind the Meridian full-stack AI workspace — including where alternatives exist and why ",
+      "total_modules": 9,
+      "total_lessons": 16,
+      "total_cards": 97,
+      "generated": "2026-04-13"
+    }
+  ]
+}

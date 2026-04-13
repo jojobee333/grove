@@ -1,0 +1,26 @@
+{
+  "module": "M01",
+  "title": "TypeScript Strict Mode — Quick Check",
+  "questions": [
+    {
+      "id": "MC01-1",
+      "q": "What does `strict: true` in tsconfig.json actually do under the hood?",
+      "a": "It is a shorthand that activates nine individual compiler flags simultaneously, including `noImplicitAny`, `strictNullChecks`, `strictFunctionTypes`, and `strictPropertyInitialization`. Enabling `strict: true` is equivalent to enabling all nine flags individually."
+    },
+    {
+      "id": "MC01-2",
+      "q": "What is the `schema = type` pattern and why does it matter at API boundaries?",
+      "a": "The schema = type pattern means the runtime validation schema (e.g. a Zod schema) is also the TypeScript type source via `z.infer<typeof schema>`. At API boundaries, this guarantees that the compile-time type and the runtime validation rule are provably identical — you cannot have a type that says a field is `string` but a validator that allows `null`, or vice versa."
+    },
+    {
+      "id": "MC01-3",
+      "q": "Why does `isolatedModules: true` matter when using Vite?",
+      "a": "Vite uses esbuild for transpilation, and esbuild processes each file in isolation without cross-file type analysis. `isolatedModules: true` makes TypeScript flag patterns that esbuild cannot handle — such as re-exporting a type without the `type` keyword — as compile errors, preventing runtime failures that would only appear after `vite build`."
+    },
+    {
+      "id": "MC01-4",
+      "q": "How does Drizzle ORM implement the `schema = type` pattern, and what does it mean for type safety on INSERT operations?",
+      "a": "Drizzle exposes `$inferSelect` (the shape of a SELECT result) and `$inferInsert` (the shape required for an INSERT) as TypeScript types inferred directly from the table definition. This means adding a non-nullable column to the Drizzle schema immediately surfaces a TypeScript error at every INSERT site that doesn't provide the new column — no separate interface maintenance needed."
+    }
+  ]
+}

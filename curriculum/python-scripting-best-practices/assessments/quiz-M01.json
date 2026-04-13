@@ -1,0 +1,155 @@
+{
+  "id": "quiz-M01",
+  "type": "module",
+  "module": "M01",
+  "title": "Assessment: The Python Quality Toolchain",
+  "generated": "2026-04-12",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "A colleague proposes adding separate .flake8, mypy.ini, and pytest.ini files to a new Python project. What is the strongest counter-argument?",
+      "options": {
+        "A": "Those file formats are deprecated and no longer supported by the tools",
+        "B": "All three tools support [tool.*] sections in pyproject.toml, so the project can use a single authoritative config file",
+        "C": "It is impossible to run ruff, mypy, and pytest from the same project without conflicts",
+        "D": "pyproject.toml is only for packaging and cannot configure dev tools"
+      },
+      "correct": "B",
+      "explanation": "ruff, mypy, and pytest all support pyproject.toml configuration under [tool.ruff], [tool.mypy], and [tool.pytest.ini_options] respectively. Separate config files still work but add unnecessary fragmentation. A, C, and D are factually incorrect.",
+      "lesson_ref": "L02",
+      "claim_ref": "C2",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "A script codebase has ruff configured but not mypy. A function that returns str | None is called later in the same file with .upper() called on the result without a None check. What does ruff catch that mypy would catch, and vice versa?",
+      "options": {
+        "A": "Ruff would catch the missing None check; mypy would catch the style issue",
+        "B": "Ruff would catch style and formatting issues; mypy would catch the missing None check as a type error",
+        "C": "Both tools would flag the missing None check equally",
+        "D": "Neither tool would flag the missing None check — it would only be caught at runtime"
+      },
+      "correct": "B",
+      "explanation": "Ruff is a linter/formatter — it checks style, formatting, and some static code issues but does not perform type inference. Mypy is a static type checker — it would flag `result.upper()` as a potential AttributeError because result could be None. This illustrates why both tools are necessary.",
+      "lesson_ref": "L01",
+      "claim_ref": "C1",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "You are starting a new project and decide to enable mypy --strict from the first commit rather than adding it later. What is the primary benefit of this timing?",
+      "options": {
+        "A": "mypy --strict is only compatible with projects under 1000 lines of code",
+        "B": "Enabling --strict at the start means every new function is checked immediately; retrofitting it to a large codebase requires annotating hundreds of existing functions at once",
+        "C": "mypy --strict automatically generates type annotations for unannotated code",
+        "D": "CI pipelines reject projects that add mypy --strict after the initial commit"
+      },
+      "correct": "B",
+      "explanation": "The cost of adopting mypy --strict scales with codebase size. Starting from the first commit means the 'annotation debt' is always zero — every added function must be annotated before the check passes. A, C, and D are incorrect.",
+      "lesson_ref": "L01",
+      "claim_ref": "C11",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "A Python script needs to read its own pyproject.toml at runtime to display the project version. Which approach is correct?",
+      "options": {
+        "A": "Use json.load() after renaming the file to .json",
+        "B": "Open the file in text mode and use tomllib.load()",
+        "C": "Open the file in binary mode ('rb') and use tomllib.load()",
+        "D": "tomllib cannot read pyproject.toml at runtime — use configparser instead"
+      },
+      "correct": "C",
+      "explanation": "tomllib.load() requires a binary file object — it validates UTF-8 encoding at the binary level. Opening in text mode ('r') raises a TypeError. D is wrong because tomllib is specifically designed for TOML files. A is incorrect because TOML and JSON are different formats.",
+      "lesson_ref": "L02",
+      "claim_ref": "C2",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "Your team is releasing a Python library that will be imported into other applications. You want users to be able to silence all logging from your library. What should your library's __init__.py do?",
+      "options": {
+        "A": "Call logging.basicConfig(level=logging.WARNING) to set a default quiet level",
+        "B": "Add a NullHandler to the package logger: logging.getLogger(__name__).addHandler(logging.NullHandler())",
+        "C": "Set logging.disable(logging.CRITICAL) to suppress all messages by default",
+        "D": "Configure a FileHandler so library logs go to a separate file"
+      },
+      "correct": "B",
+      "explanation": "The NullHandler pattern is the correct library pattern — it discards records by default but allows the importing application to configure its own handlers for the library's logger. A, C, and D all configure logging from within the library, which overrides the importing application's logging setup.",
+      "lesson_ref": "L01",
+      "claim_ref": "C4",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "A team member argues that because ruff replaces five tools, adding mypy is redundant. How would you respond?",
+      "options": {
+        "A": "Agree — ruff's type-checking rules cover the same ground as mypy",
+        "B": "Disagree — ruff's 'T' rules check type annotation syntax, but ruff does not perform cross-file type inference; mypy verifies that annotations are semantically correct",
+        "C": "Disagree — ruff is only a formatter and has no lint functionality",
+        "D": "Agree — running both tools causes configuration conflicts in pyproject.toml"
+      },
+      "correct": "B",
+      "explanation": "Ruff can check annotation syntax and flag missing annotations, but it does not perform type inference — it cannot verify that a function receiving str | None is called safely. Mypy performs full static type checking including cross-file inference. They serve different purposes.",
+      "lesson_ref": "L01",
+      "claim_ref": "C1",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "Explain the dual role of pyproject.toml in a Python project and describe one limitation of tomllib that is relevant to its runtime use.",
+      "answer_key": {
+        "required_points": [
+          "Must identify pyproject.toml as dev tool config hub (replaces separate mypy.ini, .flake8, etc.)",
+          "Must identify pyproject.toml as readable at runtime via tomllib for project metadata/config",
+          "Must note that tomllib is read-only (cannot write/serialize TOML)"
+        ],
+        "acceptable_variations": "May phrase the dual role as 'build configuration' and 'tool configuration'. May mention tomli backport for pre-3.11.",
+        "full_credit": "Identifies both roles clearly and notes tomllib's read-only limitation with an explanation of why it matters.",
+        "partial_credit": "Identifies only one role, or mentions the limitation without explaining the consequence."
+      },
+      "lesson_ref": "L02",
+      "claim_ref": "C2",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "Describe a scenario where running ruff without mypy would fail to catch a critical bug, and explain why mypy would catch it.",
+      "answer_key": {
+        "required_points": [
+          "Must describe a type-related scenario: e.g., calling a method on a potentially-None value, passing wrong type to a function, returning wrong type",
+          "Must explain that ruff does not perform type inference across the codebase",
+          "Must explain that mypy traces the type through the call chain and flags the mismatch"
+        ],
+        "acceptable_variations": "Any valid type error scenario is acceptable — None dereference, wrong argument type, unchecked union type.",
+        "full_credit": "Concrete scenario with an explanation of why type inference is required to catch it.",
+        "partial_credit": "Vague description without a specific scenario, or incorrect attribution of bug type."
+      },
+      "lesson_ref": "L01",
+      "claim_ref": "C1",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "essay",
+      "prompt": "A new Python team is debating whether to use the full quality triad (ruff + mypy + pytest) or just pytest, arguing that type annotations slow down development and ruff is 'just style'. Write a response that explains the distinct value of each tool, anticipates the team's objections, and makes the case for all three.",
+      "guidance": "A strong response distinguishes the failure modes each tool catches, uses a concrete example where only one tool catches a specific bug, and addresses the 'slow development' objection with the argument about early vs. late defect detection.",
+      "rubric": {
+        "A": "Distinguishes all three tools by failure mode, provides a concrete multi-tool example, addresses the development speed objection with a defensible argument, cites at least one lesson concept by name",
+        "B": "Distinguishes tools and addresses objections but without concrete examples or only partially",
+        "C": "Lists tools with descriptions but does not distinguish failure modes or address objections"
+      },
+      "lesson_ref": "L01-L02",
+      "difficulty": "analysis"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "module": "M05",
+  "title": "Data Serialization — Quick Check",
+  "questions": [
+    {
+      "id": "MC05-1",
+      "q": "What is the security risk of deserializing untrusted pickle data, and what is the correct policy?",
+      "a": "pickle.loads() executes arbitrary Python bytecode embedded in the data. An attacker who can supply the pickle payload can run any code with the process's privileges. The policy: only pickle data you generated yourself; never unpickle data from external sources, user input, or network responses."
+    },
+    {
+      "id": "MC05-2",
+      "q": "Map each of these use cases to the correct format: external API response, developer tool config, internal cache of a trained model.",
+      "a": "External API response → JSON (human-readable, language-agnostic, safe to deserialize). Developer tool config → TOML (readable, typed, standard for pyproject.toml). Internal trusted cache → pickle (only acceptable because the data source is controlled and trusted)."
+    },
+    {
+      "id": "MC05-3",
+      "q": "When is CSV preferred over JSON for external data, and what is its main limitation?",
+      "a": "CSV is preferred for tabular data (rows of uniform columns) sent to or from spreadsheet tools or data pipelines. Its limitation is no native type system — all values are strings, so numbers, booleans, and nulls need explicit parsing."
+    }
+  ]
+}

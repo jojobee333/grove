@@ -1,0 +1,155 @@
+{
+  "id": "quiz-M04",
+  "type": "module",
+  "module": "M04",
+  "title": "Assessment: Resource Management and Configuration",
+  "generated": "2026-04-12",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "A script builds a file path using: `output_path = base_dir + '/' + subdir + '/' + filename`. What is wrong with this approach and how should it be fixed?",
+      "options": {
+        "A": "Nothing is wrong — string concatenation for paths is correct on Linux",
+        "B": "The separator '/' fails on Windows; fix by using os.path.sep dynamically",
+        "C": "String concatenation for paths is fragile (leading/trailing slashes, platform separators); fix by using `Path(base_dir) / subdir / filename`",
+        "D": "The path must use os.path.join() — pathlib is not part of the standard library"
+      },
+      "correct": "C",
+      "explanation": "String concatenation fails when base_dir has a trailing slash, or subdir has a leading slash, or on Windows. `pathlib.Path` with the `/` operator handles all cases correctly, is cross-platform, and is part of the standard library since Python 3.4. os.path.join() also works but is less readable than pathlib.",
+      "lesson_ref": "L07",
+      "claim_ref": "C7",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Code opens a file with `f = open(path)`, processes it, calls `f.close()`, and then raises an exception in the processing step. What happens to the file handle?",
+      "options": {
+        "A": "The file is closed automatically by Python's garbage collector immediately",
+        "B": "f.close() is never called — the exception propagates before it is reached, leaving the file handle open",
+        "C": "Python raises ResourceWarning automatically and closes the file",
+        "D": "The exception is swallowed by the file system and f.close() is called anyway"
+      },
+      "correct": "B",
+      "explanation": "If an exception is raised before f.close() is reached, the close() call is skipped and the file handle leaks until the garbage collector collects the object — which may be indefinitely in CPython with circular references. The `with` statement's __exit__ is guaranteed to run even when exceptions occur, making it the correct pattern.",
+      "lesson_ref": "L07",
+      "claim_ref": "C8",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "A script uses `tmp = tempfile.mktemp(suffix='.db')` to get a temporary file path. A colleague flags this as a security issue. Why?",
+      "options": {
+        "A": "mktemp() creates world-readable files by default",
+        "B": "mktemp() only returns a name — between the name being returned and the script creating the file, another process can create a file at the same path (TOCTOU race condition)",
+        "C": "mktemp() does not clean up automatically, so the file persists after the script exits",
+        "D": "Both B and C are security concerns with mktemp()"
+      },
+      "correct": "D",
+      "explanation": "mktemp() has two problems: 1) TOCTOU race condition between name generation and file creation (B), and 2) no automatic cleanup (C). Use `tempfile.NamedTemporaryFile()` (as a context manager) or `tempfile.TemporaryDirectory()` which create the resource atomically and clean up on __exit__.",
+      "lesson_ref": "L07",
+      "claim_ref": "C8",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "A deployment engineer sets the environment variable `APP_HOST=prod.example.com`. The script also has a pyproject.toml with `[tool.myapp] host = 'staging.example.com'` and the CLI receives `--host localhost`. Which value wins?",
+      "options": {
+        "A": "staging.example.com (config file — last written wins)",
+        "B": "prod.example.com (environment variable — most secure source wins)",
+        "C": "localhost (CLI flag — highest priority in the four-tier stack)",
+        "D": "The script raises a conflict error when multiple sources provide the same key"
+      },
+      "correct": "C",
+      "explanation": "The four-tier configuration priority stack from highest to lowest is: CLI > environment variables > config file > hardcoded defaults. CLI flags always win because they represent the user's explicit, per-run intent. The script must implement this ordering in code — it does not happen automatically.",
+      "lesson_ref": "L08",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "A developer stores an API key in config.toml under `[secrets] api_key = 'sk-...'`. What is the primary risk?",
+      "options": {
+        "A": "tomllib cannot parse string values containing hyphens",
+        "B": "The config.toml file may be committed to version control, exposing the secret permanently in git history",
+        "C": "Environment variables are more performant than file-based config",
+        "D": "TOML files are world-readable by default on Linux"
+      },
+      "correct": "B",
+      "explanation": "Once a secret is committed to a git repository, it exists in the git history permanently — even if the file is later deleted and a new commit pushes an empty secret. Secrets belong in environment variables only. The risk is not file permissions (D) but version control exposure.",
+      "lesson_ref": "L08",
+      "claim_ref": "C6",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "A script must create a directory `/data/reports/2026/` and write a file inside it, creating all intermediate directories if they do not exist. Which pathlib call is correct?",
+      "options": {
+        "A": "Path('/data/reports/2026/').mkdir()",
+        "B": "Path('/data/reports/2026/').mkdir(parents=True, exist_ok=True)",
+        "C": "Path('/data/reports/2026/').makedirs()",
+        "D": "Path('/data/reports/2026/').create(recursive=True)"
+      },
+      "correct": "B",
+      "explanation": "`parents=True` creates all intermediate directories in the path. `exist_ok=True` suppresses the FileExistsError if the directory already exists. Without `parents=True`, mkdir() fails if parent directories don't exist. makedirs() and create() are not pathlib methods.",
+      "lesson_ref": "L07",
+      "claim_ref": "C7",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "Describe a scenario where tomllib is the better choice over configparser, and a scenario where configparser is the better choice. Justify each decision.",
+      "answer_key": {
+        "required_points": [
+          "tomllib better when: developer-facing config with nested structure, typed values (int/bool/datetime), read-only config that should not be modified at runtime",
+          "configparser better when: end-user editable config where INI simplicity is preferred, config that must be written back (configparser supports read/write), Python < 3.11 without wanting to add dependencies"
+        ],
+        "acceptable_variations": "May use different concrete scenarios as long as the reasoning maps to the characteristics of each format.",
+        "full_credit": "Two concrete scenarios with appropriate justification referencing format characteristics.",
+        "partial_credit": "Only one scenario, or scenarios without justification."
+      },
+      "lesson_ref": "L08",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "A script currently uses `os.path.join(base, 'data', filename)`, `open(output_path, 'r')` for reading, and `os.makedirs(output_dir, exist_ok=True)`. Rewrite all three lines using pathlib, and identify one additional improvement over the original.",
+      "answer_key": {
+        "required_points": [
+          "`Path(base) / 'data' / filename` — path joining with / operator",
+          "`Path(output_path).read_text(encoding='utf-8')` — or `with Path(output_path).open() as f:`",
+          "`Path(output_dir).mkdir(parents=True, exist_ok=True)`",
+          "Additional improvement: explicit encoding parameter in read_text; cross-platform path handling; or IDE autocompletion/type safety"
+        ],
+        "acceptable_variations": "The third line may use `parents=True` or omit it if output_dir is a single level. read_text() vs open() context manager both valid.",
+        "full_credit": "All three correct pathlib rewrites plus one additional improvement identified.",
+        "partial_credit": "Two of three rewrites correct, or all three correct without additional improvement."
+      },
+      "lesson_ref": "L07",
+      "claim_ref": "C7",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "essay",
+      "prompt": "A colleague argues: 'Storing secrets in environment variables is no more secure than a .env file — if someone has access to the machine, they can read both.' Evaluate this argument. Where is it correct, where is it wrong, and what is the actual threat the env-var rule is designed to prevent?",
+      "guidance": "A strong response identifies that the .env-vs-env-var distinction is not primarily about machine access (the colleague has a point there) — it is about version control exposure. The actual threat is accidental git commit of .env files. Should also note that env vars are ephemerally set by deployment tooling (CI/CD, containers), not persisted to disk in production.",
+      "rubric": {
+        "A": "Acknowledges the colleague's valid point about local machine access, identifies version control as the primary threat, explains ephemeral env var injection in deployment, gives a concrete recommendation (e.g., .gitignore + secret manager for production)",
+        "B": "Identifies version control as the main threat but without engaging with the colleague's valid point",
+        "C": "Simply re-asserts that env vars are best practice without engaging with the specific argument"
+      },
+      "lesson_ref": "L08",
+      "difficulty": "analysis"
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "module": "M03",
+  "title": "Control vs Abstraction — Quick Check",
+  "questions": [
+    {
+      "id": "MC03-1",
+      "q": "What is the control-vs-abstraction diagnostic question, and when does it favour choosing the higher-abstraction tool?",
+      "a": "The question is: 'What mechanism does this tool expose directly, and what does the alternative hide?' The higher-abstraction tool is correct when the hidden mechanism is genuinely NOT needed — e.g. using a GraphQL client over raw fetch is fine when you don't need direct control over HTTP headers, caching policy, or request batching. The diagnostic prevents choosing abstraction by default and forces an explicit assessment of what is being traded away."
+    },
+    {
+      "id": "MC03-2",
+      "q": "Name the three specific technical requirements that make Prisma unsuitable for Meridian, and explain which Meridian feature drives each.",
+      "a": "1. SET LOCAL for RLS: Prisma's `$executeRaw` makes adding `SET LOCAL app.current_workspace_id` before every query cumbersome — Meridian's multi-tenant RLS requires this per-query setup. 2. pgvector native types: Prisma loses type information on `vector` columns — Meridian's RAG system requires typed vector operations. 3. Codegen requirement: Prisma requires `prisma generate` after every schema change before TypeScript knows the new types — Meridian's Drizzle approach is schema-first with immediate type inference."
+    },
+    {
+      "id": "MC03-3",
+      "q": "Express benchmarks significantly slower than Fastify. Why is Express still the correct choice for Meridian?",
+      "a": "Meridian's per-request latency is dominated by PostgreSQL queries (5–50ms) and Anthropic API calls (100–5000ms). The Express vs Fastify throughput difference (~15k vs ~65k req/s) is irrelevant when the bottleneck is I/O, not HTTP processing. Choosing Fastify for its performance advantage would optimize the non-bottleneck while adding configuration complexity for no observed benefit."
+    }
+  ]
+}

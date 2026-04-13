@@ -1,0 +1,156 @@
+{
+  "id": "quiz-M04",
+  "type": "module",
+  "module": "M04",
+  "title": "Assessment: Single Source of Truth — Schema-as-Type Across the Stack",
+  "generated": "2026-04-13",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What does `createInsertSchema(table)` from `drizzle-zod` produce?",
+      "options": {
+        "A": "A SQL INSERT statement string for the table",
+        "B": "A Zod schema that mirrors the table's insert type, automatically derived from the table definition",
+        "C": "A TypeScript interface for inserting rows into the table",
+        "D": "A Drizzle query builder pre-configured for INSERT operations"
+      },
+      "correct": "B",
+      "explanation": "createInsertSchema() reads the Drizzle table definition and produces a Zod schema that matches the insert type — with column types mapped to Zod validators and server-generated fields (id, created_at) still present by default. Combined with .omit() for server-set fields, this schema can be used directly in an Express route.",
+      "lesson_ref": "L06",
+      "claim_ref": "C2",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Why must `workspaceId` always be omitted from the Zod insert schema for workspace-scoped routes, rather than accepting it from request body?",
+      "options": {
+        "A": "workspaceId is automatically set by PostgreSQL triggers and doesn't need to be provided",
+        "B": "workspaceId values from the request body are not valid UUIDs",
+        "C": "workspaceId in request body is user-controlled and cannot be trusted — a mallicious user could supply any workspaceId to access another tenant's data. It must come exclusively from the verified JWT payload set by tenant middleware",
+        "D": "The Zod UUID validator doesn't work with workspaceId fields"
+      },
+      "correct": "C",
+      "explanation": "This is a core tenant isolation rule. req.body is user-controlled input — any value can be placed there. workspaceId must come from req.workspace.id, which was set by tenant middleware after verifying the JWT signature and confirming the user's workspace membership. Accepting it from body would allow a user to claim membership in any workspace.",
+      "lesson_ref": "L06",
+      "claim_ref": "C9",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "What does `SET LOCAL app.current_workspace_id = $1` accomplish, and why must it run before any workspace-scoped query?",
+      "options": {
+        "A": "It caches the workspace ID in Redis for subsequent requests",
+        "B": "It sets a transaction-scoped PostgreSQL session variable that the RLS policy reads via current_setting() to determine which rows to show — if it hasn't run, the RLS policy has no context and rejects the query",
+        "C": "It validates that the workspace exists before executing the query",
+        "D": "It sets the PostgreSQL search_path to the workspace's schema"
+      },
+      "correct": "B",
+      "explanation": "SET LOCAL sets a session variable scoped to the current transaction only. The RLS policy USING clause reads it: workspace_id = current_setting('app.current_workspace_id')::uuid. If SET LOCAL hasn't run, current_setting() returns an empty string, the UUID cast fails or the comparison fails, and the policy blocks all row access. Order is required: SET LOCAL must precede any query it needs to protect.",
+      "lesson_ref": "L07",
+      "claim_ref": "C9",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "Meridian uses both RLS policies AND explicit `WHERE workspace_id = ?` filters in Drizzle queries. Why maintain both layers?",
+      "options": {
+        "A": "RLS has performance overhead — the application-layer filter avoids it for most queries",
+        "B": "Belt-and-suspenders defense-in-depth: if tenant middleware has a bug and SET LOCAL never runs, RLS rejects the query with an error (not a data leak). If RLS is misconfigured, the application filter still scopes the result. Each layer covers the other's failure mode",
+        "C": "Drizzle's query builder doesn't integrate with RLS directly",
+        "D": "The two filters are needed for different table types — RLS for user tables, application filter for document tables"
+      },
+      "correct": "B",
+      "explanation": "Defense-in-depth means no single failure creates a security breach. RLS at the database level operates independently of application code — even a severely buggy route handler can't bypass it if the SET LOCAL is correct. The explicit WHERE clause operates independently of RLS — even if RLS is temporarily misconfigured or SET LOCAL wasn't run, the application filter prevents data leakage. Two independent failures are required.",
+      "lesson_ref": "L07",
+      "claim_ref": "C9",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "What is the difference between `SET LOCAL` and `SET` in PostgreSQL, and why does using `SET` instead of `SET LOCAL` in a connection pool environment cause a critical security bug?",
+      "options": {
+        "A": "SET LOCAL is permanent; SET is temporary. Using SET could cause the workspace context to reset unexpectedly",
+        "B": "SET changes a session variable for the entire database connection. In a connection pool, the next request reusing that connection inherits the previous tenant's workspace context. SET LOCAL scopes the change to the current transaction only — connection-pool safe",
+        "C": "SET is faster than SET LOCAL and should be used for non-critical variables",
+        "D": "SET LOCAL requires superuser privileges; SET works for all roles"
+      },
+      "correct": "B",
+      "explanation": "This is a critical security distinction for any pooled connection architecture. SET applies to the database session (the connection itself). When the connection is returned to the pool and reused by the next request (potentially from a different workspace), the previous workspace's context is still active. SET LOCAL is transaction-scoped — it disappears when the transaction ends or is committed, leaving the connection clean for the pool.",
+      "lesson_ref": "L07",
+      "claim_ref": "C9",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "Why does pgvector use an HNSW index for embedding search rather than a standard B-tree index?",
+      "options": {
+        "A": "B-tree indexes don't work with PostgreSQL extensions",
+        "B": "B-tree indexes provide exact matches by sorting values — they cannot compare multi-dimensional vectors by cosine distance. HNSW is an approximate nearest-neighbour graph algorithm that finds semantically similar vectors in O(log n) time",
+        "C": "HNSW indexes are faster to build than B-tree indexes for large datasets",
+        "D": "B-tree indexes can't handle data types larger than 4KB, and embeddings exceed this limit"
+      },
+      "correct": "B",
+      "explanation": "Vector similarity search is a fundamentally different problem from exact lookup or range queries B-trees solve. Cosine distance (the <=> operator) measures the angle between 1536-dimensional vectors — there's no linear ordering to index. HNSW builds a hierarchical graph of approximate neighbours, enabling O(log n) nearest-neighbour queries at the cost of not guaranteeing the absolute nearest neighbours.",
+      "lesson_ref": "L07",
+      "claim_ref": "C10",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "Write the complete three-step Drizzle + drizzle-zod pattern for a type-safe Express route that creates a document. Include the table definition, schema derivation, and route handler logic.",
+      "answer_key": {
+        "required_points": [
+          "Step 1: Drizzle table definition with id (uuid/pk), workspaceId (uuid/notNull), and content fields",
+          "Step 2: createInsertSchema(documents).omit({ id: true, workspaceId: true }) to derive Zod schema",
+          "Step 3: safeParse(req.body) → check success → on failure return 400 → on success db.insert with ...parsed.data and workspaceId from req.workspace.id",
+          "workspaceId must NOT come from parsed.data — must come from req.workspace.id"
+        ],
+        "acceptable_variations": "Exact field names may vary; uuid() vs uuid('id') syntax variations acceptable",
+        "full_credit": "All three steps present, workspaceId correctly sourced from middleware not body, error handling on safeParse failure",
+        "partial_credit": "Correct general pattern but workspaceId incorrectly sourced from body, or missing error handling"
+      },
+      "lesson_ref": "L06",
+      "claim_ref": "C2",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "What is the benefit of co-locating vector data in the same PostgreSQL instance as relational data (vs a dedicated vector database like Pinecone), and what is the known limitation of this approach?",
+      "answer_key": {
+        "required_points": [
+          "Benefits: ACID transactions (document insert + embedding insert succeed or fail together), no 2PC/distributed consistency protocol, single operational footprint (one DB to manage/backup/scale)",
+          "Limitation: performance ceiling at extreme embedding scale is unquantified — Pinecone/Weaviate have more vector-specific optimization. No benchmark defines the point at which pgvector degrades for Meridian's workload.",
+          "This is a moderate-confidence claim — correct at current scale, needs benchmarking before commit at 10M+ embeddings"
+        ],
+        "acceptable_variations": "May cite 'ACID transactions' or 'transactional consistency' for the first benefit",
+        "full_credit": "At least two concrete benefits and a clear statement of the scale uncertainty",
+        "partial_credit": "Correctly describes benefits without acknowledging the limitation"
+      },
+      "lesson_ref": "L07",
+      "claim_ref": "C10",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "essay",
+      "prompt": "The 'define once, derive everywhere' principle appears at three different layers of the Meridian stack: runtime validation (Zod), database typing (Drizzle), and database security (RLS). For each layer, explain what is defined once, what is derived from it, and what class of bugs this prevents vs a world where each layer maintains separate definitions.",
+      "guidance": "Strong responses describe the single definition at each layer and trace what would happen if they diverged: a Drizzle column added without a Zod schema update, RLS policy missing a new column, etc. Should be concrete about the bug class each layer's unification prevents.",
+      "rubric": {
+        "A": "All three layers covered with specific derivation chains and specific bug classes that schema drift would produce",
+        "B": "Two layers well covered, third described at high level",
+        "C": "Correctly identifies the principle but doesn't trace specific derivation chains or bug classes"
+      },
+      "lesson_ref": "L06-L07",
+      "difficulty": "analysis"
+    }
+  ]
+}

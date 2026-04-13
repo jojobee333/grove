@@ -1,0 +1,26 @@
+{
+  "module": "M02",
+  "title": "Immutability and Concurrent State — Quick Check",
+  "questions": [
+    {
+      "id": "MC02-1",
+      "q": "What is state tearing in React 18 concurrent mode, and which API prevents it for external stores?",
+      "a": "State tearing occurs when React's concurrent scheduler yields mid-render and external state changes during the pause, causing different parts of the same render to see different versions of a store. `useSyncExternalStore` prevents this by making state reads atomic within a render pass — React guarantees that once it starts reading the snapshot, it won't yield until the render is complete."
+    },
+    {
+      "id": "MC02-2",
+      "q": "What invariant must a Zustand store's `getSnapshot()` function satisfy, and what breaks if violated?",
+      "a": "getSnapshot() must return the exact same object reference if the store state has not changed. If it returns a new reference (e.g. `{...state}` or `JSON.stringify(state)`) on every call, React detects a constant 'change' signal and enters an infinite render loop, crashing the application."
+    },
+    {
+      "id": "MC02-3",
+      "q": "Why are Yjs CRDT operations designed as immutable value objects rather than mutable state changes?",
+      "a": "Immutability enables commutativity: applying operation A then B produces the same result as applying B then A. This property is required for convergence in distributed editing — offline peers can accumulate operations in any order and arrive at identical documents. If operations mutated shared state, the order of application would change the outcome, making convergence impossible."
+    },
+    {
+      "id": "MC02-4",
+      "q": "What is a Yjs tombstone and why can it never be garbage-collected from an active document?",
+      "a": "A tombstone is the marker left when a character or node is deleted in Yjs. It must be retained because another peer may be offline and still hold an operation referencing the deleted item. If the tombstone were removed, the peer's operation would reference a non-existent position, making merge impossible. Tombstones are only periodically compacted in Yjs under controlled conditions via snapshot/state vector mechanisms."
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "module": "M02",
+  "title": "Script Structure and Observability — Quick Check",
+  "questions": [
+    {
+      "id": "MC02-1",
+      "q": "List the four steps in the canonical main() execution sequence and explain why order matters.",
+      "a": "parse → log → validate → dispatch. Order matters because logging must be configured before any log call is made, and validation must run before dispatch so the script fails fast with a clear error rather than deep inside business logic."
+    },
+    {
+      "id": "MC02-2",
+      "q": "What is the purpose of the `if __name__ == '__main__'` guard, and what capability does it unlock?",
+      "a": "It prevents top-level code from running when the file is imported as a module. This makes the script importable, which in turn makes it testable — pytest can import and call main() directly without spawning a subprocess."
+    },
+    {
+      "id": "MC02-3",
+      "q": "Why should scripts use module-level loggers created with `logging.getLogger(__name__)` rather than the root logger?",
+      "a": "Module-level loggers carry the file's qualified name, making log messages self-identifying. They also integrate into the logging hierarchy, so callers can silence or redirect a specific module's output without affecting the whole application."
+    },
+    {
+      "id": "MC02-4",
+      "q": "How would you expose log verbosity as a CLI argument, and what Python logging level would you map to `-v`?",
+      "a": "Add a `--log-level` or `-v` flag via argparse, then call `logging.basicConfig(level=getattr(logging, args.log_level.upper()))` in main(). A single `-v` conventionally maps to `logging.DEBUG`."
+    }
+  ]
+}

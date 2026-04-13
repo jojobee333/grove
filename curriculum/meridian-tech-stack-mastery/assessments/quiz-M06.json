@@ -1,0 +1,157 @@
+{
+  "id": "quiz-M06",
+  "type": "module",
+  "module": "M06",
+  "title": "Assessment: Collaborative Editing — Yjs, CRDTs, and Lexical",
+  "generated": "2026-04-13",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What is the fundamental algorithmic difference between CRDTs (like Yjs) and OT (like ProseMirror's collab module) for resolving concurrent edits?",
+      "options": {
+        "A": "CRDTs use timestamps to order operations; OT uses vector clocks",
+        "B": "CRDTs embed conflict resolution into each operation's mathematical identity (commutativity/idempotency), requiring no central authority. OT transforms conflicting operations at a central server that sees all operations in order",
+        "C": "CRDTs resolve conflicts by taking the last write; OT merges all writes",
+        "D": "CRDTs are optimized for text; OT handles rich structured content better"
+      },
+      "correct": "B",
+      "explanation": "The core distinction: OT's correctness requires a central server to act as the total order arbiter — it sees every operation and computes the required transformation. Two OT clients can't merge operations without going through this central server first. CRDT operations carry their own identity (client ID + Lamport clock) and the math guarantees that any subset applied in any order produces the same result — no central coordinator required.",
+      "lesson_ref": "L10",
+      "claim_ref": "C6",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "What is `y-websocket`'s role in Meridian's collaboration architecture — specifically, what does it NOT do?",
+      "options": {
+        "A": "y-websocket acts as the source of truth — all clients sync through it and it resolves conflicts",
+        "B": "y-websocket is a relay that forwards binary Yjs update messages between peers in the same room. It does NOT resolve conflicts, does NOT determine operation order for correctness, and does NOT act as source of truth — CRDT convergence happens inside each client's Y.Doc",
+        "C": "y-websocket is responsible for persisting the document state to a database",
+        "D": "y-websocket validates all Yjs operations before broadcasting them to peers"
+      },
+      "correct": "B",
+      "explanation": "This is a critical conceptual distinction. y-websocket is a dumb relay — it receives binary Yjs update blobs and broadcasts them to all connected clients in the same room. It has no understanding of document content, no conflict resolution logic, and no storage. The CRDT property of Yjs means correctness is guaranteed by the operation structure, not the relay's intelligence.",
+      "lesson_ref": "L10",
+      "claim_ref": "C6",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "Why did the requirement for offline editing lead specifically to Lexical, not ProseMirror?",
+      "options": {
+        "A": "Lexical has better offline caching support than ProseMirror",
+        "B": "ProseMirror is slower and can't handle offline state",
+        "C": "Offline editing requires CRDT → Yjs was chosen → Yjs needs a first-class integration → @lexical/yjs is maintained by Meta (the Lexical team). ProseMirror's Yjs integration (y-prosemirror) is a third-party package not maintained by ProseMirror's developers",
+        "D": "Lexical supports offline storage via IndexedDB natively; ProseMirror does not"
+      },
+      "correct": "C",
+      "explanation": "The chain of constraints: offline editing → needs conflict-free convergence without central server → CRDT algorithm → Yjs implementation → editor must integrate with Yjs → the quality of that integration matters for a production workspace product. @lexical/yjs is first-party (Meta develops both) — it's tested, supported, and updated together. y-prosemirror is maintained by a third party, creating a dependency risk for a core architectural integration.",
+      "lesson_ref": "L10",
+      "claim_ref": "C5",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "What happens to unsaved Yjs changes when a user goes offline, and how do they synchronize when the connection is restored?",
+      "options": {
+        "A": "Changes are lost — Yjs requires a connection to apply operations",
+        "B": "Changes are cached in the browser's Service Worker and replayed on reconnect",
+        "C": "Local Yjs operations continue accumulating in the in-memory Y.Doc. On reconnect, WebsocketProvider sends all pending binary updates to the relay, which distributes them to other peers. Each peer's Y.Doc applies the updates via CRDT merge and converges — no manual handling required",
+        "D": "Changes are queued in a conflict buffer and the user must manually resolve them on reconnect"
+      },
+      "correct": "C",
+      "explanation": "This is one of CRDT's key practical benefits. The Y.Doc continues accepting local operations offline — they're valid CRDT operations with unique identities. WebsocketProvider maintains an internal queue of unsent updates. On reconnect, it automatically flushes the queue. Remote peers apply incoming updates using Yjs's merge algorithm — because CRDT operations are commutative, the order in which queued vs live edits are applied doesn't matter.",
+      "lesson_ref": "L11",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "Why must `CollaborationPlugin` in Lexical receive `editorState: null` in the initial `LexicalComposer` config?",
+      "options": {
+        "A": "null tells Lexical to create an empty document, which is always the correct starting state",
+        "B": "Setting editorState to null disables Lexical's undo/redo stack, which conflicts with Yjs",
+        "C": "When CollaborationPlugin is active, initial editor state comes from the Yjs document — either synced from other peers or a bootstrapped empty state. Setting any editorState would initialize Lexical's own state, which would conflict with the state arriving from Yjs",
+        "D": "null is required because CollaborationPlugin initializes asynchronously and needs an empty placeholder"
+      },
+      "correct": "C",
+      "explanation": "With CollaborationPlugin, Yjs is the authoritative source of document state. The plugin bootstraps the editor from the Y.XmlFragment, which either contains the current collaborative document state (if other peers are connected or y-indexeddb has a local cache) or starts empty. Any pre-loaded editorState would be overwritten by this — but setting it to non-null first would cause a brief flash of wrong content or a state conflict.",
+      "lesson_ref": "L11",
+      "claim_ref": "C5",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "CRDTs eliminate the need for a central server for algorithmic correctness. What do CRDTs still require a central server for in practice?",
+      "options": {
+        "A": "Nothing — CRDTs are fully peer-to-peer with no server requirements",
+        "B": "Peer discovery (how peers find each other), persistence (document storage when all peers are offline), and efficient catch-up (snapshot delivery prevents replaying full operation history on reconnect)",
+        "C": "Conflict detection and resolution — without a server, two peers may produce incompatible states",
+        "D": "Access control and authentication — CRDTs can't verify user permissions"
+      },
+      "correct": "B",
+      "explanation": "CRDT handles the correctness concern: any operation set applied in any order converges. But practical infrastructure needs remain: (1) A server enables peer discovery — two users editing the same doc need a meeting point. (2) When all peers go offline, a server stores the document state. (3) A peer reconnecting after a week would need to replay thousands of individual operations — a server-stored snapshot enables efficient sync. These are infrastructure concerns, not algorithmic ones.",
+      "lesson_ref": "L10",
+      "claim_ref": "C6",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "What purpose does `provider.awareness.setLocalStateField('user', { name, color })` serve, and when should it be called? How does Yjs awareness differ from the document content CRDT?",
+      "answer_key": {
+        "required_points": [
+          "Purpose: publishes this peer's presence metadata (name, cursor colour) to all connected peers in the Yjs room",
+          "When to call: immediately after provider creation, before the user starts editing, so their cursor appears to others from the moment they join",
+          "Awareness vs content: awareness is ephemeral — not stored in the CRDT document, not persisted, automatically cleaned up when the peer disconnects",
+          "Document content is CRDT-persisted and survives disconnection; awareness is transient presence-only state"
+        ],
+        "acceptable_variations": "May describe awareness as 'per-peer transient metadata' or 'presence channel'",
+        "full_credit": "Correctly describes purpose, timing, and the key distinction between ephemeral awareness and persistent CRDT content",
+        "partial_credit": "Correctly describes purpose and timing but doesn't distinguish awareness from document content"
+      },
+      "lesson_ref": "L11",
+      "claim_ref": "C5",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "You're evaluating whether to use ProseMirror (with y-prosemirror) vs Lexical (with @lexical/yjs) for a collaborative editor that requires offline support. Construct the argument for Lexical using both the control-vs-abstraction lens AND the CRDT vs OT distinction.",
+      "answer_key": {
+        "required_points": [
+          "CRDT vs OT: ProseMirror's built-in collab module uses OT (requires central server) — incompatible with offline/distributed requirement. y-prosemirror mixes CRDT/OT concerns in a third-party package",
+          "@lexical/yjs is first-party, maintained by the Lexical team — ensures the binding stays correct across Lexical version updates",
+          "Control-vs-abstraction: ProseMirror's schema system is powerful but adds an abstraction layer over DOM management. Lexical's DecoratorNode returns JSX directly, working within React's lifecycle rather than requiring manual ReactDOM.render()",
+          "Both lenses converge on Lexical: CRDT requirement (Yjs) + React-native DX + first-party Yjs binding"
+        ],
+        "acceptable_variations": "May frame as 'integration depth' rather than control-vs-abstraction",
+        "full_credit": "Uses both lenses explicitly and shows they converge on the same answer",
+        "partial_credit": "Makes a strong case using one lens only"
+      },
+      "lesson_ref": "L10-L11",
+      "claim_ref": "C5",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "essay",
+      "prompt": "Describe the complete lifecycle of a collaborative editing session in Meridian: from two users opening the same document, through an offline period for one user, to reconnection and convergence. For each phase, identify which component handles it and why the CRDT property guarantees correctness.",
+      "guidance": "Strong responses cover: (1) Initial sync via WebsocketProvider, (2) Both users editing simultaneously, (3) One user goes offline — local Y.Doc continues, (4) Reconnect — pending updates sent to relay, (5) Remote peer receives updates — Y.Doc CRDT merge. Should identify y-websocket, Y.Doc, WebsocketProvider, and @lexical/yjs as distinct responsibilities.",
+      "rubric": {
+        "A": "All five phases covered with correct component attribution and explanation of CRDT convergence guarantee at each conflict point",
+        "B": "Four of five phases covered with correct component attribution",
+        "C": "High-level lifecycle described but component responsibilities not clearly attributed"
+      },
+      "lesson_ref": "L10-L11",
+      "difficulty": "analysis"
+    }
+  ]
+}

@@ -1,0 +1,141 @@
+{
+  "id": "quiz-M03",
+  "type": "module",
+  "module": "M03",
+  "title": "Assessment: The Control-vs-Abstraction Lens",
+  "generated": "2026-04-13",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What single question, according to the control-vs-abstraction framework, resolves every major technology choice in the Meridian stack?",
+      "options": {
+        "A": "What is the performance benchmark of this tool vs its nearest alternative?",
+        "B": "What mechanism does this tool expose directly, and what does the alternative hide?",
+        "C": "How large is the community and long-term support commitment for this tool?",
+        "D": "Does this tool have first-party TypeScript types and a compatible license?"
+      },
+      "correct": "B",
+      "explanation": "The key insight: every choice between two tools is a choice about how much of a mechanism to expose vs abstract away. The right choice depends on whether Meridian needs direct access to the hidden mechanism. Express vs Fastify, Drizzle vs Prisma, direct Anthropic SDK vs LangChain — each resolves to this same question.",
+      "lesson_ref": "L05",
+      "claim_ref": "C5",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Prisma has excellent DX, first-class TypeScript support, and is used in production by thousands of teams. What are the three specific technical requirements that make Prisma unsuitable for Meridian?",
+      "options": {
+        "A": "Prisma lacks PostgreSQL support, doesn't handle migrations, and is too slow for production",
+        "B": "SET LOCAL for RLS context is awkward via $executeRaw; native pgvector column types lose type fidelity; codegen is required after every schema change — invalidating the zero-codegen type safety pattern",
+        "C": "Prisma doesn't integrate with Zod, can't handle JWT validation, and lacks WebSocket support",
+        "D": "Prisma requires a separate process, doesn't support Docker environments, and lacks monorepo support"
+      },
+      "correct": "B",
+      "explanation": "Three specific blockers: (1) Prisma's $executeRaw for SET LOCAL is awkward — Drizzle's db.execute(sql`SET LOCAL ...`) is idiomatic. (2) pgvector columns in Prisma require extension type workarounds with type loss; Drizzle exposes them natively as typed column definitions. (3) Prisma requires prisma generate after every schema.prisma change — Drizzle's table definitions are plain TypeScript objects that derive types structurally at compile time.",
+      "lesson_ref": "L05",
+      "claim_ref": "C7",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "Express benchmarks at ~15k req/s; Fastify at ~65k req/s. Why is Express still the correct choice for Meridian?",
+      "options": {
+        "A": "Express has better TypeScript support and a larger middleware ecosystem",
+        "B": "Fastify's throughput advantage is real but irrelevant — Meridian's per-request latency is governed by PostgreSQL queries (5–50ms) and Anthropic API calls (100–5000ms). No user-observable improvement comes from a faster HTTP framework when the bottleneck is external I/O",
+        "C": "Fastify is not production-ready and lacks the middleware Meridian uses",
+        "D": "Express is required by the Drizzle ORM integration"
+      },
+      "correct": "B",
+      "explanation": "The bottleneck analysis is decisive. A Meridian route that calls PostgreSQL + Anthropic takes 100–5000ms total. The difference between Express (~15k req/s) and Fastify (~65k req/s) matters when routes complete in microseconds — not when they block for 100ms+ on I/O. Where the abstraction layer (Express's complexity) doesn't affect the bottleneck (DB/AI latency), the simpler, more familiar tool wins.",
+      "lesson_ref": "L05",
+      "claim_ref": "C8",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "A new team member suggests replacing the direct Anthropic TypeScript SDK with the Vercel AI SDK. What is the strongest case for keeping the direct SDK for Meridian's current architecture?",
+      "options": {
+        "A": "The Vercel AI SDK has worse TypeScript types and is less maintained",
+        "B": "The Vercel AI SDK doesn't support streaming responses",
+        "C": "Meridian uses a single provider (Anthropic) with a custom RAG pipeline. The Vercel AI SDK's primary value is provider portability and abstracted streaming — benefits that require multi-provider switching to materialize. Adding an abstraction layer with no corresponding benefit introduces indirection at every AI call site",
+        "D": "The Vercel AI SDK would require a complete rewrite of the Express server"
+      },
+      "correct": "C",
+      "explanation": "The decision framework: what does the Vercel AI SDK abstract away, and does Meridian need direct access to what it hides? It hides Anthropic-specific streaming events, tool call interfaces, and message format details — abstracting them into a provider-neutral API. If you're staying on one provider, that abstraction buys nothing. The hidden mechanism (Anthropic's specific API surface) is exactly what Meridian already uses directly and well.",
+      "lesson_ref": "L05",
+      "claim_ref": "C11",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "A team is building a standard CRUD SaaS — single tenant, no RLS, no vector search, no custom SQL. The team is strong in GraphQL but weaker in SQL. Apply the control-vs-abstraction framework: Drizzle or Prisma?",
+      "options": {
+        "A": "Always Drizzle — direct SQL control produces better code quality in all contexts",
+        "B": "Prisma — the team's SQL unfamiliarity is the relevant constraint and the mechanisms Drizzle exposes directly (SET LOCAL, pgvector, no-codegen) are not required. Prisma's abstraction aligns with both team strength and project needs",
+        "C": "Always Prisma — Drizzle's API is too low-level for any production application",
+        "D": "Neither — the team should use a GraphQL-native ORM instead"
+      },
+      "correct": "B",
+      "explanation": "The framework is prescriptive, not a blanket 'control always wins.' When the hidden mechanism (SQL, SET LOCAL specifics) is not something you need direct access to, abstraction is the correct choice. The team's SQL gap is a real constraint. Prisma's excellent nested write handling, automatic join management, and high-DX generated client are all valuable when the pgvector/RLS/no-codegen requirements aren't present.",
+      "lesson_ref": "L05",
+      "claim_ref": "C7",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q06",
+      "type": "short_answer",
+      "question": "The control-vs-abstraction framework asks: 'What does the alternative hide, and is that hidden mechanism one we need direct access to?' Explain why this is the right diagnostic question rather than, for example, 'which tool has better performance?' or 'which is more popular?'",
+      "answer_key": {
+        "required_points": [
+          "Performance comparisons are conditional: they depend on where the bottleneck actually is (e.g. Express vs Fastify is meaningless if DB latency dominates)",
+          "Popularity signals community health but not fitness for specific constraints",
+          "The 'hidden mechanism' question is directional: it identifies the specific capability that the abstraction would block access to, which is the precise criterion that determines correctness in Meridian's constraint set",
+          "A tool that hides something you need is wrong regardless of its performance or popularity"
+        ],
+        "acceptable_variations": "May frame as 'fitness to constraints' vs 'absolute quality metrics'",
+        "full_credit": "Explains why relative metrics (performance, popularity) are context-dependent while the hidden-mechanism question directly tests constraint compatibility",
+        "partial_credit": "Makes the argument for one of the counter-examples without addressing both"
+      },
+      "lesson_ref": "L05",
+      "claim_ref": "C5",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "Describe the specific conditions under which Fastify would be the correct choice over Express for a server application.",
+      "answer_key": {
+        "required_points": [
+          "Route handlers complete in sub-millisecond time (no DB queries, no external API calls, no heavy computation)",
+          "High traffic volume where HTTP framework overhead is measurable (100k+ req/s is the target)",
+          "Examples: lightweight proxy/routing layer, edge function, static file serving, simple health-check endpoints",
+          "Explicitly NOT for Meridian's profile: DB + AI latency dominates, making framework overhead irrelevant"
+        ],
+        "acceptable_variations": "May mention 'schema-based serialization' as Fastify's other advantage for response performance",
+        "full_credit": "Describes the bottleneck condition correctly (sub-ms route completion + high vol), gives a concrete example use case, and explains why Meridian's profile doesn't match",
+        "partial_credit": "Identifies high traffic as the condition without specifying the route-latency context"
+      },
+      "lesson_ref": "L05",
+      "claim_ref": "C8",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q08",
+      "type": "essay",
+      "prompt": "The control-vs-abstraction framework is claimed to predict all of Meridian's major technology choices. Apply the framework to TWO choices not covered in the M03 lesson — one from the collaboration layer and one from the AI or security layer — and show that the same diagnostic question produces the correct answer in each case.",
+      "guidance": "Strong responses select specific comparisons (e.g. @lexical/yjs vs y-prosemirror, or Zod vs class-validator), identify the specific mechanism the alternative would hide, and explain whether Meridian needs direct access to that mechanism. Should not simply restate the choice but justify it through the framework.",
+      "rubric": {
+        "A": "Both comparisons identify the specific hidden mechanism, correctly applies the yes/no direct-access test, and explains the consequence of the alternative hiding it",
+        "B": "Both comparisons present but one is missing the hidden-mechanism specificity",
+        "C": "Makes valid choices but argues from DX or popularity rather than mechanism-access"
+      },
+      "lesson_ref": "L05",
+      "difficulty": "analysis"
+    }
+  ]
+}

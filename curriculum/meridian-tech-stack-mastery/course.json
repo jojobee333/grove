@@ -1,0 +1,266 @@
+{
+  "topic": "Meridian Tech Stack Mastery",
+  "slug": "meridian-tech-stack-mastery",
+  "strata_source": "vault/research/meridian-tech-stack-mastery/",
+  "generated": "2026-04-13",
+  "learner": {
+    "goal": "apply_practically",
+    "background": "intermediate",
+    "session_time_min": 15
+  },
+  "summary": "Master the architecture, technology choices, and engineering tradeoffs behind the Meridian full-stack AI workspace — including where alternatives exist and why each decision was made.",
+  "modules": [
+    {
+      "id": "M01",
+      "title": "TypeScript Strict Mode: The Stack's Foundation",
+      "strata_theme": "Theme 1 — TypeScript strict mode as the universal prerequisite",
+      "description": "Why strict mode is not a preference but a technical contract, and how every library in the Meridian stack depends on it.",
+      "objectives": [
+        "Configure TypeScript strict mode and explain what each of the nine sub-flags does",
+        "Identify which Meridian libraries silently degrade without strict mode and why"
+      ],
+      "lessons": [
+        {
+          "id": "L01",
+          "title": "The Nine Flags: What strict:true Actually Enables",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 15,
+          "description": "The nine strict sub-flags, which ones matter most for the Meridian stack, and how isolatedModules interacts with Vite."
+        },
+        {
+          "id": "L02",
+          "title": "Strict Mode Through Libraries: Zod, Zustand, and the Anthropic SDK",
+          "strata_claim": "C2",
+          "type": "applied",
+          "estimated_minutes": 15,
+          "description": "How z.infer<>, Drizzle table types, and the Anthropic SDK's MessageParam types each depend on strict mode to work correctly."
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M02",
+      "title": "Immutability: The Architectural Principle Behind Three Layers",
+      "strata_theme": "Theme 2 — Immutability as the architectural foundation",
+      "description": "How the same principle — immutable values, copy-on-write mutations — governs React 18's concurrent renderer, Lexical's EditorState, and Yjs's CRDT operations.",
+      "objectives": [
+        "Explain why immutable state is required for React 18's concurrent rendering to be safe",
+        "Describe how Lexical's frozen EditorState and Yjs's operation model both derive from the same immutability principle"
+      ],
+      "lessons": [
+        {
+          "id": "L03",
+          "title": "React 18 Concurrent Rendering and Why Mutation Breaks It",
+          "strata_claim": "C4",
+          "type": "core",
+          "estimated_minutes": 15,
+          "description": "How startTransition, interrupted renders, and StrictMode double-invocation all require immutable state snapshots to be safe."
+        },
+        {
+          "id": "L04",
+          "title": "Immutable Operations in Yjs: The Math Behind CRDT Convergence",
+          "strata_claim": "C6",
+          "type": "core",
+          "estimated_minutes": 15,
+          "description": "Why CRDT commutativity requires each operation to be an immutable value, and how this connects to Lexical's frozen EditorState."
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M03",
+      "title": "The Control-vs-Abstraction Lens",
+      "strata_theme": "Theme 4 — The control vs abstraction tradeoff as the meta-theme",
+      "description": "The single decision framework that explains every major technology choice in Meridian: control (direct access to the mechanism) vs abstraction (DX at the cost of opacity).",
+      "objectives": [
+        "Apply the control-vs-abstraction tradeoff to evaluate a technology choice given a set of domain constraints",
+        "Identify the specific mechanism that an abstracted alternative would hide for each Meridian component"
+      ],
+      "lessons": [
+        {
+          "id": "L05",
+          "title": "One Lens for Every Technology Decision",
+          "strata_claim": "C5, C7, C8, C11",
+          "type": "applied",
+          "estimated_minutes": 15,
+          "description": "Drizzle vs Prisma, Express vs Fastify, Lexical vs ProseMirror, direct Anthropic SDK vs LangChain — each resolved through one consistent tradeoff question."
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M04",
+      "title": "Single Source of Truth: Schema-as-Type Across the Stack",
+      "strata_theme": "Theme 3 — Single source of truth, define once, derive everywhere",
+      "description": "How Zod schemas, Drizzle table definitions, and PostgreSQL RLS policies each express the 'define once, derive everywhere' principle.",
+      "objectives": [
+        "Use drizzle-zod createInsertSchema() to derive a Zod validator from a Drizzle table and use it in an Express route",
+        "Implement a PostgreSQL table with RLS and the SET LOCAL pattern so the schema enforces tenant isolation automatically"
+      ],
+      "lessons": [
+        {
+          "id": "L06",
+          "title": "Schema-as-Type: z.infer<> + drizzle-zod in Practice",
+          "strata_claim": "C2",
+          "type": "applied",
+          "estimated_minutes": 15,
+          "description": "The full pattern: Drizzle table definition → drizzle-zod createInsertSchema() → Zod validator in Express route → zero manual type declarations."
+        },
+        {
+          "id": "L07",
+          "title": "PostgreSQL RLS + pgvector: One Table Definition, Three Jobs",
+          "strata_claim": "C9, C10",
+          "type": "applied",
+          "estimated_minutes": 15,
+          "description": "How a single Drizzle table definition defines RLS-protected relational columns and a pgvector HNSW-indexed embedding column simultaneously."
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M05",
+      "title": "React 18 + Zustand: The Client State Integration Contract",
+      "strata_theme": "Theme 5 — React 18 / useSyncExternalStore as the state integration contract",
+      "description": "How useSyncExternalStore connects React 18's concurrent renderer to external state systems, and why Zustand, Lexical, and AI streaming all honour this contract.",
+      "objectives": [
+        "Implement a Zustand slice that correctly subscribes to an SSE stream in React 18 concurrent mode without tearing",
+        "Explain why Vite SPA is architecturally correct for Meridian while Next.js App Router is not"
+      ],
+      "lessons": [
+        {
+          "id": "L08",
+          "title": "useSyncExternalStore: The Hook That Connects React 18 to the World",
+          "strata_claim": "C4",
+          "type": "core",
+          "estimated_minutes": 15,
+          "description": "What the hook does, why Zustand v4 switched to it, and the pattern for connecting an SSE stream to React state without concurrent-mode tearing."
+        },
+        {
+          "id": "L09",
+          "title": "Vite SPA vs Next.js: Why SSR-First Frameworks Break Meridian",
+          "strata_claim": "C3",
+          "type": "debate",
+          "estimated_minutes": 15,
+          "description": "Why Lexical cannot run on the server, why Yjs providers are client-side, and the specific Next.js App Router features that are incompatible with Meridian's real-time architecture."
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M06",
+      "title": "Collaborative Editing: Yjs, CRDTs, and Lexical",
+      "strata_theme": "Theme 7 — Collaborative editing as a foundational architectural constraint",
+      "description": "How the CRDT algorithm choice determines the editor choice, and how @lexical/yjs wires an immutable CRDT to an immutable editor state.",
+      "objectives": [
+        "Implement a collaborative Lexical editor with @lexical/yjs and a y-websocket provider",
+        "Explain why Yjs's CRDT model enables offline editing while ProseMirror's OT model cannot"
+      ],
+      "lessons": [
+        {
+          "id": "L10",
+          "title": "CRDTs vs OT: Why the Algorithm Choice Determines the Editor Choice",
+          "strata_claim": "C6",
+          "type": "core",
+          "estimated_minutes": 15,
+          "description": "CRDT commutativity vs OT central authority, and the direct chain: offline requirement → Yjs (CRDT) → Lexical (@lexical/yjs first-class) → not ProseMirror."
+        },
+        {
+          "id": "L11",
+          "title": "@lexical/yjs in Practice: Editor State as a Y.XmlFragment",
+          "strata_claim": "C5",
+          "type": "applied",
+          "estimated_minutes": 15,
+          "description": "Wiring a Lexical editor to a Y.Doc via @lexical/yjs: provider setup, awareness (cursor presence), and the offline-sync lifecycle."
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M07",
+      "title": "RAG as AI Memory Architecture",
+      "strata_theme": "Theme 8 — RAG as the AI memory architecture",
+      "description": "The four-stage RAG pipeline mapped to Meridian's stack: pgvector for retrieval, Anthropic SDK for generation, and why direct SDK beats abstraction layers.",
+      "objectives": [
+        "Implement the four RAG stages using pgvector's HNSW index and the Anthropic SDK's streaming messages API",
+        "Explain why the direct Anthropic SDK is the correct choice given a single-provider architecture"
+      ],
+      "lessons": [
+        {
+          "id": "L12",
+          "title": "The Four RAG Stages Mapped to the Meridian Stack",
+          "strata_claim": "C12",
+          "type": "applied",
+          "estimated_minutes": 15,
+          "description": "Ingestion (chunk → embed → pgvector INSERT), Retrieval (embed query → ORDER BY embedding <=> $1), Augmentation (inject into system prompt), Generation (client.messages.stream())."
+        },
+        {
+          "id": "L13",
+          "title": "Direct Anthropic SDK: Streaming, Tool Calling, and When Not to Abstract",
+          "strata_claim": "C11",
+          "type": "debate",
+          "estimated_minutes": 15,
+          "description": "What the Anthropic SDK exposes that Vercel AI SDK and LangChain hide, and the conditions under which abstraction would be the right choice instead."
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M08",
+      "title": "Security: Four Independent Layers",
+      "strata_theme": "Theme 6 — Security as layered defense-in-depth",
+      "description": "How Zod, JWT, bcrypt, and PostgreSQL RLS form four independent layers of defense, each covering a distinct attack surface.",
+      "objectives": [
+        "Implement the four-layer security chain in correct dependency order: Zod → JWT middleware → SET LOCAL → RLS",
+        "Identify the specific JWT attacks from RFC 8725 and the Express middleware pattern that prevents each"
+      ],
+      "lessons": [
+        {
+          "id": "L14",
+          "title": "Four-Layer Security: Zod → JWT → bcrypt → RLS in Correct Order",
+          "strata_claim": "C13",
+          "type": "applied",
+          "estimated_minutes": 15,
+          "description": "The full request lifecycle: Zod validates body → JWT middleware extracts workspace_id → SET LOCAL sets RLS context → query executes under RLS. Why order matters."
+        },
+        {
+          "id": "L15",
+          "title": "bcrypt vs Argon2id and the JWT Attacks That Actually Happen",
+          "strata_claim": "C14",
+          "type": "debate",
+          "estimated_minutes": 15,
+          "description": "The alg:none and RSA-to-HMAC confusion attacks from RFC 8725, the bcrypt vs Argon2id tradeoff, and when to upgrade Meridian's credential hashing."
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M09",
+      "title": "Monorepo Tooling: Three Scopes, One Project",
+      "strata_theme": "Theme 9 — Monorepo layers are complementary, not competing",
+      "description": "How pnpm workspaces, Turborepo, and Docker Compose each operate at distinct scopes and why understanding those scopes prevents tooling confusion.",
+      "objectives": [
+        "Configure a pnpm workspace with workspace:* linking and scoped --filter commands",
+        "Identify the observable signal that triggers adding Turborepo to a pnpm workspace"
+      ],
+      "lessons": [
+        {
+          "id": "L16",
+          "title": "pnpm + Docker Compose + Turborepo: Three Scopes, Not Three Options",
+          "strata_claim": "C15, C16",
+          "type": "applied",
+          "estimated_minutes": 15,
+          "description": "Package registry (pnpm workspace:*), task graph (turbo.json pipelines), service runtime (compose.yaml health checks) — each tool's scope, when to add Turborepo, and the Docker Compose health check pattern."
+        }
+      ],
+      "has_assessment": true
+    }
+  ],
+  "total_lessons": 16,
+  "total_estimated_hours": 4.0,
+  "learning_plan": {
+    "sessions_to_complete": 16,
+    "suggested_schedule": "1 lesson per session, 3–5 sessions per week (3–5 week completion)",
+    "milestone_lessons": ["L01", "L05", "L10", "L14", "L16"]
+  }
+}

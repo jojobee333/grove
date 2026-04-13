@@ -1,0 +1,156 @@
+{
+  "id": "quiz-M02",
+  "type": "module",
+  "module": "M02",
+  "title": "Assessment: Script Structure and Observability",
+  "generated": "2026-04-12",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "A Python script file contains this at the bottom: `main()` (no guard). A test file does `from myscript import process_data`. What happens when the test file is imported?",
+      "options": {
+        "A": "Nothing — Python only executes the imported module if explicitly called",
+        "B": "The entire script runs from top to bottom, including main(), triggering all side effects",
+        "C": "An ImportError is raised because scripts cannot be imported",
+        "D": "Only the function definitions are imported; module-level code is skipped"
+      },
+      "correct": "B",
+      "explanation": "Without the `if __name__ == '__main__'` guard, `main()` is a module-level call that runs on every import. When the test file imports from myscript, `main()` executes immediately, triggering all its side effects (network calls, file writes, etc.). This is why the guard is required for testability.",
+      "lesson_ref": "L03",
+      "claim_ref": "C5",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "In the standard script execution sequence, logging.basicConfig() must be called AFTER argument parsing. What breaks if the order is reversed?",
+      "options": {
+        "A": "argparse raises a RuntimeError if logging is already configured",
+        "B": "basicConfig() would be called with the default WARNING level before the --log-level flag is read, and calling it again later has no effect (basicConfig is a no-op if handlers already exist)",
+        "C": "The script would crash because logging is not thread-safe",
+        "D": "Nothing breaks — basicConfig() can be called at any point and reconfigures logging each time"
+      },
+      "correct": "B",
+      "explanation": "logging.basicConfig() is a no-op if root logger handlers already exist. If called before argument parsing, it uses the default level (WARNING). The subsequent call with args.log_level is ignored. This means --log-level DEBUG would have no effect, breaking level-controlled observability.",
+      "lesson_ref": "L03",
+      "claim_ref": "C5",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "A script uses `print(f'Processing file: {path}')` for progress output. What capability does this lack that `logger.info('Processing file: %s', path)` provides?",
+      "options": {
+        "A": "print() does not support f-strings in Python 3.10+",
+        "B": "print() output cannot be redirected to stderr",
+        "C": "The print() output cannot be selectively silenced at runtime without editing source code, and carries no severity level, timestamp, or source module information",
+        "D": "print() output is buffered and may not appear before the script exits"
+      },
+      "correct": "C",
+      "explanation": "print() always produces output and carries no metadata. Logging output can be filtered by level at runtime (--log-level WARNING suppresses INFO), automatically includes timestamp and source module, and can be redirected to files/rotating handlers. B is partially true but not the primary issue. D is a minor concern, not the core difference.",
+      "lesson_ref": "L04",
+      "claim_ref": "C4",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "A developer writes an asyncio script and calls `asyncio.run(main())` inside `if __name__ == '__main__':`. The main() function is defined as `async def main()`. Is this pattern correct?",
+      "options": {
+        "A": "No — asyncio.run() is deprecated; use loop.run_until_complete() instead",
+        "B": "Yes — asyncio.run() is the correct entry point for an async main() since Python 3.7",
+        "C": "No — you must define main() as a regular function and make it call asyncio.run() internally",
+        "D": "Yes, but only if the script has no synchronous code at module level"
+      },
+      "correct": "B",
+      "explanation": "asyncio.run(main()) is the canonical pattern for async scripts since Python 3.7. It creates an event loop, runs the coroutine to completion, and closes the loop. asyncio.run() is not deprecated — loop.run_until_complete() is the older pattern it replaced.",
+      "lesson_ref": "L03",
+      "claim_ref": "C5",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "A library module contains this line at module level: `logging.basicConfig(level=logging.DEBUG)`. What effect does this have on applications that import the library?",
+      "options": {
+        "A": "No effect — basicConfig() in a library only affects the library's log output",
+        "B": "The importing application's root logger is configured to DEBUG before the application calls basicConfig(), leaving the application's own basicConfig() call as a no-op and forcing DEBUG output from all loggers",
+        "C": "The application's logging is automatically isolated from the library's logging",
+        "D": "Python raises ImportError when a library configures logging"
+      },
+      "correct": "B",
+      "explanation": "basicConfig() configures the root logger, which is shared across the entire process. A library calling basicConfig() runs before the importing application can configure its own logging. The application's subsequent basicConfig() call is a no-op (handlers already exist), so the library has permanently configured all logging, including the application's own loggers.",
+      "lesson_ref": "L04",
+      "claim_ref": "C4",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "Which logging call is more performant when the current log level is WARNING?",
+      "options": {
+        "A": "logger.debug(f'Computed result: {expensive_fn()}')",
+        "B": "logger.debug('Computed result: %s', expensive_fn())",
+        "C": "They are identical in performance",
+        "D": "logger.debug('Computed result: ' + str(expensive_fn()))"
+      },
+      "correct": "B",
+      "explanation": "With %-style formatting, the string is only built if the message will actually be emitted. At WARNING level, DEBUG messages are discarded before formatting — expensive_fn() is still called (that's the argument), but str() conversion is deferred. With f-strings (A and D), the full string is built and expensive_fn() is evaluated before the logger even checks the level.",
+      "lesson_ref": "L04",
+      "claim_ref": "C4",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "Describe the complete main() execution sequence for a well-structured Python script, and explain why each step must come before the next.",
+      "answer_key": {
+        "required_points": [
+          "Step 1: Parse arguments (argparse) — must come first to provide --log-level",
+          "Step 2: Configure logging (basicConfig with args.log_level) — must come before domain functions so their output is routed correctly",
+          "Step 3: Validate inputs — must come before dispatch to prevent domain functions running with invalid data",
+          "Step 4: Dispatch to domain functions"
+        ],
+        "acceptable_variations": "Validation and dispatch may be described as a combined step. The key causal ordering between parsing and logging must be explained.",
+        "full_credit": "All four steps identified with the causal reasoning between parse→log and log→domain functions.",
+        "partial_credit": "Steps listed without explaining why the order matters, or missing the causal argument."
+      },
+      "lesson_ref": "L03",
+      "claim_ref": "C5",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "You are reviewing a script where a colleague used print() extensively for progress output and sys.stderr.write() for error messages. Describe two specific improvements the logging module provides over this approach, and explain how you would migrate the script.",
+      "answer_key": {
+        "required_points": [
+          "Must identify runtime level control (--log-level argument, no source edits)",
+          "Must identify automatic metadata (timestamp, module name, severity) or output routing (file, rotating handler)",
+          "Migration: replace print() with logger.info()/logger.debug(), replace stderr.write() with logger.error()/logger.warning(), add getLogger(__name__) at module level, add basicConfig() in main()"
+        ],
+        "acceptable_variations": "May focus on different log module capabilities as long as two distinct improvements are identified.",
+        "full_credit": "Two improvements explained with rationale plus a concrete migration approach.",
+        "partial_credit": "Only one improvement identified, or improvements listed without rationale."
+      },
+      "lesson_ref": "L04",
+      "claim_ref": "C4",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "essay",
+      "prompt": "A teammate argues: 'The script skeleton (main(), __name__ guard, fixed execution sequence) is over-engineering for a 50-line script. I'll add structure when the script grows.' Evaluate this argument and explain when the skeleton's overhead is justified and when it might genuinely be unnecessary.",
+      "guidance": "A strong response acknowledges that a truly one-off, never-imported script might not need full structure, but argues that the guard plus main() has near-zero cost and that testability and importability are the primary justifications even for small scripts. Should address the 'it will stay small' assumption.",
+      "rubric": {
+        "A": "Acknowledges the legitimate case for simple scripts, explains the near-zero cost of the pattern, uses testability/importability as the specific justification, addresses the 'it will stay small' assumption with a realistic engineering counterargument",
+        "B": "Argues for the skeleton without acknowledging any trade-offs, or acknowledges trade-offs without making a clear recommendation",
+        "C": "Simply restates that the skeleton is best practice without engaging with the specific objection"
+      },
+      "lesson_ref": "L03-L04",
+      "difficulty": "analysis"
+    }
+  ]
+}

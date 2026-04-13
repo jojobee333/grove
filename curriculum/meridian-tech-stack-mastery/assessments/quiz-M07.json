@@ -1,0 +1,158 @@
+{
+  "id": "quiz-M07",
+  "type": "module",
+  "module": "M07",
+  "title": "Assessment: RAG as AI Memory Architecture",
+  "generated": "2026-04-13",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "Name the four stages of a RAG pipeline in order.",
+      "options": {
+        "A": "Parse → Index → Search → Generate",
+        "B": "Ingestion → Retrieval → Augmentation → Generation",
+        "C": "Upload → Embed → Search → Respond",
+        "D": "Chunking → Indexing → Prompting → Streaming"
+      },
+      "correct": "B",
+      "explanation": "Ingestion: chunk text, embed each chunk, store chunk content + vector in pgvector. Retrieval: embed the user's query, find nearest chunks via cosine distance. Augmentation: inject retrieved chunks into the system prompt as context. Generation: send the augmented prompt to the LLM and stream the response back. Each stage is distinct and sequentially dependent.",
+      "lesson_ref": "L12",
+      "claim_ref": "C12",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Where should RAG-retrieved context be injected in the message structure sent to the Anthropic API — in the system prompt or the user message — and why?",
+      "options": {
+        "A": "In the user message, so the model treats it as part of the current question",
+        "B": "In the system prompt, so retrieved context persists across all turns without polluting conversation history or repeating in every user message",
+        "C": "In a separate 'context' role that Anthropic supports in its messages API",
+        "D": "Split across both — key facts in system prompt, full text in user message"
+      },
+      "correct": "B",
+      "explanation": "The system prompt persists across every turn in the conversation. Injecting context there means all subsequent responses can reference it without repeating the retrieval snippets. If context is injected into the user message instead, it repeats in the conversation history on every turn, inflating token usage and cluttering the displayed conversation. The system prompt is the correct single location for injected workspace memory.",
+      "lesson_ref": "L12",
+      "claim_ref": "C12",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "The Meridian vector search requires both `user_id` and `workspace_id` filters. Why is filtering by `workspace_id` alone insufficient for AI memory retrieval?",
+      "options": {
+        "A": "workspace_id alone would cause performance issues by scanning too many rows",
+        "B": "A workspace has multiple users — filtering only by workspace_id returns memories from all users in that workspace, allowing User A to retrieve User B's personal AI memory. Both filters are required: workspace_id for tenant isolation, user_id for per-user privacy",
+        "C": "user_id is required because workspace_id is not indexed in pgvector",
+        "D": "Filtering by workspace_id alone would miss memories stored in sub-workspaces"
+      },
+      "correct": "B",
+      "explanation": "This is a dual-scope security requirement. workspace_id provides tenant isolation (no cross-tenant leakage). user_id provides individual privacy within a tenant. Personal AI memory — notes, context, preferences ingested for a specific user — should not be accessible to other members of the same workspace. Both filters are always required for any memory retrieval query.",
+      "lesson_ref": "L12",
+      "claim_ref": "C12",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "In an Anthropic SDK streaming response, which event type carries the text being generated, and how do you extract the text chunk?",
+      "options": {
+        "A": "type: 'text_chunk', accessed via event.content",
+        "B": "type: 'message_delta', accessed via event.delta.text",
+        "C": "type: 'content_block_delta' with event.delta.type === 'text_delta', text accessed via event.delta.text",
+        "D": "type: 'stream_event', accessed via event.payload.text"
+      },
+      "correct": "C",
+      "explanation": "The Anthropic streaming event discriminated union: events have a top-level type field. During text generation, the event is content_block_delta. The delta object has its own type field — text_delta for text, input_json_delta for tool input streaming. The actual text chunk is at event.delta.text. This two-level type discrimination ('content_block_delta' then 'text_delta') is important to get right when forwarding chunks to SSE clients.",
+      "lesson_ref": "L13",
+      "claim_ref": "C11",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "What does the Vercel AI SDK provide that the direct Anthropic SDK does not, and when does this value materialize for a product team?",
+      "options": {
+        "A": "The Vercel AI SDK provides better streaming performance and lower latency",
+        "B": "The Vercel AI SDK provides provider portability — a unified API surface across OpenAI, Anthropic, Google, and others. This value materializes when a product needs to switch providers or offer provider choice to customers",
+        "C": "The Vercel AI SDK provides built-in RAG support that the Anthropic SDK lacks",
+        "D": "The Vercel AI SDK provides automatic retry logic for failed API calls"
+      },
+      "correct": "B",
+      "explanation": "Provider portability is the Vercel AI SDK's core value proposition. Switching from `anthropic.messages.create()` to `openai.chat.completions.create()` requires rewriting every AI call site because the interfaces differ. The Vercel AI SDK wraps both behind a common interface. This matters if you need multi-provider support. For Meridian (single provider, single-provider commitment), the abstraction adds indirection at every call site without providing the benefit it's designed for.",
+      "lesson_ref": "L13",
+      "claim_ref": "C11",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "Why is fine-tuning NOT a substitute for RAG for Meridian's personal AI memory feature?",
+      "options": {
+        "A": "Fine-tuning with Anthropic is too expensive for a startup product",
+        "B": "Fine-tuning bakes knowledge into model weights at training time — it cannot reflect documents added after training. RAG retrieves current workspace content at inference time, enabling memory of documents added seconds ago. A workspace where users continuously create content requires inference-time retrieval, not training-time baking",
+        "C": "Fine-tuning produces less accurate responses than RAG for conversational tasks",
+        "D": "The Anthropic API doesn't support fine-tuning"
+      },
+      "correct": "B",
+      "explanation": "This is the fundamental architectural distinction. Fine-tuning is a static snapshot of knowledge baked into weights — it goes stale the moment a user adds a new document. RAG is dynamic — it retrieves content that exists right now, at the moment the user asks a question. For a workspace with continuously evolving content (notes, pages, memories), fine-tuning would require constant re-training at prohibitive cost and would still lag behind live content.",
+      "lesson_ref": "L12",
+      "claim_ref": "C12",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "Write the complete pgvector retrieval query for Meridian's RAG pipeline. Explain each clause, including the operator used and why it's the correct one.",
+      "answer_key": {
+        "required_points": [
+          "SELECT content FROM memories WHERE user_id = $1 AND workspace_id = $2 ORDER BY embedding <=> $3::vector LIMIT 10",
+          "<=> operator: cosine distance (lower = more similar) — correct for text embeddings where meaning is in direction, not magnitude",
+          "Both WHERE filters required: user_id for personal privacy, workspace_id for tenant isolation",
+          "$3::vector cast: the query embedding is sent as a JSON/binary array and cast to PostgreSQL's vector type",
+          "LIMIT 10: controls context window size — too many chunks overflow the LLM context window"
+        ],
+        "acceptable_variations": "LIMIT value may differ; column names may vary; may use Drizzle syntax instead of raw SQL",
+        "full_credit": "Correct SQL with both WHERE filters, correct operator (<=>), correct cast, and explanation of why cosine is used",
+        "partial_credit": "Correct query structure but missing explanation of operator choice or missing one WHERE filter"
+      },
+      "lesson_ref": "L12",
+      "claim_ref": "C12",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "Describe how tool calling works in the Anthropic SDK: what does the model return when it wants to use a tool, and what must your code do in response?",
+      "answer_key": {
+        "required_points": [
+          "Model returns stop_reason: 'tool_use' and a ToolUseBlock in response.content containing: tool name, unique tool_use_id, and parsed input object",
+          "Your code executes the tool with the provided input",
+          "Send result back by appending a new message with role: 'user' and content: [{ type: 'tool_result', tool_use_id: block.id, content: result }]",
+          "Call messages.create() again with the updated messages array — the model then continues generating"
+        ],
+        "acceptable_variations": "May describe the second call as 'continuing the conversation' or 'second inference call'",
+        "full_credit": "All four steps: response shape, code execution, tool_result structure with correct tool_use_id, and second API call",
+        "partial_credit": "Describes receiving the tool call and executing it but doesn't correctly describe the tool_result response structure"
+      },
+      "lesson_ref": "L13",
+      "claim_ref": "C11",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "essay",
+      "prompt": "The direct Anthropic SDK is described as the correct choice for Meridian 'given a single-provider architecture.' This claim would reverse if Meridian added a second LLM provider. Describe: (1) what specifically would need to change in the codebase to migrate to the Vercel AI SDK, (2) how extensive the migration would be, and (3) what architectural decision the team should make today to reduce migration risk while keeping the direct SDK.",
+      "guidance": "Strong responses identify specific technical differences: streaming event shapes, tool call interfaces, message format, type signatures. Should estimate migration scope realistically. For mitigation: a thin adapter layer or AI service module that wraps SDK calls, so migration affects one module not all route handlers.",
+      "rubric": {
+        "A": "Identifies specific type/interface differences to migrate, estimates realistic scope, proposes a concrete adapter pattern that reduces future migration cost",
+        "B": "Identifies the migration scope and proposes an abstraction but without specifics on what changes",
+        "C": "Acknowledges the migration risk without proposal for mitigation"
+      },
+      "lesson_ref": "L13",
+      "difficulty": "analysis"
+    }
+  ]
+}

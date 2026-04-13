@@ -1,0 +1,222 @@
+{
+  "topic": "Python Scripting Best Practices",
+  "slug": "python-scripting-best-practices",
+  "strata_source": "research/python-scripting-best-practices/",
+  "generated": "2026-04-12",
+  "learner": {
+    "goal": "teach others",
+    "background": "intermediate",
+    "session_time_min": 15
+  },
+  "summary": "A 13-lesson course that equips an intermediate Python developer to explain, justify, and demonstrate every production-quality scripting best practice — from toolchain automation to concurrency — using 22 official sources as the evidence base.",
+  "modules": [
+    {
+      "id": "M01",
+      "title": "The Python Quality Toolchain",
+      "strata_theme": "Theme 1: Automate Style Enforcement; Theme 3: pyproject.toml as Single Config Hub",
+      "description": "How to configure ruff, mypy, and pytest in one place so correctness is enforced automatically rather than by discipline",
+      "objectives": [
+        "Explain why automated enforcement is more reliable than code review for style and type safety",
+        "Illustrate the role each tool (ruff, mypy, pytest) plays in the quality stack",
+        "Justify using pyproject.toml as the single configuration file for all dev tools"
+      ],
+      "lessons": [
+        {
+          "id": "L01",
+          "title": "Automating Quality: ruff, mypy, and pytest",
+          "strata_claim": "C1, C11",
+          "type": "core",
+          "estimated_minutes": 12,
+          "description": "Why the three-tool quality stack (ruff, mypy, pytest) is non-negotiable, how each tool fills a unique gap, and how to configure all three in pyproject.toml"
+        },
+        {
+          "id": "L02",
+          "title": "pyproject.toml: One File to Configure Them All",
+          "strata_claim": "C2",
+          "type": "core",
+          "estimated_minutes": 12,
+          "description": "How pyproject.toml serves as both the dev-tool configuration hub and the runtime config source (via tomllib), and why this reduces cognitive overhead"
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M02",
+      "title": "Script Structure and Observability",
+      "strata_theme": "Theme 6: Standard Script Structure; Theme 4: Structured Logging",
+      "description": "The universal main()-based skeleton that makes scripts testable and auditable, and how to route all observability through the logging hierarchy",
+      "objectives": [
+        "Explain the execution sequence of a well-structured Python script and why order matters",
+        "Compare print()-based debugging with structured logging and justify the difference to a junior developer",
+        "Illustrate how argparse, logging, and main() work together as a single coherent system"
+      ],
+      "lessons": [
+        {
+          "id": "L03",
+          "title": "The Universal Script Skeleton",
+          "strata_claim": "C5",
+          "type": "core",
+          "estimated_minutes": 12,
+          "description": "The if __name__ == '__main__' guard, the main() execution sequence (parse → log → validate → dispatch), and why this pattern makes scripts testable and importable"
+        },
+        {
+          "id": "L04",
+          "title": "Structured Logging Over print()",
+          "strata_claim": "C4",
+          "type": "core",
+          "estimated_minutes": 12,
+          "description": "Module-level loggers, logging.basicConfig() in main(), the library/script distinction, and how to expose --log-level as a CLI argument"
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M03",
+      "title": "Documentation and the Type System",
+      "strata_theme": "Theme 2: Type Annotations Are the Default for New Code",
+      "description": "How PEP 257 docstrings and Python 3.10+ type annotations together form a machine-verifiable and human-readable function contract",
+      "objectives": [
+        "Explain the complementary roles of docstrings and type annotations in making code self-documenting",
+        "Illustrate correct usage of Python 3.10+ annotation syntax (str | None, list[T], TypedDict, Protocol, Final)",
+        "Compare the Google Style Guide's 'mandatory annotations' position against PEP 484's 'never mandatory' framing and explain the resolution to a team"
+      ],
+      "lessons": [
+        {
+          "id": "L05",
+          "title": "Writing Self-Documenting Functions",
+          "strata_claim": "C3",
+          "type": "core",
+          "estimated_minutes": 12,
+          "description": "PEP 257 Google-style docstrings (summary + Args/Returns/Raises), type annotation requirements for public functions in new code, and how ruff enforces both"
+        },
+        {
+          "id": "L06",
+          "title": "Python 3.10+ Type System: Union, TypedDict, Protocol, Final",
+          "strata_claim": "C10",
+          "type": "applied",
+          "estimated_minutes": 12,
+          "description": "The modern annotation vocabulary — str | None, list[T], TypedDict for dict structures, Protocol for structural typing, Final for constants — and when to use each"
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M04",
+      "title": "Resource Management and Configuration",
+      "strata_theme": "Theme 5: Context Managers and pathlib; Theme 10: Secrets in Env Vars or Files",
+      "description": "How pathlib replaces os.path, why context managers are mandatory for all resources, and how to layer configuration safely without secrets in source",
+      "objectives": [
+        "Explain why pathlib.Path is preferred over os.path and demonstrate at least three API improvements",
+        "Justify the use of context managers for every resource lifecycle, including temporary files",
+        "Compare TOML, INI, and environment variables as configuration sources and explain when to use each"
+      ],
+      "lessons": [
+        {
+          "id": "L07",
+          "title": "pathlib and Context Managers: Safe I/O by Default",
+          "strata_claim": "C7, C8",
+          "type": "core",
+          "estimated_minutes": 12,
+          "description": "pathlib.Path replacing os.path, the with-statement requirement for all resources, and why TemporaryDirectory is safer than mktemp()"
+        },
+        {
+          "id": "L08",
+          "title": "Configuration and Secrets: Files, Env Vars, Never Source",
+          "strata_claim": "C6",
+          "type": "applied",
+          "estimated_minutes": 12,
+          "description": "The layered config priority (CLI > env > file > default), tomllib for TOML, configparser for INI, and os.environ.get() for secrets"
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M05",
+      "title": "Data Serialization",
+      "strata_theme": "Theme 9: Security-Aware Serialization",
+      "description": "How to choose the right serialization format by trust level — json and csv for external data, pickle only for internal trusted caches",
+      "objectives": [
+        "Explain the security risk of deserializing untrusted pickle data and illustrate the correct policy to a team",
+        "Compare json, csv, TOML, and pickle by use case and justify the correct choice for a given scenario"
+      ],
+      "lessons": [
+        {
+          "id": "L09",
+          "title": "Choosing the Right Serialization Format",
+          "strata_claim": "C9",
+          "type": "core",
+          "estimated_minutes": 10,
+          "description": "The format-to-trust-level mapping: json/csv for external data, TOML for developer config, pickle only for internal trusted caches — and why this matters for security"
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M06",
+      "title": "Concurrency and Graceful Shutdown",
+      "strata_theme": "Theme 7: Concurrency Model by Task Type; Theme 8: Graceful Shutdown First-Class",
+      "description": "How to choose between asyncio, ThreadPoolExecutor, and ProcessPoolExecutor, and how to structure shutdown so long-running scripts exit cleanly under any condition",
+      "objectives": [
+        "Explain the decision matrix for concurrency model selection (IO-bound vs CPU-bound, sync vs async libraries)",
+        "Compare asyncio.gather() and asyncio.TaskGroup and justify which to use on Python 3.11+",
+        "Illustrate a complete graceful shutdown pattern spanning signal handlers, CancelledError, and executor context managers"
+      ],
+      "lessons": [
+        {
+          "id": "L10",
+          "title": "asyncio, Threads, or Processes: The Decision Matrix",
+          "strata_claim": "C12",
+          "type": "applied",
+          "estimated_minutes": 12,
+          "description": "Task-type-based selection (IO-bound → asyncio or threads, CPU-bound → ProcessPoolExecutor), asyncio.to_thread() as the bridge, and TaskGroup vs gather() for Python 3.11+"
+        },
+        {
+          "id": "L11",
+          "title": "Graceful Shutdown: SIGTERM, CancelledError, and Cleanup",
+          "strata_claim": "C13",
+          "type": "applied",
+          "estimated_minutes": 12,
+          "description": "Registering SIGTERM/SIGINT handlers, handling CancelledError in finally blocks in asyncio tasks, and letting executor with-blocks drain pending work"
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M07",
+      "title": "Teaching Complications and Honest Limits",
+      "strata_theme": "Contradictions and Gaps from analysis",
+      "description": "The genuine debates and open questions in this field — how to present them honestly when teaching, and what to do when evidence runs out",
+      "objectives": [
+        "Compare the PEP 484 'never mandatory' and Google 'mandatory for all new code' positions and explain the resolution to a team without dismissing either",
+        "Explain the three open gaps in this research (dataclasses, packaging, pre-commit) and what learners should read next"
+      ],
+      "lessons": [
+        {
+          "id": "L12",
+          "title": "The Type Annotation Debate: Helping Your Team Decide",
+          "strata_claim": "C3 (debate context)",
+          "type": "debate",
+          "estimated_minutes": 12,
+          "description": "PEP 484 vs Google Style Guide on annotation enforcement — the historical context, the real resolution, and how to present both sides fairly to a team adopting types incrementally"
+        },
+        {
+          "id": "L13",
+          "title": "Gaps and Follow-Ups: What This Research Left Open",
+          "strata_claim": "G010, G011, G012, G013",
+          "type": "gap",
+          "estimated_minutes": 10,
+          "description": "The four open gaps — dataclasses, packaging/distribution, dependency management, pre-commit hooks — why they're out of scope, and where to go next"
+        }
+      ],
+      "has_assessment": false
+    }
+  ],
+  "total_lessons": 13,
+  "total_estimated_hours": 2.6,
+  "learning_plan": {
+    "sessions_to_complete": 13,
+    "suggested_schedule": "3 sessions per week (4–5 weeks)",
+    "milestone_lessons": ["L01", "L05", "L10"],
+    "notes": "Each lesson targets ≤800 words / ~10–12 min reading time. One lesson per 15-min session. Milestones mark the end of each major block: toolchain (L01), documentation/types (L05), concurrency (L10)."
+  }
+}

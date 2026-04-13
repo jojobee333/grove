@@ -1,0 +1,26 @@
+{
+  "module": "M04",
+  "title": "Schema, RLS, and pgvector — Quick Check",
+  "questions": [
+    {
+      "id": "MC04-1",
+      "q": "What two SQL statements implement row-level security for a Meridian table, and what does each do?",
+      "a": "1. `ALTER TABLE your_table ENABLE ROW LEVEL SECURITY;` — activates RLS enforcement on the table. 2. `CREATE POLICY workspace_isolation ON your_table USING (workspace_id = current_setting('app.current_workspace_id')::uuid);` — creates the restriction predicate. Without the first statement, the policy exists but is never enforced. Without the second, enabling RLS blocks ALL access (the default-deny behaviour of RLS with no policy)."
+    },
+    {
+      "id": "MC04-2",
+      "q": "Why must every pgvector similarity search include BOTH `user_id = $1` AND `workspace_id = $2` in the WHERE clause?",
+      "a": "Scoping to `workspace_id` alone enforces multi-tenancy (one tenant can't see another's data) but doesn't prevent one user within the same workspace from reading another member's personal memories. Scoping to `user_id` alone would fail in a shared workspace where the same content belongs to different users. Both conditions are necessary to simultaneously enforce workspace isolation and per-user privacy."
+    },
+    {
+      "id": "MC04-3",
+      "q": "What does `drizzle-zod` do, and at what point in the request lifecycle does it eliminate manual work?",
+      "a": "drizzle-zod generates Zod validation schemas directly from Drizzle table definitions via `createInsertSchema()` and `createSelectSchema()`. At the API route level, you can call `.parse(req.body)` against the generated schema without writing a separate Zod schema. When the Drizzle table gains a new column, the Zod schema is automatically updated — no manual synchronization between the database schema and the API validator."
+    },
+    {
+      "id": "MC04-4",
+      "q": "What does `<=>` mean in a PostgreSQL pgvector query, and how does it differ from `<->` or `<#>`?",
+      "a": "`<=>` is the cosine distance operator — it measures the angle between two vectors (values 0–2, lower is more similar). It is appropriate for semantic similarity search because it is independent of vector magnitude. `<->` is Euclidean (L2) distance — affected by magnitude, better for spatial data. `<#>` is negative inner product — equivalent to cosine for normalized vectors. For embedding-based semantic search, `<=>` is the standard choice."
+    }
+  ]
+}

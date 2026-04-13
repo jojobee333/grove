@@ -1,0 +1,266 @@
+{
+  "id": "quiz-final",
+  "type": "final",
+  "module": "all",
+  "title": "Final Assessment: Meridian Tech Stack Mastery",
+  "generated": "2026-04-13",
+  "passing_score": 75,
+  "questions": [
+    {
+      "id": "F01",
+      "type": "mcq",
+      "question": "Which TypeScript compiler flag must be set to `true` when using esbuild (as Vite does), and why?",
+      "options": {
+        "A": "`strict`, because esbuild requires full type checking",
+        "B": "`isolatedModules`, because esbuild transpiles each file independently and cannot process patterns that require cross-file type analysis",
+        "C": "`noImplicitAny`, because esbuild cannot infer types from other files",
+        "D": "`moduleResolution: bundler`, because esbuild uses its own module resolution algorithm"
+      },
+      "correct": "B",
+      "lesson_ref": "L01",
+      "module_ref": "M01",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "F02",
+      "type": "mcq",
+      "question": "A Zustand store's `getSnapshot()` returns `JSON.stringify(state)` to ensure a new value on every call. In React 18 concurrent mode, what is the consequence?",
+      "options": {
+        "A": "Performance degrades because JSON serialization is slow, but rendering is correct",
+        "B": "React triggers an infinite rendering loop: the new string reference on every call causes React's concurrent scheduler to detect a 'tearing' signal and keep re-rendering",
+        "C": "The store works correctly — JSON.stringify provides stable rendering semantics",
+        "D": "TypeScript rejects this pattern at compile time"
+      },
+      "correct": "B",
+      "lesson_ref": "L03",
+      "module_ref": "M02",
+      "difficulty": "application"
+    },
+    {
+      "id": "F03",
+      "type": "mcq",
+      "question": "Prisma is rejected for Meridian despite better developer experience. Which combination of three technical requirements specifically forces this decision?",
+      "options": {
+        "A": "Performance, TypeScript support, and community size",
+        "B": "`SET LOCAL` for row-level security is awkward in `$executeRaw`; native pgvector columns lose type information; schema changes require codegen before the TypeScript types update",
+        "C": "Prisma doesn't support PostgreSQL 16, lacks migration tooling, and has no streaming support",
+        "D": "Drizzle has better Zod integration, better connection pooling, and lower memory usage"
+      },
+      "correct": "B",
+      "lesson_ref": "L05",
+      "module_ref": "M03",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "F04",
+      "type": "mcq",
+      "question": "A Drizzle schema defines `users` with `.notNull()` on every column. `db.select().from(users).where(eq(users.id, id))` returns `type[]`. What is the correct handling pattern for 'user not found'?",
+      "options": {
+        "A": "Check `result.length === 0` and throw a 404 — Drizzle never returns null from a WHERE query, only an empty array",
+        "B": "Check `result === null` because Drizzle returns null when no rows match",
+        "C": "Check `result === undefined` because Drizzle returns undefined when no rows match",
+        "D": "Use try/catch — Drizzle throws a `NotFoundError` when no rows match"
+      },
+      "correct": "A",
+      "lesson_ref": "L06",
+      "module_ref": "M04",
+      "difficulty": "application"
+    },
+    {
+      "id": "F05",
+      "type": "mcq",
+      "question": "In the pgvector cosine similarity search, two WHERE conditions are always required. What are they and why?",
+      "options": {
+        "A": "`embedding IS NOT NULL AND workspace_id IS NOT NULL` — prevents null pointer errors in the similarity calculation",
+        "B": "`user_id = $1 AND workspace_id = $2` — scopes the search to one user's memories within one workspace, enforcing both privacy (user isolation) and multi-tenancy (workspace isolation) in a single query",
+        "C": "`created_at > NOW() - INTERVAL '30 days' AND similarity > 0.7` — limits results to recent, high-quality matches",
+        "D": "`document_type = 'memory' AND is_indexed = true` — prevents searching un-indexed documents"
+      },
+      "correct": "B",
+      "lesson_ref": "L07",
+      "module_ref": "M04",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "F06",
+      "type": "mcq",
+      "question": "React 18's root API changed from `ReactDOM.render()` to `ReactDOM.createRoot()`. What is the functional consequence of using the legacy API?",
+      "options": {
+        "A": "The app fails to compile in TypeScript strict mode",
+        "B": "The legacy API opts out of concurrent rendering — the scheduler runs synchronously, blocking the main thread. `startTransition`, `useTransition`, and `useDeferredValue` are available but have no effect. The app 'works' but loses all concurrent scheduling benefits",
+        "C": "React 18 throws a runtime error when the legacy API is used",
+        "D": "The legacy API enables automatic batching by default, which is the opposite of React 18's behavior"
+      },
+      "correct": "B",
+      "lesson_ref": "L08",
+      "module_ref": "M05",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "F07",
+      "type": "mcq",
+      "question": "Lexical's `EditorState.read()` must be used to access editor state outside of `editor.update()`. What is the consequence of reading `editor._editorState.content` directly, bypassing `read()`?",
+      "options": {
+        "A": "TypeScript blocks this pattern at compile time",
+        "B": "Direct access works most of the time but can read a partially constructed EditorState during an in-progress `update()` call, producing inconsistent DOM rendering or state corruption",
+        "C": "Lexical throws a runtime error on direct access",
+        "D": "There is no difference — `read()` is a convenience wrapper only"
+      },
+      "correct": "B",
+      "lesson_ref": "L09",
+      "module_ref": "M05",
+      "difficulty": "application"
+    },
+    {
+      "id": "F08",
+      "type": "mcq",
+      "question": "Two users simultaneously insert text at position 5 in a shared Yjs document — User A inserts 'Hello' and User B inserts 'World'. After both operations are applied at both peers, what is guaranteed about the resulting state?",
+      "options": {
+        "A": "One user's insert wins and the other is discarded — last-write-wins",
+        "B": "Both inserts are preserved and the document is byte-for-byte identical at both peers, though the exact character ordering between 'Hello' and 'World' is determined deterministically by Yjs's conflict resolution (client ID tiebreaker)",
+        "C": "The document enters a conflict state that must be manually resolved",
+        "D": "Yjs requires a server lock — concurrent inserts at the same position are prevented"
+      },
+      "correct": "B",
+      "lesson_ref": "L11",
+      "module_ref": "M06",
+      "difficulty": "application"
+    },
+    {
+      "id": "F09",
+      "type": "mcq",
+      "question": "An AI assistant receives a prompt: `Generate a summary of recent activity`. Before sending to the Anthropic API, Meridian runs the prompt through a context assembler. What three components does the assembled context include?",
+      "options": {
+        "A": "System prompt, conversation history, and the raw user message",
+        "B": "User preferences (from the user profile), retrieved memory chunks (from pgvector similarity search scoped to user + workspace), and the user message — assembled into a structured prompt with explicit section headers",
+        "C": "User role, workspace permissions, and current document content",
+        "D": "Previous AI responses, tool call results, and the user message"
+      },
+      "correct": "B",
+      "lesson_ref": "L12",
+      "module_ref": "M07",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "F10",
+      "type": "mcq",
+      "question": "Why does bcrypt with cost factor 12 protect against brute-force attacks even when the password hash database is leaked?",
+      "options": {
+        "A": "bcrypt uses a secret server key that makes hashes irreversible without the key",
+        "B": "bcrypt is deterministic at cost factor 12 but non-deterministic at higher factors, preventing rainbow tables",
+        "C": "Cost factor 12 means each hash computation requires ~250ms of CPU time. An attacker testing 1 billion passwords/second with a GPU must wait 250ms per attempt — reducing throughput to ~4 attempts/second per core and making full-dictionary attacks computationally infeasible",
+        "D": "bcrypt embeds the user's email in the hash, making precomputed rainbow tables useless"
+      },
+      "correct": "C",
+      "lesson_ref": "L14",
+      "module_ref": "M08",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "F11",
+      "type": "mcq",
+      "question": "The tenant middleware pattern requires `SET LOCAL app.current_workspace_id = $1` before every query. Why `SET LOCAL` specifically (not `SET`)?",
+      "options": {
+        "A": "`SET LOCAL` is faster because it doesn't write to the PostgreSQL configuration file",
+        "B": "`SET LOCAL` scopes the session variable to the current transaction. When the transaction commits or rolls back, the variable resets. `SET` (without LOCAL) persists for the entire connection — in a connection pool, this would cause the workspace context from one request to leak into the next request that reuses the connection",
+        "C": "`SET LOCAL` encrypts the workspace ID for security; `SET` stores it in plain text",
+        "D": "Row-level security policies only read variables set with `SET LOCAL`; `SET` variables are invisible to RLS"
+      },
+      "correct": "B",
+      "lesson_ref": "L14",
+      "module_ref": "M08",
+      "difficulty": "application"
+    },
+    {
+      "id": "F12",
+      "type": "mcq",
+      "question": "`workspace:*` in a pnpm package.json means what, and what would happen if you replaced it with `*`?",
+      "options": {
+        "A": "`workspace:*` is a comment; `*` pins the latest version — no functional difference",
+        "B": "`workspace:*` links to the local package in the monorepo repo (symlink). Replacing with `*` would cause pnpm to install the latest published version from the npm registry — breaking local development of cross-package changes until the package is published",
+        "C": "`workspace:*` installs all workspace packages; `*` installs just the named one",
+        "D": "`workspace:*` enables hot module replacement; `*` requires a full reinstall on every change"
+      },
+      "correct": "B",
+      "lesson_ref": "L16",
+      "module_ref": "M09",
+      "difficulty": "application"
+    },
+    {
+      "id": "F13",
+      "type": "short_answer",
+      "question": "The `schema = type` pattern is central to Meridian's TypeScript strategy. Describe what this pattern means, name three specific tools in the stack that implement it, and explain the single validation advantage it provides at API boundaries.",
+      "answer_key": {
+        "required_points": [
+          "Schema = type: the runtime validation schema (Zod, Drizzle, Lexical node config) is also the TypeScript type source — `z.infer<>`, `$inferSelect`/`$inferInsert`, `NodeDefinition` generate static types from the same object that validates at runtime",
+          "Three tools: Zod (z.infer<typeof schema>), Drizzle ORM ($inferSelect / $inferInsert), drizzle-zod (bridging them) — OR Zod, Drizzle, Lexical NodeDefinition",
+          "API boundary advantage: a single Zod schema validates the incoming request body AND provides the TypeScript type for that body. No duplication between runtime check and type annotation — they are provably identical"
+        ],
+        "full_credit": "Pattern explained, three tools named, validation advantage stated with 'provably identical runtime + compile-time check' framing",
+        "partial_credit": "Pattern explained and 1-2 tools named without full advantage explanation"
+      },
+      "module_ref": "M01/M04",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "F14",
+      "type": "short_answer",
+      "question": "Compare and contrast immutability in three systems: Zustand's `getSnapshot()` contract, Lexical's `EditorState` object, and Yjs CRDT operations. For each, state what 'immutable' means and identify the specific invariant that would break without it.",
+      "answer_key": {
+        "required_points": [
+          "Zustand getSnapshot: must return the exact same reference if state hasn't changed. Invariant: React's concurrent scheduler uses reference equality to detect state changes. Mutable references cause either missed renders or infinite render loops",
+          "Lexical EditorState: frozen after editor.update() — cannot be mutated. Invariant: Lexical's reconciler diffs the previous frozen state against the new state; if states are mutable, the diff always produces 'no change' (both point to the same mutated object)",
+          "Yjs operations: each operation is an immutable value object (type + position + content). Immutability enables commutativity: A+B = B+A holds because neither operation modifies the other. Mutable operations would make order-of-application matter, breaking convergence"
+        ],
+        "full_credit": "All three systems addressed with correct invariant for each",
+        "partial_credit": "Two of three systems correctly explained"
+      },
+      "module_ref": "M02/M06",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "F15",
+      "type": "short_answer",
+      "question": "Meridian uses four independent security layers. Name them, state what attack each blocks, and explain why independence matters — specifically what 'defense in depth' means when at least one layer fails.",
+      "answer_key": {
+        "required_points": [
+          "Layer 1 — Input validation (Zod at route entry): blocks malformed requests, injection payloads, type coercion attacks. Fails if schema is incomplete.",
+          "Layer 2 — Authentication (JWT verification): blocks unauthenticated requests. Fails if JWT secret is leaked or token is not verified.",
+          "Layer 3 — Application-level tenant isolation (workspace_id in every query): blocks cross-tenant data access at the application layer. Fails if a query omits the WHERE clause.",
+          "Layer 4 — Database-level RLS (SET LOCAL + USING policy): blocks tenant leakage even if the application layer is compromised. Fails if connection isn't in a transaction or SET LOCAL is omitted.",
+          "Independence means: each layer catches what the others miss. A bug in input validation doesn't bypass RLS. An auth bypass doesn't let you read other tenants' data if RLS is set. No single failure cascades to a full breach."
+        ],
+        "full_credit": "All four layers named with attack and failure mode, plus independence/depth-in-depth explanation",
+        "partial_credit": "Three layers with attacks but missing independence explanation"
+      },
+      "module_ref": "M08",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "F16",
+      "type": "essay",
+      "prompt": "Meridian makes a series of unconventional choices: TypeScript strict mode everywhere (not just for user-facing code), immutable state patterns in both frontend and collaborative editing, direct Drizzle SQL over Prisma, Anthropic SDK directly over LangChain, and pnpm + Docker Compose before adding Turborepo. A new team member argues: 'These choices add complexity with marginal benefit. We could ship faster by relaxing TypeScript, using Prisma (better DX), LangChain (higher abstraction), and adding all monorepo tooling upfront.' Provide a structured rebuttal that defends Meridian's choices using the control-vs-abstraction framework, the schema=type pattern, and the defense-in-depth security model.",
+      "guidance": "Strongest essays apply the same analytical framework across all three domains: (1) control vs abstraction — each 'simpler' tool (Prisma, LangChain, Turborepo-first) hides a mechanism that Meridian specifically requires direct access to; (2) schema=type — strict mode is not style, it's the enforcement mechanism that keeps runtime validators and compile-time types identical; (3) defense in depth — removing strict mode or tenant-aware queries doesn't just create risk, it removes an entire independent layer. The 'ship faster' framing should be challenged: it trades known technical debt for unknown security and correctness debt.",
+      "rubric": {
+        "A": "Each challenged choice grounded in a specific mechanism it exposes; schema=type and defense-in-depth applied correctly; 'ship faster' analyzed as incorrect tradeoff evaluation (short-term vs. long-term)",
+        "B": "Most choices defended but one framework misapplied or missing",
+        "C": "General defense of the choices without applying the specific frameworks taught in the course"
+      },
+      "module_ref": "all",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "F17",
+      "type": "essay",
+      "prompt": "You are architecting a new feature for Meridian: AI-generated document summaries that appear in real time as the user types, are scoped to the current workspace, stored as memories for future retrieval, and logged for audit. Walk through every layer of the Meridian stack—TypeScript types, database schema, vector storage, React state, collaborative editing, and security—identifying at least one specific decision from each module that applies to this feature and explaining what would break if that specific decision were absent.",
+      "guidance": "This is an integration question. Strong essays trace a single feature through all nine modules: M01 (strict types for the summary request/response shapes), M02 (immutable Zustand state for streaming summary chunks), M03 (direct Anthropic SDK for streaming; Drizzle for audit log insert), M04 (Drizzle schema + drizzle-zod for memory_fragments insert; pgvector for retrieval), M05 (React 18 startTransition for non-blocking summary reveal), M06 (Yjs for concurrent editor users who both trigger summaries), M07 (RAG: user's prior memories + current doc as context for the summary), M08 (JWT auth + workspace_id scoping + RLS + Zod input validation for the summary route), M09 (workspace:* linking so the summarization logic can live in a shared package). Missing-if-absent analysis should be concrete, not vague.",
+      "rubric": {
+        "A": "At least 7 of 9 modules explicitly referenced with a specific decision and concrete failure mode for each",
+        "B": "5-6 modules covered with specific decisions",
+        "C": "Integration traced but decisions are generic (e.g. 'TypeScript helps' without specifying which pattern)"
+      },
+      "module_ref": "all",
+      "difficulty": "analysis"
+    }
+  ]
+}

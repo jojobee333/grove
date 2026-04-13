@@ -1,0 +1,157 @@
+{
+  "id": "quiz-M08",
+  "type": "module",
+  "module": "M08",
+  "title": "Assessment: Security — Four Independent Layers",
+  "generated": "2026-04-13",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What is the correct order for Meridian's four security middleware layers, and why can layers 2 and 3 not be reversed?",
+      "options": {
+        "A": "bcrypt → JWT → Zod → RLS. The password must be verified before parsing the request body",
+        "B": "Zod → JWT → SET LOCAL → route handler. Steps 2 and 3 can't be reversed because SET LOCAL requires workspaceId from the verified JWT payload — running it first leaves no context to set",
+        "C": "JWT → Zod → RLS → route handler. JWT must come first to establish identity before validating input",
+        "D": "Zod → RLS → JWT → route handler. Input must be validated before checking permissions"
+      },
+      "correct": "B",
+      "explanation": "The dependency chain is strict: Zod validates the request has correct shape (before any other processing). JWT verifies identity and extracts workspaceId from the verified payload. SET LOCAL uses that workspaceId to set the RLS context — it needs the verified JWT workspaceId to do its job. If SET LOCAL ran before JWT middleware, there would be no verified workspaceId available to set. RLS then enforces isolation automatically on all subsequent queries.",
+      "lesson_ref": "L14",
+      "claim_ref": "C13",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Why must `workspaceId` in tenant middleware come from `req.jwtPayload`, not `req.body` or `req.params`?",
+      "options": {
+        "A": "req.body is not parsed until after middleware runs, making it unavailable",
+        "B": "req.body and req.params are user-controlled — a malicious user can supply any workspaceId to claim membership in another tenant's workspace. req.jwtPayload.workspaceId was signed by the server and verified — it represents the server's authoritative statement of which workspace this JWT holder is authorized for",
+        "C": "URL parameters are URL-encoded and cannot contain UUID values",
+        "D": "req.body is not available in Express middleware, only in route handlers"
+      },
+      "correct": "B",
+      "explanation": "This is the fundamental source-of-trust distinction. User-supplied values (body, params, query) are attacker-controlled. A user can send any JSON body with any workspaceId and claim they belong to that workspace. The JWT, however, was issued by the server after verifying membership and signed with the server's secret. Only the server can produce a valid JWT — the workspaceId in a valid JWT is the server's trusted statement.",
+      "lesson_ref": "L14",
+      "claim_ref": "C9",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "Describe the `alg:none` JWT attack and the one-line fix that prevents it.",
+      "options": {
+        "A": "An attacker removes the signature entirely; fix: use HTTPS so signatures can't be intercepted",
+        "B": "An attacker crafts a JWT with `alg: 'none'` in the header and no signature. If jwt.verify() allows any algorithm, it skips signature verification for alg:none tokens. Fix: `jwt.verify(token, secret, { algorithms: ['HS256'] })` — allowlist only the expected algorithm",
+        "C": "An attacker changes the algorithm to HS512 and re-signs; fix: pin the secret key",
+        "D": "An attacker sets alg:none to bypass rate limiting; fix: enforce algorithm at the API gateway"
+      },
+      "correct": "B",
+      "explanation": "alg:none is a real attack documented in RFC 8725. Some JWT libraries, when not given an explicit algorithm restriction, accept tokens claiming alg:none and skip verification entirely — the token signature (or lack thereof) is never checked. The attacker can forge arbitrary claims (userId, workspaceId, role) and the server accepts them. Explicitly passing algorithms: ['HS256'] to jwt.verify() ensures only HS256-signed tokens are accepted.",
+      "lesson_ref": "L15",
+      "claim_ref": "C13",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "What is the RS256 → HS256 algorithm confusion attack, and how does `{ algorithms: ['HS256'] }` prevent it?",
+      "options": {
+        "A": "The attacker replaces HS256 with RS256 in the header to use a longer key; prevention: key length validation",
+        "B": "If a server that normally uses RS256 publishes its public key, an attacker can create an HS256 token signed with that public key as the HMAC secret. A library accepting both algorithms might verify the HMAC using the public key and accept the forged token. Hardcoding algorithms: ['HS256'] prevents the server from ever processing RS256 tokens",
+        "C": "The attack replaces the algorithm with a weaker one to make brute-forcing easier; prevention: algorithm strength minimum",
+        "D": "An attacker sends RS256 tokens without a certificate chain; prevention: strict certificate validation"
+      },
+      "correct": "B",
+      "explanation": "This is the key confusion attack. RS256 uses asymmetric keys — public key to verify, private key to sign. If the server publishes its public key (common practice) and an attacker creates an HS256 token using that public key as the symmetric HMAC secret, a naive library that accepts both algorithm types might successfully 'verify' it using the public key. Since only one algorithm is expected, specifying it explicitly closes the attack vector entirely.",
+      "lesson_ref": "L15",
+      "claim_ref": "C13",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "bcrypt's cost factor controls how many iterations are performed. At cost 12, hashing takes ~300ms. What is the practical consequence of increasing cost to 13?",
+      "options": {
+        "A": "Doubles the memory required (~50MB instead of ~25MB)",
+        "B": "Increases hash time to ~600ms (doubles), making offline brute-force attacks proportionally more expensive while slightly slower login UX — each increment is 2× computational cost",
+        "C": "Increases hash length from 60 to 120 characters",
+        "D": "Requires more rounds of password stretching but no change in wall-clock time due to CPU pipeline optimization"
+      },
+      "correct": "B",
+      "explanation": "bcrypt's cost is an exponent: cost N = 2^N iterations. Each increment doubles the work. Cost 12 = 4,096 iterations ≈ 300ms. Cost 13 = 8,192 iterations ≈ 600ms. The UX impact on legitimate users is a slightly slower login (still sub-second). The security benefit: anyone trying to brute-force password hashes offline now needs twice as much compute per attempt.",
+      "lesson_ref": "L15",
+      "claim_ref": "C14",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "Argon2id is classified as superior to bcrypt for password hashing. Why does Meridian still specify bcrypt at cost 12, and is this a security vulnerability?",
+      "options": {
+        "A": "bcrypt is superior to Argon2id — the classification is incorrect",
+        "B": "bcrypt cost 12 falls within OWASP's acceptable range (not optimal, but not insecure). Meridian chose bcrypt for library maturity and no native compile dependencies. The risk delta from bcrypt cost 12 to Argon2id is small at Meridian's threat model — it's a documented trade-off, not a vulnerability. The upgrade path exists: replace the bcrypt calls with argon2 npm package, re-hash on next login",
+        "C": "Argon2id is not supported by Node.js natively, so bcrypt is the only option",
+        "D": "bcrypt at cost 12 is more secure than Argon2id for web applications — Argon2id is only better for hardware wallets"
+      },
+      "correct": "B",
+      "explanation": "OWASP's password hashing guidance recommends Argon2id first, then bcrypt (cost ≥12) as the acceptable legacy choice. bcrypt's weakness relative to Argon2id is that it's not memory-hard — GPU cracking is more efficient. But at cost 12, it's still expensive enough to make offline attacks impractical for most threat models. Characterizing it as a vulnerability would overstate the risk; characterizing it as the ideal choice would overstate security.",
+      "lesson_ref": "L15",
+      "claim_ref": "C14",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "What is 'defense-in-depth' in the context of Meridian's four security layers? Give a concrete example of how a failure in one layer is caught by another.",
+      "answer_key": {
+        "required_points": [
+          "Defense-in-depth: each layer independently covers a distinct attack surface, so a failure in one layer is caught by another — multiple independent failures are required for a breach",
+          "Concrete example: if tenant middleware has a bug and fails to call SET LOCAL — RLS still rejects cross-tenant queries (returns empty result or error, not wrong data)",
+          "Another example: if RLS policy has a configuration error — the explicit WHERE workspaceId = ? in the Drizzle query still scopes results correctly",
+          "Or: if Zod validation is bypassed — JWT still verifies identity; if JWT is compromised — SET LOCAL + RLS still enforce workspace scoping"
+        ],
+        "acceptable_variations": "Any valid cross-layer failure example is acceptable",
+        "full_credit": "Defines defense-in-depth correctly and provides a specific, mechanically correct cross-layer catch example",
+        "partial_credit": "Defines the concept correctly but gives a vague or incorrect example"
+      },
+      "lesson_ref": "L14",
+      "claim_ref": "C13",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "What `expiresIn` value should access tokens use in Meridian, and what specific threat does short expiry mitigate? How does this interact with the refresh token pattern?",
+      "answer_key": {
+        "required_points": [
+          "expiresIn: '15m' — 15 minutes",
+          "Threat mitigated: if an access token is stolen (logged, intercepted, stored in browser logs), the attacker's window is limited to 15 minutes from issuance",
+          "After expiry, jwt.verify() throws TokenExpiredError — the stolen token is useless",
+          "Refresh token pattern: a longer-lived refresh token (stored in httpOnly cookie, not accessible to JavaScript) silently acquires new access tokens — balancing short access token expiry with UX continuity"
+        ],
+        "acceptable_variations": "Refresh token lifetime may vary (1 day, 7 days, 30 days — all acceptable)",
+        "full_credit": "Correct expiry, correct threat described, and correct explanation of how refresh tokens maintain UX without compromising access token security",
+        "partial_credit": "Correct expiry and threat but doesn't explain the refresh token mechanism"
+      },
+      "lesson_ref": "L15",
+      "claim_ref": "C13",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "essay",
+      "prompt": "Meridian's security model treats the four layers (Zod, JWT, bcrypt, RLS) as independent defensive mechanisms covering distinct attack surfaces. For each layer, identify: (1) the specific attack surface it covers, (2) the attack that succeeds if only that layer is absent, and (3) which other layer would partially compensate for its failure. Conclude with an assessment of which layer's failure would be most catastrophic.",
+      "guidance": "Strong responses map each layer to a specific OWASP or RFC-documented attack class: Zod → injection/malformed input; JWT → authentication bypass; bcrypt → credential stuffing after DB breach; RLS → tenant data leakage. Cross-layer compensation should be specific about what the compensating layer catches and what it misses.",
+      "rubric": {
+        "A": "All four layers covered with specific attack surfaces, named attack strategies, realistic cross-layer compensation analysis, and justified catastrophic failure assessment",
+        "B": "Three layers well covered with correct attack surface mapping",
+        "C": "Describes the layers correctly but without specific attack surface mapping"
+      },
+      "lesson_ref": "L14-L15",
+      "difficulty": "analysis"
+    }
+  ]
+}

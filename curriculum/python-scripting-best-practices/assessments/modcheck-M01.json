@@ -1,0 +1,26 @@
+{
+  "module": "M01",
+  "title": "The Python Quality Toolchain — Quick Check",
+  "questions": [
+    {
+      "id": "MC01-1",
+      "q": "What distinct problem does each tool in the ruff / mypy / pytest stack solve? Give one sentence per tool.",
+      "a": "ruff enforces style and catches simple bugs at lint time; mypy verifies type contracts statically before runtime; pytest validates behaviour by running automated tests."
+    },
+    {
+      "id": "MC01-2",
+      "q": "Why is automated enforcement more reliable than relying on code review for style and type safety?",
+      "a": "Reviewers miss things under time pressure and enforcement quality varies person-to-person; automated tools run consistently on every commit with zero cognitive overhead."
+    },
+    {
+      "id": "MC01-3",
+      "q": "What two roles does pyproject.toml serve in a Python project, and why does consolidating them in one file matter?",
+      "a": "It acts as the dev-tool configuration hub (ruff, mypy, pytest sections) and as the runtime config source via tomllib. One file reduces context switching and prevents config drift across separate ini/cfg files."
+    },
+    {
+      "id": "MC01-4",
+      "q": "If a colleague adds a setup.cfg for pytest and a .mypy.ini for mypy alongside an existing pyproject.toml, what argument would you make to consolidate?",
+      "a": "Having three config files splits the source of truth, meaning changes must be made in multiple places and files can silently disagree. pyproject.toml supports all three tools natively, so there is no technical reason not to consolidate."
+    }
+  ]
+}

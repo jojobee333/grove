@@ -1,0 +1,10 @@
+{
+  "slug": "python-scripting-best-practices",
+  "created": "2026-04-12",
+  "last_updated": "2026-04-12",
+  "phase": "complete",
+  "last_completed_step": 6,
+  "sub_skills_complete": ["grove-map", "grove-lessons", "grove-cards", "grove-assess"],
+  "strata_source": "vault/research/python-scripting-best-practices/",
+  "curriculum_root": "curriculum/python-scripting-best-practices/"
+}

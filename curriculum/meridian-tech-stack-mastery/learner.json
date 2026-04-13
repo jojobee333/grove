@@ -1,0 +1,13 @@
+{
+  "goal": "apply_practically",
+  "background": "intermediate",
+  "session_time_min": 15,
+  "calibration_notes": {
+    "lesson_max_words": 800,
+    "lessons_per_module_max": 2,
+    "objective_verb_style": "implement, apply, use, demonstrate, solve",
+    "skip_basics": true,
+    "emphasize_code_examples": true,
+    "flashcard_density": "high"
+  }
+}

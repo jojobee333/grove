@@ -1,0 +1,26 @@
+{
+  "module": "M04",
+  "title": "Resource Management and Configuration — Quick Check",
+  "questions": [
+    {
+      "id": "MC04-1",
+      "q": "Name three concrete API improvements pathlib.Path offers over os.path.",
+      "a": "1. `/` operator for joining paths instead of os.path.join(). 2. `.read_text()` / `.write_text()` replacing open() boilerplate. 3. `.suffix`, `.stem`, `.parent` as attributes rather than function calls."
+    },
+    {
+      "id": "MC04-2",
+      "q": "Why are context managers mandatory for all resource lifecycles, not just file I/O?",
+      "a": "Context managers guarantee the `__exit__` / cleanup path runs even when exceptions occur, preventing resource leaks (file handles, DB connections, network sockets, temporary directories) regardless of how the code exits."
+    },
+    {
+      "id": "MC04-3",
+      "q": "What is the correct layered priority order for a CLI script's configuration, from highest to lowest?",
+      "a": "CLI flags > environment variables > config file > built-in defaults. This allows deployment overrides without code changes while keeping sensible defaults for local use."
+    },
+    {
+      "id": "MC04-4",
+      "q": "Why should secrets never appear in a config file committed to source control, even in an encrypted form?",
+      "a": "Encrypted secrets still leak the encryption key problem; key rotation requires code changes; and git history preserves plaintext if the secret is accidentally committed even once. Environment variables or a dedicated secrets manager decouple secrets from the code lifecycle entirely."
+    }
+  ]
+}

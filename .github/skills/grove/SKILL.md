@@ -1,0 +1,237 @@
+---
+name: grove
+description: >-
+  Grove turns Strata research artifacts into a complete learning curriculum:
+  a structured course outline, lesson content, a flashcard deck, and assessments.
+  Use when: converting research into a course, building lessons from a Strata project,
+  creating a learning plan, making flashcards from research, or any prompt containing
+  "make a course", "create lessons", "learning plan", "study this", "teach me",
+  "flashcards for", "quiz me on", "curriculum", or "grove". The single entry point
+  for all Grove curriculum generation.
+argument-hint: "Strata topic slug to convert (e.g. 'ai-regulation') or 'resume' to continue"
+user-invokable: true
+allowed-tools:
+  - editFiles
+  - search
+---
+
+# Grove — Curriculum generation from Strata
+
+Grove reads Strata research artifacts and produces a complete, structured
+curriculum that can be studied with or without an LLM.
+
+```
+/grove [topic-slug]
+
+  Strata artifacts  →  course map  →  lessons  →  flashcards  →  assessments
+  (your research)      (outline)      (content)    (recall)       (testing)
+```
+
+## Step 1 — Validate Strata input
+
+Look for the Strata project at `research/[topic-slug]/`.
+
+Required files (all must exist and be non-empty):
+- `03-synthesis/claims.md` — the conclusions to teach
+- `03-synthesis/narrative.md` — the explanatory prose
+- `02-analysis/themes.md` — the module structure
+- `state.json` — phase must be `complete`
+
+If any are missing or incomplete: tell the user which files need to be finished
+in Strata first. Do not proceed with incomplete research.
+
+Check for an existing Grove project at `curriculum/[topic-slug]/state.json`:
+- **Found, complete** → show summary, ask if they want to regenerate anything
+- **Found, in-progress** → resume from last completed step
+- **Not found** → new project, proceed to Step 2
+
+## Step 2 — Ask learner profile questions
+
+Before generating anything, ask these three questions together:
+
+1. **Goal**: What do you want to be able to do after completing this course?
+   (understand broadly / apply practically / teach others / pass an exam)
+
+2. **Background**: How familiar are you with this topic already?
+   (complete beginner / some exposure / intermediate / deep expert in adjacent area)
+
+3. **Time**: How much time can you commit per session?
+   (15 min / 30 min / 1 hour / flexible)
+
+Store answers in `curriculum/[topic-slug]/learner.json`. These drive:
+- Lesson depth and length
+- Flashcard density
+- Assessment difficulty
+- Pacing in the learning plan
+
+## Step 3 — Generate course map (invoke /grove-map)
+
+Load `.github/skills/grove-map/SKILL.md` and follow its instructions.
+
+This produces `curriculum/[topic-slug]/course.json` — the master outline.
+
+Tell the user: "Course map created — N modules, N lessons. Review before continuing?"
+Show the module list and wait for confirmation.
+
+## Step 4 — Generate lessons (invoke /grove-lessons)
+
+Load `.github/skills/grove-lessons/SKILL.md` and follow its instructions.
+
+Generate lessons one module at a time. After each module, checkpoint state.
+
+## Step 5 — Generate flashcards (invoke /grove-cards)
+
+Load `.github/skills/grove-cards/SKILL.md` and follow its instructions.
+
+Produces `curriculum/[topic-slug]/cards.json`.
+
+## Step 6 — Generate assessments (invoke /grove-assess)
+
+Load `.github/skills/grove-assess/SKILL.md` and follow its instructions.
+
+Produces `curriculum/[topic-slug]/assessments/` with one quiz per module.
+
+### Step 6b — Generate module retention checks
+
+After generating quizzes, create a short retention check for every module.
+Write one file per module: `curriculum/[topic-slug]/assessments/modcheck-[MID].json`.
+
+Each file must follow this schema:
+
+```json
+{
+  "module": "M01",
+  "title": "[Module Title] — Quick Check",
+  "questions": [
+    { "id": "MC01-1", "q": "...", "a": "..." },
+    { "id": "MC01-2", "q": "...", "a": "..." },
+    { "id": "MC01-3", "q": "...", "a": "..." }
+  ]
+}
+```
+
+Rules:
+- 3–5 questions per module — no more, no less
+- Questions must be recall-level (not recognition): no multiple-choice, just open-ended prompts
+- Answers should be 1–3 sentences — concise, no padding
+- IDs use the pattern `MC[module-num]-[question-num]`, e.g. `MC01-2`
+- Questions should target the module’s stated learning objectives from `course.json`
+- Do NOT duplicate questions already present in the module’s `quiz-*.json`
+
+## Step 7 — Build the bundle
+
+After all content is generated, write a single `curriculum/[topic-slug]/bundle.json`
+that contains everything the Grove app needs in one file:
+
+```json
+{
+  "version": "2.0",
+  "slug":    "[topic-slug]",
+  "bundled": "<ISO timestamp>",
+  "course":  { /* course.json contents */ },
+  "learner": { /* learner.json contents */ },
+  "lessons": {
+    "L01": "# full markdown content of L01",
+    "L02": "# full markdown content of L02"
+  },
+  "cards": [ /* cards array from cards.json */ ],
+  "quizzes": {
+    "M01": { /* quiz-M01.json contents */ },
+    "M02": { /* quiz-M02.json contents */ }
+  },
+  "modchecks": {
+    "M01": { /* modcheck-M01.json contents — title + questions[{id,q,a}] */ },
+    "M02": { /* modcheck-M02.json contents */ }
+  }
+}
+```
+
+Rules for building the bundle:
+- `lessons` keys are lesson IDs (L01, L02 …), values are the full raw markdown string
+- `cards` is the `cards` array from `cards.json` (strip top-level wrapper)
+- `quizzes` keys are module IDs (M01, M02 …) mapped from `assessments/quiz-M01.json`
+- `modchecks` keys are module IDs (M01, M02 …) mapped from `assessments/modcheck-M01.json`
+- If `assessments/` does not exist, set `"quizzes": {}` and `"modchecks": {}`
+
+Also update (or create) `curriculum/index.json` with this course entry:
+
+```json
+{
+  "courses": [
+    {
+      "slug": "[topic-slug]",
+      "title": "[course.topic]",
+      "description": "[course.summary, max 160 chars]",
+      "total_modules": N,
+      "total_lessons": N,
+      "total_cards": N,
+      "generated": "YYYY-MM-DD"
+    }
+  ]
+}
+```
+
+Merge into existing array — don't overwrite other courses.
+
+**Shortcut**: if the user is running from the grove repo, they can also run:
+```
+node build-bundle.mjs [topic-slug]
+```
+
+## Step 8 — Final output
+
+Update `curriculum/[topic-slug]/state.json` to `phase: complete`.
+
+Show the completion summary:
+
+```
+Grove curriculum complete
+────────────────────────────────────────
+Topic:       [topic]
+Source:      Strata project research/[slug]/
+Learner:     [goal] · [background] · [time/session]
+
+Curriculum:
+  Modules:     N
+  Lessons:     N (avg N min each)
+  Flashcards:  N cards
+  Assessments: N quizzes (N questions total)
+  Mod checks:  N retention checks (3–5 questions each)
+
+Files:
+  → curriculum/[slug]/course.json
+  → curriculum/[slug]/lessons/L01.md … L0N.md
+  → curriculum/[slug]/cards.json
+  → curriculum/[slug]/assessments/quiz-*.json
+  → curriculum/[slug]/assessments/modcheck-*.json
+  → curriculum/[slug]/learner.json
+  → curriculum/[slug]/bundle.json   ← single-file app bundle
+  → curriculum/index.json           ← course registry
+
+To study:
+  1. cd grove/
+  2. npx serve .
+  3. Open http://localhost:3000
+────────────────────────────────────────
+```
+
+## Curriculum folder structure
+
+```
+curriculum/
+├── index.json              ← course registry (all courses)
+└── [topic-slug]/
+    ├── state.json          ← Grove session state
+    ├── learner.json        ← learner profile
+    ├── course.json         ← master outline + learning plan
+    ├── bundle.json         ← single-file bundle for the app ← NEW
+    ├── lessons/
+    │   ├── L01-[slug].md   ← source markdown (also embedded in bundle)
+    │   └── L0N-[slug].md
+    ├── cards.json          ← full flashcard deck (also embedded in bundle)
+    └── assessments/
+        ├── quiz-M01.json   ← one full quiz per module (also embedded in bundle)
+        ├── quiz-M0N.json
+        ├── modcheck-M01.json   ← 3–5 short retention Qs per module  ← NEW
+        └── modcheck-M0N.json
+```

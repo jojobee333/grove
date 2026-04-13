@@ -1,0 +1,172 @@
+{
+  "id": "quiz-M06",
+  "type": "module",
+  "module": "M06",
+  "title": "Assessment: Concurrency and Graceful Shutdown",
+  "generated": "2026-04-12",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "A script compresses 500 large files using a pure-Python compression algorithm. Which concurrency model should you use?",
+      "options": {
+        "A": "asyncio — it handles many concurrent tasks efficiently",
+        "B": "ThreadPoolExecutor — threads parallelize well in Python",
+        "C": "ProcessPoolExecutor — CPU-bound work requires separate processes to bypass the GIL",
+        "D": "No concurrency needed — Python is fast enough for batch compression sequentially"
+      },
+      "correct": "C",
+      "explanation": "File compression is CPU-bound (pure computation). The GIL prevents threads from parallelizing CPU-bound Python code — all threads share one interpreter. ProcessPoolExecutor spawns separate processes, each with their own GIL, enabling true CPU parallelism. asyncio is cooperative and would block the event loop on CPU-heavy work.",
+      "lesson_ref": "L10",
+      "claim_ref": "C12",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "An asyncio coroutine catches `asyncio.CancelledError` in an except block and returns normally without re-raising. What breaks?",
+      "options": {
+        "A": "Nothing — catching CancelledError and returning is the correct way to handle cancellation",
+        "B": "The coroutine is marked as failed and the event loop shuts down",
+        "C": "The TaskGroup or caller awaiting this coroutine never receives the cancellation signal, breaking cooperative cancellation and potentially leaving the group waiting indefinitely",
+        "D": "Python raises RuntimeError automatically if CancelledError is not re-raised"
+      },
+      "correct": "C",
+      "explanation": "CancelledError is the propagation mechanism for structured concurrency. If caught and swallowed, the calling TaskGroup or gather() receives a normal completion — not a cancellation. The group may continue waiting for other tasks, and the cancellation chain is broken. Always: `except CancelledError: cleanup(); raise`.",
+      "lesson_ref": "L11",
+      "claim_ref": "C13",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "A script fetches data from 1000 URLs. Which approach handles this most efficiently?",
+      "options": {
+        "A": "ThreadPoolExecutor with 1000 max_workers — one thread per URL",
+        "B": "ProcessPoolExecutor — each URL fetch is in its own process",
+        "C": "asyncio with an async HTTP client and TaskGroup — all fetches run concurrently on a single event loop thread",
+        "D": "Sequential requests.get() calls — simpler and equally fast for I/O-bound work"
+      },
+      "correct": "C",
+      "explanation": "HTTP fetching is I/O-bound — the process is waiting for network responses. asyncio handles thousands of concurrent waits on a single thread with minimal overhead. 1000 threads (A) consume gigabytes of stack space. 1000 processes (B) is far too heavy for I/O. Sequential (D) serializes 1000 waits rather than overlapping them.",
+      "lesson_ref": "L10",
+      "claim_ref": "C12",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "An async script must call a synchronous third-party library function that may block for several seconds. What is the correct approach?",
+      "options": {
+        "A": "Call it directly inside a coroutine — asyncio handles blocking automatically",
+        "B": "Use `await asyncio.to_thread(blocking_fn, *args)` to run it in a thread pool without blocking the event loop",
+        "C": "Wrap it in `async def` and call it with await",
+        "D": "Use `asyncio.create_task(blocking_fn())` to run it as a background task"
+      },
+      "correct": "B",
+      "explanation": "asyncio.to_thread() runs the blocking function in a ThreadPoolExecutor, yielding control to the event loop while it waits. Calling it directly (A) blocks the entire event loop for all other coroutines. Simply wrapping it in async def (C) doesn't make it async. create_task() (D) requires a coroutine, not a regular function.",
+      "lesson_ref": "L10",
+      "claim_ref": "C12",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "A containerized script receives SIGTERM from Kubernetes when it is being scaled down. The script has no signal handler. What happens?",
+      "options": {
+        "A": "The script receives a Python SystemExit exception that can be caught and handled",
+        "B": "The script terminates immediately without running any cleanup code — in-flight work is lost",
+        "C": "Python automatically drains the event loop and closes all context managers before exiting",
+        "D": "Kubernetes waits indefinitely for the script to finish before sending SIGTERM"
+      },
+      "correct": "B",
+      "explanation": "Without a SIGTERM handler, the default action is immediate process termination (SIGTERM's default disposition). No finally blocks run, no context managers are exited, no pending work is flushed. Kubernetes sends SIGTERM, waits for a configurable grace period (default 30s), then sends SIGKILL. A graceful handler must be registered explicitly.",
+      "lesson_ref": "L11",
+      "claim_ref": "C13",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "What is the key behavioral difference between asyncio.TaskGroup and asyncio.gather() when one task raises an exception?",
+      "options": {
+        "A": "TaskGroup re-raises the exception; gather() silently swallows it",
+        "B": "TaskGroup automatically cancels all remaining tasks and re-raises; gather() by default completes all tasks regardless and collects exceptions",
+        "C": "They behave identically — both cancel remaining tasks on an exception",
+        "D": "TaskGroup is deprecated in 3.12; gather() should be used instead"
+      },
+      "correct": "B",
+      "explanation": "TaskGroup implements structured concurrency: if one task raises, all others are cancelled (via CancelledError) before the exception propagates. asyncio.gather() without return_exceptions=False completes remaining tasks and returns normally — exceptions from completed tasks are returned as results. TaskGroup's behaviour is generally safer for fan-out work.",
+      "lesson_ref": "L10",
+      "claim_ref": "C12",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "A script registers a SIGTERM handler using `loop.add_signal_handler()`. The script is later run on Windows. What happens?",
+      "options": {
+        "A": "It works identically — Windows and Linux signal handling is abstracted by Python",
+        "B": "loop.add_signal_handler() raises NotImplementedError on Windows — Windows does not support UNIX signals",
+        "C": "Python automatically falls back to signal.signal() on Windows",
+        "D": "SIGTERM is available on Windows but SIGINT is not"
+      },
+      "correct": "B",
+      "explanation": "loop.add_signal_handler() is not available on Windows — it is a UNIX-specific API. On Windows, use signal.signal(signal.SIGINT, handler) for keyboard interrupt (Ctrl+C), which is the primary graceful shutdown mechanism on Windows. SIGTERM cannot be registered on Windows.",
+      "lesson_ref": "L11",
+      "claim_ref": "C13",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "Describe the decision matrix for choosing between asyncio, ThreadPoolExecutor, and ProcessPoolExecutor. For each model, state the primary workload it targets, the GIL constraint that makes it correct, and one example task.",
+      "answer_key": {
+        "required_points": [
+          "asyncio: I/O-bound, GIL released during network/disk waits, single thread handles thousands of concurrent waits — e.g. HTTP requests, database queries",
+          "ThreadPoolExecutor: I/O-bound (alternative to asyncio for sync code), GIL released during I/O, simpler than asyncio for blocking I/O libs — e.g. calling a blocking SDK with multiple calls",
+          "ProcessPoolExecutor: CPU-bound, GIL is bypassed by running separate interpreter processes — e.g. image processing, compression, parsing large datasets"
+        ],
+        "acceptable_variations": "asyncio and ThreadPoolExecutor may be described together as both being I/O-bound solutions. Example tasks may vary.",
+        "full_credit": "All three models with workload, GIL constraint, and example.",
+        "partial_credit": "Two models complete, or all three without GIL explanation."
+      },
+      "lesson_ref": "L10",
+      "claim_ref": "C12",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "Write the complete pattern for a graceful async task shutdown: the signal handler registration, the CancelledError handling inside a worker coroutine, and the cleanup guarantee. Explain each component.",
+      "answer_key": {
+        "required_points": [
+          "Signal handler: loop.add_signal_handler(signal.SIGTERM, event.set) or callback that sets asyncio.Event",
+          "Worker: try/except CancelledError with cleanup in finally block, re-raise CancelledError",
+          "Main: await shutdown_event; task.cancel(); await task (or TaskGroup handles it)",
+          "Cleanup guarantee: finally block runs even on CancelledError"
+        ],
+        "acceptable_variations": "May use different variable names. TaskGroup-based cancellation is an acceptable alternative to manual task.cancel().",
+        "full_credit": "All three components present with explanation of why each is necessary.",
+        "partial_credit": "Two of three components, or all three without explanation."
+      },
+      "lesson_ref": "L11",
+      "claim_ref": "C13",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "A team is designing a data pipeline that: (1) fetches data from 50 external APIs concurrently, (2) runs a heavy feature-extraction algorithm on each result, and (3) saves the results to a database. The pipeline runs as a containerized service. Design the concurrency architecture, explaining which model you use for each stage and how you implement graceful shutdown.",
+      "guidance": "A strong response uses asyncio for stage 1 (I/O-bound HTTP), ProcessPoolExecutor for stage 2 (CPU-bound extraction), and asyncio for stage 3 (I/O-bound DB writes), with asyncio.to_thread() or run_in_executor bridging stages 1+3 to stage 2. Graceful shutdown registers SIGTERM handler, drains the ProcessPoolExecutor context manager, and re-raises CancelledError in all async tasks.",
+      "rubric": {
+        "A": "Correct concurrency model for all three stages with justification, uses run_in_executor or to_thread to bridge async/sync boundary, describes a complete SIGTERM → cancel → drain shutdown sequence",
+        "B": "Correct models for two of three stages, or correct models without explaining the async/sync bridge",
+        "C": "Uses one concurrency model for all stages without justifying the choice based on workload type"
+      },
+      "lesson_ref": "L10-L11",
+      "difficulty": "analysis"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "module": "M06",
+  "title": "Collaborative Editing Architecture — Quick Check",
+  "questions": [
+    {
+      "id": "MC06-1",
+      "q": "What is a CRDT and what two mathematical properties make it suitable for collaborative editing without a central conflict resolver?",
+      "a": "CRDT stands for Conflict-free Replicated Data Type. Its two required properties are: (1) commutativity — applying operations A then B produces the same result as B then A; (2) idempotency — applying the same operation twice produces the same result as applying it once. Together these mean peers can receive operations in any order, with duplicates, and always converge to the same document state without a server mediating conflicts."
+    },
+    {
+      "id": "MC06-2",
+      "q": "Describe the Yjs provider layer. What are the three common provider types and what does each one handle?",
+      "a": "The provider layer is Yjs's transport and persistence abstraction. Three types: (1) WebSocket provider (`y-websocket`) — synchronizes the Yjs document in real time over a WebSocket connection, broadcasting updates to all connected clients; (2) IndexedDB provider (`y-indexeddb`) — persists the document locally in the browser for offline access and fast initial load; (3) WebRTC provider (`y-webrtc`) — peer-to-peer document sync directly between browsers without a server. Providers can be stacked — Meridian uses WebSocket + IndexedDB simultaneously."
+    },
+    {
+      "id": "MC06-3",
+      "q": "Why does the Lexical-Yjs binding require a `binding.mux` mechanism when applying remote operations?",
+      "a": "Without the mux, applying a remote Yjs update to the Lexical editor triggers an `editor.update()`, which generates a new Lexical operation, which is observed by the Yjs binding, which generates a new Yjs update — creating an infinite loop. The mux flag (`binding.mux = true`) marks updates as 'already from Yjs', causing the binding's Lexical observer to skip them and preventing the feedback loop."
+    },
+    {
+      "id": "MC06-4",
+      "q": "What is the purpose of the awareness protocol in `y-protocols/awareness`, distinct from document synchronization?",
+      "a": "Awareness handles ephemeral per-user state that does NOT need to be part of the persistent document: cursor positions, user names, online/offline presence, and selection highlights. This data is broadcast to all peers with a short TTL (30 seconds by default) and is not stored in the Yjs document history. Without awareness, you could sync document content but wouldn't know where other users' cursors are or who is actively editing."
+    }
+  ]
+}

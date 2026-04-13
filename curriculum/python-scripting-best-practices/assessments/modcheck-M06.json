@@ -1,0 +1,26 @@
+{
+  "module": "M06",
+  "title": "Concurrency and Graceful Shutdown — Quick Check",
+  "questions": [
+    {
+      "id": "MC06-1",
+      "q": "Apply the concurrency decision matrix: your script must call 50 external REST APIs and then compress 8 large files. What model do you use for each task?",
+      "a": "REST calls are IO-bound: use asyncio (or ThreadPoolExecutor if the HTTP library is sync-only). File compression is CPU-bound: use ProcessPoolExecutor to bypass the GIL and parallelize across CPU cores."
+    },
+    {
+      "id": "MC06-2",
+      "q": "What does `asyncio.to_thread()` do, and when is it the right bridge?",
+      "a": "It runs a synchronous (blocking) function in a thread pool executor and returns an awaitable, allowing it to be awaited inside an async event loop without freezing it. Use it when you must call a sync library from async code."
+    },
+    {
+      "id": "MC06-3",
+      "q": "Describe the three components of a complete graceful shutdown pattern for a long-running async script.",
+      "a": "1. Register SIGTERM/SIGINT signal handlers that cancel the main task or set a stop event. 2. Catch CancelledError in task finally blocks to run cleanup (flush buffers, close connections). 3. Use executor context managers (with ThreadPoolExecutor(...) as ex:) so pending sync work drains before the process exits."
+    },
+    {
+      "id": "MC06-4",
+      "q": "What advantage does `asyncio.TaskGroup` (Python 3.11+) have over `asyncio.gather()` for error handling?",
+      "a": "TaskGroup cancels all sibling tasks immediately when any task raises an exception, providing structured concurrency with clean failure semantics. gather() by default continues running other tasks after a failure unless `return_exceptions=False` is set, making cleanup harder to reason about."
+    }
+  ]
+}

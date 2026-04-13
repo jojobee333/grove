@@ -1,0 +1,158 @@
+{
+  "id": "quiz-M01",
+  "type": "module",
+  "module": "M01",
+  "title": "Assessment: TypeScript Strict Mode — The Stack's Foundation",
+  "generated": "2026-04-13",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What does enabling `strict: true` in tsconfig.json actually do?",
+      "options": {
+        "A": "Enables type checking with zero error tolerance — any type warning fails the build",
+        "B": "Acts as a shorthand that activates nine individual compiler flags simultaneously",
+        "C": "Prevents TypeScript from inferring any types automatically, requiring all annotations",
+        "D": "Enables strict runtime type checking in addition to compile-time checking"
+      },
+      "correct": "B",
+      "explanation": "strict: true is a shorthand, not a feature. It activates nine individual flags (noImplicitAny, strictNullChecks, strictFunctionTypes, etc.) simultaneously. This distinction matters because you can also enable individual flags selectively, though doing so selectively gives weaker guarantees than enabling all nine.",
+      "lesson_ref": "L01",
+      "claim_ref": "C1",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Why does Vite require `isolatedModules: true` in tsconfig.json?",
+      "options": {
+        "A": "Vite's dev server needs each file to be independently hot-reloadable",
+        "B": "TypeScript strict mode requires isolatedModules as a prerequisite",
+        "C": "Vite uses esbuild which transpiles each file independently without cross-file type information, so every file must be safely transpilable in isolation",
+        "D": "isolatedModules enables tree-shaking in Vite's production build"
+      },
+      "correct": "C",
+      "explanation": "esbuild — Vite's transpilation engine — processes files independently. It cannot see cross-file type information. isolatedModules: true makes TypeScript enforce that each file is self-contained: no const enum declarations cross file boundaries, and type-only imports use import type. Without it, some TypeScript constructs would compile with tsc but silently fail with esbuild.",
+      "lesson_ref": "L01",
+      "claim_ref": "C1",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "With `strictNullChecks` disabled, how does this affect API response handling in Meridian?",
+      "options": {
+        "A": "nullable API fields become required, causing runtime crashes on absent values",
+        "B": "null and undefined are assignable to every type, so optional fields pass type checks silently — missing null guards compile without error",
+        "C": "The Express router rejects requests with null body fields",
+        "D": "Zod validation fails more aggressively, catching nulls that would otherwise slip through"
+      },
+      "correct": "B",
+      "explanation": "Without strictNullChecks, null and undefined are subtypes of every type. A function returning User | null passes type checks anywhere a User is expected — the caller never needs to handle the null case. Meridian's API responses, Drizzle query results, and JWT payload fields all have nullable shapes that require explicit guard handling.",
+      "lesson_ref": "L01",
+      "claim_ref": "C1",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "A developer writes `const store = create<State>(() => ({ count: 0, inc: (set) => set(s => ({ count: s.count + 1 })) }))` instead of the curried `create<State>()(() => ...)` form. With strict mode enabled, what is the consequence?",
+      "options": {
+        "A": "The code fails to compile with a TypeScript error about missing type arguments",
+        "B": "The `set` parameter types as `any` instead of the correct `(state: State) => Partial<State>` because TypeScript cannot resolve the generic from both the explicit type parameter and the callback simultaneously without currying",
+        "C": "The store works correctly at compile time but throws a runtime error on first state update",
+        "D": "No consequence — both forms are equivalent in TypeScript strict mode"
+      },
+      "correct": "B",
+      "explanation": "TypeScript's generic inference requires the curried create<State>()(() => ...) form because it resolves the State generic in two passes: first from the explicit type argument, then from the callback. Without currying, TypeScript resolves the generic from the callback's inferred return type, which causes set to lose its typed constraint and fall back to any.",
+      "lesson_ref": "L02",
+      "claim_ref": "C2",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "What is Drizzle's `$inferSelect` and how does it differ from Prisma's approach to deriving TypeScript types from a table definition?",
+      "options": {
+        "A": "$inferSelect generates a separate .d.ts file from the schema; Prisma generates a full client",
+        "B": "$inferSelect derives types structurally at compile time from the table definition object — no codegen step. Prisma requires running a codegen step after every schema change to materialize types into generated client code",
+        "C": "$inferSelect produces runtime types; Prisma produces compile-time types",
+        "D": "Both use the same approach — codegen from schema — but Drizzle's is faster"
+      },
+      "correct": "B",
+      "explanation": "Drizzle's table definitions are plain TypeScript objects with type-level metadata. $inferSelect reads this at the type system level — zero codegen, change the table definition and the type updates automatically. Prisma's generated client (node_modules/.prisma) must be regenerated via prisma generate after every schema.prisma change.",
+      "lesson_ref": "L02",
+      "claim_ref": "C2",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "A team argues: 'We have thorough code review and IDE auto-complete, so TypeScript strict mode is an unnecessary constraint for our productivity.' What is the strongest evidence-based counter-argument for Meridian's specific stack?",
+      "options": {
+        "A": "TypeScript strict mode is required by the TypeScript specification",
+        "B": "Code review catches logic errors, not type errors",
+        "C": "Libraries like Zod, Zustand, and Drizzle have internal conditional types where specific schema shapes silently return `any` without strict mode — these bugs are undetectable by review because the code appears correct and IDE auto-complete still works, providing false confidence",
+        "D": "Auto-complete doesn't work without strict mode"
+      },
+      "correct": "C",
+      "explanation": "The critical distinction: IDE auto-complete and code review catch what they can see. But when z.infer<> returns any due to a conditional type resolution failure, the editor shows 'any' — which is a valid type. The reviewer sees typed-looking code. The test passes (any is assignable everywhere). The bug is invisible until runtime. This is the silent degradation class that strict mode prevents.",
+      "lesson_ref": "L02",
+      "claim_ref": "C1",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "Explain the 'schema = type' principle and identify the three Meridian tools that implement it, describing how each contributes.",
+      "answer_key": {
+        "required_points": [
+          "The principle: define a schema/shape once and derive all representations (type, validator, query result type) from that single definition",
+          "Zod: z.infer<typeof schema> derives the TypeScript type from the runtime validator",
+          "Drizzle: $inferSelect/$inferInsert derives TypeScript types from the table definition object",
+          "drizzle-zod: createInsertSchema() derives a Zod validator from the Drizzle table definition, linking all three layers"
+        ],
+        "acceptable_variations": "May describe the chain as 'single source of truth' — acceptable if the derivation direction is correct",
+        "full_credit": "Names all three tools with correct description of what each derives from what, and articulates why single-source-of-truth prevents drift",
+        "partial_credit": "Correctly describes two of the three tools or correctly states the principle without naming tools"
+      },
+      "lesson_ref": "L02",
+      "claim_ref": "C2",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "A developer adds a `priority: integer` column to the Drizzle `documents` table. With the drizzle-zod pattern in place, which files need manual updates and which update automatically?",
+      "answer_key": {
+        "required_points": [
+          "Manual update required: a database migration file (ALTER TABLE or new migration)",
+          "Automatic updates: Drizzle's $inferSelect/$inferInsert type now includes priority",
+          "Automatic updates: createInsertSchema(documents) Zod schema now includes priority",
+          "Automatic updates: z.infer<> types at route call sites now include priority",
+          "No manual type declarations, no Zod schema edits — these derive automatically"
+        ],
+        "acceptable_variations": "Acceptable to say 'only the migration' as the manual step",
+        "full_credit": "Correctly identifies the migration as the only manual update and explains that all TypeScript types and Zod schemas derive automatically from the table definition",
+        "partial_credit": "Correctly identifies the migration but doesn't explain why types/schemas auto-update"
+      },
+      "lesson_ref": "L06",
+      "claim_ref": "C2",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "essay",
+      "prompt": "'TypeScript strict mode is a technical prerequisite for the Meridian stack, not a team preference.' Evaluate this claim. Identify at least three specific places where disabling strict mode would cause breakage, and classify each as silent (compiles fine, fails at runtime or produces wrong results) or loud (compile error).",
+      "guidance": "Strong responses trace specific library interactions: Zod's conditional type inference, Zustand's curried create pattern, Drizzle's $inferSelect, catch variable typing. Should distinguish silent vs loud failures specifically.",
+      "rubric": {
+        "A": "Identifies 3+ silent degradation scenarios with specific library mechanisms, distinguishes silent from loud, explains why silent bugs are more dangerous than compile errors",
+        "B": "Identifies 2-3 scenarios with mostly correct mechanisms, some silent/loud classification",
+        "C": "Makes the general argument without specific library evidence"
+      },
+      "lesson_ref": "L01-L02",
+      "difficulty": "analysis"
+    }
+  ]
+}

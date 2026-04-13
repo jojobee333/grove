@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grove</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #fafaf8;
+    --surface: #ffffff;
+    --border: rgba(0,0,0,0.1);
+    --border-strong: rgba(0,0,0,0.2);
+    --text: #1a1a18;
+    --muted: #6b6b65;
+    --accent: #2d6a4f;
+    --accent-light: #e8f5ee;
+    --accent-text: #1a4032;
+    --warn: #b45309;
+    --warn-light: #fef3c7;
+    --danger: #991b1b;
+    --danger-light: #fee2e2;
+    --radius: 8px;
+    --radius-lg: 12px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141412;
+      --surface: #1e1e1c;
+      --border: rgba(255,255,255,0.1);
+      --border-strong: rgba(255,255,255,0.2);
+      --text: #e8e8e2;
+      --muted: #888880;
+      --accent: #52b788;
+      --accent-light: #1a3028;
+      --accent-text: #a7d9bb;
+      --warn: #f59e0b;
+      --warn-light: #2a2010;
+      --danger: #f87171;
+      --danger-light: #2a1010;
+    }
+  }
+
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  /* Layout */
+  .app { display: grid; grid-template-columns: 240px 1fr; min-height: 100vh; }
+  .sidebar { border-right: 1px solid var(--border); padding: 1.5rem 1rem; background: var(--surface); position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+  .main { padding: 2rem; max-width: 760px; }
+
+  /* Sidebar */
+  .brand { font-size: 20px; font-weight: 600; color: var(--accent); margin-bottom: 1.5rem; letter-spacing: -0.5px; }
+  .nav-section { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin: 1.2rem 0 0.4rem; }
+  .nav-item { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: var(--radius); cursor: pointer; font-size: 13px; color: var(--text); border: none; background: none; width: 100%; text-align: left; transition: background 0.1s; }
+  .nav-item:hover { background: var(--accent-light); }
+  .nav-item.active { background: var(--accent-light); color: var(--accent-text); font-weight: 500; }
+  .nav-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border-strong); flex-shrink: 0; }
+  .nav-dot.done { background: var(--accent); }
+  .nav-dot.current { background: var(--warn); }
+
+  /* Progress bar */
+  .progress-wrap { margin: 1rem 0; }
+  .progress-label { font-size: 11px; color: var(--muted); margin-bottom: 4px; display: flex; justify-content: space-between; }
+  .progress-bar { height: 4px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.3s; }
+
+  /* Cards (panels) */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1rem; }
+  .card-sm { padding: 1rem; }
+
+  /* Headings */
+  h1 { font-size: 24px; font-weight: 600; letter-spacing: -0.5px; margin-bottom: 0.5rem; }
+  h2 { font-size: 18px; font-weight: 600; margin-bottom: 0.75rem; }
+  h3 { font-size: 15px; font-weight: 600; margin-bottom: 0.5rem; }
+  p { font-size: 14px; line-height: 1.7; color: var(--muted); margin-bottom: 0.75rem; }
+
+  /* Badges */
+  .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 99px; font-size: 11px; font-weight: 500; }
+  .badge-green { background: var(--accent-light); color: var(--accent-text); }
+  .badge-amber { background: var(--warn-light); color: var(--warn); }
+  .badge-gray { background: var(--border); color: var(--muted); }
+
+  /* Buttons */
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: var(--radius); font-size: 14px; font-weight: 500; cursor: pointer; border: 1px solid var(--border-strong); background: var(--surface); color: var(--text); transition: all 0.1s; }
+  .btn:hover { background: var(--accent-light); border-color: var(--accent); color: var(--accent-text); }
+  .btn-primary { background: var(--accent); border-color: var(--accent); color: white; }
+  .btn-primary:hover { opacity: 0.9; color: white; }
+  .btn-row { display: flex; gap: 8px; margin-top: 1rem; }
+
+  /* Module map */
+  .module-grid { display: grid; gap: 12px; }
+  .module-card { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.25rem; cursor: pointer; transition: border-color 0.15s; }
+  .module-card:hover { border-color: var(--accent); }
+  .module-card.locked { opacity: 0.5; cursor: default; }
+  .module-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+  .module-title { font-size: 15px; font-weight: 600; }
+  .module-meta { font-size: 12px; color: var(--muted); }
+  .lesson-list { list-style: none; margin-top: 8px; border-top: 1px solid var(--border); padding-top: 8px; display: none; }
+  .lesson-list.open { display: block; }
+  .lesson-item { display: flex; align-items: center; gap: 8px; padding: 4px 0; font-size: 13px; cursor: pointer; }
+  .lesson-item:hover { color: var(--accent); }
+  .lesson-check { width: 16px; height: 16px; border-radius: 50%; border: 1.5px solid var(--border-strong); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .lesson-check.done { background: var(--accent); border-color: var(--accent); color: white; font-size: 10px; }
+
+  /* Lesson reader */
+  .lesson-content { font-size: 15px; line-height: 1.8; }
+  .lesson-content h2 { font-size: 17px; margin: 1.5rem 0 0.5rem; }
+  .lesson-content h3 { font-size: 15px; margin: 1.2rem 0 0.4rem; }
+  .lesson-content p { color: var(--text); margin-bottom: 0.9rem; }
+  .lesson-content ul, .lesson-content ol { padding-left: 1.4rem; margin-bottom: 0.9rem; }
+  .lesson-content li { margin-bottom: 0.3rem; font-size: 14px; }
+  .lesson-content blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; color: var(--muted); font-style: italic; margin: 1rem 0; }
+  .lesson-content code { font-family: monospace; font-size: 13px; background: var(--border); padding: 1px 5px; border-radius: 4px; }
+  .lesson-nav { display: flex; justify-content: space-between; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+
+  /* Flashcard */
+  .flashcard-wrap { perspective: 1000px; }
+  .flashcard { width: 100%; min-height: 220px; cursor: pointer; position: relative; transform-style: preserve-3d; transition: transform 0.4s; }
+  .flashcard.flipped { transform: rotateY(180deg); }
+  .fc-face { position: absolute; width: 100%; min-height: 220px; backface-visibility: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 2rem; display: flex; flex-direction: column; justify-content: center; background: var(--surface); }
+  .fc-back { transform: rotateY(180deg); background: var(--accent-light); border-color: var(--accent); }
+  .fc-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.8px; color: var(--muted); margin-bottom: 0.75rem; }
+  .fc-text { font-size: 17px; font-weight: 500; text-align: center; line-height: 1.5; }
+  .fc-source { font-size: 11px; color: var(--muted); margin-top: 1rem; text-align: center; }
+  .rating-row { display: flex; gap: 8px; justify-content: center; margin-top: 1rem; }
+  .rating-btn { padding: 8px 20px; border-radius: var(--radius); font-size: 13px; font-weight: 500; cursor: pointer; border: 1px solid; }
+  .rating-btn.hard { border-color: var(--danger); color: var(--danger); background: var(--danger-light); }
+  .rating-btn.okay { border-color: var(--warn); color: var(--warn); background: var(--warn-light); }
+  .rating-btn.easy { border-color: var(--accent); color: var(--accent-text); background: var(--accent-light); }
+  .fc-progress { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 1rem; }
+
+  /* Quiz */
+  .question-card { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 12px; }
+  .question-text { font-size: 15px; font-weight: 500; margin-bottom: 1rem; line-height: 1.5; }
+  .option-list { display: flex; flex-direction: column; gap: 8px; }
+  .option { display: flex; align-items: flex-start; gap: 10px; padding: 10px 12px; border-radius: var(--radius); border: 1px solid var(--border); cursor: pointer; font-size: 14px; transition: border-color 0.1s; }
+  .option:hover { border-color: var(--accent); }
+  .option.selected { border-color: var(--accent); background: var(--accent-light); }
+  .option.correct { border-color: var(--accent); background: var(--accent-light); }
+  .option.wrong { border-color: var(--danger); background: var(--danger-light); }
+  .option-key { font-weight: 600; color: var(--muted); flex-shrink: 0; }
+  .explanation { font-size: 13px; color: var(--muted); padding: 10px 12px; background: var(--bg); border-radius: var(--radius); margin-top: 8px; line-height: 1.6; display: none; }
+  .explanation.show { display: block; }
+  .short-answer textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); font-size: 14px; resize: vertical; min-height: 80px; background: var(--surface); color: var(--text); font-family: inherit; }
+  .answer-key { font-size: 13px; padding: 10px 12px; background: var(--accent-light); border-radius: var(--radius); margin-top: 8px; display: none; line-height: 1.6; }
+  .answer-key.show { display: block; }
+  .quiz-score { font-size: 28px; font-weight: 700; color: var(--accent); text-align: center; margin: 1rem 0 0.25rem; }
+  .quiz-score-label { font-size: 14px; color: var(--muted); text-align: center; }
+
+  /* File loader */
+  .drop-zone { border: 2px dashed var(--border-strong); border-radius: var(--radius-lg); padding: 3rem 2rem; text-align: center; cursor: pointer; transition: border-color 0.15s; }
+  .drop-zone:hover { border-color: var(--accent); }
+  .drop-zone input { display: none; }
+
+  /* Utilities */
+  .flex { display: flex; }
+  .gap-8 { gap: 8px; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+  .mb-4 { margin-bottom: 1rem; }
+  .mt-4 { margin-top: 1rem; }
+  .text-muted { color: var(--muted); font-size: 13px; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
+</style>
+</head>
+<body>
+<h2 class="sr-only">Grove — structured learning from research</h2>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="brand">Grove</div>
+
+    <div id="course-meta" style="display:none">
+      <div class="progress-wrap">
+        <div class="progress-label">
+          <span>Overall progress</span>
+          <span id="pct">0%</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+      </div>
+
+      <div class="nav-section">Navigate</div>
+      <button class="nav-item active" onclick="showView('plan')" id="nav-plan">
+        <span class="nav-dot done"></span> Learning plan
+      </button>
+      <button class="nav-item" onclick="showView('cards')" id="nav-cards">
+        <span class="nav-dot" id="dot-cards"></span> Flashcards
+      </button>
+
+      <div class="nav-section">Modules</div>
+      <div id="module-nav"></div>
+    </div>
+
+    <div id="load-prompt" style="margin-top:1rem">
+      <p style="font-size:13px;margin-bottom:0.75rem">Load a Grove curriculum to begin.</p>
+      <button class="btn" onclick="document.getElementById('file-input').click()">Load course.json</button>
+      <input type="file" id="file-input" accept=".json" onchange="loadCourse(event)" style="display:none">
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main" id="main">
+    <div class="card" style="text-align:center;padding:3rem">
+      <h1 style="margin-bottom:0.5rem">Grove</h1>
+      <p>Load a curriculum generated by the <strong>/grove</strong> skill to start learning.</p>
+      <div style="margin-top:1.5rem">
+        <button class="btn btn-primary" onclick="document.getElementById('file-input').click()">
+          Load course.json
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────
+let course = null;
+let cards = null;
+let assessments = {};
+let progress = {};
+let cardSession = { queue: [], current: 0, flipped: false };
+let quizState = { answers: {}, submitted: false };
+
+function saveProgress() {
+  if (!course) return;
+  localStorage.setItem('grove_progress_' + course.slug, JSON.stringify(progress));
+}
+
+function loadProgress() {
+  if (!course) return;
+  const saved = localStorage.getItem('grove_progress_' + course.slug);
+  progress = saved ? JSON.parse(saved) : { lessons: {}, cards: {}, quizzes: {} };
+  if (!progress.lessons) progress.lessons = {};
+  if (!progress.cards) progress.cards = {};
+  if (!progress.quizzes) progress.quizzes = {};
+}
+
+// ── FILE LOADING ───────────────────────────────────────────
+function loadCourse(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      course = JSON.parse(e.target.result);
+      loadProgress();
+      buildSidebar();
+      showView('plan');
+      document.getElementById('course-meta').style.display = 'block';
+      document.getElementById('load-prompt').style.display = 'none';
+    } catch(err) {
+      alert('Could not parse course.json: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function loadCards(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      cards = data.cards || [];
+      // Merge saved SR state
+      cards.forEach(c => {
+        if (progress.cards[c.id]) Object.assign(c.sr, progress.cards[c.id]);
+      });
+      showView('cards');
+    } catch(err) { alert('Could not parse cards.json'); }
+  };
+  reader.readAsText(file);
+}
+
+function loadQuiz(file, moduleId) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      assessments[moduleId] = JSON.parse(e.target.result);
+      showQuiz(moduleId);
+    } catch(err) { alert('Could not parse quiz file'); }
+  };
+  reader.readAsText(file);
+}
+
+// ── SIDEBAR ────────────────────────────────────────────────
+function buildSidebar() {
+  const nav = document.getElementById('module-nav');
+  nav.innerHTML = '';
+  (course.modules || []).forEach(m => {
+    const done = moduleProgress(m);
+    const btn = document.createElement('button');
+    btn.className = 'nav-item';
+    btn.id = 'nav-m-' + m.id;
+    btn.onclick = () => showModule(m.id);
+    btn.innerHTML = `<span class="nav-dot ${done === 100 ? 'done' : done > 0 ? 'current' : ''}"></span>${m.title}`;
+    nav.appendChild(btn);
+  });
+}
+
+function moduleProgress(m) {
+  const lessons = m.lessons || [];
+  if (!lessons.length) return 0;
+  const done = lessons.filter(l => progress.lessons[l.id]).length;
+  return Math.round((done / lessons.length) * 100);
+}
+
+function updateOverallProgress() {
+  if (!course) return;
+  const all = course.modules.flatMap(m => m.lessons || []);
+  const done = all.filter(l => progress.lessons[l.id]).length;
+  const pct = all.length ? Math.round((done / all.length) * 100) : 0;
+  document.getElementById('pct').textContent = pct + '%';
+  document.getElementById('progress-fill').style.width = pct + '%';
+}
+
+// ── VIEWS ──────────────────────────────────────────────────
+function showView(view) {
+  ['plan','cards'].forEach(v => {
+    const el = document.getElementById('nav-' + v);
+    if (el) el.classList.toggle('active', v === view);
+  });
+  if (view === 'plan') renderPlan();
+  if (view === 'cards') renderCards();
+}
+
+function showModule(moduleId) {
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const el = document.getElementById('nav-m-' + moduleId);
+  if (el) el.classList.add('active');
+  renderModule(moduleId);
+}
+
+// ── LEARNING PLAN ──────────────────────────────────────────
+function renderPlan() {
+  const m = document.getElementById('main');
+  const lp = course.learning_plan || {};
+  m.innerHTML = `
+    <h1>${course.topic}</h1>
+    <p style="margin-bottom:1.5rem">${course.summary || ''}</p>
+    <div class="flex gap-8 items-center mb-4" style="flex-wrap:wrap">
+      <span class="badge badge-green">${course.total_lessons} lessons</span>
+      <span class="badge badge-gray">${Math.round((course.total_estimated_hours || 0) * 60)} min total</span>
+      <span class="badge badge-amber">${lp.suggested_schedule || ''}</span>
+    </div>
+    <div class="module-grid">
+      ${(course.modules || []).map(renderModuleCard).join('')}
+    </div>
+    <div class="card" style="margin-top:1rem">
+      <div class="flex justify-between items-center">
+        <div>
+          <h3>Flashcard deck</h3>
+          <p style="margin:0">Review all key concepts with spaced repetition</p>
+        </div>
+        <div>
+          <button class="btn" onclick="document.getElementById('cards-input').click()">Load cards.json</button>
+          <input type="file" id="cards-input" accept=".json" onchange="loadCards(this.files[0])" style="display:none">
+        </div>
+      </div>
+    </div>
+  `;
+  updateOverallProgress();
+}
+
+function renderModuleCard(m) {
+  const pct = moduleProgress(m);
+  const lessons = (m.lessons || []).map(l => `
+    <li class="lesson-item" onclick="showLesson('${l.id}','${m.id}')">
+      <div class="lesson-check ${progress.lessons[l.id] ? 'done' : ''}">
+        ${progress.lessons[l.id] ? '✓' : ''}
+      </div>
+      <span>${l.title}</span>
+      <span class="text-muted" style="margin-left:auto">${l.estimated_minutes}m</span>
+    </li>
+  `).join('');
+  return `
+    <div class="module-card" onclick="toggleModule('${m.id}')">
+      <div class="module-header">
+        <span class="module-title">${m.id} · ${m.title}</span>
+        <span class="badge ${pct===100?'badge-green':pct>0?'badge-amber':'badge-gray'}">${pct}%</span>
+      </div>
+      <div class="module-meta">${(m.lessons||[]).length} lessons · ${m.description || ''}</div>
+      <ul class="lesson-list" id="ll-${m.id}">${lessons}</ul>
+    </div>
+  `;
+}
+
+function toggleModule(id) {
+  const el = document.getElementById('ll-' + id);
+  if (el) el.classList.toggle('open');
+}
+
+function renderModule(moduleId) {
+  const m = course.modules.find(x => x.id === moduleId);
+  if (!m) return;
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="flex items-center gap-8 mb-4">
+      <h1>${m.title}</h1>
+      <span class="badge badge-gray">${moduleProgress(m)}%</span>
+    </div>
+    <p>${m.description}</p>
+    <h2 style="margin-top:1.5rem">Learning objectives</h2>
+    <ul style="padding-left:1.4rem;margin-bottom:1.5rem">
+      ${(m.objectives||[]).map(o => `<li style="font-size:14px;margin-bottom:4px">${o}</li>`).join('')}
+    </ul>
+    <h2>Lessons</h2>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:1.5rem">
+      ${(m.lessons||[]).map(l => `
+        <div class="card card-sm flex justify-between items-center" style="cursor:pointer" onclick="showLesson('${l.id}','${m.id}')">
+          <div class="flex items-center gap-8">
+            <div class="lesson-check ${progress.lessons[l.id]?'done':''}">${progress.lessons[l.id]?'✓':''}</div>
+            <div>
+              <div style="font-size:14px;font-weight:500">${l.title}</div>
+              <div class="text-muted">${l.type} · ${l.estimated_minutes} min</div>
+            </div>
+          </div>
+          <span>→</span>
+        </div>
+      `).join('')}
+    </div>
+    ${m.has_assessment ? `
+      <div class="card card-sm flex justify-between items-center">
+        <div>
+          <div style="font-size:14px;font-weight:500">Module assessment</div>
+          <div class="text-muted">${progress.quizzes[moduleId] ? 'Score: ' + progress.quizzes[moduleId].score + '%' : 'Not yet taken'}</div>
+        </div>
+        <div>
+          <button class="btn btn-primary" onclick="promptQuiz('${moduleId}')">
+            ${progress.quizzes[moduleId] ? 'Retake' : 'Take quiz'}
+          </button>
+        </div>
+      </div>
+    ` : ''}
+  `;
+}
+
+// ── LESSON READER ──────────────────────────────────────────
+function showLesson(lessonId, moduleId) {
+  const m = course.modules.find(x => x.id === moduleId);
+  const l = m?.lessons.find(x => x.id === lessonId);
+  if (!l) return;
+
+  const allLessons = course.modules.flatMap(mod => mod.lessons || []);
+  const idx = allLessons.findIndex(x => x.id === lessonId);
+  const prev = idx > 0 ? allLessons[idx-1] : null;
+  const next = idx < allLessons.length-1 ? allLessons[idx+1] : null;
+
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div class="flex items-center gap-8 mb-4" style="flex-wrap:wrap">
+      <span class="badge badge-gray">${m.title}</span>
+      <span class="badge badge-gray">${l.type}</span>
+      <span class="text-muted">${l.estimated_minutes} min</span>
+    </div>
+    <h1 style="margin-bottom:1rem">${l.title}</h1>
+
+    <div id="lesson-body" class="card lesson-content">
+      <div style="text-align:center;color:var(--muted);padding:2rem">
+        <p>Load the lesson file to read it.</p>
+        <button class="btn mt-4" onclick="document.getElementById('lesson-file-input').click()">
+          Load ${lessonId}.md
+        </button>
+        <input type="file" id="lesson-file-input" accept=".md" onchange="loadLessonFile(event,'${lessonId}','${moduleId}')" style="display:none">
+      </div>
+    </div>
+
+    <div class="lesson-nav">
+      <div>${prev ? `<button class="btn" onclick="showLesson('${prev.id}','${getModuleForLesson(prev.id)}')">← ${prev.title}</button>` : ''}</div>
+      <div class="flex gap-8">
+        ${!progress.lessons[lessonId] ? `<button class="btn btn-primary" onclick="markDone('${lessonId}','${moduleId}')">Mark complete ✓</button>` : `<span class="badge badge-green">Completed ✓</span>`}
+        ${next ? `<button class="btn" onclick="showLesson('${next.id}','${getModuleForLesson(next.id)}')">Next →</button>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+function loadLessonFile(event, lessonId, moduleId) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const body = document.getElementById('lesson-body');
+    if (body) body.innerHTML = simpleMarkdown(e.target.result);
+  };
+  reader.readAsText(file);
+}
+
+function simpleMarkdown(md) {
+  return md
+    .replace(/^# (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+    .replace(/^### (.+)$/gm, '<h3>$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`(.+?)`/g, '<code>$1</code>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g, s => '<ul>' + s + '</ul>')
+    .replace(/^(?!<[hul]|\s*$)(.+)$/gm, '<p>$1</p>')
+    .replace(/\n{3,}/g, '\n\n');
+}
+
+function getModuleForLesson(lessonId) {
+  const m = course.modules.find(mod => mod.lessons?.some(l => l.id === lessonId));
+  return m?.id || '';
+}
+
+function markDone(lessonId, moduleId) {
+  progress.lessons[lessonId] = { date: new Date().toISOString() };
+  saveProgress();
+  buildSidebar();
+  updateOverallProgress();
+  showLesson(lessonId, moduleId);
+}
+
+// ── FLASHCARDS (SM-2) ──────────────────────────────────────
+function renderCards() {
+  const main = document.getElementById('main');
+  if (!cards) {
+    main.innerHTML = `
+      <h1>Flashcards</h1>
+      <div class="drop-zone" onclick="document.getElementById('fc-input').click()">
+        <p>Load your cards.json file to start reviewing</p>
+        <button class="btn mt-4">Load cards.json</button>
+        <input type="file" id="fc-input" accept=".json" onchange="loadCards(this.files[0])" style="display:none">
+      </div>
+    `;
+    return;
+  }
+
+  const due = cards.filter(c => {
+    if (!c.sr.next_review) return true;
+    return new Date(c.sr.next_review) <= new Date();
+  });
+
+  if (!due.length) {
+    const next = cards.reduce((a, b) => new Date(a.sr.next_review) < new Date(b.sr.next_review) ? a : b);
+    main.innerHTML = `
+      <h1>Flashcards</h1>
+      <div class="card" style="text-align:center;padding:2.5rem">
+        <h2>All caught up!</h2>
+        <p>Next card due: ${new Date(next.sr.next_review).toLocaleDateString()}</p>
+        <p>${cards.length} cards total · ${cards.filter(c=>c.sr.reviews>0).length} reviewed</p>
+      </div>
+    `;
+    return;
+  }
+
+  cardSession = { queue: [...due].sort(() => Math.random()-0.5), current: 0, flipped: false };
+  renderCard();
+}
+
+function renderCard() {
+  const main = document.getElementById('main');
+  const { queue, current } = cardSession;
+  if (current >= queue.length) {
+    main.innerHTML = `
+      <h1>Session complete</h1>
+      <div class="card" style="text-align:center;padding:2.5rem">
+        <h2>Well done!</h2>
+        <p>Reviewed ${queue.length} cards.</p>
+        <button class="btn btn-primary mt-4" onclick="renderCards()">Review again</button>
+      </div>
+    `;
+    return;
+  }
+
+  const card = queue[current];
+  main.innerHTML = `
+    <h1>Flashcards</h1>
+    <div class="fc-progress">${current + 1} of ${queue.length} due today</div>
+    <div class="flashcard-wrap">
+      <div class="flashcard" id="fc" onclick="flipCard()">
+        <div class="fc-face">
+          <div class="fc-label">Question · click to reveal</div>
+          <div class="fc-text">${card.front}</div>
+          <div class="fc-source">${card.module} · ${card.type}</div>
+        </div>
+        <div class="fc-face fc-back">
+          <div class="fc-label">Answer</div>
+          <div class="fc-text">${card.back}</div>
+          <div class="fc-source">${card.source_ref}</div>
+        </div>
+      </div>
+    </div>
+    <div id="rating-row" style="display:none" class="rating-row">
+      <button class="rating-btn hard" onclick="rateCard(1)">Hard</button>
+      <button class="rating-btn okay" onclick="rateCard(3)">Okay</button>
+      <button class="rating-btn easy" onclick="rateCard(5)">Easy</button>
+    </div>
+  `;
+}
+
+function flipCard() {
+  const fc = document.getElementById('fc');
+  const rr = document.getElementById('rating-row');
+  if (fc) fc.classList.toggle('flipped');
+  if (rr) rr.style.display = 'flex';
+  cardSession.flipped = true;
+}
+
+function rateCard(quality) {
+  const card = cardSession.queue[cardSession.current];
+  const sr = card.sr;
+
+  // SM-2 algorithm
+  if (quality >= 3) {
+    if (sr.reviews === 0) sr.interval = 1;
+    else if (sr.reviews === 1) sr.interval = 6;
+    else sr.interval = Math.round(sr.interval * sr.ease);
+    sr.ease = Math.max(1.3, sr.ease + (0.1 - (5 - quality) * (0.08 + (5 - quality) * 0.02)));
+  } else {
+    sr.interval = 1;
+    sr.lapses = (sr.lapses || 0) + 1;
+  }
+
+  sr.reviews = (sr.reviews || 0) + 1;
+  const next = new Date();
+  next.setDate(next.getDate() + sr.interval);
+  sr.next_review = next.toISOString().split('T')[0];
+
+  progress.cards[card.id] = { ...sr };
+  saveProgress();
+
+  cardSession.current++;
+  renderCard();
+}
+
+// ── ASSESSMENT ─────────────────────────────────────────────
+function promptQuiz(moduleId) {
+  if (assessments[moduleId]) { showQuiz(moduleId); return; }
+  const main = document.getElementById('main');
+  const m = course.modules.find(x => x.id === moduleId);
+  main.innerHTML += `
+    <div class="card mt-4">
+      <h3>Load quiz file</h3>
+      <p>Load the quiz JSON file for this module.</p>
+      <button class="btn" onclick="document.getElementById('quiz-input-${moduleId}').click()">
+        Load quiz-${moduleId}.json
+      </button>
+      <input type="file" id="quiz-input-${moduleId}" accept=".json"
+        onchange="loadQuiz(this.files[0],'${moduleId}')" style="display:none">
+    </div>
+  `;
+}
+
+function showQuiz(moduleId) {
+  const quiz = assessments[moduleId];
+  if (!quiz) return;
+  quizState = { answers: {}, submitted: false };
+
+  const main = document.getElementById('main');
+  const questions = (quiz.questions || []).map((q, i) => renderQuestion(q, i)).join('');
+  main.innerHTML = `
+    <h1>${quiz.title}</h1>
+    <p class="text-muted">${quiz.questions?.length} questions · Passing: ${quiz.passing_score}%</p>
+    <div style="margin-top:1.5rem">${questions}</div>
+    <div class="btn-row">
+      <button class="btn btn-primary" onclick="submitQuiz('${moduleId}')">Submit</button>
+    </div>
+    <div id="quiz-result" style="margin-top:1rem;display:none"></div>
+  `;
+}
+
+function renderQuestion(q, i) {
+  if (q.type === 'mcq') {
+    const opts = Object.entries(q.options || {}).map(([k,v]) => `
+      <div class="option" id="opt-${q.id}-${k}" onclick="selectOption('${q.id}','${k}')">
+        <span class="option-key">${k}</span> ${v}
+      </div>
+    `).join('');
+    return `
+      <div class="question-card">
+        <div class="question-text">${i+1}. ${q.question}</div>
+        <div class="option-list">${opts}</div>
+        <div class="explanation" id="exp-${q.id}">${q.explanation || ''}</div>
+      </div>
+    `;
+  }
+  if (q.type === 'short_answer') {
+    return `
+      <div class="question-card">
+        <div class="question-text">${i+1}. ${q.question}</div>
+        <div class="short-answer">
+          <textarea id="sa-${q.id}" placeholder="Your answer..."></textarea>
+        </div>
+        <div class="answer-key" id="ak-${q.id}">
+          <strong>Answer key:</strong><br>
+          ${(q.answer_key?.required_points || []).map(p => '• ' + p).join('<br>')}
+          ${q.answer_key?.full_credit ? '<br><br><strong>Full credit:</strong> ' + q.answer_key.full_credit : ''}
+        </div>
+      </div>
+    `;
+  }
+  if (q.type === 'essay') {
+    return `
+      <div class="question-card">
+        <div class="question-text">${i+1}. ${q.prompt}</div>
+        <div class="short-answer">
+          <textarea id="sa-${q.id}" placeholder="Your essay response..." style="min-height:120px"></textarea>
+        </div>
+        <div class="answer-key" id="ak-${q.id}">
+          <strong>Guidance:</strong> ${q.guidance || ''}<br><br>
+          <strong>Rubric:</strong><br>
+          ${Object.entries(q.rubric || {}).map(([g,d]) => `<strong>${g}:</strong> ${d}`).join('<br>')}
+        </div>
+      </div>
+    `;
+  }
+  return '';
+}
+
+function selectOption(qId, key) {
+  quizState.answers[qId] = key;
+  document.querySelectorAll(`[id^="opt-${qId}-"]`).forEach(el => el.classList.remove('selected'));
+  const sel = document.getElementById(`opt-${qId}-${key}`);
+  if (sel) sel.classList.add('selected');
+}
+
+function submitQuiz(moduleId) {
+  const quiz = assessments[moduleId];
+  const mcqs = (quiz.questions || []).filter(q => q.type === 'mcq');
+  let correct = 0;
+
+  mcqs.forEach(q => {
+    const chosen = quizState.answers[q.id];
+    const optEls = document.querySelectorAll(`[id^="opt-${q.id}-"]`);
+    optEls.forEach(el => {
+      const key = el.id.split('-').pop();
+      el.classList.remove('selected');
+      if (key === q.correct) el.classList.add('correct');
+      else if (key === chosen && chosen !== q.correct) el.classList.add('wrong');
+    });
+    const exp = document.getElementById('exp-' + q.id);
+    if (exp) exp.classList.add('show');
+    if (chosen === q.correct) correct++;
+  });
+
+  // Reveal short answer keys
+  quiz.questions.filter(q => q.type !== 'mcq').forEach(q => {
+    const ak = document.getElementById('ak-' + q.id);
+    if (ak) ak.classList.add('show');
+  });
+
+  const score = mcqs.length ? Math.round((correct / mcqs.length) * 100) : null;
+  const passed = score === null || score >= quiz.passing_score;
+
+  progress.quizzes[moduleId] = { score, date: new Date().toISOString(), passed };
+  saveProgress();
+
+  const result = document.getElementById('quiz-result');
+  if (result) {
+    result.style.display = 'block';
+    result.innerHTML = `
+      <div class="card" style="text-align:center;padding:1.5rem">
+        ${score !== null ? `<div class="quiz-score">${score}%</div>
+        <div class="quiz-score-label">${correct}/${mcqs.length} correct · ${passed ? 'Passed ✓' : 'Not yet — review and retry'}</div>` : ''}
+        <p style="margin-top:0.75rem">Short answer questions revealed above — review and self-assess.</p>
+      </div>
+    `;
+  }
+}
+</script>
+</body>
+</html>
