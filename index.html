@@ -1,1806 +1,213 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Grove — Structured Learning</title>
+<title>Grove</title>
 <style>
-/* ═══════════════════════════════════════════════════════════
-   RESET & ROOT
-═══════════════════════════════════════════════════════════ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-:root {
-  --bg: #f6f5f0;
-  --surface: #ffffff;
-  --surface-raised: #f0efe9;
-  --border: #e2e0d8;
-  --border-strong: #c8c6bc;
-  --text: #1c1c18;
-  --text-secondary: #56564e;
-  --text-muted: #8a8a80;
-  --accent: #2d6a4f;
-  --accent-hover: #245a42;
-  --accent-light: #eaf4ee;
-  --accent-mid: #74c69d;
-  --accent-text: #1a4032;
-  --warn: #c2410c;
-  --warn-light: #fff7ed;
-  --success: #15803d;
-  --success-light: #f0fdf4;
-  --danger: #b91c1c;
-  --danger-light: #fef2f2;
-  --info: #1d4ed8;
-  --info-light: #eff6ff;
-  --radius-sm: 6px;
-  --radius: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 20px;
-  --shadow-sm: 0 1px 2px rgba(0,0,0,0.06);
-  --shadow: 0 1px 4px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.05);
-  --shadow-md: 0 4px 16px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
-  --sidebar-w: 264px;
-  --t: 140ms ease;
-}
-
-@media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0f0f0d;
-    --surface: #1a1a17;
-    --surface-raised: #222220;
-    --border: #2c2c28;
-    --border-strong: #3c3c38;
-    --text: #eeeee6;
-    --text-secondary: #a8a89e;
-    --text-muted: #6e6e64;
-    --accent: #52b788;
-    --accent-hover: #6bcba0;
-    --accent-light: #162a22;
-    --accent-mid: #40916c;
-    --accent-text: #b7e4c7;
-    --warn: #fb923c;
-    --warn-light: #1e1004;
-    --success: #4ade80;
-    --success-light: #042a16;
-    --danger: #f87171;
-    --danger-light: #1c0404;
-    --info: #60a5fa;
-    --info-light: #0a1628;
-    --shadow-sm: 0 1px 2px rgba(0,0,0,0.25);
-    --shadow: 0 1px 4px rgba(0,0,0,0.30);
-    --shadow-md: 0 4px 16px rgba(0,0,0,0.45);
+    --bg: #fafaf8;
+    --surface: #ffffff;
+    --border: rgba(0,0,0,0.1);
+    --text: #1a1a18;
+    --muted: #6b6b65;
+    --accent: #2d6a4f;
+    --accent-light: #e8f5ee;
+    --accent-text: #1a4032;
+    --radius: 12px;
   }
-}
 
-html { height: 100%; scroll-behavior: smooth; }
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-}
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141412;
+      --surface: #1e1e1c;
+      --border: rgba(255,255,255,0.1);
+      --text: #e8e8e2;
+      --muted: #888880;
+      --accent: #52b788;
+      --accent-light: #1a3028;
+      --accent-text: #a7d9bb;
+    }
+  }
 
-/* ═══════════════════════════════════════════════════════════
-   LAYOUT
-═══════════════════════════════════════════════════════════ */
-.app {
-  display: grid;
-  grid-template-columns: var(--sidebar-w) 1fr;
-  min-height: 100vh;
-}
+  body { font-family: system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-/* ═══════════════════════════════════════════════════════════
-   READING PROGRESS BAR
-═══════════════════════════════════════════════════════════ */
-#reading-bar {
-  position: fixed; top: 0; left: var(--sidebar-w); right: 0;
-  height: 3px; background: var(--border); z-index: 200; display: none;
-}
-#reading-bar.on { display: block; }
-#reading-fill {
-  height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-mid));
-  border-radius: 0 99px 99px 0; transition: width 80ms linear;
-}
+  .header {
+    padding: 2rem 2.5rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .brand { font-size: 24px; font-weight: 700; color: var(--accent); letter-spacing: -0.5px; }
+  .tagline { font-size: 14px; color: var(--muted); }
 
-/* ═══════════════════════════════════════════════════════════
-   SIDEBAR
-═══════════════════════════════════════════════════════════ */
-.sidebar {
-  background: var(--surface);
-  border-right: 1px solid var(--border);
-  display: flex; flex-direction: column;
-  height: 100vh; position: sticky; top: 0;
-  overflow: hidden;
-}
+  .content { max-width: 860px; margin: 0 auto; padding: 2.5rem 2rem; }
 
-.sidebar-top {
-  padding: 1.1rem 1rem 1rem;
-  border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
-}
+  h2 { font-size: 16px; font-weight: 600; margin-bottom: 1.25rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.6px; font-size: 11px; }
 
-.brand {
-  display: flex; align-items: center; gap: 8px;
-  font-size: 17px; font-weight: 700; letter-spacing: -0.4px; color: var(--accent);
-  text-decoration: none; cursor: pointer;
-}
-.brand-icon {
-  width: 28px; height: 28px;
-  background: var(--accent-light); border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 14px; flex-shrink: 0;
-}
+  .course-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 1rem; }
 
-.sidebar-course-name {
-  font-size: 12.5px; font-weight: 600; color: var(--text);
-  margin-top: 0.6rem; line-height: 1.4;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
+  .course-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.25rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
 
-/* Progress ring block */
-.sidebar-ring-block {
-  display: flex; align-items: center; gap: 12px;
-  padding: 0.9rem 1rem 0;
-  flex-shrink: 0;
-}
-.ring-svg { width: 46px; height: 46px; transform: rotate(-90deg); flex-shrink: 0; }
-.ring-bg { fill: none; stroke: var(--border); stroke-width: 3; }
-.ring-fill {
-  fill: none; stroke: var(--accent); stroke-width: 3.5; stroke-linecap: round;
-  transition: stroke-dashoffset 0.6s cubic-bezier(0.4,0,0.2,1),
-              stroke-dasharray 0.6s cubic-bezier(0.4,0,0.2,1);
-}
-.ring-meta { min-width: 0; }
-.ring-pct { font-size: 22px; font-weight: 700; line-height: 1; }
-.ring-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .course-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+  .course-title { font-size: 15px; font-weight: 600; line-height: 1.3; }
+  .badge {
+    font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 20px;
+    white-space: nowrap; flex-shrink: 0;
+  }
+  .badge-green { background: #d1fae5; color: #065f46; }
+  .badge-gray  { background: var(--border); color: var(--muted); }
 
-/* Sidebar nav */
-.sidebar-nav {
-  flex: 1; overflow-y: auto; padding: 0.6rem 0.5rem 1.5rem;
-}
-.sidebar-nav::-webkit-scrollbar { width: 3px; }
-.sidebar-nav::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 99px; }
+  .course-desc { font-size: 13px; color: var(--muted); line-height: 1.5; }
 
-.nav-label {
-  font-size: 10px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.9px; color: var(--text-muted);
-  padding: 0 8px; margin: 0.8rem 0 0.3rem;
-}
-.nav-btn {
-  display: flex; align-items: center; gap: 8px;
-  width: 100%; padding: 7px 8px; border-radius: var(--radius-sm);
-  border: none; background: none; color: var(--text-secondary);
-  font-size: 13px; cursor: pointer; text-align: left;
-  transition: background var(--t), color var(--t);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.nav-btn svg { flex-shrink: 0; opacity: 0.65; }
-.nav-btn:hover { background: var(--surface-raised); color: var(--text); }
-.nav-btn.active { background: var(--accent-light); color: var(--accent-text); font-weight: 500; }
-.nav-btn.active svg { opacity: 1; }
+  .course-meta { display: flex; gap: 1rem; font-size: 12px; color: var(--muted); }
 
-.nav-due-pill {
-  margin-left: auto; flex-shrink: 0;
-  background: var(--warn-light); color: var(--warn);
-  font-size: 10px; font-weight: 700; padding: 1px 7px;
-  border-radius: 99px; border: 1px solid currentColor;
-}
+  .progress-row { display: flex; align-items: center; gap: 10px; }
+  .progress-bar { flex: 1; height: 6px; background: var(--border); border-radius: 99px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 99px; transition: width 0.3s; }
+  .progress-label { font-size: 12px; color: var(--muted); white-space: nowrap; min-width: 32px; text-align: right; }
 
-/* Module + lesson nav */
-.mod-nav-btn {
-  display: flex; align-items: center; gap: 6px;
-  width: 100%; padding: 5px 8px 5px 6px; border-radius: var(--radius-sm);
-  border: none; background: none; color: var(--text-secondary);
-  font-size: 12px; cursor: pointer; text-align: left;
-  transition: background var(--t), color var(--t);
-}
-.mod-nav-btn:hover { background: var(--surface-raised); color: var(--text); }
-.mod-pip {
-  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
-  background: var(--border-strong);
-}
-.mod-pip.partial { background: var(--warn); }
-.mod-pip.done { background: var(--accent); }
-.mod-pct { margin-left: auto; font-size: 10px; color: var(--text-muted); flex-shrink: 0; }
+  .card-footer { display: flex; gap: 8px; margin-top: 0.25rem; }
 
-.lesson-sub { padding-left: 18px; display: none; }
-.lesson-sub.open { display: block; }
-.lesson-nav-btn {
-  display: flex; align-items: center; gap: 6px;
-  width: 100%; padding: 3px 8px; border: none; background: none;
-  color: var(--text-muted); font-size: 11.5px; cursor: pointer;
-  text-align: left; border-radius: var(--radius-sm);
-  transition: background var(--t), color var(--t);
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-}
-.lesson-nav-btn:hover { background: var(--surface-raised); color: var(--text); }
-.lesson-nav-btn.active { color: var(--accent-text); font-weight: 500; }
-.l-pip {
-  width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
-  border: 1.5px solid var(--border-strong); background: transparent;
-}
-.l-pip.done { background: var(--accent); border-color: var(--accent); }
+  .btn {
+    padding: 7px 14px; border-radius: 6px; border: 1px solid var(--border);
+    font-size: 13px; font-weight: 500; cursor: pointer;
+    background: var(--surface); color: var(--text); transition: background 0.1s;
+  }
+  .btn:hover { background: var(--accent-light); }
+  .btn-primary { background: var(--accent); color: white; border-color: var(--accent); }
+  .btn-primary:hover { opacity: 0.9; }
 
-/* ═══════════════════════════════════════════════════════════
-   MAIN AREA
-═══════════════════════════════════════════════════════════ */
-.main { min-height: 100vh; display: flex; flex-direction: column; }
-.content { flex: 1; padding: 2.5rem 3rem 5rem; max-width: 780px; }
+  .no-progress { font-size: 12px; color: var(--muted); font-style: italic; }
 
-/* ═══════════════════════════════════════════════════════════
-   TYPOGRAPHY
-═══════════════════════════════════════════════════════════ */
-h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.6px; line-height: 1.3; margin-bottom: 0.5rem; }
-h2 { font-size: 19px; font-weight: 600; letter-spacing: -0.3px; margin-bottom: 0.5rem; }
-h3 { font-size: 15.5px; font-weight: 600; margin-bottom: 0.35rem; }
-p { font-size: 14px; line-height: 1.7; color: var(--text-secondary); margin-bottom: 0.75rem; }
+  input[type=file] { display: none; }
 
-/* ═══════════════════════════════════════════════════════════
-   BADGES
-═══════════════════════════════════════════════════════════ */
-.badge {
-  display: inline-flex; align-items: center; gap: 4px;
-  padding: 3px 9px; border-radius: 99px;
-  font-size: 11.5px; font-weight: 500; line-height: 1.4;
-}
-.bg-green { background: var(--accent-light); color: var(--accent-text); }
-.bg-amber { background: var(--warn-light); color: var(--warn); }
-.bg-gray { background: var(--border); color: var(--text-secondary); }
-.bg-outline { border: 1px solid var(--border-strong); color: var(--text-secondary); background: transparent; }
-.bg-info { background: var(--info-light); color: var(--info); }
-
-/* ═══════════════════════════════════════════════════════════
-   BUTTONS
-═══════════════════════════════════════════════════════════ */
-.btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  padding: 9px 18px; border-radius: var(--radius);
-  font-size: 14px; font-weight: 500; cursor: pointer;
-  border: 1px solid var(--border-strong); background: var(--surface); color: var(--text);
-  transition: all var(--t); white-space: nowrap; line-height: 1;
-}
-.btn:hover { background: var(--surface-raised); border-color: var(--accent); }
-.btn-primary { background: var(--accent); border-color: var(--accent); color: white; }
-.btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: white; }
-.btn-sm { padding: 6px 12px; font-size: 13px; }
-.btn-xs { padding: 4px 10px; font-size: 12px; }
-.btn-ghost { border-color: transparent; background: transparent; }
-.btn-ghost:hover { background: var(--surface-raised); border-color: var(--border); }
-.btn-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1.25rem; }
-
-/* ═══════════════════════════════════════════════════════════
-   CARD SURFACES
-═══════════════════════════════════════════════════════════ */
-.card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 1.5rem;
-  margin-bottom: 1rem; box-shadow: var(--shadow);
-}
-.card-sm { padding: 1rem; }
-.card-xs { padding: 0.75rem 1rem; }
-.card-link {
-  cursor: pointer;
-  transition: border-color var(--t), box-shadow var(--t), transform var(--t);
-}
-.card-link:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-1px); }
-
-/* ═══════════════════════════════════════════════════════════
-   DISCOVER / COURSE GRID
-═══════════════════════════════════════════════════════════ */
-.discover-wrap { padding-bottom: 3rem; }
-.discover-head { margin-bottom: 2rem; }
-.discover-head h1 { font-size: 30px; margin-bottom: 0.3rem; }
-
-.course-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
-  gap: 16px;
-}
-.course-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 1.5rem;
-  cursor: pointer; box-shadow: var(--shadow);
-  transition: all var(--t);
-  display: flex; flex-direction: column;
-}
-.course-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-2px); }
-.course-card-icon {
-  width: 44px; height: 44px; border-radius: var(--radius);
-  background: var(--accent-light); display: flex; align-items: center;
-  justify-content: center; font-size: 20px; margin-bottom: 0.85rem;
-}
-.course-card h3 { font-size: 15.5px; margin-bottom: 0.35rem; }
-.course-card p { font-size: 13px; flex: 1; margin-bottom: 0.9rem; }
-.course-card-meta { display: flex; gap: 6px; flex-wrap: wrap; }
-
-/* ═══════════════════════════════════════════════════════════
-   DASHBOARD / OVERVIEW
-═══════════════════════════════════════════════════════════ */
-.stat-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  margin-bottom: 2rem;
-}
-.stat {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 1rem 1.1rem; box-shadow: var(--shadow);
-}
-.stat-val { font-size: 26px; font-weight: 800; letter-spacing: -0.8px; line-height: 1; }
-.stat-lbl { font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-top: 4px; }
-
-.cta-card {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 16px; background: var(--surface); border: 1.5px solid var(--accent-mid);
-  border-radius: var(--radius-lg); padding: 1rem 1.25rem; margin-bottom: 1rem;
-  cursor: pointer; box-shadow: var(--shadow);
-  transition: border-color var(--t), box-shadow var(--t);
-}
-.cta-card:hover { border-color: var(--accent); box-shadow: var(--shadow-md); }
-.cta-title { font-size: 14.5px; font-weight: 600; }
-.cta-sub { font-size: 12.5px; color: var(--text-muted); margin-top: 2px; }
-
-.mod-grid { display: flex; flex-direction: column; gap: 10px; }
-.mod-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--shadow);
-}
-.mod-header {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: 1rem 1.25rem; cursor: pointer;
-  transition: background var(--t);
-}
-.mod-header:hover { background: var(--surface-raised); }
-.mod-header-left { display: flex; align-items: center; gap: 10px; }
-.mod-id {
-  font-size: 10.5px; font-weight: 700; letter-spacing: 0.3px;
-  padding: 2px 8px; border-radius: 99px;
-  background: var(--accent-light); color: var(--accent-text);
-}
-.mod-header-title { font-size: 14px; font-weight: 600; }
-.mod-progress-line { height: 3px; background: var(--border); margin: 0 1.25rem; }
-.mod-progress-fill { height: 100%; background: var(--accent); transition: width 0.5s; }
-
-.mod-lessons { display: none; padding-bottom: 4px; }
-.mod-lessons.open { display: block; }
-
-.lesson-row {
-  display: flex; align-items: center; gap: 10px;
-  padding: 7px 1.25rem; cursor: pointer;
-  transition: background var(--t);
-}
-.lesson-row:hover { background: var(--surface-raised); }
-.lesson-chk {
-  width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0;
-  border: 1.5px solid var(--border-strong);
-  display: flex; align-items: center; justify-content: center;
-  font-size: 9px; font-weight: 700;
-}
-.lesson-chk.done { background: var(--accent); border-color: var(--accent); color: white; }
-.lesson-row-title { font-size: 13.5px; flex: 1; }
-.lesson-row-meta { font-size: 11.5px; color: var(--text-muted); white-space: nowrap; }
-
-/* ═══════════════════════════════════════════════════════════
-   LESSON READER
-═══════════════════════════════════════════════════════════ */
-.lesson-breadcrumb {
-  display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
-  margin-bottom: 1.25rem;
-}
-.lesson-title-row { margin-bottom: 0.75rem; }
-.lesson-pills { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 2rem; }
-
-/* Prose content */
-.prose {
-  font-size: 15.5px; line-height: 1.85;
-  color: var(--text);
-}
-.prose :is(h1,h2,h3,h4,h5,h6) { color: var(--text); }
-.prose h1 { font-size: 22px; margin: 2.5rem 0 0.75rem; }
-.prose h2 {
-  font-size: 18px; margin: 2.25rem 0 0.6rem;
-  border-bottom: 1px solid var(--border); padding-bottom: 0.4rem;
-}
-.prose h3 { font-size: 15.5px; margin: 1.8rem 0 0.5rem; }
-.prose h4 { font-size: 14px; color: var(--text-secondary); margin: 1.4rem 0 0.4rem; }
-.prose p { font-size: 15.5px; line-height: 1.85; color: var(--text); margin-bottom: 1.1rem; }
-.prose ul, .prose ol { padding-left: 1.7rem; margin-bottom: 1.1rem; }
-.prose li { margin-bottom: 0.45rem; font-size: 15.5px; line-height: 1.75; }
-.prose li > ul, .prose li > ol { margin-top: 0.3rem; margin-bottom: 0.2rem; }
-.prose blockquote {
-  border-left: 3px solid var(--accent); margin: 1.5rem 0;
-  padding: 0.6rem 1.1rem; background: var(--accent-light);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-}
-.prose blockquote p { color: var(--accent-text); margin-bottom: 0; font-size: 15px; }
-.prose code {
-  font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'Consolas', monospace;
-  font-size: 13.5px; background: var(--surface-raised);
-  border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px;
-}
-.prose pre {
-  background: var(--surface-raised); border: 1px solid var(--border);
-  border-radius: var(--radius); padding: 1.1rem 1.25rem;
-  overflow-x: auto; margin: 1.25rem 0;
-}
-.prose pre code { background: none; border: none; padding: 0; font-size: 13px; line-height: 1.65; }
-.prose strong { font-weight: 650; color: var(--text); }
-.prose em { font-style: italic; }
-.prose hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
-.prose table { width: 100%; border-collapse: collapse; margin-bottom: 1.25rem; font-size: 14px; }
-.prose th {
-  background: var(--surface-raised); padding: 8px 14px;
-  font-weight: 600; text-align: left; border: 1px solid var(--border);
-}
-.prose td { padding: 8px 14px; border: 1px solid var(--border); }
-.prose tr:nth-child(even) td { background: var(--surface-raised); }
-.prose a { color: var(--accent); text-decoration: underline; text-decoration-thickness: 1px; }
-
-.lesson-nav-bar {
-  display: flex; justify-content: space-between; align-items: center;
-  margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
-  gap: 12px;
-}
-.lesson-nav-center { display: flex; gap: 8px; align-items: center; }
-
-/* ═══════════════════════════════════════════════════════════
-   FLASHCARDS
-═══════════════════════════════════════════════════════════ */
-.cards-top {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 1.25rem; gap: 12px;
-}
-.session-pill {
-  font-size: 13px; color: var(--text-muted);
-  background: var(--surface); border: 1px solid var(--border);
-  padding: 4px 14px; border-radius: 99px; box-shadow: var(--shadow-sm);
-}
-.cards-progress-bar {
-  height: 4px; background: var(--border); border-radius: 99px; overflow: hidden;
-  margin-bottom: 1.5rem;
-}
-.cards-progress-fill {
-  height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-mid));
-  border-radius: 99px; transition: width 0.35s ease;
-}
-
-.stage { perspective: 1200px; margin-bottom: 1.5rem; }
-
-.flashcard {
-  width: 100%; min-height: 250px; cursor: pointer; position: relative;
-  transform-style: preserve-3d; transition: transform 0.48s cubic-bezier(0.4,0,0.2,1);
-}
-.flashcard.flipped { transform: rotateY(180deg); }
-
-.fc-face {
-  position: absolute; width: 100%; min-height: 250px;
-  backface-visibility: hidden; border-radius: var(--radius-lg);
-  padding: 2.25rem 2rem;
-  display: flex; flex-direction: column; justify-content: center;
-  border: 1px solid var(--border);
-  background: var(--surface); box-shadow: var(--shadow-md);
-}
-.fc-back {
-  transform: rotateY(180deg);
-  background: var(--accent-light); border-color: var(--accent-mid);
-}
-
-.fc-tag {
-  font-size: 10px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.9px; color: var(--text-muted); margin-bottom: 0.9rem;
-}
-.fc-back .fc-tag { color: var(--accent-text); }
-
-.fc-text {
-  font-size: 18px; font-weight: 500; text-align: center;
-  line-height: 1.6; color: var(--text);
-}
-.fc-back .fc-text { color: var(--accent-text); }
-.fc-hint { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 1.25rem; }
-.fc-source { font-size: 11px; color: var(--accent-text); opacity: 0.7; text-align: center; margin-top: 1rem; }
-
-.type-pill {
-  align-self: flex-end;
-  font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px;
-  padding: 2px 8px; border-radius: 99px; background: var(--border); color: var(--text-muted);
-}
-.type-pill.definition { background: var(--info-light); color: var(--info); }
-.type-pill.claim { background: var(--warn-light); color: var(--warn); }
-.type-pill.application { background: var(--success-light); color: var(--success); }
-
-.rating-wrap { display: none; flex-direction: column; align-items: center; gap: 10px; }
-.rating-wrap.on { display: flex; }
-.rating-lbl { font-size: 11.5px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-.rating-btns { display: flex; gap: 10px; }
-.r-btn {
-  padding: 10px 26px; border-radius: var(--radius); font-size: 14px; font-weight: 600;
-  cursor: pointer; border: 1.5px solid; transition: all var(--t);
-}
-.r-btn.hard { border-color: var(--danger); color: var(--danger); background: var(--danger-light); }
-.r-btn.hard:hover { background: var(--danger); color: white; }
-.r-btn.good { border-color: var(--warn); color: var(--warn); background: var(--warn-light); }
-.r-btn.good:hover { background: var(--warn); color: white; }
-.r-btn.easy { border-color: var(--accent); color: var(--accent-text); background: var(--accent-light); }
-.r-btn.easy:hover { background: var(--accent); color: white; }
-
-.kb-hint { font-size: 11.5px; color: var(--text-muted); text-align: center; }
-.kb { display: inline-block; padding: 2px 6px; border: 1px solid var(--border-strong); border-radius: 4px; font-family: monospace; font-size: 10px; color: var(--text-secondary); margin: 0 1px; }
-
-/* ═══════════════════════════════════════════════════════════
-   QUIZ
-═══════════════════════════════════════════════════════════ */
-.quiz-meta { font-size: 13.5px; color: var(--text-secondary); margin-top: 0.3rem; margin-bottom: 1.5rem; }
-
-.q-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 1.25rem 1.5rem 1.4rem;
-  margin-bottom: 12px; box-shadow: var(--shadow);
-}
-.q-num { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 0.5rem; }
-.q-text { font-size: 15px; font-weight: 500; line-height: 1.6; margin-bottom: 1rem; color: var(--text); }
-
-.opts { display: flex; flex-direction: column; gap: 8px; }
-.opt {
-  display: flex; align-items: flex-start; gap: 10px;
-  padding: 10px 14px; border-radius: var(--radius);
-  border: 1.5px solid var(--border); cursor: pointer; font-size: 14px;
-  line-height: 1.55; transition: border-color var(--t), background var(--t);
-}
-.opt:hover:not(.done) { border-color: var(--accent); background: var(--accent-light); }
-.opt.selected { border-color: var(--accent); background: var(--accent-light); }
-.opt.correct { border-color: var(--success); background: var(--success-light); }
-.opt.wrong { border-color: var(--danger); background: var(--danger-light); }
-.opt-key { font-weight: 700; flex-shrink: 0; min-width: 20px; color: var(--text-muted); }
-.opt.selected .opt-key { color: var(--accent); }
-.opt.correct .opt-key { color: var(--success); }
-.opt.wrong .opt-key { color: var(--danger); }
-
-.explanation {
-  font-size: 13px; color: var(--text-secondary);
-  padding: 10px 14px; margin-top: 8px;
-  background: var(--surface-raised); border-radius: var(--radius-sm);
-  border-left: 3px solid var(--accent); display: none; line-height: 1.65;
-}
-.explanation.on { display: block; }
-
-.sa-area {
-  width: 100%; padding: 10px 12px;
-  border: 1.5px solid var(--border); border-radius: var(--radius);
-  font-size: 14px; resize: vertical; min-height: 84px;
-  background: var(--surface); color: var(--text); font-family: inherit;
-  line-height: 1.6; transition: border-color var(--t);
-}
-.sa-area:focus { outline: none; border-color: var(--accent); }
-
-.answer-key {
-  font-size: 13px; padding: 10px 14px; margin-top: 8px;
-  background: var(--accent-light); color: var(--accent-text);
-  border-radius: var(--radius-sm); border-left: 3px solid var(--accent);
-  display: none; line-height: 1.65;
-}
-.answer-key.on { display: block; }
-
-.score-wrap { text-align: center; padding: 2.5rem 2rem; }
-.score-num { font-size: 72px; font-weight: 800; letter-spacing: -2px; line-height: 1; }
-.score-green { color: var(--success); }
-.score-red { color: var(--danger); }
-.score-detail { font-size: 15px; color: var(--text-muted); margin-top: 0.6rem; }
-.score-verdict { font-size: 18px; font-weight: 700; margin-top: 0.75rem; }
-
-/* ═══════════════════════════════════════════════════════════
-   MODULE CHECK
-═══════════════════════════════════════════════════════════ */
-.mc-card {
-  background: var(--surface); border: 1px solid var(--border);
-  border-radius: var(--radius-lg); padding: 1.25rem 1.5rem 1.4rem;
-  margin-bottom: 12px; box-shadow: var(--shadow);
-}
-.mc-qnum { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 0.5rem; }
-.mc-qtext { font-size: 15px; font-weight: 500; line-height: 1.6; color: var(--text); margin-bottom: 1rem; }
-.mc-answer {
-  font-size: 14px; padding: 12px 14px; margin-top: 8px;
-  background: var(--accent-light); color: var(--accent-text);
-  border-radius: var(--radius-sm); border-left: 3px solid var(--accent);
-  display: none; line-height: 1.65;
-}
-.mc-answer.on { display: block; }
-
-/* ═══════════════════════════════════════════════════════════
-   EMPTY / ERROR / LOADING STATES
-═══════════════════════════════════════════════════════════ */
-.empty {
-  text-align: center; padding: 4rem 2rem; max-width: 520px; margin: 0 auto;
-}
-.empty-icon {
-  width: 72px; height: 72px; border-radius: 50%;
-  background: var(--accent-light); display: flex;
-  align-items: center; justify-content: center; font-size: 30px;
-  margin: 0 auto 1.5rem;
-}
-.empty h2 { font-size: 22px; margin-bottom: 0.5rem; }
-.empty p { max-width: 360px; margin: 0 auto 1.5rem; }
-
-.err-banner {
-  background: var(--warn-light); border: 1px solid var(--warn);
-  border-radius: var(--radius); padding: 0.9rem 1.1rem; margin-bottom: 1.5rem;
-  font-size: 14px; color: var(--warn); line-height: 1.55;
-}
-
-.loader {
-  display: flex; flex-direction: column; align-items: center;
-  justify-content: center; gap: 0.75rem; padding: 5rem 2rem;
-}
-.spinner {
-  width: 34px; height: 34px; border: 3px solid var(--border);
-  border-top-color: var(--accent); border-radius: 50%;
-  animation: spin 0.75s linear infinite;
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-.loader-text { font-size: 13px; color: var(--text-muted); }
-
-/* Celebration */
-.celebration {
-  background: var(--success-light); border: 1px solid var(--accent-mid);
-  border-radius: var(--radius-lg); padding: 2.5rem;
-  text-align: center; box-shadow: var(--shadow);
-}
-.celebration h2 { font-size: 22px; margin-bottom: 0.5rem; }
-.celebration p { max-width: 380px; margin: 0 auto; }
-
-/* Code block for instructions */
-.code-block {
-  font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
-  font-size: 13px; background: var(--accent-light); color: var(--accent-text);
-  border: 1px solid var(--accent-mid); border-radius: var(--radius);
-  padding: 0.9rem 1.1rem; line-height: 1.7; margin: 0.75rem 0;
-}
-
-/* ═══════════════════════════════════════════════════════════
-   UTILITIES
-═══════════════════════════════════════════════════════════ */
-.flex { display: flex; }
-.flex-col { flex-direction: column; }
-.gap-1 { gap: 0.25rem; }
-.gap-2 { gap: 0.5rem; }
-.gap-3 { gap: 0.75rem; }
-.gap-4 { gap: 1rem; }
-.items-center { align-items: center; }
-.items-start { align-items: flex-start; }
-.justify-between { justify-content: space-between; }
-.justify-center { justify-content: center; }
-.mb-1 { margin-bottom: 0.25rem; }
-.mb-2 { margin-bottom: 0.5rem; }
-.mb-3 { margin-bottom: 0.75rem; }
-.mb-4 { margin-bottom: 1rem; }
-.mb-6 { margin-bottom: 1.5rem; }
-.mt-2 { margin-top: 0.5rem; }
-.mt-4 { margin-top: 1rem; }
-.mt-6 { margin-top: 1.5rem; }
-.w-full { width: 100%; }
-.text-center { text-align: center; }
-.font-bold { font-weight: 700; }
-.font-semibold { font-weight: 600; }
-.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0,0,0,0); }
-code { font-family: 'SF Mono', 'Cascadia Code', monospace; font-size: 13px; background: var(--surface-raised); border: 1px solid var(--border); padding: 1px 6px; border-radius: 4px; }
-
-/* ═══════════════════════════════════════════════════════════
-   RESPONSIVE
-═══════════════════════════════════════════════════════════ */
-@media (max-width: 800px) {
-  :root { --sidebar-w: 0px; }
-  .sidebar { display: none; }
-  #reading-bar { left: 0; }
-  .content { padding: 1.5rem 1.25rem 4rem; }
-  .stat-row { grid-template-columns: repeat(2, 1fr); }
-}
+  #status { margin-top: 2rem; font-size: 13px; color: var(--muted); min-height: 20px; }
 </style>
 </head>
 <body>
 
-<!-- Reading progress bar -->
-<div id="reading-bar"><div id="reading-fill" style="width:0%"></div></div>
+<header class="header">
+  <span class="brand">Grove</span>
+  <span class="tagline">Structured learning from research</span>
+</header>
 
-<div class="app">
-
-  <!-- ═══════════════════ SIDEBAR ═══════════════════ -->
-  <nav class="sidebar">
-    <div class="sidebar-top">
-      <div class="brand" onclick="handleBrandClick()">
-        <div class="brand-icon">🌿</div>
-        Grove
-      </div>
-      <div id="sb-course" style="display:none" class="sidebar-course-name"></div>
-    </div>
-
-    <div id="sb-ring" class="sidebar-ring-block" style="display:none">
-      <svg class="ring-svg" viewBox="0 0 46 46">
-        <circle class="ring-bg" cx="23" cy="23" r="19"/>
-        <circle class="ring-fill" id="ring-fill" cx="23" cy="23" r="19"
-          stroke-dasharray="119.4" stroke-dashoffset="119.4"/>
-      </svg>
-      <div class="ring-meta">
-        <div class="ring-pct" id="ring-pct">0%</div>
-        <div class="ring-sub" id="ring-sub">complete</div>
-      </div>
-    </div>
-
-    <div class="sidebar-nav" id="sb-nav">
-      <!-- Populated by JS once a course is loaded -->
-    </div>
-
-    <!-- Sidebar footer -->
-    <div style="padding:0.6rem 0.75rem;border-top:1px solid var(--border);flex-shrink:0;display:flex;flex-direction:column;gap:4px">
-      <label class="btn btn-ghost btn-xs w-full" style="justify-content:center;color:var(--text-muted);cursor:pointer">
-        <svg width="12" height="12" viewBox="0 0 16 16" fill="currentColor"><path d="M.5 9.9a.5.5 0 01.5.5v2.5a1 1 0 001 1h12a1 1 0 001-1v-2.5a.5.5 0 011 0v2.5a2 2 0 01-2 2H2a2 2 0 01-2-2v-2.5a.5.5 0 01.5-.5z"/><path d="M7.646 1.146a.5.5 0 01.708 0l3 3a.5.5 0 01-.708.708L8.5 2.707V11.5a.5.5 0 01-1 0V2.707L5.354 4.854a.5.5 0 11-.708-.708l3-3z"/></svg>
-        Load bundle.json
-        <input type="file" accept=".json" style="display:none" onchange="loadBundleFile(event)">
-      </label>
-      <div id="progress-btns" style="display:none;gap:4px">
-        <button class="btn btn-ghost btn-xs" style="flex:1;justify-content:center;color:var(--text-muted);font-size:11px" onclick="exportProgress()" title="Export progress">
-          <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M.5 9.9a.5.5 0 01.5.5v2.5a1 1 0 001 1h12a1 1 0 001-1v-2.5a.5.5 0 011 0v2.5a2 2 0 01-2 2H2a2 2 0 01-2-2v-2.5a.5.5 0 01.5-.5z"/><path d="M7.646 1.146a.5.5 0 01.708 0l3 3a.5.5 0 01-.708.708L8.5 2.707V11.5a.5.5 0 01-1 0V2.707L5.354 4.854a.5.5 0 11-.708-.708l3-3z"/></svg>
-          Export progress
-        </button>
-        <label class="btn btn-ghost btn-xs" style="flex:1;justify-content:center;color:var(--text-muted);font-size:11px;cursor:pointer" title="Import progress">
-          <svg width="11" height="11" viewBox="0 0 16 16" fill="currentColor"><path d="M.5 9.9a.5.5 0 01.5.5v2.5a1 1 0 001 1h12a1 1 0 001-1v-2.5a.5.5 0 011 0v2.5a2 2 0 01-2 2H2a2 2 0 01-2-2v-2.5a.5.5 0 01.5-.5z"/><path d="M8.354 4.854a.5.5 0 00-.708 0l-3 3a.5.5 0 00.708.708L7.5 6.207V15a.5.5 0 001 0V6.207l2.146 2.147a.5.5 0 00.708-.708l-3-3z"/></svg>
-          Import progress
-          <input type="file" accept=".json" style="display:none" onchange="importProgress(event)">
-        </label>
-      </div>
-    </div>
-  </nav>
-
-  <!-- ═══════════════════ MAIN ═══════════════════ -->
-  <main class="main">
-    <div class="content" id="content">
-      <div class="loader">
-        <div class="spinner"></div>
-        <div class="loader-text">Loading…</div>
-      </div>
-    </div>
-  </main>
+<div class="content">
+  <h2>Your courses</h2>
+  <div class="course-grid" id="course-grid">
+    <p style="color:var(--muted);font-size:14px">Loading coursesâ€¦</p>
+  </div>
+  <div id="status"></div>
 </div>
 
-<!-- ═══════════════════════════════════════════════════
-     marked.js — markdown parser
-═══════════════════════════════════════════════════════ -->
-<script src="https://cdn.jsdelivr.net/npm/marked@9/marked.min.js"></script>
-
 <script>
-'use strict';
-// ════════════════════════════════════════════════════════════
-// GROVE v2  — bundle-first, auto-fetch, no file pickers
-// ════════════════════════════════════════════════════════════
-
-// ── CONFIG ──────────────────────────────────────────────────
-const BASE = '/curriculum';
-
-// ── STATE ───────────────────────────────────────────────────
-let bundle    = null;   // loaded bundle.json
-let courses   = [];     // from curriculum/index.json
-let slug      = null;   // active course slug
-
-let view      = 'discover';
-let lessonId  = null;
-let moduleId  = null;
-
-let progress  = { lessons: {}, cards: {}, quizzes: {}, modchecks: {} };
-let cardSess  = { queue: [], idx: 0, flipped: false };
-let quizSt    = { answers: {}, submitted: false };
-
-// ── BOOT ────────────────────────────────────────────────────
-(async () => {
-  if (window.location.protocol === 'file:') { showFileError(); return; }
-
-  // Support ?bundle=<slug> deep-link
-  const params = new URLSearchParams(window.location.search);
-  const deepSlug = params.get('bundle');
+async function init() {
+  let index;
   try {
-    const r = await fetch(`${BASE}/index.json`);
-    if (!r.ok) throw 0;
-    const d = await r.json();
-    courses = d.courses || [];
-  } catch { courses = []; }
-
-  if (deepSlug) {
-    await loadCourse(deepSlug);
-  } else if (courses.length === 1) {
-    await loadCourse(courses[0].slug);
-  } else {
-    showDiscover();
-  }
-})();
-
-// ── BUNDLE FILE LOADER (UI drag/pick) ───────────────────────
-function loadBundleFile(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  // Reset so same file can be re-selected
-  event.target.value = '';
-  const reader = new FileReader();
-  reader.onload = e => {
-    let b;
-    try { b = JSON.parse(e.target.result); }
-    catch { showBundleError('Could not parse JSON — is this a valid bundle.json?'); return; }
-    if (!b.course || !b.lessons) {
-      showBundleError('This file doesn\u2019t look like a Grove bundle. Expected `course` and `lessons` keys.');
-      return;
-    }
-    mountBundle(b, file.name.replace(/\.json$/, ''));
-  };
-  reader.readAsText(file);
-}
-
-function mountBundle(b, label) {
-  bundle = b;
-  slug   = b.slug || label;
-  // Register in the in-memory course list so discover works
-  if (!courses.find(c => c.slug === slug)) {
-    courses.push({
-      slug,
-      title:         b.course.topic,
-      description:   (b.course.summary || '').slice(0, 160),
-      total_modules: b.course.modules?.length ?? 0,
-      total_lessons: b.course.modules?.flatMap(m => m.lessons||[]).length ?? 0,
-      total_cards:   b.cards?.length ?? 0,
-      generated:     b.course.generated ?? '',
-    });
-  }
-  loadProgress();
-  buildSidebar();
-  showHome();
-}
-
-function showBundleError(msg) {
-  const main = el('content');
-  const banner = document.createElement('div');
-  banner.className = 'err-banner';
-  banner.style.cssText = 'position:fixed;top:1rem;left:50%;transform:translateX(-50%) translateX(132px);max-width:480px;z-index:999;box-shadow:0 4px 16px rgba(0,0,0,.2)';
-  banner.textContent = msg;
-  document.body.appendChild(banner);
-  setTimeout(() => banner.remove(), 4500);
-}
-
-// Drag-and-drop bundle onto the page
-document.addEventListener('dragover', e => e.preventDefault());
-document.addEventListener('drop', e => {
-  e.preventDefault();
-  const file = e.dataTransfer?.files?.[0];
-  if (!file || !file.name.endsWith('.json')) return;
-  const reader = new FileReader();
-  reader.onload = ev => {
-    let b;
-    try { b = JSON.parse(ev.target.result); } catch { showBundleError('Could not parse dropped file.'); return; }
-    if (!b.course || !b.lessons) { showBundleError('Not a Grove bundle.'); return; }
-    mountBundle(b, file.name.replace(/\.json$/,''));
-  };
-  reader.readAsText(file);
-});
-
-// ── COURSE LOADING ───────────────────────────────────────────
-async function loadCourse(s) {
-  setContent(`<div class="loader"><div class="spinner"></div><div class="loader-text">Loading ${s}…</div></div>`);
-  try {
-    const r = await fetch(`${BASE}/${s}/bundle.json`);
-    if (!r.ok) throw new Error('Not found');
-    bundle = await r.json();
-    slug   = s;
-    loadProgress();
-    buildSidebar();
-    showHome();
-  } catch (_) {
-    setContent(`
-      <div class="err-banner">Cannot load <strong>bundle.json</strong> for <code>${s}</code>. Run <code>node build-bundle.mjs ${s}</code> to generate it.</div>
-      <div class="empty">
-        <div class="empty-icon">📦</div>
-        <h2>Bundle not found</h2>
-        <p>Run the <code>/grove</code> skill or the bundler script to generate it, then refresh.</p>
-        <button class="btn" onclick="showDiscover()">← All courses</button>
-      </div>`);
-  }
-}
-
-// ── PROGRESS ────────────────────────────────────────────────
-function loadProgress() {
-  const raw = localStorage.getItem(`grove2:${slug}`);
-  progress = raw ? JSON.parse(raw) : { lessons: {}, cards: {}, quizzes: {} };
-  if (!progress.lessons)  progress.lessons  = {};
-  if (!progress.cards)    progress.cards    = {};
-  if (!progress.quizzes)   progress.quizzes   = {};
-  if (!progress.modchecks) progress.modchecks = {};
-  // Show export/import controls whenever a course is loaded
-  const pb = el('progress-btns');
-  if (pb) pb.style.display = 'flex';
-}
-function save() {
-  if (slug) localStorage.setItem(`grove2:${slug}`, JSON.stringify(progress));
-  // Show progress controls once there's something to export
-  const pb = el('progress-btns');
-  if (pb) pb.style.display = 'flex';
-}
-
-// ── PROGRESS EXPORT / IMPORT ─────────────────────────────────
-function exportProgress() {
-  if (!slug) return;
-  const payload = {
-    grove_progress: '1.0',
-    slug,
-    exported: new Date().toISOString(),
-    course_title: bundle?.course?.topic ?? slug,
-    progress,
-  };
-  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement('a');
-  a.href     = url;
-  a.download = `grove-progress-${slug}-${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
-  URL.revokeObjectURL(url);
-}
-
-function importProgress(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  event.target.value = '';
-  const reader = new FileReader();
-  reader.onload = e => {
-    let data;
-    try { data = JSON.parse(e.target.result); }
-    catch { showBundleError('Could not parse progress file.'); return; }
-
-    if (!data.grove_progress || !data.progress) {
-      showBundleError('This doesn\u2019t look like a Grove progress export.');
-      return;
-    }
-    if (data.slug && data.slug !== slug) {
-      const ok = confirm(`This progress file is for "${data.slug}" but the loaded course is "${slug}". Import anyway?`);
-      if (!ok) return;
-    }
-
-    // Merge: imported data wins for any key present, existing data kept otherwise
-    const imp = data.progress;
-    progress.lessons   = { ...progress.lessons,   ...(imp.lessons   || {}) };
-    progress.cards     = { ...progress.cards,     ...(imp.cards     || {}) };
-    progress.quizzes   = { ...progress.quizzes,   ...(imp.quizzes   || {}) };
-    progress.modchecks = { ...progress.modchecks, ...(imp.modchecks || {}) };
-    save();
-    buildSidebar();
-    // Refresh current view
-    if      (view === 'home')        showHome();
-    else if (view === 'cards')       startCards();
-    else if (view === 'assessments') showAssessments();
-    else if (view === 'lesson')      showLesson(lessonId);
-
-    const mcCount = Object.keys(imp.modchecks||{}).length;
-    showToast(`Progress imported \u2014 ${Object.keys(imp.lessons||{}).length} lessons, ${Object.keys(imp.cards||{}).length} cards, ${Object.keys(imp.quizzes||{}).length} quizzes${mcCount ? ', ' + mcCount + ' mod checks' : ''}`);
-  };
-  reader.readAsText(file);
-}
-
-function showToast(msg) {
-  const t = document.createElement('div');
-  t.textContent = msg;
-  t.style.cssText = 'position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:var(--text);color:var(--bg);padding:10px 20px;border-radius:99px;font-size:13px;font-weight:500;z-index:1000;box-shadow:0 4px 16px rgba(0,0,0,.25);white-space:nowrap;opacity:0;transition:opacity .2s';
-  document.body.appendChild(t);
-  requestAnimationFrame(() => { t.style.opacity = '1'; });
-  setTimeout(() => { t.style.opacity = '0'; setTimeout(() => t.remove(), 250); }, 3000);
-}
-
-function pct() {
-  if (!bundle) return 0;
-  const all = bundle.course.modules.flatMap(m => m.lessons || []);
-  if (!all.length) return 0;
-  return Math.round(all.filter(l => progress.lessons[l.id]).length / all.length * 100);
-}
-function modPct(m) {
-  const ls = m.lessons || [];
-  if (!ls.length) return 0;
-  return Math.round(ls.filter(l => progress.lessons[l.id]).length / ls.length * 100);
-}
-function dueCount() {
-  if (!bundle?.cards?.length) return 0;
-  const now = new Date();
-  return bundle.cards.filter(c => {
-    const st = progress.cards[c.id];
-    return !st?.next_review || new Date(st.next_review) <= now;
-  }).length;
-}
-function getStoredPct(s) {
-  const raw = localStorage.getItem(`grove2:${s}`);
-  if (!raw) return 0;
-  try {
-    const p = JSON.parse(raw);
-    return Object.keys(p.lessons || {}).length ? -1 : 0; // -1 = started
-  } catch { return 0; }
-}
-
-// ── SIDEBAR ──────────────────────────────────────────────────
-function buildSidebar() {
-  const course = bundle?.course;
-  if (!course) { clearSidebar(); return; }
-
-  el('sb-course').textContent = course.topic;
-  el('sb-course').style.display = 'block';
-  el('sb-ring').style.display = 'flex';
-  updateRing();
-
-  const due = dueCount();
-  const quizMods = (course.modules || []).filter(m => m.has_assessment && bundle.quizzes?.[m.id]);
-  el('sb-nav').innerHTML = `
-    <div class="nav-label">Study</div>
-    <button class="nav-btn" id="snav-home" onclick="showHome()">
-      ${ico('home')} Overview
-    </button>
-    <button class="nav-btn" id="snav-cards" onclick="startCards()">
-      ${ico('cards')} Flashcards
-      ${due > 0 ? `<span class="nav-due-pill">${due}</span>` : ''}
-    </button>
-    ${quizMods.length ? `
-    <button class="nav-btn" id="snav-assessments" onclick="showAssessments()">
-      ${ico('quiz')} Assessments
-      <span style="margin-left:auto;font-size:11px;color:var(--text-muted);flex-shrink:0">${quizMods.length}</span>
-    </button>` : ''}
-    <div class="nav-label">Modules</div>
-    ${(course.modules || []).map(renderModNavItem).join('')}
-  `;
-}
-
-function clearSidebar() {
-  el('sb-course').style.display = 'none';
-  el('sb-ring').style.display = 'none';
-  el('sb-nav').innerHTML = '';
-}
-
-function renderModNavItem(m) {
-  const p = modPct(m);
-  const pipCls = p === 100 ? 'done' : p > 0 ? 'partial' : '';
-  const lessons = (m.lessons || []).map(l => `
-    <button class="lesson-nav-btn" id="lnav-${l.id}" onclick="showLesson('${l.id}')">
-      <div class="l-pip ${progress.lessons[l.id] ? 'done' : ''}"></div>
-      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${l.title}</span>
-    </button>`).join('');
-
-  return `
-    <div>
-      <button class="mod-nav-btn" onclick="toggleSubNav('mns-${m.id}')">
-        <div class="mod-pip ${pipCls}"></div>
-        <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${m.id} · ${m.title}</span>
-        <span class="mod-pct">${p}%</span>
-      </button>
-      <div class="lesson-sub" id="mns-${m.id}">
-        ${lessons}
-      </div>
-    </div>`;
-}
-
-function toggleSubNav(id) { el(id)?.classList.toggle('open'); }
-
-function updateRing() {
-  const p = pct();
-  const r = 19, c = 2 * Math.PI * r;
-  const f = el('ring-fill');
-  if (f) {
-    f.style.strokeDasharray = c;
-    f.style.strokeDashoffset = c - (p / 100) * c;
-  }
-  const rp = el('ring-pct');
-  if (rp) rp.textContent = p + '%';
-}
-
-function setNavActive(id) {
-  document.querySelectorAll('.nav-btn,.lesson-nav-btn,.mod-nav-btn').forEach(b => b.classList.remove('active'));
-  el(id)?.classList.add('active');
-}
-
-// ── HELPERS ──────────────────────────────────────────────────
-function el(id) { return document.getElementById(id); }
-function setContent(html) { el('content').innerHTML = html; }
-function handleBrandClick() { courses.length > 1 ? showDiscover() : (bundle ? showHome() : showDiscover()); }
-
-// ── ASSESSMENTS OVERVIEW ────────────────────────────────────
-function showAssessments() {
-  view = 'assessments';
-  el('reading-bar').classList.remove('on');
-  setNavActive('snav-assessments');
-
-  const quizMods = bundle.course.modules.filter(m => m.has_assessment && bundle.quizzes?.[m.id]);
-
-  const rows = quizMods.map(m => {
-    const qr  = progress.quizzes[m.id];
-    const q   = bundle.quizzes[m.id];
-    const mcqs = (q.questions||[]).filter(x => x.type==='mcq').length;
-    const total = (q.questions||[]).length;
-    const badge = qr
-      ? (qr.passed
-          ? `<span class="badge bg-green">✓ ${qr.score}%</span>`
-          : `<span class="badge bg-amber">${qr.score}% — retry</span>`)
-      : `<span class="badge bg-gray">Not taken</span>`;
-
-    return `
-      <div class="card card-link" onclick="showQuiz('${m.id}')">
-        <div class="flex items-center justify-between gap-4">
-          <div class="flex items-center gap-3">
-            <div style="width:40px;height:40px;border-radius:var(--radius);background:var(--accent-light);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0">📝</div>
-            <div>
-              <div style="font-size:14.5px;font-weight:600">${m.id} · ${m.title}</div>
-              <div style="font-size:12.5px;color:var(--text-muted);margin-top:2px">${total} question${total!==1?'s':''} · ${mcqs} multiple choice · Pass: ${q.passing_score||70}%</div>
-            </div>
-          </div>
-          <div class="flex items-center gap-3">
-            ${badge}
-            <span style="color:var(--text-muted)">→</span>
-          </div>
-        </div>
-      </div>`;
-  });
-
-  const taken   = quizMods.filter(m => progress.quizzes[m.id]).length;
-  const passed  = quizMods.filter(m => progress.quizzes[m.id]?.passed).length;
-
-  setContent(`
-    <h1 style="margin-bottom:0.35rem">Assessments</h1>
-    <p style="margin-bottom:1.5rem">${quizMods.length} module quiz${quizMods.length!==1?'zes':''} · ${taken} taken · ${passed} passed</p>
-    ${rows.join('')}
-  `);
-}
-
-// ── DISCOVER ─────────────────────────────────────────────────
-function showDiscover() {
-  view = 'discover';
-  el('reading-bar').classList.remove('on');
-  clearSidebar();
-
-  const loadBtn = `
-    <label style="display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:10px;font-size:14px;font-weight:500;cursor:pointer;border:1.5px dashed var(--border-strong);background:var(--surface);color:var(--text-secondary);transition:all .14s ease" onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent-text)'" onmouseout="this.style.borderColor='var(--border-strong)';this.style.color='var(--text-secondary)'">
-      <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M.5 9.9a.5.5 0 01.5.5v2.5a1 1 0 001 1h12a1 1 0 001-1v-2.5a.5.5 0 011 0v2.5a2 2 0 01-2 2H2a2 2 0 01-2-2v-2.5a.5.5 0 01.5-.5z"/><path d="M7.646 1.146a.5.5 0 01.708 0l3 3a.5.5 0 01-.708.708L8.5 2.707V11.5a.5.5 0 01-1 0V2.707L5.354 4.854a.5.5 0 11-.708-.708l3-3z"/></svg>
-      Load bundle.json
-      <input type="file" accept=".json" style="display:none" onchange="loadBundleFile(event)">
-    </label>`;
-
-  if (!courses.length) {
-    setContent(`
-      <div class="empty" style="padding-top:5rem">
-        <div class="empty-icon">🌱</div>
-        <h2>No courses yet</h2>
-        <p>Generate a course with the <strong>/grove</strong> skill, then run the bundler:</p>
-        <div class="code-block">node build-bundle.mjs &lt;topic-slug&gt;</div>
-        <p style="font-size:13px;color:var(--text-muted);margin-bottom:1.5rem">Or load a <code>bundle.json</code> directly:</p>
-        ${loadBtn}
-        <p style="font-size:12px;color:var(--text-muted);margin-top:1rem">You can also drag &amp; drop a bundle.json anywhere on the page</p>
-      </div>`);
+    const res = await fetch('/curriculum/index.json');
+    index = await res.json();
+  } catch (e) {
+    document.getElementById('course-grid').innerHTML =
+      '<p style="color:var(--muted)">Could not load curriculum/index.json. Is the server running from the grove/ folder?</p>';
     return;
   }
 
-  setContent(`
-    <div class="discover-wrap">
-      <div class="discover-head" style="display:flex;align-items:flex-start;justify-content:space-between;gap:1rem;flex-wrap:wrap">
-        <div>
-          <h1>Grove</h1>
-          <p style="font-size:15px;color:var(--text-secondary);margin:0">Structured learning from research</p>
-        </div>
-        ${loadBtn}
+  const grid = document.getElementById('course-grid');
+  grid.innerHTML = '';
+
+  for (const c of index.courses) {
+    const saved = localStorage.getItem('grove_progress_' + c.slug);
+    const prog  = saved ? JSON.parse(saved) : null;
+
+    const completedLessons = prog ? Object.keys(prog.lessons || {}).length : 0;
+    const pct = c.total_lessons ? Math.round((completedLessons / c.total_lessons) * 100) : 0;
+    const completedCards = prog ? Object.keys(prog.cards || {}).length : 0;
+    const hasProgress = completedLessons > 0 || completedCards > 0;
+
+    const progressHtml = hasProgress ? `
+      <div class="progress-row">
+        <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+        <span class="progress-label">${pct}%</span>
       </div>
-      <div class="course-grid">
-        ${courses.map(c => {
-          const started = getStoredPct(c.slug);
-          return `
-            <div class="course-card" onclick="loadCourse('${c.slug}')">
-              <div class="course-card-icon">📚</div>
-              <h3>${c.title}</h3>
-              <p>${c.description || ''}</p>
-              <div class="course-card-meta">
-                ${c.total_lessons ? `<span class="badge bg-gray">${c.total_lessons} lessons</span>` : ''}
-                ${c.total_cards   ? `<span class="badge bg-gray">${c.total_cards} cards</span>` : ''}
-                ${started < 0     ? `<span class="badge bg-green">Started</span>` : ''}
-              </div>
-            </div>`;
-        }).join('')}
+      <div class="course-meta">
+        <span>${completedLessons} / ${c.total_lessons} lessons</span>
+        <span>${completedCards} / ${c.total_cards} cards reviewed</span>
+        ${prog?.quizzes ? `<span>${Object.keys(prog.quizzes).length} quiz${Object.keys(prog.quizzes).length !== 1 ? 'zes' : ''} taken</span>` : ''}
+      </div>` : `<div class="course-meta"><span class="no-progress">No progress yet</span></div>`;
+
+    const card = document.createElement('div');
+    card.className = 'course-card';
+    card.innerHTML = `
+      <div class="course-header">
+        <span class="course-title">${c.title}</span>
+        ${c.adaptive ? '<span class="badge badge-green">v3 adaptive</span>' : '<span class="badge badge-gray">basic</span>'}
       </div>
-      <p style="font-size:12px;color:var(--text-muted);margin-top:1.5rem;text-align:center">You can also drag &amp; drop a bundle.json anywhere on the page</p>
-    </div>`);
-}
-
-// ── HOME / DASHBOARD ─────────────────────────────────────────
-function showHome() {
-  view = 'home';
-  el('reading-bar').classList.remove('on');
-  setNavActive('snav-home');
-
-  const c = bundle.course;
-  const all = c.modules.flatMap(m => m.lessons || []);
-  const done = all.filter(l => progress.lessons[l.id]).length;
-  const due  = dueCount();
-  const rem  = all.filter(l => !progress.lessons[l.id]).reduce((s, l) => s + (l.estimated_minutes || 0), 0);
-  const p    = pct();
-
-  setContent(`
-    <div class="mb-6">
-      <h1>${c.topic}</h1>
-      <p style="font-size:15px;margin:0.4rem 0 0">${c.summary || ''}</p>
-    </div>
-
-    <div class="stat-row">
-      <div class="stat"><div class="stat-val">${p}%</div><div class="stat-lbl">Complete</div></div>
-      <div class="stat"><div class="stat-val">${done}/${all.length}</div><div class="stat-lbl">Lessons done</div></div>
-      <div class="stat"><div class="stat-val">${due}</div><div class="stat-lbl">Cards due</div></div>
-      <div class="stat"><div class="stat-val">${rem}m</div><div class="stat-lbl">Time left</div></div>
-    </div>
-
-    ${due > 0 ? `
-      <div class="cta-card" onclick="startCards()">
-        <div>
-          <div class="cta-title">🃏 ${due} flashcard${due > 1 ? 's' : ''} due today</div>
-          <div class="cta-sub">Keep your streak — quick review session</div>
-        </div>
-        <button class="btn btn-primary btn-sm" onclick="event.stopPropagation();startCards()">Review now</button>
-      </div>` : ''}
-
-    <h2 style="margin-bottom:1rem">Modules</h2>
-    <div class="mod-grid">
-      ${(c.modules || []).map(renderModCard).join('')}
-    </div>
-
-    ${bundle.cards?.length ? `
-      <div class="card flex items-center justify-between mt-4 card-sm">
-        <div>
-          <div class="font-semibold" style="font-size:14.5px">Flashcard Deck</div>
-          <div style="font-size:12.5px;color:var(--text-muted);margin-top:2px">${bundle.cards.length} cards · spaced repetition</div>
-        </div>
-        <button class="btn btn-primary btn-sm" onclick="startCards()">Study cards</button>
-      </div>` : ''}
-  `);
-
-  updateRing();
-}
-
-function renderModCard(m) {
-  const p = modPct(m);
-  const ls = (m.lessons || []).map(l => `
-    <div class="lesson-row" onclick="showLesson('${l.id}')">
-      <div class="lesson-chk ${progress.lessons[l.id] ? 'done' : ''}">${progress.lessons[l.id] ? '✓' : ''}</div>
-      <div class="lesson-row-title">${l.title}</div>
-      <div class="lesson-row-meta">${l.estimated_minutes}m · ${l.type}</div>
-    </div>`).join('');
-
-  const hasQuiz = m.has_assessment && bundle.quizzes?.[m.id];
-  const qr = progress.quizzes[m.id];
-
-  return `
-    <div class="mod-card">
-      <div class="mod-header" onclick="toggleMod('md-${m.id}')">
-        <div class="mod-header-left">
-          <span class="mod-id">${m.id}</span>
-          <span class="mod-header-title">${m.title}</span>
-        </div>
-        <span class="badge ${p===100?'bg-green':p>0?'bg-amber':'bg-gray'}">${p}%</span>
+      <div class="course-desc">${c.description}</div>
+      <div class="course-meta">
+        <span>${c.total_modules} modules</span>
+        <span>${c.total_lessons} lessons</span>
+        <span>${c.total_cards} cards</span>
       </div>
-      <div class="mod-progress-line">
-        <div class="mod-progress-fill" style="width:${p}%"></div>
-      </div>
-      <div class="mod-lessons" id="md-${m.id}">
-        ${ls}
-        ${hasQuiz ? `
-          <div class="lesson-row" onclick="showQuiz('${m.id}')">
-            <div class="lesson-chk ${qr?.passed?'done':''}">${qr?.passed?'✓':'?'}</div>
-            <div class="lesson-row-title" style="color:var(--accent);font-weight:500">Module assessment</div>
-            <div class="lesson-row-meta">${qr ? qr.score+'%' : 'Not taken'}</div>
-          </div>` : ''}
-      </div>
-    </div>`;
-}
-
-function toggleMod(id) { el(id)?.classList.toggle('open'); }
-
-// ── LESSON READER ────────────────────────────────────────────
-function showLesson(id) {
-  const c = bundle.course;
-  let mod = null;
-  for (const m of c.modules) { if ((m.lessons||[]).find(l=>l.id===id)) { mod=m; break; } }
-  if (!mod) return;
-
-  view = 'lesson'; lessonId = id; moduleId = mod.id;
-
-  const l     = mod.lessons.find(x => x.id === id);
-  const all   = c.modules.flatMap(m => m.lessons || []);
-  const idx   = all.findIndex(x => x.id === id);
-  const prev  = idx > 0 ? all[idx-1] : null;
-  const next  = idx < all.length-1 ? all[idx+1] : null;
-  const isDone = !!progress.lessons[id];
-
-  el('reading-bar').classList.add('on');
-  el('reading-fill').style.width = '0%';
-  setNavActive('lnav-' + id);
-  el('mns-' + mod.id)?.classList.add('open');
-
-  const raw = bundle.lessons?.[id] || '';
-  const html = raw ? marked.parse(raw) : '<p style="color:var(--text-muted)">No content in bundle.</p>';
-
-  setContent(`
-    <div class="lesson-breadcrumb">
-      <button class="btn btn-ghost btn-sm" onclick="showHome()">← ${c.topic}</button>
-      <span style="color:var(--text-muted)">›</span>
-      <span class="badge bg-gray">${mod.id} · ${mod.title}</span>
-    </div>
-    <div class="lesson-title-row"><h1>${l.title}</h1></div>
-    <div class="lesson-pills">
-      <span class="badge bg-outline">${l.type}</span>
-      <span class="badge bg-outline">⏱ ${l.estimated_minutes} min</span>
-      ${isDone ? '<span class="badge bg-green">✓ Complete</span>' : ''}
-    </div>
-    <div class="prose" id="lesson-body">${html}</div>
-    <div class="lesson-nav-bar">
-      <div>${prev ? `<button class="btn btn-ghost btn-sm" onclick="showLesson('${prev.id}')">← ${prev.title}</button>` : '<span></span>'}</div>
-      <div class="lesson-nav-center">
-        ${!isDone
-          ? `<button class="btn btn-primary" onclick="markDone('${id}')">Mark complete ✓</button>`
-          : `<span class="badge bg-green" style="font-size:13px;padding:7px 16px">✓ Completed</span>`}
-      </div>
-      <div>${next ? `<button class="btn btn-ghost btn-sm" onclick="showLesson('${next.id}')">${next.title} →</button>` : '<span></span>'}</div>
-    </div>
-  `);
-
-  window.scrollTo(0, 0);
-  setupReadingBar();
-  setupProseLinks();
-}
-
-function setupProseLinks() {
-  const body = el('lesson-body');
-  if (!body) return;
-  // Build a filename → lesson-id map from the loaded bundle
-  const fileMap = {};
-  if (bundle?.course?.modules) {
-    const allLessons = bundle.course.modules.flatMap(m => m.lessons || []);
-    for (const l of allLessons) {
-      // lessons are named like L01-quality-toolchain.md — match by ID prefix
-      fileMap[l.id.toLowerCase()] = l.id;
-    }
-  }
-  body.querySelectorAll('a[href]').forEach(a => {
-    const href = a.getAttribute('href');
-    if (!href) return;
-    // External links — open in new tab
-    if (/^https?:\/\//.test(href)) {
-      a.target = '_blank';
-      a.rel = 'noopener noreferrer';
-      return;
-    }
-    // Relative lesson links like ./L02-pyproject-toml.md
-    const mdMatch = href.match(/(?:^|[/\\])(L\d+)[^/\\]*\.md$/i);
-    if (mdMatch) {
-      const lid = mdMatch[1].toUpperCase();
-      const resolved = fileMap[lid.toLowerCase()];
-      if (resolved) {
-        a.href = 'javascript:void(0)';
-        a.onclick = (e) => { e.preventDefault(); showLesson(resolved); };
-      } else {
-        // Can't resolve — disable so it doesn't 404
-        a.href = 'javascript:void(0)';
-        a.style.pointerEvents = 'none';
-        a.style.opacity = '0.4';
-      }
-      return;
-    }
-    // Research/vault source links that weren't rewritten to external URLs
-    // Prevent 404 navigation — show a dimmed unclickable label
-    if (/\.md$/i.test(href) && !href.startsWith('http')) {
-      a.href = 'javascript:void(0)';
-      a.title = 'Source file not available in bundle';
-      a.style.pointerEvents = 'none';
-      a.style.opacity = '0.45';
-      a.style.textDecoration = 'line-through';
-    }
-  });
-}
-
-function markDone(id) {
-  progress.lessons[id] = { date: new Date().toISOString() };
-  save();
-  // Check if all lessons in this module are now done — if so, show the mod check
-  let mod = null;
-  for (const m of bundle.course.modules) {
-    if ((m.lessons || []).find(l => l.id === id)) { mod = m; break; }
-  }
-  if (mod && bundle.modchecks?.[mod.id]) {
-    const allDone = (mod.lessons || []).every(l => progress.lessons[l.id]);
-    if (allDone && !progress.modchecks?.[mod.id]?.completed) {
-      buildSidebar();
-      showModCheck(mod.id);
-      return;
-    }
-  }
-  buildSidebar(); showLesson(id);
-}
-
-// ── MODULE CHECK ─────────────────────────────────────────────
-function showModCheck(mid) {
-  view = 'modcheck'; moduleId = mid;
-  el('reading-bar').classList.remove('on');
-
-  const mod    = bundle.course.modules.find(m => m.id === mid);
-  const checks = bundle.modchecks?.[mid];
-
-  if (!checks?.questions?.length) { buildSidebar(); showHome(); return; }
-
-  const allLessons  = bundle.course.modules.flatMap(m => m.lessons || []);
-  const modLessons  = mod?.lessons || [];
-  const lastLessonId = modLessons[modLessons.length - 1]?.id;
-  const lastIdx      = allLessons.findIndex(l => l.id === lastLessonId);
-  const nextLesson   = lastIdx >= 0 && lastIdx < allLessons.length - 1 ? allLessons[lastIdx + 1] : null;
-
-  setContent(`
-    <div class="lesson-breadcrumb">
-      <button class="btn btn-ghost btn-sm" onclick="showHome()">← ${bundle.course.topic}</button>
-      <span style="color:var(--text-muted)">›</span>
-      <span class="badge bg-green">✓ ${mod.title}</span>
-    </div>
-    <div style="text-align:center;padding:2rem 0 1.5rem">
-      <div style="font-size:42px;margin-bottom:0.75rem">🎯</div>
-      <h1 style="margin-bottom:0.35rem">Module complete</h1>
-      <p style="font-size:15px;color:var(--text-secondary);margin:0">${checks.title || mod.title + ' — Quick check'}</p>
-      <p style="font-size:13px;color:var(--text-muted);margin-top:0.35rem">${checks.questions.length} short question${checks.questions.length !== 1 ? 's' : ''} · Read, think, then reveal</p>
-    </div>
-    <div id="mc-questions">
-      ${checks.questions.map((q, i) => `
-        <div class="mc-card">
-          <div class="mc-qnum">Question ${i + 1}</div>
-          <div class="mc-qtext">${q.q}</div>
-          <button class="btn btn-ghost btn-sm" id="mc-btn-${q.id}" onclick="revealMC('${q.id}')">Reveal answer</button>
-          <div class="mc-answer" id="mc-ans-${q.id}">${q.a}</div>
-        </div>`).join('')}
-    </div>
-    <div class="lesson-nav-bar" style="margin-top:2rem">
-      <div></div>
-      <div class="lesson-nav-center">
-        <button class="btn btn-primary" onclick="completeMC('${mid}')">
-          ${nextLesson ? `Continue to ${nextLesson.title} →` : 'Finish course →'}
+      ${progressHtml}
+      <div class="card-footer">
+        <button class="btn btn-primary" onclick="openCourse('${c.slug}')">
+          ${hasProgress ? 'Continue' : 'Start'}
         </button>
+        <button class="btn" onclick="document.getElementById('bundle-input-${c.slug}').click()">
+          Load bundle
+        </button>
+        <input type="file" id="bundle-input-${c.slug}" accept=".json" onchange="loadBundle(event, '${c.slug}')">
+        ${hasProgress ? `<button class="btn" style="margin-left:auto;color:var(--muted)" onclick="resetProgress('${c.slug}', this)">Reset</button>` : ''}
       </div>
-      <div></div>
-    </div>
-  `);
-  window.scrollTo(0, 0);
-}
-
-function revealMC(qid) {
-  const btn = el(`mc-btn-${qid}`);
-  const ans = el(`mc-ans-${qid}`);
-  if (btn) btn.style.display = 'none';
-  if (ans) ans.classList.add('on');
-}
-
-function completeMC(mid) {
-  if (!progress.modchecks) progress.modchecks = {};
-  progress.modchecks[mid] = { completed: true, date: new Date().toISOString() };
-  save(); buildSidebar();
-  const mod          = bundle.course.modules.find(m => m.id === mid);
-  const allLessons   = bundle.course.modules.flatMap(m => m.lessons || []);
-  const modLessons   = mod?.lessons || [];
-  const lastLessonId = modLessons[modLessons.length - 1]?.id;
-  const lastIdx      = allLessons.findIndex(l => l.id === lastLessonId);
-  const nextLesson   = lastIdx >= 0 && lastIdx < allLessons.length - 1 ? allLessons[lastIdx + 1] : null;
-  if (nextLesson) showLesson(nextLesson.id);
-  else showHome();
-}
-
-function setupReadingBar() {
-  function onScroll() {
-    const body = el('lesson-body');
-    if (!body) { window.removeEventListener('scroll', onScroll); return; }
-    const bRect = body.getBoundingClientRect();
-    const total = bRect.height - window.innerHeight + 200;
-    const scrolled = -bRect.top;
-    const p = Math.min(100, Math.max(0, (scrolled / total) * 100));
-    const fill = el('reading-fill');
-    if (fill) fill.style.width = p + '%';
+    `;
+    grid.appendChild(card);
   }
-  window.addEventListener('scroll', onScroll);
 }
 
-// ── FLASHCARDS ───────────────────────────────────────────────
-function startCards() {
-  view = 'cards';
-  el('reading-bar').classList.remove('on');
-  setNavActive('snav-cards');
-
-  if (!bundle.cards?.length) {
-    setContent(`<h1>Flashcards</h1><div class="empty"><div class="empty-icon">🃏</div><h2>No cards in bundle</h2><p>Regenerate the bundle with the /grove skill.</p></div>`);
-    return;
-  }
-
-  const now = new Date();
-  const livecards = bundle.cards.map(c => ({
-    ...c,
-    sr: { interval:0, ease:2.5, reviews:0, lapses:0, next_review:null, ...(progress.cards[c.id]||{}) }
-  }));
-  const due = livecards.filter(c => !c.sr.next_review || new Date(c.sr.next_review) <= now);
-
-  if (!due.length) {
-    const nxt = [...livecards].sort((a,b) => new Date(a.sr.next_review)-new Date(b.sr.next_review))[0];
-    setContent(`
-      <h1>Flashcards</h1>
-      <div class="celebration mt-4">
-        <div style="font-size:48px;margin-bottom:1rem">🎉</div>
-        <h2>All caught up!</h2>
-        <p>Next card due: <strong>${new Date(nxt.sr.next_review).toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'})}</strong></p>
-        <p style="font-size:13px;margin-top:0.25rem">${livecards.length} cards · ${livecards.filter(c=>c.sr.reviews>0).length} reviewed</p>
-      </div>`);
-    return;
-  }
-
-  cardSess = { queue: [...due].sort(()=>Math.random()-0.5), idx:0, flipped:false };
-  renderCard();
+function openCourse(slug) {
+  window.location.href = `/app?course=${slug}`;
 }
 
-function renderCard() {
-  const { queue, idx } = cardSess;
-  if (idx >= queue.length) {
-    setContent(`
-      <h1>Session complete</h1>
-      <div class="celebration mt-4">
-        <div style="font-size:48px;margin-bottom:1rem">✅</div>
-        <h2>Great session!</h2>
-        <p>Reviewed ${queue.length} card${queue.length>1?'s':''}.</p>
-        <div class="btn-row" style="justify-content:center;margin-top:1.5rem">
-          <button class="btn btn-primary" onclick="startCards()">Study again</button>
-          <button class="btn btn-ghost" onclick="showHome()">Back to course</button>
-        </div>
-      </div>`);
-    return;
-  }
-
-  const card = queue[idx];
-  const typeCls = ['definition','claim','application'].includes(card.type) ? card.type : '';
-  const barW = Math.round((idx / queue.length) * 100);
-
-  setContent(`
-    <div class="cards-top">
-      <h1>Flashcards</h1>
-      <span class="session-pill">${idx+1} / ${queue.length}</span>
-    </div>
-    <div class="cards-progress-bar">
-      <div class="cards-progress-fill" style="width:${barW}%"></div>
-    </div>
-
-    <div class="stage">
-      <div class="flashcard" id="fc" onclick="flipCard()">
-        <div class="fc-face">
-          <span class="type-pill ${typeCls}">${card.type}</span>
-          <div class="fc-tag" style="margin-top:0.75rem">Question — click to reveal</div>
-          <div class="fc-text">${card.front}</div>
-        </div>
-        <div class="fc-face fc-back">
-          <div class="fc-tag">Answer</div>
-          <div class="fc-text">${card.back}</div>
-          <div class="fc-source">${card.module} · ${card.source_ref || ''}</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="rating-wrap" id="rating-wrap">
-      <div class="rating-lbl">How well did you know this?</div>
-      <div class="rating-btns">
-        <button class="r-btn hard" onclick="rate(1)">Hard</button>
-        <button class="r-btn good" onclick="rate(3)">Good</button>
-        <button class="r-btn easy" onclick="rate(5)">Easy</button>
-      </div>
-      <div class="kb-hint">
-        <span class="kb">1</span> Hard &nbsp;
-        <span class="kb">2</span> Good &nbsp;
-        <span class="kb">3</span> Easy &nbsp;
-        <span class="kb">Space</span> Flip
-      </div>
-    </div>
-  `);
-}
-
-function flipCard() {
-  el('fc')?.classList.toggle('flipped');
-  el('rating-wrap')?.classList.toggle('on');
-  cardSess.flipped = !cardSess.flipped;
-}
-
-function rate(q) {
-  const card = cardSess.queue[cardSess.idx];
-  const sr = { ...card.sr };
-  if (q >= 3) {
-    if (sr.reviews === 0)           sr.interval = 1;
-    else if (sr.reviews === 1)       sr.interval = 6;
-    else                             sr.interval = Math.round(sr.interval * sr.ease);
-    sr.ease = Math.max(1.3, sr.ease + 0.1 - (5-q)*(0.08 + (5-q)*0.02));
-  } else {
-    sr.interval = 1;
-    sr.lapses = (sr.lapses || 0) + 1;
-  }
-  sr.reviews = (sr.reviews || 0) + 1;
-  const d = new Date(); d.setDate(d.getDate() + sr.interval);
-  sr.next_review = d.toISOString().split('T')[0];
-  progress.cards[card.id] = sr;
-  save();
-  cardSess.idx++;
-  cardSess.flipped = false;
-  renderCard();
-}
-
-// ── QUIZ ─────────────────────────────────────────────────────
-function showQuiz(mid) {
-  view = 'quiz'; moduleId = mid;
-  el('reading-bar').classList.remove('on');
-
-  const quiz = bundle.quizzes?.[mid];
-  const m    = bundle.course.modules.find(x => x.id === mid);
-
-  if (!quiz) {
-    setContent(`<h1>Quiz</h1><div class="empty"><div class="empty-icon">📝</div><h2>No quiz in bundle</h2><p>Regenerate with assessments.</p></div>`);
-    return;
-  }
-
-  quizSt = { answers: {}, submitted: false };
-
-  setContent(`
-    <button class="btn btn-ghost btn-sm mb-4" onclick="showAssessments()">← All assessments</button>
-    <h1>${quiz.title || (m?.title + ' — Assessment')}</h1>
-    <p class="quiz-meta">${(quiz.questions||[]).length} questions · Pass: ${quiz.passing_score||70}%</p>
-    <div id="qs">
-      ${(quiz.questions||[]).map((q,i) => renderQ(q,i)).join('')}
-    </div>
-    <div class="btn-row">
-      <button class="btn btn-primary" onclick="submitQuiz('${mid}')">Submit answers</button>
-    </div>
-    <div id="quiz-result" style="display:none;margin-top:1.5rem"></div>
-  `);
-}
-
-function renderQ(q, i) {
-  if (q.type === 'mcq') {
-    const opts = Object.entries(q.options||{}).map(([k,v]) => `
-      <div class="opt" id="opt-${q.id}-${k}" onclick="pick('${q.id}','${k}')">
-        <span class="opt-key">${k}.</span> ${v}
-      </div>`).join('');
-    return `
-      <div class="q-card">
-        <div class="q-num">Question ${i+1} · Multiple choice</div>
-        <div class="q-text">${q.question}</div>
-        <div class="opts">${opts}</div>
-        <div class="explanation" id="exp-${q.id}">${q.explanation||''}</div>
-      </div>`;
-  }
-  if (q.type === 'short_answer') {
-    return `
-      <div class="q-card">
-        <div class="q-num">Question ${i+1} · Short answer</div>
-        <div class="q-text">${q.question}</div>
-        <textarea class="sa-area" id="sa-${q.id}" placeholder="Write your answer…"></textarea>
-        <div class="answer-key" id="ak-${q.id}">
-          <strong>Answer key:</strong><br>
-          ${(q.answer_key?.required_points||[]).map(p=>'• '+p).join('<br>')}
-          ${q.answer_key?.full_credit ? `<br><br><strong>Full credit:</strong> ${q.answer_key.full_credit}` : ''}
-        </div>
-      </div>`;
-  }
-  if (q.type === 'essay') {
-    return `
-      <div class="q-card">
-        <div class="q-num">Question ${i+1} · Essay</div>
-        <div class="q-text">${q.prompt}</div>
-        <textarea class="sa-area" id="sa-${q.id}" placeholder="Write your response…" style="min-height:120px"></textarea>
-        <div class="answer-key" id="ak-${q.id}">
-          <strong>Guidance:</strong> ${q.guidance||''}<br><br>
-          <strong>Rubric:</strong><br>
-          ${Object.entries(q.rubric||{}).map(([g,d])=>`<strong>${g}:</strong> ${d}`).join('<br>')}
-        </div>
-      </div>`;
-  }
-  return '';
-}
-
-function pick(qId, key) {
-  if (quizSt.submitted) return;
-  quizSt.answers[qId] = key;
-  document.querySelectorAll(`[id^="opt-${qId}-"]`).forEach(b => b.classList.remove('selected'));
-  el(`opt-${qId}-${key}`)?.classList.add('selected');
-}
-
-function submitQuiz(mid) {
-  const quiz = bundle.quizzes[mid];
-  quizSt.submitted = true;
-
-  const mcqs = (quiz.questions||[]).filter(q => q.type==='mcq');
-  let correct = 0;
-
-  mcqs.forEach(q => {
-    const chosen = quizSt.answers[q.id];
-    document.querySelectorAll(`[id^="opt-${q.id}-"]`).forEach(b => {
-      const k = b.id.replace(`opt-${q.id}-`, '');
-      b.classList.remove('selected'); b.classList.add('done');
-      if (k === q.correct)                              b.classList.add('correct');
-      else if (k === chosen && chosen !== q.correct)    b.classList.add('wrong');
-    });
-    el(`exp-${q.id}`)?.classList.add('on');
-    if (chosen === q.correct) correct++;
-  });
-
-  quiz.questions.filter(q=>q.type!=='mcq').forEach(q => el(`ak-${q.id}`)?.classList.add('on'));
-
-  const score   = mcqs.length ? Math.round(correct/mcqs.length*100) : null;
-  const passing = quiz.passing_score || 70;
-  const passed  = score === null || score >= passing;
-
-  progress.quizzes[mid] = { score, date: new Date().toISOString(), passed };
-  save(); buildSidebar();
-
-  const r = el('quiz-result');
-  r.style.display = 'block';
-  r.innerHTML = `
-    <div class="card score-wrap">
-      ${score !== null ? `
-        <div class="score-num ${passed?'score-green':'score-red'}">${score}%</div>
-        <div class="score-verdict ${passed?'score-green':'score-red'}">${passed?'✓ Passed':'Not yet'}</div>
-        <div class="score-detail">${correct} / ${mcqs.length} correct · Passing: ${passing}%</div>` : ''}
-      <p style="margin-top:1rem">Review the explanations above. Short-answer keys revealed.</p>
-      <div class="btn-row" style="justify-content:center;margin-top:1.25rem">
-        <button class="btn btn-ghost btn-sm" onclick="showAssessments()">← All assessments</button>
-        ${!passed ? `<button class="btn btn-primary btn-sm" onclick="showQuiz('${mid}')">Retake</button>` : ''}
-      </div>
-    </div>`;
-  r.scrollIntoView({ behavior:'smooth', block:'start' });
-}
-
-// ── ICONS ────────────────────────────────────────────────────
-function ico(n) {
-  const s = { width:15, height:15, viewBox:'0 0 16 16', fill:'currentColor', style:'flex-shrink:0' };
-  const a = Object.entries(s).map(([k,v])=>`${k}="${v}"`).join(' ');
-  const p = {
-    home : 'M8.354 1.146a.5.5 0 00-.708 0l-6 6A.5.5 0 001.5 7.5v7a.5.5 0 00.5.5H5a.5.5 0 00.5-.5v-4h5v4a.5.5 0 00.5.5H14a.5.5 0 00.5-.5v-7a.5.5 0 00-.146-.354L8.354 1.146z',
-    cards: 'M14.5 3h-13A.5.5 0 001 3.5v9a.5.5 0 00.5.5h13a.5.5 0 00.5-.5v-9a.5.5 0 00-.5-.5zm-13-1A1.5 1.5 0 000 3.5v9A1.5 1.5 0 001.5 14h13A1.5 1.5 0 0016 12.5v-9A1.5 1.5 0 0014.5 2h-13zM3 5.5a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9a.5.5 0 01-.5-.5zm0 2.5a.5.5 0 01.5-.5h9a.5.5 0 010 1h-9A.5.5 0 013 8zm0 2.5a.5.5 0 01.5-.5h6a.5.5 0 010 1h-6a.5.5 0 01-.5-.5z',
-    quiz : 'M5 3a2 2 0 00-2 2v6a2 2 0 002 2h6a2 2 0 002-2V5a2 2 0 00-2-2H5zm0 1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1V5a1 1 0 011-1zm1 2a.5.5 0 000 1h4a.5.5 0 000-1H6zm0 2a.5.5 0 000 1h4a.5.5 0 000-1H6zm0 2a.5.5 0 000 1h2a.5.5 0 000-1H6z',
+function loadBundle(event, slug) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      if (!data.version || !data.course) {
+        alert('âš ï¸ This does not look like a valid bundle.json.\n\nBuild one with: node build-bundle.mjs ' + slug);
+        return;
+      }
+      // Store bundle slug hint then navigate
+      sessionStorage.setItem('grove_pending_bundle_' + slug, e.target.result);
+      window.location.href = `/app?course=${slug}&from=home`;
+    } catch(err) {
+      alert('Could not parse file: ' + err.message);
+    }
   };
-  return `<svg ${a}><path d="${p[n]}"/></svg>`;
+  reader.readAsText(file);
 }
 
-// ── FILE PROTOCOL ERROR ──────────────────────────────────────
-function showFileError() {
-  el('content').innerHTML = `
-    <div class="empty" style="padding-top:5rem;max-width:500px">
-      <div class="empty-icon">🌿</div>
-      <h2>Grove</h2>
-      <p>Load a <code>bundle.json</code> to start learning — no server needed.</p>
-      <label style="display:inline-flex;align-items:center;gap:8px;padding:10px 22px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;background:var(--accent);color:white;border:none">
-        <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M.5 9.9a.5.5 0 01.5.5v2.5a1 1 0 001 1h12a1 1 0 001-1v-2.5a.5.5 0 011 0v2.5a2 2 0 01-2 2H2a2 2 0 01-2-2v-2.5a.5.5 0 01.5-.5z"/><path d="M7.646 1.146a.5.5 0 01.708 0l3 3a.5.5 0 01-.708.708L8.5 2.707V11.5a.5.5 0 01-1 0V2.707L5.354 4.854a.5.5 0 11-.708-.708l3-3z"/></svg>
-        Load bundle.json
-        <input type="file" accept=".json" style="display:none" onchange="loadBundleFile(event)">
-      </label>
-      <p style="font-size:12px;color:var(--text-muted);margin-top:1rem">Or drop a bundle.json anywhere on the page</p>
-      <details style="margin-top:2rem;text-align:left">
-        <summary style="font-size:13px;color:var(--text-muted);cursor:pointer">Prefer auto-load? Use a local server instead</summary>
-        <div class="code-block" style="margin-top:0.75rem">
-          cd path/to/grove<br>
-          npx serve .<br>
-          <span style="opacity:0.6"># then open http://localhost:3000</span>
-        </div>
-      </details>
-    </div>`;
+function resetProgress(slug, btn) {
+  if (!confirm(`Reset all progress for this course? This cannot be undone.`)) return;
+  localStorage.removeItem('grove_progress_' + slug);
+  btn.closest('.course-card').querySelector('.progress-row')?.remove();
+  init();
 }
 
-// ── KEYBOARD ─────────────────────────────────────────────────
-document.addEventListener('keydown', e => {
-  if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') return;
-
-  if (view === 'cards') {
-    if (e.code === 'Space') { e.preventDefault(); el('fc') && flipCard(); }
-    if (e.key === '1') rate(1);
-    if (e.key === '2') rate(3);
-    if (e.key === '3') rate(5);
-  }
-
-  if (view === 'lesson' && bundle) {
-    const all = bundle.course.modules.flatMap(m => m.lessons||[]);
-    const i   = all.findIndex(l => l.id === lessonId);
-    if (e.key === 'ArrowRight' && i < all.length-1) showLesson(all[i+1].id);
-    if (e.key === 'ArrowLeft'  && i > 0)            showLesson(all[i-1].id);
-  }
-});
+init();
 </script>
 </body>
 </html>
