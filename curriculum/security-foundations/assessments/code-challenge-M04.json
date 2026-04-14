@@ -1,0 +1,88 @@
+{
+  "id": "code-challenge-M04",
+  "type": "module",
+  "module": "M04",
+  "title": "Coding Challenge: Cryptography and KDFs",
+  "challenges": [
+    {
+      "id": "CC07",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `validate_bcrypt_params(bcrypt_hash)` that analyzes a bcrypt hash string and validates that it meets OWASP security recommendations.\n\nA bcrypt hash follows the format: `$2b$cost$salt+hash`\nExample: `$2b$12$R9h/cIPz0gi.URNNBU3faPbVi/rrq.yJZaoxbE5qXkiTLcKj19PBa`\n\nYour function receives a bcrypt hash string and returns a dictionary with:\n- 'valid': True/False (meets OWASP minimum)\n- 'cost': extracted cost factor (as integer)\n- 'reason': explanation if invalid (or empty string if valid)\n\nOWASP minimum requirement: cost factor ≥ 12. \nIf cost < 12, return reason 'cost_too_low'. \nIf the hash format is malformed, return reason 'invalid_format'.",
+      "starter_code": "def validate_bcrypt_params(bcrypt_hash):\n    \"\"\"\n    Validate a bcrypt hash meets OWASP security requirements.\n    Returns a dictionary with 'valid', 'cost', and 'reason' keys.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Valid bcrypt with cost 12",
+          "input": "'$2b$12$R9h/cIPz0gi.URNNBU3faPbVi/rrq.yJZaoxbE5qXkiTLcKj19PBa'",
+          "expected_output": "{'valid': True, 'cost': 12, 'reason': ''}",
+          "visibility": "visible"
+        },
+        {
+          "name": "Valid bcrypt with cost 13",
+          "input": "'$2b$13$R9h/cIPz0gi.URNNBU3faPbVi/rrq.yJZaoxbE5qXkiTLcKj19PBa'",
+          "expected_output": "{'valid': True, 'cost': 13, 'reason': ''}",
+          "visibility": "visible"
+        },
+        {
+          "name": "Cost too low (cost 10)",
+          "input": "'$2b$10$R9h/cIPz0gi.URNNBU3faPbVi/rrq.yJZaoxbE5qXkiTLcKj19PBa'",
+          "expected_output": "{'valid': False, 'cost': 10, 'reason': 'cost_too_low'}",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Invalid format (wrong prefix)",
+          "input": "'$1$12$R9h/cIPz0gi.URNNBU3faPbVi/rrq.yJZaoxbE5qXkiTLcKj19PBa'",
+          "expected_output": "{'valid': False, 'cost': 0, 'reason': 'invalid_format'}",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["kdf-password-storage", "forward-secrecy"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L08",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L08"]
+    },
+    {
+      "id": "CC08",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `validate_cert_chain(certificates)` that validates a certificate chain following RFC 5280 requirements.\n\nEach certificate in the input list is a dictionary with:\n- 'subject': domain/CN of the certificate\n- 'issuer': who signed it\n- 'signature_valid': True/False (already verified)\n- 'valid_from': year cert becomes valid\n- 'valid_until': year cert expires\n- 'revoked': True/False (revocation status)\n- 'is_root': True if this is a root CA cert\n\nYour function validates four RFC 5280 checks:\n1. Signature validation (signature_valid must be True)\n2. Validity period (certificate current year must be between valid_from and valid_until)\n3. Revocation status (revoked must be False)\n4. Path - at least one cert must be root (is_root: True)\n\nReturn a dictionary: {'valid': True/False, 'failed_checks': [list of failed check names]}",
+      "starter_code": "def validate_cert_chain(certificates):\n    \"\"\"\n    Validate certificate chain against RFC 5280 requirements.\n    Returns dictionary with 'valid' and 'failed_checks' keys.\n    Current year is assumed to be 2026.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Valid chain",
+          "input": "[{'subject': 'example.com', 'issuer': 'LetsEncrypt', 'signature_valid': True, 'valid_from': 2024, 'valid_until': 2027, 'revoked': False, 'is_root': False}, {'subject': 'LetsEncrypt', 'issuer': 'DST Root', 'signature_valid': True, 'valid_from': 2020, 'valid_until': 2035, 'revoked': False, 'is_root': True}]",
+          "expected_output": "{'valid': True, 'failed_checks': []}",
+          "visibility": "visible"
+        },
+        {
+          "name": "Expired certificate",
+          "input": "[{'subject': 'example.com', 'issuer': 'LetsEncrypt', 'signature_valid': True, 'valid_from': 2024, 'valid_until': 2025, 'revoked': False, 'is_root': False}]",
+          "expected_output": "{'valid': False, 'failed_checks': ['validity_period', 'no_root']}",
+          "visibility": "visible"
+        },
+        {
+          "name": "Revoked certificate",
+          "input": "[{'subject': 'old.example.com', 'issuer': 'LetsEncrypt', 'signature_valid': True, 'valid_from': 2024, 'valid_until': 2027, 'revoked': True, 'is_root': False}, {'subject': 'LetsEncrypt', 'issuer': 'DST Root', 'signature_valid': True, 'valid_from': 2020, 'valid_until': 2035, 'revoked': False, 'is_root': True}]",
+          "expected_output": "{'valid': False, 'failed_checks': ['revocation']}",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Invalid signature",
+          "input": "[{'subject': 'example.com', 'issuer': 'LetsEncrypt', 'signature_valid': False, 'valid_from': 2024, 'valid_until': 2027, 'revoked': False, 'is_root': False}, {'subject': 'LetsEncrypt', 'issuer': 'DST Root', 'signature_valid': True, 'valid_from': 2020, 'valid_until': 2035, 'revoked': False, 'is_root': True}]",
+          "expected_output": "{'valid': False, 'failed_checks': ['signature']}",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["pki-chain-validation", "forward-secrecy"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L08",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L08"]
+    }
+  ]
+}

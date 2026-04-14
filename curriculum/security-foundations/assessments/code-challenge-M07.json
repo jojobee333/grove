@@ -1,0 +1,48 @@
+{
+  "id": "code-challenge-M07",
+  "type": "module",
+  "module": "M07",
+  "title": "Coding Challenge: Windows Telemetry Correlation",
+  "challenges": [
+    {
+      "id": "CC06",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `correlate_events(event_logs)` that analyzes a sequence of Windows event log entries and identifies suspicious authentication patterns.\n\nEach event is a dictionary with: 'event_id', 'logon_type', 'process_name', 'ip_address', 'computername'\n\nYour function should identify suspicious patterns and return a list of issues as (event_id, issue_type):\n1. 'network_logon_suspicious' — LogonType 3 (network) followed immediately by process access to lsass.exe\n2. 'rdp_then_execution' — LogonType 10 (RDP) followed by unusual process execution\n3. 'anomalous_protocol' — any logon with 'NTLM' protocol (should be Kerberos in domain environments)\n4. 'failed_followed_by_success' — same IP/user attempting auth, fail then success within 5 events\n\nInput events are provided in order of occurrence.",
+      "starter_code": "def correlate_events(event_logs):\n    \"\"\"\n    Correlate Windows events to identify suspicious authentication patterns.\n    Returns a list of (event_id, issue_type) tuples for suspicious patterns.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Normal domain logons",
+          "input": "[{'event_id': 1, 'logon_type': 2, 'protocol': 'Kerberos', 'ip': '192.168.1.100'}, {'event_id': 2, 'logon_type': 2, 'protocol': 'Kerberos', 'ip': '192.168.1.101'}]",
+          "expected_output": "[]",
+          "visibility": "visible"
+        },
+        {
+          "name": "NTLM detected (anomalous)",
+          "input": "[{'event_id': 1, 'logon_type': 3, 'protocol': 'NTLM', 'ip': '10.0.0.50'}, {'event_id': 2, 'logon_type': 2, 'protocol': 'Kerberos', 'ip': '192.168.1.100'}]",
+          "expected_output": "[(1, 'anomalous_protocol')]",
+          "visibility": "visible"
+        },
+        {
+          "name": "Failed then successful auth from same IP",
+          "input": "[{'event_id': 1, 'logon_type': 3, 'protocol': 'Kerberos', 'ip': '10.20.30.40', 'status': 'failed'}, {'event_id': 2, 'logon_type': 3, 'protocol': 'Kerberos', 'ip': '192.168.1.1'}, {'event_id': 3, 'logon_type': 3, 'protocol': 'Kerberos', 'ip': '10.20.30.40', 'status': 'success'}]",
+          "expected_output": "[(3, 'failed_followed_by_success')]",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Multiple issues",
+          "input": "[{'event_id': 1, 'logon_type': 3, 'protocol': 'NTLM', 'ip': '10.0.0.50'}, {'event_id': 2, 'logon_type': 3, 'protocol': 'NTLM', 'ip': '10.0.0.50', 'status': 'failed'}, {'event_id': 3, 'logon_type': 3, 'protocol': 'NTLM', 'ip': '10.0.0.50', 'status': 'success'}]",
+          "expected_output": "[(1, 'anomalous_protocol'), (2, 'anomalous_protocol'), (3, 'anomalous_protocol'), (3, 'failed_followed_by_success')]",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["windows-event-logs", "event-correlation"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L13",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L13", "L14"]
+    }
+  ]
+}

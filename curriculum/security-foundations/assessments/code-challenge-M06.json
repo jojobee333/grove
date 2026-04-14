@@ -1,0 +1,48 @@
+{
+  "id": "code-challenge-M06",
+  "type": "module",
+  "module": "M06",
+  "title": "Coding Challenge: Persistence Detection",
+  "challenges": [
+    {
+      "id": "CC05",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `parse_crontab(crontab_entries)` that analyzes crontab lines and identifies suspicious entries.\n\nEach crontab line follows the format: `minute hour day-of-month month day-of-week user command`\n\nExample: `0 3 * * * root /tmp/cleanup.sh`\n\nYour function receives a list of crontab lines and returns a list of suspicious entries as tuples: (line_number, reason, command)\n\nSuspicious patterns:\n1. 'suspicious_path' — command path starts with /tmp, /var/tmp, /dev/shm, or ~\n2. 'hidden_command' — command starts with . or contains ..\n3. 'early_hour' — runs between 2 AM and 4 AM (common for malware)\n4. 'obfuscated_cmd' — command contains pipes to base64, xxd, or hex decoders",
+      "starter_code": "def parse_crontab(crontab_entries):\n    \"\"\"\n    Analyze crontab entries for suspicious patterns.\n    Returns a list of (line_number, reason, command) tuples for suspicious entries.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Legitimate system cron",
+          "input": "['0 3 * * * root /usr/local/bin/backup.sh', '*/5 * * * * root /usr/bin/check-updates']",
+          "expected_output": "[]",
+          "visibility": "visible"
+        },
+        {
+          "name": "Suspicious /tmp path",
+          "input": "['0 3 * * * root /tmp/malware.sh', '30 * * * * user /var/tmp/dropper']",
+          "expected_output": "[(1, 'suspicious_path', '/tmp/malware.sh'), (2, 'suspicious_path', '/var/tmp/dropper')]",
+          "visibility": "visible"
+        },
+        {
+          "name": "Mix of good and suspicious",
+          "input": "['0 0 * * * root /usr/sbin/backup', '30 3 * * * root /dev/shm/evil.sh', '*/10 * * * * user /usr/bin/logger']",
+          "expected_output": "[(2, 'suspicious_path', '/dev/shm/evil.sh'), (2, 'early_hour', '/dev/shm/evil.sh')]",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Obfuscated command",
+          "input": "['0 2 * * * root echo payload | base64 -d | bash']",
+          "expected_output": "[(1, 'early_hour', 'echo payload | base64 -d | bash'), (1, 'obfuscated_cmd', 'echo payload | base64 -d | bash')]",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["persistence-mechanisms"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L11",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L11", "L12"]
+    }
+  ]
+}

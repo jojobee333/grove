@@ -1,7 +1,7 @@
 {
   "version": "3.0",
   "slug": "security-foundations",
-  "bundled": "2026-04-14T00:12:47.825Z",
+  "bundled": "2026-04-14T02:08:13.156Z",
   "course": {
     "topic": "Security Foundations",
     "slug": "security-foundations",
@@ -3780,7 +3780,412 @@
       ]
     }
   },
-  "codeChallenges": {},
+  "codeChallenges": {
+    "M02": {
+      "id": "code-challenge-M02",
+      "type": "module",
+      "module": "M02",
+      "title": "Coding Challenge: DNS Attacks and Defense",
+      "challenges": [
+        {
+          "id": "CC01",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `detect_dga_pattern(queries)` that analyzes a list of DNS query domain names and identifies whether they exhibit DGA (Domain Generation Algorithm) characteristics.\n\nDGA domains typically have:\n1. High consonant-to-vowel ratio (more random)\n2. Unusual lengths (not typical business domains)\n3. Non-word patterns (no recognizable English words)\n\nYour function receives a list of full domain names like `['abc123.com', 'hello.com', 'qwxyz.org']` and returns True if the pattern matches DGA characteristics (majority non-words, high consonant density), False otherwise.\n\nConsider a domain as 'likely DGA' if:\n- At least 3 consecutive consonants appear\n- Vowels make up less than 30% of the domain name (excluding TLD)\n- The domain name (excluding TLD) is longer than 12 characters or shorter than 4 characters",
+          "starter_code": "def detect_dga_pattern(queries):\n    \"\"\"\n    Analyze a list of DNS query domains for DGA characteristics.\n    Returns True if the pattern suggests DGA activity, False otherwise.\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "Obvious DGA pattern - high consonant density",
+              "input": "['xyzabc.com', 'qwerty.net', 'bcdfgh.org']",
+              "expected_output": "True",
+              "visibility": "visible"
+            },
+            {
+              "name": "Legitimate domains - human-readable",
+              "input": "['google.com', 'amazon.com', 'github.com']",
+              "expected_output": "False",
+              "visibility": "visible"
+            },
+            {
+              "name": "Mixed with some DGA-like domains",
+              "input": "['linkedin.com', 'xkzcvb.org', 'facebook.com']",
+              "expected_output": "False",
+              "visibility": "hidden"
+            },
+            {
+              "name": "Pure DGA pattern with numbers",
+              "input": "['bzxqwd123.com', 'psqxyz456.net', 'fghjkl789.org']",
+              "expected_output": "True",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "dns-attacks",
+            "protocol-attack-surface"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 3,
+          "lesson_ref": "L03",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L03",
+            "L04"
+          ]
+        },
+        {
+          "id": "CC02",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `parse_dns_records(record_string)` that parses a DNS record string and extracts the record type and value.\n\nInput is a raw DNS record like:\n- `example.com. 3600 IN A 192.0.2.1`\n- `example.com. 3600 IN CAA 0 issue \"letsencrypt.org\"`\n- `example.com. 3600 IN MX 10 mail.example.com`\n\nYour function should return a dictionary with keys: 'domain', 'ttl', 'type', 'value'\n- domain: the FQDN (with trailing dot removed)\n- ttl: the time-to-live as an integer\n- type: the record type (A, AAAA, CAA, MX, TXT, etc.)\n- value: the record data (IP, flags/tag/value for CAA, etc.)",
+          "starter_code": "def parse_dns_records(record_string):\n    \"\"\"\n    Parse a DNS record string into structured components.\n    Returns a dictionary with domain, ttl, type, value.\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "Parse A record",
+              "input": "'example.com. 3600 IN A 192.0.2.1'",
+              "expected_output": "{'domain': 'example.com', 'ttl': 3600, 'type': 'A', 'value': '192.0.2.1'}",
+              "visibility": "visible"
+            },
+            {
+              "name": "Parse CAA record",
+              "input": "'example.com. 3600 IN CAA 0 issue \"letsencrypt.org\"'",
+              "expected_output": "{'domain': 'example.com', 'ttl': 3600, 'type': 'CAA', 'value': '0 issue \"letsencrypt.org\"'}",
+              "visibility": "visible"
+            },
+            {
+              "name": "Parse MX record with priority",
+              "input": "'example.com. 7200 IN MX 10 mail.example.com.'",
+              "expected_output": "{'domain': 'example.com', 'ttl': 7200, 'type': 'MX', 'value': '10 mail.example.com.'}",
+              "visibility": "hidden"
+            },
+            {
+              "name": "Parse TXT record",
+              "input": "'example.com. 300 IN TXT \"v=spf1 include:_spf.example.com ~all\"'",
+              "expected_output": "{'domain': 'example.com', 'ttl': 300, 'type': 'TXT', 'value': '\"v=spf1 include:_spf.example.com ~all\"'}",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "dns-architecture",
+            "dns-defense"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 2,
+          "lesson_ref": "L04",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L03",
+            "L04"
+          ]
+        }
+      ]
+    },
+    "M04": {
+      "id": "code-challenge-M04",
+      "type": "module",
+      "module": "M04",
+      "title": "Coding Challenge: Cryptography and KDFs",
+      "challenges": [
+        {
+          "id": "CC07",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `validate_bcrypt_params(bcrypt_hash)` that analyzes a bcrypt hash string and validates that it meets OWASP security recommendations.\n\nA bcrypt hash follows the format: `$2b$cost$salt+hash`\nExample: `$2b$12$R9h/cIPz0gi.URNNBU3faPbVi/rrq.yJZaoxbE5qXkiTLcKj19PBa`\n\nYour function receives a bcrypt hash string and returns a dictionary with:\n- 'valid': True/False (meets OWASP minimum)\n- 'cost': extracted cost factor (as integer)\n- 'reason': explanation if invalid (or empty string if valid)\n\nOWASP minimum requirement: cost factor ≥ 12. \nIf cost < 12, return reason 'cost_too_low'. \nIf the hash format is malformed, return reason 'invalid_format'.",
+          "starter_code": "def validate_bcrypt_params(bcrypt_hash):\n    \"\"\"\n    Validate a bcrypt hash meets OWASP security requirements.\n    Returns a dictionary with 'valid', 'cost', and 'reason' keys.\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "Valid bcrypt with cost 12",
+              "input": "'$2b$12$R9h/cIPz0gi.URNNBU3faPbVi/rrq.yJZaoxbE5qXkiTLcKj19PBa'",
+              "expected_output": "{'valid': True, 'cost': 12, 'reason': ''}",
+              "visibility": "visible"
+            },
+            {
+              "name": "Valid bcrypt with cost 13",
+              "input": "'$2b$13$R9h/cIPz0gi.URNNBU3faPbVi/rrq.yJZaoxbE5qXkiTLcKj19PBa'",
+              "expected_output": "{'valid': True, 'cost': 13, 'reason': ''}",
+              "visibility": "visible"
+            },
+            {
+              "name": "Cost too low (cost 10)",
+              "input": "'$2b$10$R9h/cIPz0gi.URNNBU3faPbVi/rrq.yJZaoxbE5qXkiTLcKj19PBa'",
+              "expected_output": "{'valid': False, 'cost': 10, 'reason': 'cost_too_low'}",
+              "visibility": "hidden"
+            },
+            {
+              "name": "Invalid format (wrong prefix)",
+              "input": "'$1$12$R9h/cIPz0gi.URNNBU3faPbVi/rrq.yJZaoxbE5qXkiTLcKj19PBa'",
+              "expected_output": "{'valid': False, 'cost': 0, 'reason': 'invalid_format'}",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "kdf-password-storage",
+            "forward-secrecy"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 2,
+          "lesson_ref": "L08",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L08"
+          ]
+        },
+        {
+          "id": "CC08",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `validate_cert_chain(certificates)` that validates a certificate chain following RFC 5280 requirements.\n\nEach certificate in the input list is a dictionary with:\n- 'subject': domain/CN of the certificate\n- 'issuer': who signed it\n- 'signature_valid': True/False (already verified)\n- 'valid_from': year cert becomes valid\n- 'valid_until': year cert expires\n- 'revoked': True/False (revocation status)\n- 'is_root': True if this is a root CA cert\n\nYour function validates four RFC 5280 checks:\n1. Signature validation (signature_valid must be True)\n2. Validity period (certificate current year must be between valid_from and valid_until)\n3. Revocation status (revoked must be False)\n4. Path - at least one cert must be root (is_root: True)\n\nReturn a dictionary: {'valid': True/False, 'failed_checks': [list of failed check names]}",
+          "starter_code": "def validate_cert_chain(certificates):\n    \"\"\"\n    Validate certificate chain against RFC 5280 requirements.\n    Returns dictionary with 'valid' and 'failed_checks' keys.\n    Current year is assumed to be 2026.\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "Valid chain",
+              "input": "[{'subject': 'example.com', 'issuer': 'LetsEncrypt', 'signature_valid': True, 'valid_from': 2024, 'valid_until': 2027, 'revoked': False, 'is_root': False}, {'subject': 'LetsEncrypt', 'issuer': 'DST Root', 'signature_valid': True, 'valid_from': 2020, 'valid_until': 2035, 'revoked': False, 'is_root': True}]",
+              "expected_output": "{'valid': True, 'failed_checks': []}",
+              "visibility": "visible"
+            },
+            {
+              "name": "Expired certificate",
+              "input": "[{'subject': 'example.com', 'issuer': 'LetsEncrypt', 'signature_valid': True, 'valid_from': 2024, 'valid_until': 2025, 'revoked': False, 'is_root': False}]",
+              "expected_output": "{'valid': False, 'failed_checks': ['validity_period', 'no_root']}",
+              "visibility": "visible"
+            },
+            {
+              "name": "Revoked certificate",
+              "input": "[{'subject': 'old.example.com', 'issuer': 'LetsEncrypt', 'signature_valid': True, 'valid_from': 2024, 'valid_until': 2027, 'revoked': True, 'is_root': False}, {'subject': 'LetsEncrypt', 'issuer': 'DST Root', 'signature_valid': True, 'valid_from': 2020, 'valid_until': 2035, 'revoked': False, 'is_root': True}]",
+              "expected_output": "{'valid': False, 'failed_checks': ['revocation']}",
+              "visibility": "hidden"
+            },
+            {
+              "name": "Invalid signature",
+              "input": "[{'subject': 'example.com', 'issuer': 'LetsEncrypt', 'signature_valid': False, 'valid_from': 2024, 'valid_until': 2027, 'revoked': False, 'is_root': False}, {'subject': 'LetsEncrypt', 'issuer': 'DST Root', 'signature_valid': True, 'valid_from': 2020, 'valid_until': 2035, 'revoked': False, 'is_root': True}]",
+              "expected_output": "{'valid': False, 'failed_checks': ['signature']}",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "pki-chain-validation",
+            "forward-secrecy"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 3,
+          "lesson_ref": "L08",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L08"
+          ]
+        }
+      ]
+    },
+    "M05": {
+      "id": "code-challenge-M05",
+      "type": "module",
+      "module": "M05",
+      "title": "Coding Challenge: Linux Permissions and Security",
+      "challenges": [
+        {
+          "id": "CC03",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `identify_suid_files(ls_output_lines)` that analyzes `ls -l` output and identifies files with the SUID bit set.\n\nThe SUID bit appears as 's' in the owner execute position. For example:\n- `-rwsr-xr-x` has SUID set (the 's' in positions 1-3)\n- `-rwxr-xr-x` does NOT have SUID set\n\nYour function receives a list of strings from `ls -l` output and returns a list of filenames that have SUID set, in the order they appear.\n\nExample output line: `-rwsr-xr-x 1 root root 1234 Jan 1 00:00 /usr/bin/passwd`\nExtract the filename (rightmost field) if the permissions show SUID.",
+          "starter_code": "def identify_suid_files(ls_output_lines):\n    \"\"\"\n    Identify files with SUID bit set from ls -l output.\n    Returns a list of filenames with SUID set.\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "Single SUID file",
+              "input": "['-rwsr-xr-x 1 root root 59976 Jan 1 00:00 /usr/bin/passwd']",
+              "expected_output": "['/usr/bin/passwd']",
+              "visibility": "visible"
+            },
+            {
+              "name": "Multiple files, only one SUID",
+              "input": "['-rwxr-xr-x 1 root root 123 Jan 1 00:00 /bin/ls', '-rwsr-xr-x 1 root root 456 Jan 1 00:00 /usr/bin/sudo', '-rw-r--r-- 1 root root 789 Jan 1 00:00 /etc/passwd']",
+              "expected_output": "['/usr/bin/sudo']",
+              "visibility": "visible"
+            },
+            {
+              "name": "No SUID files",
+              "input": "['-rwxr-xr-x 1 root root 123 Jan 1 00:00 /bin/ls', '-rwxr-xr-x 1 root root 456 Jan 1 00:00 /bin/cat']",
+              "expected_output": "[]",
+              "visibility": "hidden"
+            },
+            {
+              "name": "Multiple SUID files",
+              "input": "['-rwsr-xr-x 1 root root 100 Jan 1 00:00 /usr/bin/passwd', '-rwsr-xr-x 1 root root 200 Jan 1 00:00 /bin/su', '-rwxr-xr-x 1 user user 300 Jan 1 00:00 /usr/bin/vim', '-rwsr-xr-x 1 root root 400 Jan 1 00:00 /usr/bin/chfn']",
+              "expected_output": "['/usr/bin/passwd', '/bin/su', '/usr/bin/chfn']",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "linux-permissions"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 2,
+          "lesson_ref": "L09",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L09",
+            "L10"
+          ]
+        },
+        {
+          "id": "CC04",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `find_overprivileged_files(ls_output_lines)` that identifies potentially dangerous permissions on files.\n\nA file is considered 'overprivileged' if any of these conditions are true:\n1. World-writable (other bit includes 'w': e.g., `-rw-rw-rw-`)\n2. Group-writable executable (group bits are 'w' and execute is 'x', e.g., `-rwxrwx---`)\n3. SUID on a file in /tmp or /var/tmp\n4. SUID executable owned by an unprivileged user (UID != root)\n\nYour function receives a list of `ls -l` output lines (filename at the end) and returns a list of tuples: (filename, reason) where reason is one of: 'world_writable', 'group_writable_exec', 'suid_in_tmp', 'suid_unprivileged'.",
+          "starter_code": "def find_overprivileged_files(ls_output_lines):\n    \"\"\"\n    Identify files with potentially dangerous permissions.\n    Returns a list of (filename, reason) tuples.\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "World-writable file",
+              "input": "['-rw-rw-rw- 1 root root 123 Jan 1 00:00 /etc/config']",
+              "expected_output": "[('/etc/config', 'world_writable')]",
+              "visibility": "visible"
+            },
+            {
+              "name": "SUID file in /tmp",
+              "input": "['-rwsr-xr-x 1 root root 456 Jan 1 00:00 /tmp/malware']",
+              "expected_output": "[('/tmp/malware', 'suid_in_tmp')]",
+              "visibility": "visible"
+            },
+            {
+              "name": "Normal files (safe)",
+              "input": "['-rw-r--r-- 1 root root 100 Jan 1 00:00 /etc/passwd', '-rwxr-xr-x 1 root root 200 Jan 1 00:00 /bin/ls']",
+              "expected_output": "[]",
+              "visibility": "hidden"
+            },
+            {
+              "name": "Mixed permissions",
+              "input": "['-rw-r--r-- 1 root root 100 Jan 1 00:00 /etc/passwd', '-rw-rw-rw- 1 user user 200 Jan 1 00:00 /var/log/app.log', '-rwsr-xr-x 1 myuser myuser 300 Jan 1 00:00 /usr/local/bin/tool']",
+              "expected_output": "[('/var/log/app.log', 'world_writable'), ('/usr/local/bin/tool', 'suid_unprivileged')]",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "linux-permissions",
+            "linux-filesystem"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 3,
+          "lesson_ref": "L09",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L09",
+            "L10"
+          ]
+        }
+      ]
+    },
+    "M06": {
+      "id": "code-challenge-M06",
+      "type": "module",
+      "module": "M06",
+      "title": "Coding Challenge: Persistence Detection",
+      "challenges": [
+        {
+          "id": "CC05",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `parse_crontab(crontab_entries)` that analyzes crontab lines and identifies suspicious entries.\n\nEach crontab line follows the format: `minute hour day-of-month month day-of-week user command`\n\nExample: `0 3 * * * root /tmp/cleanup.sh`\n\nYour function receives a list of crontab lines and returns a list of suspicious entries as tuples: (line_number, reason, command)\n\nSuspicious patterns:\n1. 'suspicious_path' — command path starts with /tmp, /var/tmp, /dev/shm, or ~\n2. 'hidden_command' — command starts with . or contains ..\n3. 'early_hour' — runs between 2 AM and 4 AM (common for malware)\n4. 'obfuscated_cmd' — command contains pipes to base64, xxd, or hex decoders",
+          "starter_code": "def parse_crontab(crontab_entries):\n    \"\"\"\n    Analyze crontab entries for suspicious patterns.\n    Returns a list of (line_number, reason, command) tuples for suspicious entries.\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "Legitimate system cron",
+              "input": "['0 3 * * * root /usr/local/bin/backup.sh', '*/5 * * * * root /usr/bin/check-updates']",
+              "expected_output": "[]",
+              "visibility": "visible"
+            },
+            {
+              "name": "Suspicious /tmp path",
+              "input": "['0 3 * * * root /tmp/malware.sh', '30 * * * * user /var/tmp/dropper']",
+              "expected_output": "[(1, 'suspicious_path', '/tmp/malware.sh'), (2, 'suspicious_path', '/var/tmp/dropper')]",
+              "visibility": "visible"
+            },
+            {
+              "name": "Mix of good and suspicious",
+              "input": "['0 0 * * * root /usr/sbin/backup', '30 3 * * * root /dev/shm/evil.sh', '*/10 * * * * user /usr/bin/logger']",
+              "expected_output": "[(2, 'suspicious_path', '/dev/shm/evil.sh'), (2, 'early_hour', '/dev/shm/evil.sh')]",
+              "visibility": "hidden"
+            },
+            {
+              "name": "Obfuscated command",
+              "input": "['0 2 * * * root echo payload | base64 -d | bash']",
+              "expected_output": "[(1, 'early_hour', 'echo payload | base64 -d | bash'), (1, 'obfuscated_cmd', 'echo payload | base64 -d | bash')]",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "persistence-mechanisms"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 3,
+          "lesson_ref": "L11",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L11",
+            "L12"
+          ]
+        }
+      ]
+    },
+    "M07": {
+      "id": "code-challenge-M07",
+      "type": "module",
+      "module": "M07",
+      "title": "Coding Challenge: Windows Telemetry Correlation",
+      "challenges": [
+        {
+          "id": "CC06",
+          "type": "code-challenge",
+          "language": "python",
+          "prompt": "Write a function `correlate_events(event_logs)` that analyzes a sequence of Windows event log entries and identifies suspicious authentication patterns.\n\nEach event is a dictionary with: 'event_id', 'logon_type', 'process_name', 'ip_address', 'computername'\n\nYour function should identify suspicious patterns and return a list of issues as (event_id, issue_type):\n1. 'network_logon_suspicious' — LogonType 3 (network) followed immediately by process access to lsass.exe\n2. 'rdp_then_execution' — LogonType 10 (RDP) followed by unusual process execution\n3. 'anomalous_protocol' — any logon with 'NTLM' protocol (should be Kerberos in domain environments)\n4. 'failed_followed_by_success' — same IP/user attempting auth, fail then success within 5 events\n\nInput events are provided in order of occurrence.",
+          "starter_code": "def correlate_events(event_logs):\n    \"\"\"\n    Correlate Windows events to identify suspicious authentication patterns.\n    Returns a list of (event_id, issue_type) tuples for suspicious patterns.\n    \"\"\"\n    pass\n",
+          "test_cases": [
+            {
+              "name": "Normal domain logons",
+              "input": "[{'event_id': 1, 'logon_type': 2, 'protocol': 'Kerberos', 'ip': '192.168.1.100'}, {'event_id': 2, 'logon_type': 2, 'protocol': 'Kerberos', 'ip': '192.168.1.101'}]",
+              "expected_output": "[]",
+              "visibility": "visible"
+            },
+            {
+              "name": "NTLM detected (anomalous)",
+              "input": "[{'event_id': 1, 'logon_type': 3, 'protocol': 'NTLM', 'ip': '10.0.0.50'}, {'event_id': 2, 'logon_type': 2, 'protocol': 'Kerberos', 'ip': '192.168.1.100'}]",
+              "expected_output": "[(1, 'anomalous_protocol')]",
+              "visibility": "visible"
+            },
+            {
+              "name": "Failed then successful auth from same IP",
+              "input": "[{'event_id': 1, 'logon_type': 3, 'protocol': 'Kerberos', 'ip': '10.20.30.40', 'status': 'failed'}, {'event_id': 2, 'logon_type': 3, 'protocol': 'Kerberos', 'ip': '192.168.1.1'}, {'event_id': 3, 'logon_type': 3, 'protocol': 'Kerberos', 'ip': '10.20.30.40', 'status': 'success'}]",
+              "expected_output": "[(3, 'failed_followed_by_success')]",
+              "visibility": "hidden"
+            },
+            {
+              "name": "Multiple issues",
+              "input": "[{'event_id': 1, 'logon_type': 3, 'protocol': 'NTLM', 'ip': '10.0.0.50'}, {'event_id': 2, 'logon_type': 3, 'protocol': 'NTLM', 'ip': '10.0.0.50', 'status': 'failed'}, {'event_id': 3, 'logon_type': 3, 'protocol': 'NTLM', 'ip': '10.0.0.50', 'status': 'success'}]",
+              "expected_output": "[(1, 'anomalous_protocol'), (2, 'anomalous_protocol'), (3, 'anomalous_protocol'), (3, 'failed_followed_by_success')]",
+              "visibility": "hidden"
+            }
+          ],
+          "concepts": [
+            "windows-event-logs",
+            "event-correlation"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "difficulty": 3,
+          "lesson_ref": "L13",
+          "pass_criteria": 0.75,
+          "remediation_lesson_ids": [
+            "L13",
+            "L14"
+          ]
+        }
+      ]
+    }
+  },
   "concepts": {
     "slug": "security-foundations",
     "generated": "2026-04-13",
