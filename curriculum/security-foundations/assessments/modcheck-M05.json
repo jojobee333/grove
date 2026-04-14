@@ -1,0 +1,27 @@
+{
+  "module": "M05",
+  "title": "Retention Check: Linux Security — Permissions and Filesystem",
+  "generated": "2026-04-13",
+  "questions": [
+    {
+      "id": "MC05-1",
+      "q": "What does the SUID bit do when set on a root-owned executable?",
+      "a": "The process runs with root's effective UID regardless of who launches it. Any user who executes the binary gets root's privilege level for the duration of that process execution."
+    },
+    {
+      "id": "MC05-2",
+      "q": "Write the bash command to find all SUID binaries on a Linux system.",
+      "a": "`find / -perm -4000 -type f 2>/dev/null` — finds all files with the SUID bit set, suppressing permission errors from directories the current user cannot read."
+    },
+    {
+      "id": "MC05-3",
+      "q": "Name the four standard Linux persistence locations for cron and startup mechanisms.",
+      "a": "/etc/cron.d/ (system cron jobs), /var/spool/cron/crontabs/ (user crontabs), ~/.config/systemd/user/ (user systemd services), /etc/rc.local (legacy startup script)."
+    },
+    {
+      "id": "MC05-4",
+      "q": "Why does the Filesystem Hierarchy Standard (FHS) aid detection even without specific monitoring rules?",
+      "a": "FHS defines canonical locations for each type of file and service. Legitimate services run from /usr/bin, /opt, /usr/local. Any persistent process running from /tmp, /dev/shm, or user home directories violates FHS norms and is immediately anomalous — the predictability of legitimate software is the detection signal."
+    }
+  ]
+}

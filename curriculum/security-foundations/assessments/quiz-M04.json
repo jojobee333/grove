@@ -1,0 +1,121 @@
+{
+  "id": "quiz-M04",
+  "type": "module",
+  "module": "M04",
+  "title": "Assessment: Forward Secrecy, KDFs, and PKI",
+  "generated": "2026-04-13",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "A nation-state is recording all encrypted TLS traffic between a target and a financial service. When the server's static RSA private key is subpoenaed five years later, what can the attacker decrypt?",
+      "options": {
+        "A": "Only sessions where the attacker was an active MITM",
+        "B": "All recorded sessions — both past and future — that used that server certificate",
+        "C": "Only future sessions, since past session keys were not recorded",
+        "D": "Nothing — subpoenaing the certificate does not provide the private key"
+      },
+      "correct": "B",
+      "explanation": "Static RSA key exchange encrypts the session key using the server's long-term public key. The private key decrypts the session key for any recorded session. With the recorded ciphertext and the private key, all past sessions can be decrypted retroactively. This is the 'harvest now, decrypt later' threat model. C is wrong — the session key is recoverable from the recorded handshake. D is wrong — public key certificates contain the key type and the subpoena obtains the corresponding private key.",
+      "lesson_ref": "L07",
+      "claim_ref": "C12",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Which cipher suite property provides forward secrecy for TLS 1.2 connections?",
+      "options": {
+        "A": "AES-256 instead of AES-128",
+        "B": "ECDHE (Elliptic Curve Diffie-Hellman Ephemeral) key exchange",
+        "C": "SHA-384 instead of SHA-256 for the MAC",
+        "D": "GCM mode instead of CBC mode"
+      },
+      "correct": "B",
+      "explanation": "Forward secrecy comes from ephemeral key exchange. ECDHE generates an independent key pair for each session; these are discarded after the session. Compromise of the server's long-term key cannot decrypt past sessions. A and C affect strength, not forward secrecy. D affects authentication mode, not key exchange independence.",
+      "lesson_ref": "L07",
+      "claim_ref": "C12",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "A developer stores user passwords using SHA-256. A database containing 10 million password hashes is stolen. Why is this significantly worse than a bcrypt-hashed database?",
+      "options": {
+        "A": "SHA-256 produces shorter hashes than bcrypt, making collisions more likely",
+        "B": "SHA-256 is a fast hash function; a GPU can compute ~10 billion SHA-256 hashes/second, cracking the database in hours",
+        "C": "SHA-256 does not use salts, so rainbow table attacks are faster",
+        "D": "SHA-256 hashes are reversible operations"
+      },
+      "correct": "B",
+      "explanation": "Speed is the issue. SHA-256 computes at GPU-parallel rates because it was designed for performance. bcrypt/Argon2id are designed to be slow (100–300ms per hash). A stolen bcrypt database is cracked at 100k hashes/second; SHA-256 at 10 billion/second — a factor of 100,000x difference. A is incorrect. C is a contributing factor but not the primary reason. D is incorrect — SHA-256 is one-way.",
+      "lesson_ref": "L08",
+      "claim_ref": "C13",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "A service uses bcrypt for password hashing. A security reviewer raises a concern about the 72-byte limit. Which implementation fully mitigates this?",
+      "options": {
+        "A": "Truncate user password input to 71 characters before bcrypt",
+        "B": "HMAC-SHA256 the password with a server-side secret key, then pass the 32-byte HMAC output to bcrypt",
+        "C": "Use SHA-512 to pre-hash the password, then pass the 128 hex-character string to bcrypt",
+        "D": "Enforce a maximum password length of 64 characters"
+      },
+      "correct": "B",
+      "explanation": "HMAC-SHA256 with a server-side secret key produces a fixed 32-byte output (well under bcrypt's 72-byte limit), adds server-side key stretching (compromise of the hash database alone is insufficient without the HMAC key), and salt is still handled by bcrypt. A and D reduce functionality without adding security. C passes 128 hex characters which exceeds bcrypt's limit — problem not solved.",
+      "lesson_ref": "L08",
+      "claim_ref": "C13",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "A certificate validation implementation checks the signature chain and validity dates but does not check revocation status. What attack scenario does this miss?",
+      "options": {
+        "A": "A certificate issued by an unauthorised CA to the target domain",
+        "B": "An expired certificate being reused after its validity period ends",
+        "C": "A certificate that was valid at issuance but was later revoked after key compromise",
+        "D": "A certificate with a pathLenConstraint violation"
+      },
+      "correct": "C",
+      "explanation": "RFC 5280 requires four checks: signature, validity period, revocation status, and path length. Skipping revocation means a certificate whose private key was compromised and subsequently revoked will still be accepted. The attacker holds the compromised key and can impersonate the server. A requires checking why the CA was authorised. B is caught by date checking. D is caught by path length checking.",
+      "lesson_ref": "L08",
+      "claim_ref": "C14",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "short_answer",
+      "question": "Explain why Argon2id's memory parameter (m=19456, 19 MB) is the most important GPU-cracking countermeasure, and compare it to bcrypt's approach to the same problem.",
+      "answer_key": {
+        "required_points": [
+          "Must explain that GPUs have limited per-core memory, making memory-hard functions force CPU-rate cracking",
+          "Must explain that bcrypt uses CPU time (iteration count) as the hardness factor",
+          "Must note what Argon2id adds over bcrypt"
+        ],
+        "acceptable_variations": "bcrypt keeps cracking at CPU-rate via high cost iterations. Argon2id adds memory-hardness — even with many GPUs, each core must allocate 19 MB per attempt. This beats bcrypt's purely time-based approach for modern GPU clusters.",
+        "full_credit": "Explains memory-hardness concept, explains GPU core memory constraint, compares to bcrypt (time-hard but not memory-hard), concludes that Argon2id is more resistant to GPU cracking at equivalent attack cost.",
+        "partial_credit": "States Argon2id is better without explaining the memory-GPU interaction."
+      },
+      "lesson_ref": "L08",
+      "claim_ref": "C13",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q07",
+      "type": "essay",
+      "prompt": "Forward secrecy is often described as protecting 'future privacy from present surveillance.' Evaluate this claim against the 'harvest now, decrypt later' threat model. Is forward secrecy sufficient to protect communications from a nation-state adversary who records all encrypted traffic?",
+      "guidance": "Strong responses should define what forward secrecy does and does not protect against. Consider: session key material vs long-term key, endpoint compromise vs network surveillance, quantum computing as a future threat to classical ECDHE.",
+      "rubric": {
+        "A": "Defines forward secrecy precisely (ephemeral session keys). Evaluates the 'harvest now decrypt later' threat accurately (forward secrecy defeats passive network surveillance for past sessions). Acknowledges limitations: endpoint compromise, post-quantum ECDHE vulnerabilities, metadata leakage.",
+        "B": "Accurately describes forward secrecy and the threat model but does not engage with the limitations.",
+        "C": "Vague response that equates forward secrecy with full communications security."
+      },
+      "lesson_ref": "L07",
+      "difficulty": "analysis"
+    }
+  ]
+}

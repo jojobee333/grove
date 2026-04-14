@@ -1,0 +1,126 @@
+{
+  "id": "quiz-M03",
+  "type": "module",
+  "module": "M03",
+  "title": "Assessment: Symmetric Encryption — From CBC to AEAD",
+  "generated": "2026-04-13",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What structural property do BEAST, Lucky13, and POODLE all exploit in TLS implementations?",
+      "options": {
+        "A": "Server certificate validation is optional in affected versions",
+        "B": "The separation of encryption and authentication in CBC mode creates a padding oracle",
+        "C": "Key exchange does not use forward secrecy",
+        "D": "TLS compression reveals plaintext through side channels"
+      },
+      "correct": "B",
+      "explanation": "All three attacks exploit the structural property that CBC mode performs encryption and authentication separately. The gap between decryption and MAC verification creates an oracle — the server's response to invalid padding leaks information about the decrypted plaintext. A is incorrect for these attacks. C describes a different class of attack (ROBOT). D describes CRIME, a different attack.",
+      "lesson_ref": "L05",
+      "claim_ref": "C11",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "TLS 1.3 was designed so that CBC-mode attacks cannot occur. What design decision achieves this?",
+      "options": {
+        "A": "TLS 1.3 uses longer MAC keys to prevent forgery",
+        "B": "TLS 1.3 adds a separate padding validation step before MAC verification",
+        "C": "TLS 1.3 permits only AEAD cipher suites, removing all CBC options from the spec",
+        "D": "TLS 1.3 encrypts the MAC value to hide oracle responses"
+      },
+      "correct": "C",
+      "explanation": "TLS 1.3 removed all non-AEAD cipher suites from the specification. There are only three cipher suites (all AEAD), and none use CBC mode — so there is no CBC option to configure, misconfigure, or fall back to. A, B, and D describe mitigations within CBC that could reduce risk but don't eliminate the structural problem.",
+      "lesson_ref": "L05",
+      "claim_ref": "C11",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "A server is configured with TLS 1.2. The cipher suite list includes TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 and TLS_RSA_WITH_AES_256_CBC_SHA256. Which suite should be removed, and why?",
+      "options": {
+        "A": "Remove ECDHE_RSA_WITH_AES_128_GCM_SHA256 because GCM has weaker authentication than SHA256",
+        "B": "Remove RSA_WITH_AES_256_CBC_SHA256 because it uses CBC mode (padding oracle risk) and static RSA (no forward secrecy)",
+        "C": "Remove both and require TLS 1.3 only",
+        "D": "Neither needs to be removed; both suites are acceptable in TLS 1.2"
+      },
+      "correct": "B",
+      "explanation": "TLS_RSA_WITH_AES_256_CBC_SHA256 has two problems: (1) AES-256-CBC is vulnerable to padding oracle attacks, and (2) static RSA key exchange provides no forward secrecy. TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 is correct — ECDHE for forward secrecy + AES-GCM for AEAD. C may be appropriate long-term but B is the specific answer for this question.",
+      "lesson_ref": "L06",
+      "claim_ref": "C11",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "A developer is implementing file-at-rest encryption using AES-GCM and reuses the same nonce for multiple encryption operations under the same key. What is the security consequence?",
+      "options": {
+        "A": "The encrypted files are larger than necessary",
+        "B": "The GCM authentication key is leaked, enabling plaintext recovery for both affected messages",
+        "C": "The encryption is weaker but still provides confidentiality",
+        "D": "Decryption performance is reduced"
+      },
+      "correct": "B",
+      "explanation": "AES-GCM requires unique nonces per encryption under the same key. Nonce reuse leaks the GCM authentication key (the H value) through the keystream XOR relationship. With H known, an attacker can recover plaintexts and forge authentication tags. A, C, D do not reflect the actual consequence.",
+      "lesson_ref": "L06",
+      "claim_ref": "C11",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "RFC 8446 states that it 'obsoletes' TLS 1.2. A vendor's security policy states TLS 1.2 is deprecated. A practitioner argues TLS 1.2 + ECDHE + AES-256-GCM is still acceptable. Who is correct?",
+      "options": {
+        "A": "The vendor is correct; 'obsoletes' means TLS 1.2 is operationally prohibited",
+        "B": "The practitioner is correct; 'obsoletes' in IETF terminology means no further development, not operational prohibition; TLS 1.2 + ECDHE + AEAD is cryptographically sound",
+        "C": "Both are correct; the resolution depends on the organisation's risk tolerance",
+        "D": "Neither is correct; TLS 1.2 and 1.3 are equivalent for all cipher suite configurations"
+      },
+      "correct": "B",
+      "explanation": "OWASP and NIST SP 800-52r2 both explicitly permit TLS 1.2 for deployments that can't upgrade immediately. 'Obsoletes' is IETF standards track terminology meaning no further development, not operational prohibition. TLS 1.2 with CBC or static RSA is the actual finding. D is incorrect — TLS 1.3 removed dangerous cipher suites TLS 1.2 cannot eliminate without explicit configuration.",
+      "lesson_ref": "L06",
+      "claim_ref": "C15",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q06",
+      "type": "short_answer",
+      "question": "Explain in one paragraph why AEAD cipher modes eliminated the class of attacks that affected CBC mode. Do not just say 'it provides authentication' — explain the structural reason.",
+      "answer_key": {
+        "required_points": [
+          "Must explain that CBC's oracle arises from separating encryption from authentication",
+          "Must explain that AEAD performs both operations atomically",
+          "Must note that authentication tag verification happens before any decryption attempt is complete"
+        ],
+        "acceptable_variations": "Different framings of 'atomic' are acceptable. Key insight: there is no 'decryption outcome' observable before authentication is verified. The oracle disappears because you cannot distinguish valid from invalid ciphertexts without the authentication tag.",
+        "full_credit": "Explains the oracle mechanism (error response distinguishes valid from invalid padding) and why AEAD eliminates it (authentication tag verification is atomic with decryption; no valid ciphertext can be submitted without a correct tag).",
+        "partial_credit": "States 'AEAD does both' without explaining why that eliminates the oracle."
+      },
+      "lesson_ref": "L05",
+      "claim_ref": "C11",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "You are asked to evaluate a TLS 1.2 server configuration. List the three checks you perform and the specific cipher characteristics that make a suite acceptable vs unacceptable.",
+      "answer_key": {
+        "required_points": [
+          "Check 1: Is CBC present? (unacceptable — padding oracle risk)",
+          "Check 2: Is static RSA key exchange used? (unacceptable — no forward secrecy)",
+          "Check 3: Are NULL/ANON/EXPORT/RC4/3DES suites present? (unacceptable — each has specific weaknesses)"
+        ],
+        "acceptable_variations": "Acceptable to frame as a positive check: ECDHE present? AEAD (GCM) present? No weak cipher families? The substance is the same.",
+        "full_credit": "Identifies all three checks with reasons. States the acceptable configuration: ECDHE + AEAD suites only.",
+        "partial_credit": "Identifies CBC as problematic but misses static RSA or the other weak cipher families."
+      },
+      "lesson_ref": "L06",
+      "claim_ref": "C11",
+      "difficulty": "application"
+    }
+  ]
+}

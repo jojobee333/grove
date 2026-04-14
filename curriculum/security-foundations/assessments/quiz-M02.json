@@ -1,0 +1,124 @@
+{
+  "id": "quiz-M02",
+  "type": "module",
+  "module": "M02",
+  "title": "Assessment: DNS — Single Protocol, Every Domain",
+  "generated": "2026-04-13",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "An analyst observes that a host is making hundreds of DNS queries per minute to algorithmically-named domains (high consonant density, no real words), with most returning NXDOMAIN. What is the most likely explanation?",
+      "options": {
+        "A": "The host is running a DNS stress test",
+        "B": "The host is infected with malware using a Domain Generation Algorithm for C2 resilience",
+        "C": "The host has a misconfigured local DNS resolver",
+        "D": "The host is performing legitimate reverse DNS lookups"
+      },
+      "correct": "B",
+      "explanation": "DGA malware generates hundreds of pseudo-random domain names and queries them until one resolves. High NXDOMAIN rate + algorithmically-named domains + burst query pattern is the signature. A is plausible but wouldn't produce algorithmically-named domains. C produces different patterns. D produces IP addresses as queries, not random hostnames.",
+      "lesson_ref": "L03",
+      "claim_ref": "C2",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "A Kaminsky-style DNS cache poisoning attack injects a forged response into a recursive resolver's cache. What two values must the attacker match to win the race condition?",
+      "options": {
+        "A": "The target domain and the TTL value",
+        "B": "The UDP source port and the 16-bit transaction ID",
+        "C": "The resolver's IP address and the target hostname",
+        "D": "The TTL value and the authoritative server IP"
+      },
+      "correct": "B",
+      "explanation": "DNS responses are authenticated only by matching them to the outgoing query's UDP source port and transaction ID. Both are 16-bit values. Guessing both correctly (or exhausting the space) wins the race. Without port randomisation, an attacker needs to guess only the transaction ID. A, C, and D are not the authentication fields DNS uses.",
+      "lesson_ref": "L03",
+      "claim_ref": "C2",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "A security team wants to restrict which certificate authorities can issue TLS certificates for their domain. Which DNS record type provides this restriction?",
+      "options": {
+        "A": "SPF (Sender Policy Framework)",
+        "B": "DMARC",
+        "C": "CAA (Certificate Authority Authorization)",
+        "D": "DNSSEC"
+      },
+      "correct": "C",
+      "explanation": "CAA records specify which CAs are permitted to issue certificates for the domain. Compliant CAs check CAA before issuance. SPF and DMARC restrict email senders, not certificate issuance. DNSSEC authenticates DNS responses but does not restrict certificate issuance.",
+      "lesson_ref": "L04",
+      "claim_ref": "C2",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "A blue team analyst wants to detect DNS-based C2 with process-level attribution — which specific log records which process made which DNS query?",
+      "options": {
+        "A": "Windows DNS Server log",
+        "B": "Windows Firewall log",
+        "C": "Sysmon Event 22",
+        "D": "Event 4624"
+      },
+      "correct": "C",
+      "explanation": "Sysmon Event 22 logs the querying process (with image path), the query string, and DNS response. Windows DNS Server log records queries by client IP only — no process attribution. Firewall logs capture connection-level data. Event 4624 is a logon event, unrelated to DNS.",
+      "lesson_ref": "L04",
+      "claim_ref": "C2",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "A network contains a misconfigured DNS server that allows zone transfers from any IP. What information does an attacker gain from a successful AXFR query?",
+      "options": {
+        "A": "The DNSSEC signing keys for the zone",
+        "B": "A complete list of all hostnames and IP addresses in the DNS zone",
+        "C": "The DNS resolver's cache contents",
+        "D": "TLS certificates for all hosts in the zone"
+      },
+      "correct": "B",
+      "explanation": "A zone transfer (AXFR) replicates the complete zone database, including all A, CNAME, MX, and other records — a full topology map. This is designed for legitimate secondary server replication. A, C, and D are not part of zone transfer data.",
+      "lesson_ref": "L03",
+      "claim_ref": "C2",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q06",
+      "type": "short_answer",
+      "question": "Explain why DNS tunneling is difficult to block with standard firewall rules, and describe two detection approaches that are more effective.",
+      "answer_key": {
+        "required_points": [
+          "Must mention that DNS uses UDP port 53, which is permitted through nearly all firewalls",
+          "Must describe at least two detection approaches"
+        ],
+        "acceptable_variations": "Acceptable detection approaches: Sysmon Event 22 process-level attribution, DNS query rate monitoring/anomaly, high-entropy domain name detection, abnormally large TXT record responses, NXDOMAIN rate monitoring for DGA detection.",
+        "full_credit": "Correctly explains the firewall bypass (port 53 allowed) and provides two concrete detection mechanisms with enough specificity to be actionable.",
+        "partial_credit": "Explains why it bypasses firewalls but provides only generic 'monitor DNS' without specific mechanisms."
+      },
+      "lesson_ref": "L03",
+      "claim_ref": "C2",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "What one-line DNS server configuration change prevents zone transfer exposure, and why should this be a default configuration?",
+      "answer_key": {
+        "required_points": [
+          "Must identify zone transfer restriction (allow-transfer { none; } or equivalent)",
+          "Must explain why it should be default: zones have no legitimate need for public AXFR"
+        ],
+        "acceptable_variations": "BIND syntax: `allow-transfer { none; };`. Windows DNS: restrict zone transfers to authorised IPs. The justification: zone transfers serve secondary server replication; most zones have no legitimate need to accept AXFR from any IP.",
+        "full_credit": "Names the specific configuration change and explains that zone transfers are only needed for legitimate secondary servers — unrestricted AXFR is never correct for public-facing authoritative servers.",
+        "partial_credit": "Knows AXFR should be restricted but cannot name the specific configuration mechanism."
+      },
+      "lesson_ref": "L03",
+      "claim_ref": "C2",
+      "difficulty": "application"
+    }
+  ]
+}

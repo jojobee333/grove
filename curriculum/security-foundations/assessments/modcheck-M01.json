@@ -1,0 +1,27 @@
+{
+  "module": "M01",
+  "title": "Retention Check: The Protocol Feature Mental Model",
+  "generated": "2026-04-13",
+  "questions": [
+    {
+      "id": "MC01-1",
+      "q": "State the protocol feature mental model in one sentence.",
+      "a": "Every protocol encodes a trust assumption required for it to function, and that same trusted input is the mechanism an attacker exploits."
+    },
+    {
+      "id": "MC01-2",
+      "q": "What is the specific ARP design feature that enables ARP spoofing?",
+      "a": "ARP trusts that the last reply to a broadcast is authoritative, with no authentication. Any host on the LAN can send an unsolicited reply claiming ownership of any IP."
+    },
+    {
+      "id": "MC01-3",
+      "q": "What TCP feature enables RST injection, and what is the outcome of a successful attack?",
+      "a": "TCP accepts RST segments without cryptographic verification; an attacker who guesses the approximate sequence number can terminate any established TCP connection."
+    },
+    {
+      "id": "MC01-4",
+      "q": "Name two bash commands you would run to verify ARP cache integrity on a Linux host during an investigation.",
+      "a": "`arp -n` (show current ARP cache) and `ip neigh show` (netlink equivalent). Compare entries to DHCP logs or known MAC-to-IP mappings to identify duplicates or unexpected MAC addresses."
+    }
+  ]
+}

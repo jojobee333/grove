@@ -1,0 +1,27 @@
+{
+  "module": "M03",
+  "title": "Retention Check: Symmetric Encryption — From CBC to AEAD",
+  "generated": "2026-04-13",
+  "questions": [
+    {
+      "id": "MC03-1",
+      "q": "Name three TLS attacks that all exploit the same CBC structural weak point.",
+      "a": "BEAST (2011), Lucky13 (2013), POODLE (2014). All three exploit the separation of encryption and authentication in CBC mode, creating a padding oracle that leaks plaintext byte-by-byte."
+    },
+    {
+      "id": "MC03-2",
+      "q": "What does AEAD stand for, and what property does it provide atomically that CBC does not?",
+      "a": "Authenticated Encryption with Associated Data. Provides confidentiality AND integrity in a single indivisible operation. CBC encrypts first, authenticates second — the gap between these operations is the oracle. In AEAD, there is no valid decryption output without a correct authentication tag."
+    },
+    {
+      "id": "MC03-3",
+      "q": "List the three TLS 1.3 cipher suites.",
+      "a": "TLS_AES_128_GCM_SHA256, TLS_AES_256_GCM_SHA384, TLS_CHACHA20_POLY1305_SHA256."
+    },
+    {
+      "id": "MC03-4",
+      "q": "For AES-GCM specifically, what is the one requirement for correct usage that has catastrophic consequences if violated?",
+      "a": "Nonces must never be reused under the same key. Nonce reuse leaks the GCM authentication key (H value) and enables plaintext recovery and authentication tag forgery for both messages sharing the nonce."
+    }
+  ]
+}

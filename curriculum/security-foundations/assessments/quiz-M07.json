@@ -1,0 +1,121 @@
+{
+  "id": "quiz-M07",
+  "type": "module",
+  "module": "M07",
+  "title": "Assessment: Windows Telemetry — Seeing the Full Picture",
+  "generated": "2026-04-13",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "A Windows Security Event 4624 shows LogonType=3, LmPackageName=NTLM V2, IpAddress=192.168.50.10. The affected host is a domain controller. What does this pattern suggest?",
+      "options": {
+        "A": "A normal interactive logon from a console session",
+        "B": "A remote desktop session from an authorised admin",
+        "C": "A potential lateral movement — network authentication using NTLM to a domain controller is suspicious; DC-to-DC replication uses Kerberos",
+        "D": "An automated service account logon at startup"
+      },
+      "correct": "C",
+      "explanation": "LogonType=3 is network authentication (SMB/WMI/lateral movement path). LmPackageName=NTLM on a domain controller is suspicious — domain-joined hosts default to Kerberos. NTLM to a DC suggests pass-the-hash, Kerberos downgrade forcing, or a misconfigured client. Interactive logon is LogonType=2. RDP is LogonType=10. Service logon is LogonType=5.",
+      "lesson_ref": "L13",
+      "claim_ref": "C7",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "An alert fires on Sysmon Event 10: TargetImage=lsass.exe, GrantedAccess=0x1010, SourceImage=backup_agent.exe. How do you determine if this is a true positive?",
+      "options": {
+        "A": "Event 10 on lsass.exe always indicates credential dumping — escalate immediately",
+        "B": "Check if backup_agent.exe is in the approved LSASS accessor exclusion list; if present, suppress; if absent, investigate its process creation chain (Sysmon Event 1)",
+        "C": "0x1010 is not sufficient access to dump credentials — ignore this alert",
+        "D": "LSASS access is a normal OS operation — disable Event 10 monitoring"
+      },
+      "correct": "B",
+      "explanation": "AV, backup, and Defender all legitimately access LSASS — baselining these is the tuning work. 0x1010 includes memory read access (read_process_memory), which IS sufficient for credential operations. The correct triage is: is this source image in our exclusion list? If not, check its parent and child processes via Sysmon Event 1 and the ProcessGUID correlation. A is too aggressive. C is incorrect — 0x1010 includes read access. D eliminates critical coverage.",
+      "lesson_ref": "L13",
+      "claim_ref": "C7",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "A DCSync attack is detected. What combination of AD event fields confirms it?",
+      "options": {
+        "A": "Event 4624, LogonType=3, from a workstation computer account",
+        "B": "Event 4769, TicketEncryptionType=0x17, from a service account",
+        "C": "Event 4662, Object=domainDNS, AccessMask=0x100, from an account that is NOT a domain controller computer account",
+        "D": "Event 4698 (scheduled task created) referencing replication utilities"
+      },
+      "correct": "C",
+      "explanation": "DCSync uses the DS-Replication-Get-Changes-All right (AccessMask 0x100) against the domainDNS object. Legitimate replication is performed by DC computer accounts. When a non-DC account (user, workstation, service) performs this, it indicates DCSync. B describes Kerberoasting. A describes lateral movement. D is a persistence mechanism, not DCSync.",
+      "lesson_ref": "L13",
+      "claim_ref": "C7",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "What specific advantage does ProcessGUID provide over using PID for correlating Sysmon events across a session?",
+      "options": {
+        "A": "ProcessGUID is shorter and faster to query in a SIEM",
+        "B": "PIDs can be reused by the OS after a process exits; ProcessGUID is unique per process for the system's lifetime",
+        "C": "ProcessGUID links events across different machines in a domain",
+        "D": "ProcessGUID includes the user account that launched the process"
+      },
+      "correct": "B",
+      "explanation": "Windows PID is a 16-bit value reused after process exit. In a high-churn environment (thousands of process creations/terminations per day), PIDs may be reused within the correlation window. Sysmon assigns a unique GUID at process creation that is embedded in all subsequent events for that process, solving the reuse problem. A is not meaningful. C is correct for some enterprise SIEM configurations but is not the core advantage. D is not what ProcessGUID contains.",
+      "lesson_ref": "L14",
+      "claim_ref": "C10",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "A Sysmon configuration monitors HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Image File Execution Options. An alert fires for entry 'magnify.exe' with Debugger='cmd.exe'. What is the attack technique?",
+      "options": {
+        "A": "A process injection attack targeting magnify.exe",
+        "B": "Image File Execution Options hijacking — any process launching magnify.exe will instead see cmd.exe launched, providing a shell at Windows logon screen",
+        "C": "A scheduled task named magnify.exe",
+        "D": "Registry Run key persistence mimicking the accessibility tool"
+      },
+      "correct": "B",
+      "explanation": "IFEO Debugger hijacking: Windows launches the 'Debugger' value executable before the target process. Accessibility tools like magnify.exe, sethc.exe, and utilman.exe are available before logon. Setting Debugger=cmd.exe under magnify gives an attacker a SYSTEM-level shell accessible from the login screen with no credentials required.",
+      "lesson_ref": "L14",
+      "claim_ref": "C10",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q06",
+      "type": "short_answer",
+      "question": "Describe how you would use Sysmon EventID 1 (Process Creation) and EventID 3 (Network Connection) together to investigate a suspicious process that made an outbound connection. What specific fields would you join on, and what would you look for in each event?",
+      "answer_key": {
+        "required_points": [
+          "Join on ProcessGUID field (Event 1 creates it; Event 3 includes it)",
+          "Event 1: CommandLine (what arguments), ParentImage (what launched it), Hash (compare to VirusTotal/EDR)",
+          "Event 3: DestinationIp, DestinationPort, DestinationHostname to assess the network target"
+        ],
+        "acceptable_variations": "Can also join using Process ID + timestamp window as secondary approach, but ProcessGUID is preferred.",
+        "full_credit": "Identifies ProcessGUID as the join key, lists at least two fields of interest from Event 1, lists at least two fields from Event 3, and describes what they indicate.",
+        "partial_credit": "Identifies the need to correlate the events but cannot name the join key."
+      },
+      "lesson_ref": "L14",
+      "claim_ref": "C10",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q07",
+      "type": "essay",
+      "prompt": "Each Windows event source (Security log, Sysmon, AD events) covers different parts of the kill chain, but none covers everything. Using the PsExec lateral movement example from L14, describe the four-source kill chain and argue why single-source detection would have missed the full picture.",
+      "guidance": "Strong responses should identify each source, what event it contributes, and what gap it leaves if removed. They should conclude with a principle about multi-source correlation being architecturally necessary, not just a best practice.",
+      "rubric": {
+        "A": "Names all four sources, identifies the specific event from each, explains what is missed without each source, concludes with a structural argument about multi-source detection.",
+        "B": "Identifies three of four sources with events, argues for multi-source correlation.",
+        "C": "Generic response about multiple log sources without grounding in specific events."
+      },
+      "lesson_ref": "L14",
+      "difficulty": "analysis"
+    }
+  ]
+}

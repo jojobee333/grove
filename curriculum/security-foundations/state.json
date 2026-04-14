@@ -1,0 +1,13 @@
+{
+  "slug": "security-foundations",
+  "phase": "complete",
+  "progress": {
+    "course_map": false,
+    "lessons": false,
+    "cards": false,
+    "assessments": false,
+    "bundle": false
+  },
+  "last_action": "Grove project started — learner.json created",
+  "next_action": "Generate course.json course map"
+}

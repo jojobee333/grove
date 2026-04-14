@@ -1,0 +1,34 @@
+{
+  "slug": "security-foundations",
+  "generated": "2026-04-13",
+  "paths": [
+    {
+      "id": "default-path",
+      "title": "Complete Security Foundations",
+      "description": "All 16 lessons in module order. Full course coverage from protocol analysis to layered authentication defence.",
+      "goal": "any",
+      "lessons": ["L01","L02","L03","L04","L05","L06","L07","L08","L09","L10","L11","L12","L13","L14","L15","L16"]
+    },
+    {
+      "id": "ctf-fast-track",
+      "title": "CTF Fast Track",
+      "description": "Focus on offensive techniques, exploitation patterns, and detection bypass. Skips defensive-only lessons and certificate validation deep-dives. ~10 lessons.",
+      "goal": "apply_practically",
+      "lessons": ["L01","L02","L03","L05","L07","L09","L11","L13","L15","L16"]
+    },
+    {
+      "id": "blue-team-focus",
+      "title": "Defensive Operations Focus",
+      "description": "Prioritises detection, telemetry, and response. Covers all defensive lessons in sequence with offensive context first.",
+      "goal": "apply_practically",
+      "lessons": ["L01","L03","L04","L06","L09","L10","L11","L12","L13","L14","L15","L16"]
+    },
+    {
+      "id": "crypto-deep-dive",
+      "title": "Cryptography and PKI Track",
+      "description": "Complete cryptographic foundations: CBC attacks, AEAD, forward secrecy, KDFs, PKI chain validation.",
+      "goal": "apply_practically",
+      "lessons": ["L05","L06","L07","L08"]
+    }
+  ]
+}

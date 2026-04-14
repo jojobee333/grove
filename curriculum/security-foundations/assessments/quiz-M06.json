@@ -1,0 +1,127 @@
+{
+  "id": "quiz-M06",
+  "type": "module",
+  "module": "M06",
+  "title": "Assessment: Persistence — Abusing What the OS Trusts",
+  "generated": "2026-04-13",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "Which Sysmon event triplet fully covers WMI subscription persistence creation?",
+      "options": {
+        "A": "Events 1, 3, 10",
+        "B": "Events 12, 13, 14",
+        "C": "Events 19, 20, 21",
+        "D": "Events 4624, 4625, 4769"
+      },
+      "correct": "C",
+      "explanation": "Sysmon Events 19 (WMI filter created), 20 (WMI consumer created), 21 (WMI binding created) collectively cover all three components required for WMI-based persistence. You need all three events to detect complete WMI subscriptions. Events 1/3/10 are process/network/LSASS events. Events 12/13/14 are registry events. Events 4624/4625/4769 are Windows Security log authentication events.",
+      "lesson_ref": "L11",
+      "claim_ref": "C8",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "An attacker deploys persistence using a cron job in `/etc/cron.d/` on a Linux server. Why does this blend with legitimate activity?",
+      "options": {
+        "A": "Most servers don't log cron activity",
+        "B": "System daemons, monitoring agents, and backup tools routinely place cron jobs in /etc/cron.d — malicious entries look identical to these",
+        "C": "Linux kernel hides cron jobs from process monitoring tools",
+        "D": "Cron jobs run with randomised PIDs that evade detection"
+      },
+      "correct": "B",
+      "explanation": "The /etc/cron.d directory is used by legitimate software packages (monitoring agents, backup tools, system services) to install their scheduled tasks. An attacker's malicious cron entry in the same directory looks syntactically and positionally identical to these legitimate entries. Detection requires baselining — not just checking whether cron jobs exist. A, C, D are incorrect.",
+      "lesson_ref": "L11",
+      "claim_ref": "C8",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "You want to detect new registry keys written to HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run. Which Sysmon event type should you configure?",
+      "options": {
+        "A": "Sysmon Event 1 (Process Creation)",
+        "B": "Sysmon Event 12 or 13 (Registry Key/Value Created/Modified)",
+        "C": "Sysmon Event 7 (Image Loaded)",
+        "D": "Sysmon Event 3 (Network Connection)"
+      },
+      "correct": "B",
+      "explanation": "Sysmon Events 12/13 cover registry operations. Event 12 fires on key creation/deletion. Event 13 fires on value set. The Run key writes are value set operations — Event 13 with TargetObject matching the Run key path is the correct detection.",
+      "lesson_ref": "L12",
+      "claim_ref": "C8",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "A SOC analyst sets up broad Sysmon monitoring for registry Run keys and receives thousands of alerts per day from known-good software. What is the recommended tuning approach?",
+      "options": {
+        "A": "Disable the rule entirely — too noisy to be actionable",
+        "B": "Switch to a whitelist approach: alert only on specific known-bad signatures",
+        "C": "Observe 5–7 days of baseline, add exclusions for known-good agents (AV, backup, update), alert on everything else",
+        "D": "Raise the alert threshold to only fire when the same key is written more than 10 times"
+      },
+      "correct": "C",
+      "explanation": "The exclusion-list (baselining) pattern: enable broad monitoring, learn what 'normal' looks like over days of observation, add targeted exclusions for confirmed-good entries, alert on deviations. A eliminates coverage. B is fragile — unknown malware signatures will evade. D delays detection rather than eliminating noise.",
+      "lesson_ref": "L12",
+      "claim_ref": "C8",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "During a Linux incident response, you discover `/etc/cron.d/sysmonitord` running a script from `/tmp/cache/run.sh`. What are the two independent indicators of compromise?",
+      "options": {
+        "A": "The cron job exists AND it runs daily",
+        "B": "The filename uses 'sys' to appear legitimate AND the schedule is at an odd hour",
+        "C": "The script path is /tmp (anomalous for persistent processes per FHS) AND the cron job was not in the baseline",
+        "D": "The script name ends in .sh AND cron jobs in /etc/cron.d require root"
+      },
+      "correct": "C",
+      "explanation": "Two independent IoCs: (1) FHS violation — persistent process running from /tmp is anomalous regardless of cron context; (2) baseline deviation — a cron job not present in the baseline snapshot is a new entry requiring investigation. A and D identify properties that are not inherently suspicious. B is weak — most malware uses legitimate-looking names.",
+      "lesson_ref": "L12",
+      "claim_ref": "C8",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q06",
+      "type": "short_answer",
+      "question": "Name the three WMI subscription components, state which Sysmon event detects each one's creation, and explain why all three events are needed for a complete detection rule.",
+      "answer_key": {
+        "required_points": [
+          "Filter → Sysmon Event 19",
+          "Consumer → Sysmon Event 20",
+          "Binding → Sysmon Event 21",
+          "Explanation: an attacker who creates only a filter and consumer but not the binding activates nothing; missing any one component means no execution occurs"
+        ],
+        "acceptable_variations": "The explanation can focus on: incomplete subscription = no malicious execution, OR that the presence of all three confirms the subscription is fully armed, OR that alerting on individual components creates false positives from legitimate WMI rules.",
+        "full_credit": "Names all three components with correct Sysmon events, explains why a complete detection monitors all three.",
+        "partial_credit": "Names two of three with correct events, or names all three but cannot explain the completeness requirement."
+      },
+      "lesson_ref": "L11",
+      "claim_ref": "C8",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "Explain what an exclusion list represents in a Sysmon configuration, and argue whether it should be version-controlled and reviewed during security audits.",
+      "answer_key": {
+        "required_points": [
+          "Exclusion list encodes what 'normal' looks like for the environment",
+          "It represents institutional knowledge about accepted behaviour",
+          "Argument for version control: exclusions can be manipulated by an attacker who adds themselves to the exclusion list"
+        ],
+        "acceptable_variations": "The audit argument can focus on: stale exclusions (software was uninstalled but exclusion remains), attacker-planted exclusions, overly broad exclusions masking malicious activity.",
+        "full_credit": "Explains exclusion list as encoded baseline, makes the argument for version control and periodic review, identifies at least one risk of unreviewed exclusions.",
+        "partial_credit": "Correctly explains exclusion list purpose but does not engage with the version control argument."
+      },
+      "lesson_ref": "L12",
+      "claim_ref": "C8",
+      "difficulty": "analysis"
+    }
+  ]
+}

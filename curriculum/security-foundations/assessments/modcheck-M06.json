@@ -1,0 +1,27 @@
+{
+  "module": "M06",
+  "title": "Retention Check: Persistence — Abusing What the OS Trusts",
+  "generated": "2026-04-13",
+  "questions": [
+    {
+      "id": "MC06-1",
+      "q": "Name the three components of a WMI subscription and the Sysmon event that detects each one's creation.",
+      "a": "Filter (Sysmon Event 19), Consumer (Sysmon Event 20), Binding (Sysmon Event 21). The binding links a filter to a consumer — without all three events, the subscription is incomplete."
+    },
+    {
+      "id": "MC06-2",
+      "q": "Name two Windows registry paths that host persistence mechanisms and the Sysmon event type that monitors them.",
+      "a": "HKLM/HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run (startup), HKLM\\SYSTEM\\CurrentControlSet\\Services (service installation). Monitored by Sysmon Event 12 (key created/deleted) and Event 13 (value set)."
+    },
+    {
+      "id": "MC06-3",
+      "q": "Explain the exclusion-list pattern for Sysmon tuning in one paragraph.",
+      "a": "Enable a broad monitoring rule. Observe 5–7 days of operations and identify all known-good agents that trigger it (AV, backup tools, software updates). Add those agents as exclusions in the Sysmon configuration. Alert on everything remaining. The exclusion list represents institutional knowledge about the environment's baseline — it must be version-controlled and reviewed at least quarterly."
+    },
+    {
+      "id": "MC06-4",
+      "q": "Why do attackers prefer abusing legitimate OS mechanisms over installing custom rootkits for persistence?",
+      "a": "Legitimate mechanisms (cron, WMI, scheduled tasks, registry Run keys) blend with normal administrative operations and do not trigger kernel-level or AV detection rules. Detection requires environment-specific baselining rather than signature matching. Custom rootkits trigger kernel integrity checks, AV signature detection, and EDR anomaly detection."
+    }
+  ]
+}

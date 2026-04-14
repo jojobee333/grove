@@ -1,0 +1,32 @@
+{
+  "module": "M07",
+  "title": "Retention Check: Windows Telemetry — Seeing the Full Picture",
+  "generated": "2026-04-13",
+  "questions": [
+    {
+      "id": "MC07-1",
+      "q": "What does Event 4624's LogonType field indicate, and what are the values for interactive, network, and RDP logons?",
+      "a": "LogonType indicates the authentication method used. 2 = interactive (local console). 3 = network (SMB/WMI — lateral movement path). 10 = RemoteInteractive (RDP). Type 3 from an unexpected source IP is the primary lateral movement detection signature."
+    },
+    {
+      "id": "MC07-2",
+      "q": "What does Sysmon Event 10 detect and what GrantedAccess value indicates LSASS credential dumping?",
+      "a": "Event 10 (ProcessAccess) fires when one process opens another's memory space. GrantedAccess=0x1010 or 0x1410 includes PROCESS_VM_READ, sufficient for credential dumping. TargetImage=lsass.exe with these access rights is the detection signature."
+    },
+    {
+      "id": "MC07-3",
+      "q": "What is the DCSync detection signature in AD events, and what distinguishes it from legitimate replication?",
+      "a": "Event 4662, Object=domainDNS, AccessMask=0x100 (DS-Replication-Get-Changes-All). Legitimate replication is performed by domain controller computer accounts (ending in $). DCSync is flagged when the requesting account is NOT a DC computer account."
+    },
+    {
+      "id": "MC07-4",
+      "q": "Why is ProcessGUID preferred over PID for correlating Sysmon events?",
+      "a": "Windows PIDs are 16-bit values reused after process exit. In a high-activity environment, a PID may be reused within the correlation window, causing false attribution. ProcessGUID is unique for each process for the system's lifetime."
+    },
+    {
+      "id": "MC07-5",
+      "q": "Name the four-source Windows kill chain for detecting PsExec lateral movement.",
+      "a": "Sysmon Event 1 (process creation of psexec on source) → Sysmon Event 3 (network connection to destination, linked by ProcessGUID) → Windows Security Event 4624 (logon Type 3 on destination, linked by SessionGUID) → AD Event 4769 (Kerberos ticket issued if domain context used)."
+    }
+  ]
+}

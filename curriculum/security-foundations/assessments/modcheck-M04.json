@@ -1,0 +1,27 @@
+{
+  "module": "M04",
+  "title": "Retention Check: Forward Secrecy, KDFs, and PKI",
+  "generated": "2026-04-13",
+  "questions": [
+    {
+      "id": "MC04-1",
+      "q": "What does forward secrecy protect that static RSA key exchange does not?",
+      "a": "Forward secrecy ensures that compromise of the server's long-term private key cannot decrypt previously recorded sessions. ECDHE generates independent per-session key material that is discarded after the session — no past session keys are derivable from the long-term key."
+    },
+    {
+      "id": "MC04-2",
+      "q": "What is the OWASP minimum cost factor for bcrypt, and what does it mean operationally?",
+      "a": "Cost factor 12. This means bcrypt performs 2^12 = 4,096 iterations of its internal key derivation. At this cost factor, a single hash takes approximately 100–300ms on modern hardware, making offline brute force expensive regardless of GPU resources."
+    },
+    {
+      "id": "MC04-3",
+      "q": "What are the three Argon2id minimum recommended parameters and what does each control?",
+      "a": "m=19456 (memory: 19 MB per computation, defeating GPU cracking by exhausting per-core memory), t=2 (time cost: 2 iterations over the memory block), p=1 (parallelism: 1 thread)."
+    },
+    {
+      "id": "MC04-4",
+      "q": "Name the four checks RFC 5280 requires for certificate chain validation.",
+      "a": "1. Signature validation (each cert signed by the cert above). 2. Validity period (notBefore/notAfter current). 3. Revocation status (not on CRL/OCSP). 4. Path length constraint (pathLenConstraint limiting intermediate CA depth)."
+    }
+  ]
+}

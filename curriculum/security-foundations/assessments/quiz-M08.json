@@ -1,0 +1,122 @@
+{
+  "id": "quiz-M08",
+  "type": "module",
+  "module": "M08",
+  "title": "Assessment: Authentication Weaknesses — NTLM to Kerberoasting",
+  "generated": "2026-04-13",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "An attacker dumps the NTLM hash of a domain administrator using Mimikatz on a compromised workstation, then authenticates to a file server using that hash without knowing the plaintext password. Why does this work?",
+      "options": {
+        "A": "NTLM stores a reversible encryption of the password that can be decrypted",
+        "B": "NTLM only verifies that the client can produce a valid challenge response using the hash — the hash is the credential, not a derivative of it",
+        "C": "The attacker decrypts the hash using the domain's Kerberos TGT",
+        "D": "File servers accept hashed credentials as a fallback when Kerberos is unavailable"
+      },
+      "correct": "B",
+      "explanation": "NTLM authenticates by verifying the response to a challenge computed using the NTLM hash. The hash is functionally equivalent to the password for authentication purposes — possessing the hash is sufficient to authenticate. This is the fundamental design vulnerability. A is incorrect — NTLM hashes are not reversibly encrypted. C conflates different authentication protocols. D is not the mechanism.",
+      "lesson_ref": "L15",
+      "claim_ref": "C9",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Event 4624, LogonType=3, LmPackageName='NTLM V2', IpAddress=10.10.5.99 appears on an admin server. The legitimate admin workstation is 192.168.1.50. What should the analyst conclude?",
+      "options": {
+        "A": "Normal NTLM fallback — no action needed",
+        "B": "This logon uses NTLM from an unexpected source IP, consistent with a pass-the-hash attack — investigate the host at 10.10.5.99",
+        "C": "The admin is working from a different workstation today",
+        "D": "This is a service account logging on automatically"
+      },
+      "correct": "B",
+      "explanation": "Domain admins authenticating to key servers should use Kerberos from known workstations. NTLM from an unexpected IP is the primary PTH detection signature. The investigation should focus on 10.10.5.99: what process made the NTLM auth? (Sysmon Event 10 on 10.10.5.99 for LSASS around the same time). C cannot be assumed without confirmation. D would show LogonType=5.",
+      "lesson_ref": "L15",
+      "claim_ref": "C9",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "A Kerberoasting attack uses AD Event 4769 to exert selective targeting. What specific field combination in Event 4769 distinguishes a Kerberoasting request from legitimate service ticket requests?",
+      "options": {
+        "A": "ServiceName=krbtgt and LogonType=2",
+        "B": "TicketEncryptionType=0x12 (AES256) from multiple service accounts",
+        "C": "TicketEncryptionType=0x17 (RC4) targeting multiple service accounts from a single source IP in a short window",
+        "D": "FailureCode=0x0 and Status=0x0 indicating successful authentication"
+      },
+      "correct": "C",
+      "explanation": "Kerberoasting requests RC4 tickets (EncryptionType=0x17) rather than AES (0x12) because RC4 is crackable offline. A sweep targeting multiple service accounts in a short window from one IP indicates automated Kerberoasting tooling. AES-encrypted tickets are not practically crackable. A identifies TGT requests (different attack). D identifies success but not the specific pattern.",
+      "lesson_ref": "L15",
+      "claim_ref": "C9",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "A security policy enforces PowerShell Execution Policy = Restricted on all workstations. An attacker types the contents of their PowerShell script directly at the prompt. What is the effect on execution policy enforcement?",
+      "options": {
+        "A": "The script is blocked because Restricted policy applies to all PowerShell execution",
+        "B": "Execution policy is bypassed — it only applies to .ps1 files, not interactive input",
+        "C": "The script runs but is logged in a special restricted-mode log",
+        "D": "The policy forces the commands through AMSI before execution"
+      },
+      "correct": "B",
+      "explanation": "PowerShell Execution Policy restricts which .ps1 files can be run. It does not restrict interactive input, code entered via -Command, encoded command strings (`-EncodedCommand`), or IEX (Invoke-Expression). This is why execution policy is not a security boundary — Microsoft documented this explicitly. The effective detection is Script Block Logging (Event 4104).",
+      "lesson_ref": "L16",
+      "claim_ref": "C19",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "A CISO presents three security controls: (A) Enforce MFA for all admin logins, (B) Require admin tasks from Privileged Access Workstations, (C) Use Just-In-Time elevation for admin group membership. Why does this combination qualify as 'effective layered defence'?",
+      "options": {
+        "A": "All three controls use different products, providing vendor diversity",
+        "B": "Each control adds one more step the attacker must complete, increasing complexity",
+        "C": "Each control attacks a different mechanism: MFA targets credential theft, PAWs target lateral movement paths, JIT targets persistent privilege accumulation — the attacker must defeat each independently",
+        "D": "The controls are redundant and any single one would provide adequate protection"
+      },
+      "correct": "C",
+      "explanation": "Effective layering requires each control to protect against a different mechanism. Passing one does not bypass another. An attacker with a stolen hash (bypasses password) still faces MFA. Even with credentials, they must pivot from a PAW. Even on a PAW with credentials, admin group membership has expired. Each control fails independently and is sufficient to interrupt the kill chain.",
+      "lesson_ref": "L16",
+      "claim_ref": "C19",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q06",
+      "type": "short_answer",
+      "question": "Explain the Kerberoasting attack from start to finish: what access level is required, what the attacker requests, why the ticket is crackable, and what detection signature it leaves.",
+      "answer_key": {
+        "required_points": [
+          "Any authenticated domain user can request service tickets — no elevated access required",
+          "Attacker requests service tickets for SPN-bearing service accounts, specifically requesting RC4 (EncryptionType 0x17)",
+          "RC4-encrypted tickets can be cracked offline with hashcat against domain password policies",
+          "Detection: Event 4769 with TicketEncryptionType=0x17 across multiple service accounts from same source"
+        ],
+        "acceptable_variations": "Acceptable to mention requesting with Rubeus or GetUserSPNs.py, or to note AES-256 tickets (0x12) are not practically crackable. Extra credit for mentioning that the fix is requiring AES-only tickets for service accounts.",
+        "full_credit": "Covers all four required points in a coherent attack narrative.",
+        "partial_credit": "Describes the attack mechanics but cannot provide the Event 4769 detection signature."
+      },
+      "lesson_ref": "L15",
+      "claim_ref": "C9",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q07",
+      "type": "essay",
+      "prompt": "The bypass-always pattern states that every preventative control has a known bypass. Is this pattern an argument for abandoning preventative controls, or for a different approach to security architecture? Use three examples from M08 lessons to support your argument.",
+      "guidance": "Strong responses should argue for the paired-detection principle rather than abandoning prevention. They should distinguish between 'has a bypass' and 'provides no value'. Prevention raises the cost of attack and eliminates automated/opportunistic attackers — detection is what catches targeted attackers who invest in bypass.",
+      "rubric": {
+        "A": "Argues for paired-detection (not abandonment). References three controls with their bypass conditions and detection complements. Articulates that prevention filters opportunistic attacks; detection catches targeted attackers.",
+        "B": "Argues for paired-detection with two examples, basic reasoning about prevention value.",
+        "C": "Acknowledges both prevention and detection without a structured argument or examples."
+      },
+      "lesson_ref": "L16",
+      "difficulty": "analysis"
+    }
+  ]
+}

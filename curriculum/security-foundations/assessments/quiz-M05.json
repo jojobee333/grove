@@ -1,0 +1,126 @@
+{
+  "id": "quiz-M05",
+  "type": "module",
+  "module": "M05",
+  "title": "Assessment: Linux Security — Permissions and Filesystem",
+  "generated": "2026-04-13",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "During a Linux privilege escalation exercise, you run `find / -perm -4000 -type f 2>/dev/null` and find `/usr/local/custom_tool` owned by root with SUID set. What does this mean for your privileges?",
+      "options": {
+        "A": "You can read the file contents but not execute it",
+        "B": "Executing the file gives you root's effective UID for the duration of the process",
+        "C": "You need root to execute the file because it is owned by root",
+        "D": "The SUID bit only matters if the file is a shared library"
+      },
+      "correct": "B",
+      "explanation": "SUID causes the process to run with the file owner's effective UID (root in this case), regardless of who launches it. If custom_tool has any exploitable behaviour (shell spawn, arbitrary file read/write), it becomes a root escalation path. A and C are incorrect — SUID is specifically designed to elevate privileges for the caller. D is incorrect.",
+      "lesson_ref": "L09",
+      "claim_ref": "C4",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Running `sudo -l` returns: `User pentester may run (root) NOPASSWD: /usr/bin/vim /etc/nginx/nginx.conf`. Why is this a critical misconfiguration?",
+      "options": {
+        "A": "vim has a known buffer overflow vulnerability",
+        "B": "The NOPASSWD flag means no authentication check, and vim can spawn a shell (`:!bash`), granting root access without any password",
+        "C": "nginx.conf should not be editable because it is a system file",
+        "D": "The sudo rule allows too many users to see the nginx configuration"
+      },
+      "correct": "B",
+      "explanation": "vim allows shell escapes via `:!command` — any editor with this capability becomes a full shell if run as root. Combined with NOPASSWD (no password verification), this allows privilege escalation with zero friction. The intent was to allow nginx config editing, but vim as the tool grants unrestricted root shell access. A is not the core issue. C and D miss the escalation path.",
+      "lesson_ref": "L09",
+      "claim_ref": "C4",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "An analyst finds a binary executing from `/tmp/evil_service`. Under Linux FHS conventions, what makes this immediately suspicious?",
+      "options": {
+        "A": "Binaries in /tmp cannot be executed due to filesystem permissions",
+        "B": "FHS conventions place legitimate services under predictable paths (/usr/bin, /opt); /tmp is a temporary staging area with no persistent processes",
+        "C": "/tmp is always mounted with noexec in modern distributions",
+        "D": "The filename contains 'evil' which triggers security tools"
+      },
+      "correct": "B",
+      "explanation": "The FHS creates a predictable map: legitimate services live under /usr, /opt, /usr/local. Nothing legitimate runs long-term from /tmp. Any persistent process running from /tmp violates FHS norms and is anomalous. A is incorrect — /tmp executability depends on mount options (not guaranteed). C is incorrect — noexec is not a universal default. D is trivially bypassed.",
+      "lesson_ref": "L10",
+      "claim_ref": "C5",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "You need to find all files modified in /etc in the last 24 hours during an incident investigation. Which bash command accomplishes this?",
+      "options": {
+        "A": "`ls -la /etc` sorted by modification time",
+        "B": "`find /etc -mtime -1 -type f 2>/dev/null`",
+        "C": "`cat /etc/* | grep modified`",
+        "D": "`diff /etc /etc.backup`"
+      },
+      "correct": "B",
+      "explanation": "`find -mtime -1` returns files modified within the last 1 day. This is the correct incidentinvestigation command for filesystem timeline analysis. A lists all /etc files but does not filter by time. C is invalid syntax and won't work. D requires a pre-existing backup and is comparison-based, not a time filter.",
+      "lesson_ref": "L10",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "What bash pipeline identifies the most frequent source IPs for failed SSH login attempts in auth.log?",
+      "options": {
+        "A": "`cat /var/log/auth.log | grep 'Failed' | sort | uniq -c`",
+        "B": "`grep 'Failed password' /var/log/auth.log | awk '{print $11}' | sort | uniq -c | sort -rn`",
+        "C": "`journalctl -u sshd | grep Failed | awk '{print $NF}'`",
+        "D": "`tail -f /var/log/auth.log | grep Failed`"
+      },
+      "correct": "B",
+      "explanation": "B correctly filters for failed password events, extracts field 11 (source IP in sshd log format), counts unique IPs, and sorts by frequency descending. A does not extract the IP field. C uses journalctl with field position that may vary and does not aggregate by count. D shows real-time failures but does not summarise.",
+      "lesson_ref": "L10",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "short_answer",
+      "question": "Describe the three Linux user permission types (rwx), explain what SUID does differently from normal execution, and identify the security implication of a SUID root binary.",
+      "answer_key": {
+        "required_points": [
+          "rwx: read/write/execute applied to owner, group, others",
+          "SUID: process runs as file owner's UID rather than caller's",
+          "SUID root: any user calling it gets root's effective UID during the call"
+        ],
+        "acceptable_variations": "Additional mention of SGID (group equivalent), sticky bit, or numeric representation (4000). These are bonus points not required for full credit.",
+        "full_credit": "Correctly defines all three, explains SUID elevates to file owner's UID, explains the root SUID escalation implication.",
+        "partial_credit": "Correct on rwx and SUID mechanism but does not articulate the escalation implication."
+      },
+      "lesson_ref": "L09",
+      "claim_ref": "C4",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "An investigation reveals crontab entries in three locations: /etc/crontab, /etc/cron.d/monitoring, and /var/spool/cron/crontabs/backup_user. How does each differ in who runs the jobs and what privilege level they have?",
+      "answer_key": {
+        "required_points": [
+          "/etc/crontab: system crontab, specifies username for each job explicitly, edited only by root",
+          "/etc/cron.d/: per-package system cron jobs, runs as defined user in file, typically root",
+          "/var/spool/cron/crontabs/[user]: user's personal crontab, runs as that user's UID"
+        ],
+        "acceptable_variations": "Wording variations acceptable. Key distinction: system crontabs run processes as root by default unless otherwise specified; user crontabs are locked to that user's privilege level.",
+        "full_credit": "Correctly distinguishes all three locations, their privilege levels, and who can create entries in each.",
+        "partial_credit": "Gets /var/spool/cron/crontabs correct but conflates /etc/crontab with /etc/cron.d."
+      },
+      "lesson_ref": "L10",
+      "claim_ref": "C5",
+      "difficulty": "comprehension"
+    }
+  ]
+}

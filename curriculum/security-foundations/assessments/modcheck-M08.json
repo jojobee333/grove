@@ -1,0 +1,32 @@
+{
+  "module": "M08",
+  "title": "Retention Check: Authentication Weaknesses — NTLM to Kerberoasting",
+  "generated": "2026-04-13",
+  "questions": [
+    {
+      "id": "MC08-1",
+      "q": "Why is an NTLM hash equivalent to a password for authentication purposes?",
+      "a": "NTLM authenticates by verifying that the client can produce a valid response to a server challenge using the hash. The hash itself is used to compute the response — possessing the hash is a sufficient credential. The server never verifies that the client knows the plaintext."
+    },
+    {
+      "id": "MC08-2",
+      "q": "What is the Event 4624 field combination that is the primary pass-the-hash detection signature?",
+      "a": "LogonType=3 (network logon) + LmPackageName='NTLM V2' from a source IP that is unexpected for the target account. In a domain environment, admin authentications to key servers should use Kerberos — NTLM is suspicious unless specifically expected."
+    },
+    {
+      "id": "MC08-3",
+      "q": "What encrypted ticket type does Kerberoasting specifically request, and why is it crackable offline?",
+      "a": "RC4-encrypted tickets (EncryptionType=0x17, Kerberos RC4_HMAC). Service accounts encrypted with RC4 use the account's NTLM hash as the key, which can be cracked offline with hashcat/JtR against domain password policies. AES-encrypted tickets (0x12) are not practically crackable."
+    },
+    {
+      "id": "MC08-4",
+      "q": "Why is PowerShell Execution Policy not a security control, and what IS the paired detection for malicious PowerShell?",
+      "a": "Execution policy applies only to .ps1 files — bypassed trivially by the attacker typing script content interactively, using -ExecutionPolicy Bypass, or using -EncodedCommand. The effective detection is PowerShell Script Block Logging (Event 4104), which records actual executed code regardless of policy."
+    },
+    {
+      "id": "MC08-5",
+      "q": "State the paired-detection principle and apply it to one control from M08.",
+      "a": "Every preventative control has a documented bypass condition. For each control, define: (a) the bypass condition, (b) the detection signature that fires when the bypass is used. Example: MFA prevents credential-only auth. Bypass: SIM swap or session cookie theft. Detection: simultaneous impossible-travel alert on the account's MFA success events."
+    }
+  ]
+}

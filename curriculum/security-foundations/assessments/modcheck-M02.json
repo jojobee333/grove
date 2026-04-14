@@ -1,0 +1,32 @@
+{
+  "module": "M02",
+  "title": "Retention Check: DNS — Single Protocol, Every Domain",
+  "generated": "2026-04-13",
+  "questions": [
+    {
+      "id": "MC02-1",
+      "q": "What two fields does DNS use to match responses to outgoing queries, and what makes both exploitable?",
+      "a": "16-bit transaction ID and UDP source port. Both are predictable or have limited entropy. Without source port randomisation, only the transaction ID needs to be guessed (65,536 possibilities). With randomisation, both must be guessed simultaneously."
+    },
+    {
+      "id": "MC02-2",
+      "q": "What DNS response pattern indicates a host may be using a Domain Generation Algorithm?",
+      "a": "High NXDOMAIN rate — hundreds of failed lookups per minute for algorithmically-named, high-consonant-density domains with no real-word structure. The host is cycling through DGA names looking for an active C2 domain."
+    },
+    {
+      "id": "MC02-3",
+      "q": "Name the specific DNS record type that restricts which CAs can issue certificates for a domain.",
+      "a": "CAA (Certificate Authority Authorization) record."
+    },
+    {
+      "id": "MC02-4",
+      "q": "What makes Sysmon Event 22 more actionable than standard DNS server logs for detecting C2?",
+      "a": "Event 22 records the process image path of the querying process alongside the DNS query string. Standard DNS logs record the query but only the client IP — not which process on that host initiated the query. Process-level attribution is required to determine whether the query is from a known application or unexpected malware."
+    },
+    {
+      "id": "MC02-5",
+      "q": "What single DNS server configuration change eliminates zone transfer exposure?",
+      "a": "Restrict AXFR to authorised secondary server IPs only. In BIND: `allow-transfer { <secondary-IP>; };`. Equivalent restriction in Windows DNS Server zone properties."
+    }
+  ]
+}

@@ -23,6 +23,18 @@
       "generated": "2026-04-13",
       "adaptive": true,
       "bundle_version": "3.0"
+    },
+    {
+      "slug": "security-foundations",
+      "title": "Security Foundations",
+      "description": "Build practical security skills across networking, cryptography, Linux, and Windows by learning the mental models attackers use — and the telemetry defenders re",
+      "total_modules": 8,
+      "total_lessons": 16,
+      "total_cards": 50,
+      "total_questions": 57,
+      "generated": "2026-04-13",
+      "adaptive": true,
+      "bundle_version": "3.0"
     }
   ]
 }

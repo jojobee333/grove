@@ -1,0 +1,30 @@
+{
+  "slug": "security-foundations",
+  "generated": "2026-04-13",
+  "rules": {
+    "progression": {
+      "unlock_next_lesson": "complete_current",
+      "minimum_quiz_score": 70,
+      "minimum_modcheck_score": 0,
+      "require_modcheck_before_next_module": true
+    },
+    "review": {
+      "card_review_intervals": [1, 3, 7, 14],
+      "lesson_review_trigger_days": 7,
+      "mastery_threshold_reviews": 3,
+      "lapse_reset_interval": 1
+    },
+    "mastery": {
+      "lesson_mastery_required_cards": 0.8,
+      "module_mastery_required_lessons": 1.0,
+      "course_mastery_required_modules": 1.0
+    },
+    "adaptive": {
+      "weak_concept_review": true,
+      "weak_concept_threshold_score": 60,
+      "weak_concept_review_after_days": 3,
+      "struggling_learner_slow_mode": true,
+      "struggling_learner_threshold_lapses": 3
+    }
+  }
+}

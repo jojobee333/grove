@@ -1,0 +1,366 @@
+{
+  "topic": "Security Foundations",
+  "slug": "security-foundations",
+  "strata_source": "vault/research/security-foundations/",
+  "generated": "2026-04-13",
+  "learner": {
+    "goal": "apply_practically",
+    "background": "some_exposure",
+    "session_time_min": 15
+  },
+  "summary": "Build practical security skills across networking, cryptography, Linux, and Windows by learning the mental models attackers use — and the telemetry defenders rely on.",
+  "modules": [
+    {
+      "id": "M01",
+      "title": "The Protocol Feature Mental Model",
+      "strata_theme": "Theme 1: Protocol Features Are the Attack Surface",
+      "description": "Every protocol's usability feature encodes a trust assumption that attackers exploit. Master this pattern once and you can reason about attacks on protocols you've never studied.",
+      "objectives": [
+        "Derive potential attack vectors for any protocol by identifying its trusted assumptions",
+        "Identify the specific protocol feature exploited in TCP SYN floods, ARP spoofing, and HTTP header injection"
+      ],
+      "lessons": [
+        {
+          "id": "L01",
+          "title": "How Protocol Features Become Attack Surfaces",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 13,
+          "description": "The universal pattern: every protocol's usability assumption is an attacker's entry point. Why TCP, ARP, HTTP, and DNS all follow the same structural logic.",
+          "difficulty": 2,
+          "prerequisites": [],
+          "teaches_concepts": ["protocol-attack-surface"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.70,
+          "unlock_rule": "none",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L02",
+          "title": "TCP, ARP, and HTTP: Walking Protocols to Their Attacks",
+          "strata_claim": "C3",
+          "type": "applied",
+          "estimated_minutes": 15,
+          "description": "Apply the mental model: start from each protocol's spec and derive the attacks directly from the design decisions — not from a list of CVEs.",
+          "difficulty": 3,
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["tcp-ip-attacks", "arp-spoofing", "http-vulnerabilities"],
+          "reinforces_concepts": ["protocol-attack-surface"],
+          "mastery_threshold": 0.70,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M02",
+      "title": "DNS — Single Protocol, Every Domain",
+      "strata_theme": "Theme 8: DNS Is a Universal Attack and Defense Vector",
+      "description": "DNS appears in networking attacks, C2 infrastructure, certificate security, and Windows lateral movement detection. DNS literacy is a prerequisite for everything else.",
+      "objectives": [
+        "Describe three ways attackers weaponize DNS: cache poisoning, tunneling for C2, and DGA for resilient infrastructure",
+        "Apply DNS records (CAA, SPF, Sysmon Event 22 logging) to reduce attacker leverage"
+      ],
+      "lessons": [
+        {
+          "id": "L03",
+          "title": "DNS Architecture and How Attackers Abuse It",
+          "strata_claim": "C2",
+          "type": "core",
+          "estimated_minutes": 13,
+          "description": "The recursive resolver trust chain, Kaminsky-style cache poisoning, zone transfer leakage, and DNS as the dominant C2 channel.",
+          "difficulty": 2,
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["dns-architecture", "dns-attacks"],
+          "reinforces_concepts": ["protocol-attack-surface"],
+          "mastery_threshold": 0.70,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L04",
+          "title": "Using DNS Records as a Defender",
+          "strata_claim": "C2",
+          "type": "applied",
+          "estimated_minutes": 12,
+          "description": "CAA records, DNSSEC, Sysmon Event 22, split-horizon DNS — converting the protocol that attackers love into a detection tripwire.",
+          "difficulty": 3,
+          "prerequisites": ["L03"],
+          "teaches_concepts": ["dns-defense"],
+          "reinforces_concepts": ["dns-architecture", "dns-attacks"],
+          "mastery_threshold": 0.70,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M03",
+      "title": "Symmetric Encryption — From CBC to AEAD",
+      "strata_theme": "Theme 9: AEAD Cipher Modes Represent the Cryptographic Consensus for Symmetric Encryption",
+      "description": "Three major TLS attacks (BEAST, Lucky13, POODLE) all exploited the same CBC property. Understanding why AEAD fixed them is the unlock for reading cipher suite documentation intelligently.",
+      "objectives": [
+        "Explain why separating encryption from authentication in CBC mode enabled padding oracle attacks",
+        "Select correct cipher suites for TLS 1.2 and TLS 1.3 based on OWASP and NIST guidance"
+      ],
+      "lessons": [
+        {
+          "id": "L05",
+          "title": "Why CBC Kept Breaking: The Case for AEAD",
+          "strata_claim": "C11",
+          "type": "core",
+          "estimated_minutes": 14,
+          "description": "BEAST, Lucky13, POODLE — each attack exploits the structural separation of encryption from authentication in CBC mode. AEAD collapses both into one operation.",
+          "difficulty": 2,
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["aead-encryption", "cbc-vulnerabilities"],
+          "reinforces_concepts": ["protocol-attack-surface"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L06",
+          "title": "Choosing Cipher Suites in Practice",
+          "strata_claim": "C11",
+          "type": "applied",
+          "estimated_minutes": 12,
+          "description": "TLS 1.3 is AEAD-only by spec. TLS 1.2 requires careful manual configuration. The exact OWASP and NIST-approved lists — and the TLS 1.2 vs 1.3 nuance that trips up practitioners.",
+          "difficulty": 3,
+          "prerequisites": ["L05"],
+          "teaches_concepts": ["cipher-suite-selection", "tls-versions"],
+          "reinforces_concepts": ["aead-encryption"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M04",
+      "title": "Forward Secrecy, KDFs, and PKI",
+      "strata_theme": "Theme 3: Forward Secrecy and Ephemeral Keys Are Industry Consensus",
+      "description": "Three distinct cryptographic problems with the same root cause: long-lived secret material. Ephemeral keys, KDFs, and certificate chain validation each solve a different aspect.",
+      "objectives": [
+        "Explain why ephemeral ECDH key exchange prevents retroactive decryption after long-term key compromise",
+        "Apply bcrypt or Argon2id with correct parameters for secure password storage",
+        "List RFC 5280's four certificate chain validation checks performed by browsers"
+      ],
+      "lessons": [
+        {
+          "id": "L07",
+          "title": "Ephemeral Keys and Why Forward Secrecy Is Non-Negotiable",
+          "strata_claim": "C12",
+          "type": "core",
+          "estimated_minutes": 13,
+          "description": "Static RSA key exchange meant every recorded TLS session could be decrypted retroactively after key compromise. ECDHE generates independent per-session key material.",
+          "difficulty": 2,
+          "prerequisites": ["L05"],
+          "teaches_concepts": ["forward-secrecy"],
+          "reinforces_concepts": ["cipher-suite-selection", "aead-encryption"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L08",
+          "title": "Passwords, Hashing, and Certificate Chain Validation",
+          "strata_claim": "C13",
+          "type": "applied",
+          "estimated_minutes": 15,
+          "description": "Why bcrypt and Argon2id not SHA-256 for passwords, the bcrypt 72-byte truncation caveat, and how browsers validate certificate chains (RFC 5280 four-check process).",
+          "difficulty": 3,
+          "prerequisites": ["L07"],
+          "teaches_concepts": ["kdf-password-storage", "pki-chain-validation", "sha-standards"],
+          "reinforces_concepts": ["forward-secrecy"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M05",
+      "title": "Linux Security — Permissions and the Filesystem",
+      "strata_theme": "Theme 10: Least Privilege Is the Universal Hardening Principle Across All Domains",
+      "description": "The Linux permission model is both a hardening framework and a forensic map. Knowing where files are supposed to be makes suspicious files findable.",
+      "objectives": [
+        "Use chmod, find -perm, and stat to identify over-privileged files and SUID binaries on a Linux system",
+        "Navigate the FHS to locate auth logs, crontabs, temp staging directories, and service configurations during an investigation"
+      ],
+      "lessons": [
+        {
+          "id": "L09",
+          "title": "The Linux Permission Model for Security Work",
+          "strata_claim": "C4",
+          "type": "core",
+          "estimated_minutes": 13,
+          "description": "rwx triplets, SUID and SGID bits, sudo configuration — and the privilege escalation paths each creates. With the find commands that expose them.",
+          "difficulty": 2,
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["linux-permissions"],
+          "reinforces_concepts": ["protocol-attack-surface"],
+          "mastery_threshold": 0.70,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L10",
+          "title": "The Filesystem as a Security Map: FHS and Bash Tools",
+          "strata_claim": "C5",
+          "type": "applied",
+          "estimated_minutes": 15,
+          "description": "Every security artifact has a predictable location in the FHS. auth.log, crontab, sshd_config, /tmp, /etc/cron.d — and the bash pipelines for investigating each.",
+          "difficulty": 3,
+          "prerequisites": ["L09"],
+          "teaches_concepts": ["linux-filesystem", "bash-security-tools"],
+          "reinforces_concepts": ["linux-permissions"],
+          "mastery_threshold": 0.70,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M06",
+      "title": "Persistence — Abusing What the OS Trusts",
+      "strata_theme": "Theme 6: Persistence Via 'Trusted' OS Mechanisms Is the Attacker's Default",
+      "description": "Sophisticated attackers don't invent persistence mechanisms — they use cron, systemd, WMI, and registry run keys. Detecting them requires knowing what 'normal' looks like first.",
+      "objectives": [
+        "List five persistence locations used by attackers on Linux and five on Windows, with their legitimate administrative purpose",
+        "Detect unauthorized persistence entries by comparing current state against a known-good baseline"
+      ],
+      "lessons": [
+        {
+          "id": "L11",
+          "title": "How Attackers Hide in Legitimate Autorun Mechanisms",
+          "strata_claim": "C8",
+          "type": "core",
+          "estimated_minutes": 14,
+          "description": "Cron, systemd user services, /tmp staging on Linux; scheduled tasks, WMI subscriptions (filter + consumer + binding), registry HKLM\\...\\Run keys on Windows. Why each blends into operational noise.",
+          "difficulty": 3,
+          "prerequisites": ["L10"],
+          "teaches_concepts": ["persistence-mechanisms"],
+          "reinforces_concepts": ["linux-filesystem"],
+          "mastery_threshold": 0.70,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L12",
+          "title": "Detecting Persistence Through Baselining",
+          "strata_claim": "C8",
+          "type": "applied",
+          "estimated_minutes": 14,
+          "description": "Sysmon Events 12/13 (registry modifications) and Events 19/20/21 (WMI subscriptions). Build the known-good exclusion list, alert on everything else.",
+          "difficulty": 3,
+          "prerequisites": ["L11"],
+          "teaches_concepts": ["autorun-detection"],
+          "reinforces_concepts": ["persistence-mechanisms", "bash-security-tools"],
+          "mastery_threshold": 0.70,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M07",
+      "title": "Windows Telemetry — Seeing the Full Picture",
+      "strata_theme": "Theme 4: Defense Requires Correlated Multi-Source Telemetry",
+      "description": "Event 4624, Sysmon, and AD events each cover different attack surfaces and share no single log source. Correlation via ProcessGUID and SessionGUID is what makes detection work.",
+      "objectives": [
+        "Describe the distinct security context provided by Event 4624, Sysmon Events 1/3/10/22, and AD Event 4769",
+        "Correlate events across sources using ProcessGUID and SessionGUID to reconstruct a lateral movement chain"
+      ],
+      "lessons": [
+        {
+          "id": "L13",
+          "title": "Windows Event Sources: What Each Log Provides",
+          "strata_claim": "C7",
+          "type": "core",
+          "estimated_minutes": 14,
+          "description": "Event 4624 tells WHO authenticated. Sysmon tells WHAT ran and what connected. AD events cover DC-level changes. Each has a coverage gap the others fill.",
+          "difficulty": 2,
+          "prerequisites": ["L12"],
+          "teaches_concepts": ["windows-event-logs", "sysmon"],
+          "reinforces_concepts": ["autorun-detection"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L14",
+          "title": "Correlating Events to Detect Lateral Movement",
+          "strata_claim": "C10",
+          "type": "applied",
+          "estimated_minutes": 15,
+          "description": "ProcessGUID links process creation to network connections. SessionGUID links that to logon events. AD Event 4769 confirms Kerberos. The seven security-critical registry areas and how they appear in Sysmon.",
+          "difficulty": 3,
+          "prerequisites": ["L13"],
+          "teaches_concepts": ["event-correlation", "windows-registry-security"],
+          "reinforces_concepts": ["windows-event-logs", "sysmon"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M08",
+      "title": "Authentication Weaknesses — NTLM to Kerberoasting",
+      "strata_theme": "Theme 7: NTLM Is the Cryptographic Weak Link in Windows Authentication",
+      "description": "NTLM's RC4-based cryptographic weakness underlies Pass-the-Hash and Kerberoasting — the two most common post-exploitation techniques in Active Directory environments.",
+      "objectives": [
+        "Describe the Pass-the-Hash and Kerberoasting attack chains and their specific detection event signatures",
+        "Apply the paired-detection principle: identify the monitoring control that must accompany each preventative control"
+      ],
+      "lessons": [
+        {
+          "id": "L15",
+          "title": "NTLM, Pass-the-Hash, and Kerberoasting",
+          "strata_claim": "C9",
+          "type": "core",
+          "estimated_minutes": 15,
+          "description": "LmPackageName=NTLM in Event 4624, TicketEncryptionType=0x17 in Event 4769, Event 4662 for DCSync — the exact attack chains and the exact detection signatures.",
+          "difficulty": 3,
+          "prerequisites": ["L14", "L07"],
+          "teaches_concepts": ["ntlm-attacks", "kerberoasting"],
+          "reinforces_concepts": ["windows-event-logs", "event-correlation"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L16",
+          "title": "Layered Controls and the Bypass-Always Pattern",
+          "strata_claim": "C19",
+          "type": "applied",
+          "estimated_minutes": 12,
+          "description": "Every preventative control has a documented bypass — execution policy, ARP validation, NTLM. Effective defence means paired detection for each control, not just stacking more controls.",
+          "difficulty": 3,
+          "prerequisites": ["L15"],
+          "teaches_concepts": ["layered-authentication", "bypass-controls"],
+          "reinforces_concepts": ["ntlm-attacks", "autorun-detection"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    }
+  ],
+  "total_lessons": 16,
+  "total_estimated_hours": 3.6,
+  "learning_plan": {
+    "sessions_to_complete": 21,
+    "suggested_schedule": "3 sessions per week (about 7 weeks)",
+    "milestone_lessons": ["L01", "L05", "L09", "L13", "L16"]
+  }
+}

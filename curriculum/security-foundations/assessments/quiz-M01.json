@@ -1,0 +1,139 @@
+{
+  "id": "quiz-M01",
+  "type": "module",
+  "module": "M01",
+  "title": "Assessment: The Protocol Feature Mental Model",
+  "generated": "2026-04-13",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "A developer reviews an authentication protocol where the client proves identity by decrypting a server-sent challenge with its private key. What question should a security analyst ask first to identify the attack surface?",
+      "options": {
+        "A": "What encryption algorithm is used?",
+        "B": "What does this protocol trust, and who is allowed to provide that trusted value?",
+        "C": "How many rounds of encryption are performed?",
+        "D": "What is the key length?"
+      },
+      "correct": "B",
+      "explanation": "The protocol feature mental model requires identifying the trust assumption first. A and D ask about implementation details that don't reveal the attack surface. C is irrelevant to the trust model. B is the one question from L01 that exposes whether an attacker can satisfy the trust assumption dishonestly.",
+      "lesson_ref": "L01",
+      "claim_ref": "C1",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "During a penetration test, a tester sends thousands of TCP SYN packets with spoofed source IPs to a target server. What resource is the tester attempting to exhaust?",
+      "options": {
+        "A": "Disk I/O capacity",
+        "B": "CPU processing cycles for cryptographic operations",
+        "C": "Connection table entries allocated for half-open connections",
+        "D": "Available bandwidth on the network link"
+      },
+      "correct": "C",
+      "explanation": "TCP allocates a connection table entry for every SYN received, waiting for the final ACK. Spoofed source IPs prevent the ACK from arriving. The half-open connection entries accumulate until the table is full, refusing legitimate connections. A, B, and D may be incidentally affected but are not the primary exhausted resource.",
+      "lesson_ref": "L02",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "An attacker on a LAN segment sends an unsolicited ARP reply stating '192.168.1.1 is at MAC AA:BB:CC'. A victim machine updates its ARP cache accordingly. What feature of the ARP protocol made this possible without any exploit code?",
+      "options": {
+        "A": "ARP uses UDP, which lacks connection state",
+        "B": "ARP trusts that the last reply to a broadcast is authoritative, with no authentication",
+        "C": "ARP was designed before security was considered important",
+        "D": "ARP replies are not validated by the network switch"
+      },
+      "correct": "B",
+      "explanation": "ARP's broadcast-reply-is-authoritative design is the mechanism — not a vulnerability in the traditional sense. B precisely describes the trust assumption. A is true but not the mechanism. C is vague and incorrect framing. D is partially true (switches can be configured for DAI) but misses the protocol-level trust assumption.",
+      "lesson_ref": "L02",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "A web application generates password reset URLs using the value of the HTTP Host header. An attacker modifies the Host header to 'evil.com'. What is the most likely outcome?",
+      "options": {
+        "A": "The server ignores the Host header and uses the server's canonical hostname",
+        "B": "The reset link sent to the victim contains 'evil.com', delivering the reset token to the attacker",
+        "C": "The request is rejected because Host header modification is blocked by TLS",
+        "D": "The server detects the forged header and logs a security event"
+      },
+      "correct": "B",
+      "explanation": "HTTP requires the server to trust the Host header to route virtual host requests. An application that builds URLs from this value will construct 'https://evil.com/reset?token=...' and email it to the victim. The attacker receives the token when the victim clicks. A and C are incorrect — HTTP spec requires the server use the provided Host. D describes a control that is not a default behaviour.",
+      "lesson_ref": "L02",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "A security analyst applies the protocol feature mental model to TLS 1.2 with static RSA key exchange. What is the trust assumption, and what attack scenario does it enable?",
+      "options": {
+        "A": "Trusts that the server's certificate is valid; enables man-in-the-middle if CA is compromised",
+        "B": "Trusts that the server's long-term private key is never compromised; enables retroactive decryption of all recorded sessions if the key is later obtained",
+        "C": "Trusts that the cipher suite is strong; enables attacks only when weak ciphers are negotiated",
+        "D": "Trusts that TCP sequence numbers are unpredictable; enables RST injection if sequence numbers are guessed"
+      },
+      "correct": "B",
+      "explanation": "Static RSA key exchange encrypts the session key using the server's long-term public key. Anyone with the private key can decrypt all sessions using that key — past, present, future. B correctly identifies both the trust assumption (key stays secret forever) and the attack (retroactive decryption). A describes a different TLS attack. C and D are incorrect applications of the model.",
+      "lesson_ref": "L01",
+      "claim_ref": "C1",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q06",
+      "type": "short_answer",
+      "question": "Explain the protocol feature mental model in your own words. Give one example of a protocol (not TCP/ARP/HTTP) and identify its trust assumption and the attack it enables.",
+      "answer_key": {
+        "required_points": [
+          "Must describe that protocols encode trust assumptions required for their function",
+          "Must state that the trust assumption is also the attack vector",
+          "Must identify a valid protocol, its trust assumption, and the derivative attack"
+        ],
+        "acceptable_variations": "Acceptable protocols include DNS (trust in recursive resolvers → cache poisoning), SMTP (trust in sender domain → email spoofing), OAuth (trust in redirect_uri → open redirect), Kerberos with RC4 (trust in service ticket encryption strength → Kerberoasting), etc.",
+        "full_credit": "Identifies the pattern (feature = trust assumption = attack vector), provides a specific protocol not from the lesson, correctly names the relevant trust assumption and the attack it enables.",
+        "partial_credit": "Correctly describes the pattern but gives a generic example, or identifies the protocol but misidentifies the trust assumption."
+      },
+      "lesson_ref": "L01",
+      "claim_ref": "C1",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "Describe the RST injection attack against TCP. What does the attacker need to know, and what is the outcome?",
+      "answer_key": {
+        "required_points": [
+          "Must mention forging a RST segment with a sequence number in the expected window",
+          "Must mention that RST segments are accepted without cryptographic verification",
+          "Must state the outcome: established TCP connection is terminated"
+        ],
+        "acceptable_variations": "Acceptable to mention that guessing the 32-bit window is computationally feasible on modern hardware. Not required to cite ROBOT or specific tooling.",
+        "full_credit": "Explains that RST segments carry no cryptographic signature, that the receiver accepts any RST with a plausible sequence number, that an off-path attacker can terminate any connection whose approximate sequence number can be guessed.",
+        "partial_credit": "Correctly identifies RST injection as terminating a connection but does not explain the mechanism (no auth on RST)."
+      },
+      "lesson_ref": "L02",
+      "claim_ref": "C3",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q08",
+      "type": "essay",
+      "prompt": "The protocol feature mental model claims that attack vectors are not discovered after the fact but are built into protocol design. Do you agree? Select two protocols from this module (L01-L02) and argue whether the attacks against them were foreseeable from the original design specifications.",
+      "guidance": "Strong responses reference specific protocol features and explain why those features created the attack surface. They should engage with whether 'foreseeable' means 'unavoidable' — most protocol designers made deliberate trade-offs between usability and security.",
+      "rubric": {
+        "A": "References specific protocol features and trust assumptions for two protocols. Distinguishes between 'foreseeable' and 'avoidable'. Acknowledges the trade-off between usability and security in the original design context.",
+        "B": "References two protocols with reasonable attack analysis but does not engage with the 'foreseeable' distinction meaningfully.",
+        "C": "Generic response about security trade-offs without grounding in specific protocol feature analysis."
+      },
+      "lesson_ref": "L01-L02",
+      "difficulty": "analysis"
+    }
+  ]
+}
