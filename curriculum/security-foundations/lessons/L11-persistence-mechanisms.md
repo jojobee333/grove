@@ -50,9 +50,9 @@ Detection: `find /etc/cron.d -newer /root/.bashrc` (compare against a baseline f
 
 ## Go deeper
 
-- [S015 — Sysmon v15](../../../../../vault/research/security-foundations/01-sources/web/S015-sysmon-v15.md) — Sysmon events 19/20/21 for WMI subscription monitoring
-- [S016 — AD Security Best Practices](../../../../../vault/research/security-foundations/01-sources/web/S016-ad-security-best-practices.md) — GPO-based persistence and scheduled task auditing
-- [S007 — FHS](../../../../../vault/research/security-foundations/01-sources/web/S007-fhs-filesystem-hierarchy.md) — Linux persistence location map
+- [S015 — Sysmon v15](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon) — Sysmon events 19/20/21 for WMI subscription monitoring
+- [S016 — AD Security Best Practices](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/best-practices-for-securing-active-directory) — GPO-based persistence and scheduled task auditing
+- [S007 — FHS](https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html) — Linux persistence location map
 
 ---
 

@@ -72,8 +72,8 @@ AES-GCM is secure only when nonces are never reused under the same key. A single
 
 ## Go deeper
 
-- [S013 — OWASP TLS Cheat Sheet](../../../../../vault/research/security-foundations/01-sources/web/S013-owasp-tls-cheatsheet.md) — Complete cipher suite disable/enable list with rationale
-- [S017 — NIST SP 800-52r2](../../../../../vault/research/security-foundations/01-sources/web/S017-nist-sp800-52r2-tls.md) — Federal TLS configuration requirements
+- [S013 — OWASP TLS Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Protection_Cheat_Sheet.html) — Complete cipher suite disable/enable list with rationale
+- [S017 — NIST SP 800-52r2](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-52r2.pdf) — Federal TLS configuration requirements
 
 ---
 

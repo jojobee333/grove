@@ -56,9 +56,9 @@ You understand the mental model from L01. Now apply it. For each of three protoc
 
 ## Go deeper
 
-- [S001 — RFC 793 TCP](../../../../../vault/research/security-foundations/01-sources/web/S001-rfc793-tcp.md) — TCP spec; sequence number design in section 3
-- [S002 — RFC 826 ARP](../../../../../vault/research/security-foundations/01-sources/web/S002-rfc826-arp.md) — ARP spec; the broadcast reply mechanism
-- [S003 — RFC 7230 HTTP](../../../../../vault/research/security-foundations/01-sources/web/S003-rfc7230-http.md) — HTTP/1.1 framing, Host header, and Transfer-Encoding
+- [S001 — RFC 793 TCP](https://tools.ietf.org/html/rfc793) — TCP spec; sequence number design in section 3
+- [S002 — RFC 826 ARP](https://tools.ietf.org/html/rfc826) — ARP spec; the broadcast reply mechanism
+- [S003 — RFC 7230 HTTP](https://tools.ietf.org/html/rfc7230) — HTTP/1.1 framing, Host header, and Transfer-Encoding
 
 ---
 

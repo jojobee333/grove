@@ -39,8 +39,8 @@ GTFOBins (https://gtfobins.github.io) documents which SUID binaries can be abuse
 
 ## Go deeper
 
-- [S009 — Linux Command Permissions](../../../../../vault/research/security-foundations/01-sources/web/S009-linuxcommand-permissions.md) — rwx model, SUID/SGID, practical chmod and find commands
-- [S007 — FHS Filesystem Hierarchy](../../../../../vault/research/security-foundations/01-sources/web/S007-fhs-filesystem-hierarchy.md) — Where SUID binaries are expected to live
+- [S009 — Linux Command Permissions](https://www.linuxfoundation.org/blog/blog/understanding-linux-file-permissions) — rwx model, SUID/SGID, practical chmod and find commands
+- [S007 — FHS Filesystem Hierarchy](https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html) — Where SUID binaries are expected to live
 
 ---
 

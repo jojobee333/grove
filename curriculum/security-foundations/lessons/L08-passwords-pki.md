@@ -59,9 +59,9 @@ Any one of these checks failing terminates the handshake with a certificate erro
 
 ## Go deeper
 
-- [S018 — OWASP Password Storage](../../../../../vault/research/security-foundations/01-sources/web/S018-owasp-password-storage.md) — bcrypt, Argon2id parameters and the 72-byte issue
-- [S020 — RFC 5280 X.509 PKI](../../../../../vault/research/security-foundations/01-sources/web/S020-rfc5280-x509-pki.md) — Certificate chain validation rules in full
-- [S021 — NIST FIPS 180-4 SHA](../../../../../vault/research/security-foundations/01-sources/web/S021-nist-fips180-4-sha.md) — SHA-2 standards and SHA-1 deprecation timeline
+- [S018 — OWASP Password Storage](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html) — bcrypt, Argon2id parameters and the 72-byte issue
+- [S020 — RFC 5280 X.509 PKI](https://tools.ietf.org/html/rfc5280) — Certificate chain validation rules in full
+- [S021 — NIST FIPS 180-4 SHA](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf) — SHA-2 standards and SHA-1 deprecation timeline
 
 ---
 

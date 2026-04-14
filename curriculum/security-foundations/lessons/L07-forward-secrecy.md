@@ -47,8 +47,8 @@ TLS 1.3 uses ECDHE exclusively. For TLS 1.2, ECDHE with x25519 or P-256 is prefe
 
 ## Go deeper
 
-- [S012 — RFC 8446 TLS 1.3](../../../../../vault/research/security-foundations/01-sources/web/S012-rfc8446-tls13.md) — Section 1.2 documents ROBOT and static RSA removal rationale
-- [S017 — NIST SP 800-52r2](../../../../../vault/research/security-foundations/01-sources/web/S017-nist-sp800-52r2-tls.md) — Federal prohibition of static RSA key exchange
+- [S012 — RFC 8446 TLS 1.3](https://tools.ietf.org/html/rfc8446) — Section 1.2 documents ROBOT and static RSA removal rationale
+- [S017 — NIST SP 800-52r2](https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-52r2.pdf) — Federal prohibition of static RSA key exchange
 
 ---
 

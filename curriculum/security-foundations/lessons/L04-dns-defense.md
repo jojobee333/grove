@@ -64,8 +64,8 @@ Run separate internal and external DNS zones for the same domain. External resol
 
 ## Go deeper
 
-- [S015 — Sysmon v15](../../../../../vault/research/security-foundations/01-sources/web/S015-sysmon-v15.md) — Event 22 DNS query monitoring configuration
-- [S013 — OWASP TLS Cheat Sheet](../../../../../vault/research/security-foundations/01-sources/web/S013-owasp-tls-cheatsheet.md) — CAA record guidance and DNS hardening recommendations
+- [S015 — Sysmon v15](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon) — Event 22 DNS query monitoring configuration
+- [S013 — OWASP TLS Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Protection_Cheat_Sheet.html) — CAA record guidance and DNS hardening recommendations
 
 ---
 

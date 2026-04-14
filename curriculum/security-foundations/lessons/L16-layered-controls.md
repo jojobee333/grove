@@ -64,8 +64,8 @@ For every control you rely on, document: the bypass condition, the detection sig
 
 ## Go deeper
 
-- [S014 — PowerShell Execution Policies](../../../../../vault/research/security-foundations/01-sources/web/S014-powershell-execution-policies.md) — Microsoft's own documentation that execution policy is not a security system
-- [S016 — AD Security Best Practices](../../../../../vault/research/security-foundations/01-sources/web/S016-ad-security-best-practices.md) — MFA, PAWs, JIT elevation implementation guidance
+- [S014 — PowerShell Execution Policies](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies) — Microsoft's own documentation that execution policy is not a security system
+- [S016 — AD Security Best Practices](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/best-practices-for-securing-active-directory) — MFA, PAWs, JIT elevation implementation guidance
 
 ---
 

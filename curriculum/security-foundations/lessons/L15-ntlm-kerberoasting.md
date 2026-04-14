@@ -100,9 +100,9 @@ The prevention for Kerberoasting is straightforward: remove RC4 from allowed Ker
 
 ## Go deeper
 
-- [S011 — Windows Event 4624](../../../../../vault/research/security-foundations/01-sources/web/S011-windows-event-4624.md) — LmPackageName field and NTLM detection
-- [S016 — AD Security Best Practices](../../../../../vault/research/security-foundations/01-sources/web/S016-ad-security-best-practices.md) — NTLM deprecation, Kerberoasting mitigations, DCSync detection
-- [S023 — Windows Security Events](../../../../../vault/research/security-foundations/01-sources/web/S023-windows-security-events.md) — Event 4769 TicketEncryptionType field reference
+- [S011 — Windows Event 4624](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4624) — LmPackageName field and NTLM detection
+- [S016 — AD Security Best Practices](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/best-practices-for-securing-active-directory) — NTLM deprecation, Kerberoasting mitigations, DCSync detection
+- [S023 — Windows Security Events](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/security-auditing-overview) — Event 4769 TicketEncryptionType field reference
 
 ---
 

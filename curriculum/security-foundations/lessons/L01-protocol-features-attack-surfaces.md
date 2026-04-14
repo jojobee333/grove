@@ -37,9 +37,9 @@ No external vulnerability is required. The attack is written into the protocol s
 
 ## Go deeper
 
-- [S001 — RFC 793 TCP](../../../../../vault/research/security-foundations/01-sources/web/S001-rfc793-tcp.md) — TCP's sequence number design and its side effects
-- [S002 — RFC 826 ARP](../../../../../vault/research/security-foundations/01-sources/web/S002-rfc826-arp.md) — The original ARP spec; the trust assumption is visible in the design
-- [S005 — RFC 1034 DNS](../../../../../vault/research/security-foundations/01-sources/web/S005-rfc1034-dns.md) — DNS recursive resolver trust chain
+- [S001 — RFC 793 TCP](https://tools.ietf.org/html/rfc793) — TCP's sequence number design and its side effects
+- [S002 — RFC 826 ARP](https://tools.ietf.org/html/rfc826) — The original ARP spec; the trust assumption is visible in the design
+- [S005 — RFC 1034 DNS](https://tools.ietf.org/html/rfc1034) — DNS recursive resolver trust chain
 
 ---
 

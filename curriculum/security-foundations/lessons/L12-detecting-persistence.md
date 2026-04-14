@@ -84,8 +84,8 @@ For adversary simulation: add a Run key entry in HKCU, ensure Sysmon Event 13 fi
 
 ## Go deeper
 
-- [S015 — Sysmon v15](../../../../../vault/research/security-foundations/01-sources/web/S015-sysmon-v15.md) — Event 12/13/19/20/21 documentation and XML configuration examples
-- [S016 — AD Security Best Practices](../../../../../vault/research/security-foundations/01-sources/web/S016-ad-security-best-practices.md) — Monitoring audits and baseline review recommendations
+- [S015 — Sysmon v15](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon) — Event 12/13/19/20/21 documentation and XML configuration examples
+- [S016 — AD Security Best Practices](https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/best-practices-for-securing-active-directory) — Monitoring audits and baseline review recommendations
 
 ---
 

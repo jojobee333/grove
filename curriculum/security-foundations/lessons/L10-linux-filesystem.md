@@ -92,9 +92,9 @@ The FHS's strongest security property is predictability: a legitimate web server
 
 ## Go deeper
 
-- [S007 — FHS Filesystem Hierarchy](../../../../../vault/research/security-foundations/01-sources/web/S007-fhs-filesystem-hierarchy.md) — Full FHS specification and security notes
-- [S008 — The Linux Command Line](../../../../../vault/research/security-foundations/01-sources/web/S008-tlcl-linux-commandline.md) — Pipeline construction and text processing tools
-- [S010 — Bash Scripting](../../../../../vault/research/security-foundations/01-sources/web/S010-tldp-abs-bash-scripting.md) — Advanced bash patterns for investigation scripts
+- [S007 — FHS Filesystem Hierarchy](https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html) — Full FHS specification and security notes
+- [S008 — The Linux Command Line](https://linuxcommand.org/lc3_learning_the_shell.php) — Pipeline construction and text processing tools
+- [S010 — Bash Scripting](https://tldp.org/LDP/abs/html/) — Advanced bash patterns for investigation scripts
 
 ---
 

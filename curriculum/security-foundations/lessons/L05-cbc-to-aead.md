@@ -33,9 +33,9 @@ The fix in TLS 1.3: the spec defines only three cipher suites (AES-128-GCM-SHA25
 
 ## Go deeper
 
-- [S012 — RFC 8446 TLS 1.3](../../../../../vault/research/security-foundations/01-sources/web/S012-rfc8446-tls13.md) — Appendix C documents the specific attacks CBC mode enabled
-- [S013 — OWASP TLS Cheat Sheet](../../../../../vault/research/security-foundations/01-sources/web/S013-owasp-tls-cheatsheet.md) — Lists all cipher classes to disable and why each one matters
-- [S019 — OWASP Cryptographic Storage](../../../../../vault/research/security-foundations/01-sources/web/S019-owasp-cryptographic-storage.md) — Practical guidance on symmetric encryption primitives
+- [S012 — RFC 8446 TLS 1.3](https://tools.ietf.org/html/rfc8446) — Appendix C documents the specific attacks CBC mode enabled
+- [S013 — OWASP TLS Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Protection_Cheat_Sheet.html) — Lists all cipher classes to disable and why each one matters
+- [S019 — OWASP Cryptographic Storage](https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html) — Practical guidance on symmetric encryption primitives
 
 ---
 

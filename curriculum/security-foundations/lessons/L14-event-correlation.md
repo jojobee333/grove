@@ -94,9 +94,9 @@ Condition:
 
 ## Go deeper
 
-- [S015 — Sysmon v15](../../../../../vault/research/security-foundations/01-sources/web/S015-sysmon-v15.md) — ProcessGUID and SessionGUID correlation model
-- [S022 — Windows Registry](../../../../../vault/research/security-foundations/01-sources/web/S022-windows-registry.md) — Registry hive structure and security-critical paths
-- [S011 — Windows Event 4624](../../../../../vault/research/security-foundations/01-sources/web/S011-windows-event-4624.md) — TargetLogonId for session-level event correlation
+- [S015 — Sysmon v15](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon) — ProcessGUID and SessionGUID correlation model
+- [S022 — Windows Registry](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry) — Registry hive structure and security-critical paths
+- [S011 — Windows Event 4624](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4624) — TargetLogonId for session-level event correlation
 
 ---
 

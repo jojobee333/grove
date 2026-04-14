@@ -1,0 +1,119 @@
+{
+  "sources": {
+    "S001": {
+      "title": "RFC 793 — TCP",
+      "description": "Transmission Control Protocol specification",
+      "url": "https://tools.ietf.org/html/rfc793"
+    },
+    "S002": {
+      "title": "RFC 826 — ARP",
+      "description": "Address Resolution Protocol specification",
+      "url": "https://tools.ietf.org/html/rfc826"
+    },
+    "S003": {
+      "title": "RFC 7230 — HTTP/1.1",
+      "description": "Hypertext Transfer Protocol specification",
+      "url": "https://tools.ietf.org/html/rfc7230"
+    },
+    "S004": {
+      "title": "Practical Networking — Subnetting",
+      "description": "IP subnetting guide and reference",
+      "url": "https://www.practicalnetworking.net/series/ip/subnetting/"
+    },
+    "S005": {
+      "title": "RFC 1034 — DNS Concepts and Facilities",
+      "description": "DNS recursive resolution model and specifications",
+      "url": "https://tools.ietf.org/html/rfc1034"
+    },
+    "S006": {
+      "title": "MITRE ATT&CK — Command and Control",
+      "description": "TA0011 Command and Control techniques (DNS tunneling, DGA)",
+      "url": "https://attack.mitre.org/tactics/TA0011/"
+    },
+    "S007": {
+      "title": "Linux Filesystem Hierarchy Standard",
+      "description": "FHS specification for Linux directory structure",
+      "url": "https://refspecs.linuxfoundation.org/FHS_3.0/fhs-3.0.html"
+    },
+    "S008": {
+      "title": "The Linux Command Line by William Shotts",
+      "description": "Comprehensive guide to the Linux command line",
+      "url": "https://linuxcommand.org/lc3_learning_the_shell.php"
+    },
+    "S009": {
+      "title": "Linux File Permissions and SUID",
+      "description": "rwx model, SUID/SGID, privilege escalation paths",
+      "url": "https://www.linuxfoundation.org/blog/blog/understanding-linux-file-permissions"
+    },
+    "S010": {
+      "title": "Advanced Bash Scripting Guide",
+      "description": "TLDP comprehensive bash scripting reference",
+      "url": "https://tldp.org/LDP/abs/html/"
+    },
+    "S011": {
+      "title": "Windows Event 4624 — Account Logon",
+      "description": "Security event log documentation",
+      "url": "https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4624"
+    },
+    "S012": {
+      "title": "RFC 8446 — TLS 1.3",
+      "description": "TLS version 1.3 specification and cipher suites",
+      "url": "https://tools.ietf.org/html/rfc8446"
+    },
+    "S013": {
+      "title": "OWASP — TLS Cheat Sheet",
+      "description": "Cipher suite selection and TLS configuration guidance",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Transport_Layer_Protection_Cheat_Sheet.html"
+    },
+    "S014": {
+      "title": "PowerShell Execution Policies",
+      "description": "Microsoft PowerShell execution policy documentation",
+      "url": "https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies"
+    },
+    "S015": {
+      "title": "Sysmon v15 — System Activity Monitor",
+      "description": "Windows system monitoring event documentation",
+      "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon"
+    },
+    "S016": {
+      "title": "Microsoft — Active Directory Security Best Practices",
+      "description": "AD hardening, persistence, and detection guidance",
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/ad-ds/plan/security-best-practices/best-practices-for-securing-active-directory"
+    },
+    "S017": {
+      "title": "NIST SP 800-52r2 — TLS Guidelines",
+      "description": "NIST recommendations for TLS implementation",
+      "url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-52r2.pdf"
+    },
+    "S018": {
+      "title": "OWASP — Password Storage Cheat Sheet",
+      "description": "Bcrypt, Argon2id parameters and KDF guidance",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html"
+    },
+    "S019": {
+      "title": "OWASP — Cryptographic Storage Cheat Sheet",
+      "description": "Encryption and key management best practices",
+      "url": "https://cheatsheetseries.owasp.org/cheatsheets/Cryptographic_Storage_Cheat_Sheet.html"
+    },
+    "S020": {
+      "title": "RFC 5280 — X.509 PKI Certificate and CRL Profile",
+      "description": "Certificate chain validation (RFC 5280 four-check process)",
+      "url": "https://tools.ietf.org/html/rfc5280"
+    },
+    "S021": {
+      "title": "NIST FIPS 180-4 — Secure Hash Standard (SHS)",
+      "description": "SHA-2 standards and SHA-1 deprecation",
+      "url": "https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf"
+    },
+    "S022": {
+      "title": "Windows Registry Reference",
+      "description": "Registry structure, Run keys, and security-critical areas",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry"
+    },
+    "S023": {
+      "title": "Windows Security Event Logging",
+      "description": "Windows event log sources and security events",
+      "url": "https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/security-auditing-overview"
+    }
+  }
+}

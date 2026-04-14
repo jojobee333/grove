@@ -80,9 +80,9 @@ Critical Sysmon events:
 
 ## Go deeper
 
-- [S011 — Windows Event 4624](../../../../../vault/research/security-foundations/01-sources/web/S011-windows-event-4624.md) — Full field reference for logon events
-- [S015 — Sysmon v15](../../../../../vault/research/security-foundations/01-sources/web/S015-sysmon-v15.md) — All event types and configuration reference
-- [S023 — Windows Security Events](../../../../../vault/research/security-foundations/01-sources/web/S023-windows-security-events.md) — Events 4625/4688/4698/4768/4769 reference
+- [S011 — Windows Event 4624](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4624) — Full field reference for logon events
+- [S015 — Sysmon v15](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon) — All event types and configuration reference
+- [S023 — Windows Security Events](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/security-auditing-overview) — Events 4625/4688/4698/4768/4769 reference
 
 ---
 

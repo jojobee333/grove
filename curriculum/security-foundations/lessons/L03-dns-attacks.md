@@ -37,8 +37,8 @@ The attack exploits the trust assumption: the resolver trusts responses that arr
 
 ## Go deeper
 
-- [S005 — RFC 1034 DNS](../../../../../vault/research/security-foundations/01-sources/web/S005-rfc1034-dns.md) — DNS recursive resolution model and cache poisoning exposition
-- [S006 — MITRE ATT&CK C2](../../../../../vault/research/security-foundations/01-sources/web/S006-mitre-attack-c2.md) — TA0011 Command and Control; DNS tunneling and DGA techniques
+- [S005 — RFC 1034 DNS](https://tools.ietf.org/html/rfc1034) — DNS recursive resolution model and cache poisoning exposition
+- [S006 — MITRE ATT&CK C2](https://attack.mitre.org/tactics/TA0011/) — TA0011 Command and Control; DNS tunneling and DGA techniques
 
 ---
 
