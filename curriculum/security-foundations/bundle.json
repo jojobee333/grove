@@ -1,7 +1,7 @@
 {
   "version": "3.0",
   "slug": "security-foundations",
-  "bundled": "2026-04-14T02:08:13.156Z",
+  "bundled": "2026-04-14T02:17:12.884Z",
   "course": {
     "topic": "Security Foundations",
     "slug": "security-foundations",
@@ -3791,7 +3791,7 @@
           "id": "CC01",
           "type": "code-challenge",
           "language": "python",
-          "prompt": "Write a function `detect_dga_pattern(queries)` that analyzes a list of DNS query domain names and identifies whether they exhibit DGA (Domain Generation Algorithm) characteristics.\n\nDGA domains typically have:\n1. High consonant-to-vowel ratio (more random)\n2. Unusual lengths (not typical business domains)\n3. Non-word patterns (no recognizable English words)\n\nYour function receives a list of full domain names like `['abc123.com', 'hello.com', 'qwxyz.org']` and returns True if the pattern matches DGA characteristics (majority non-words, high consonant density), False otherwise.\n\nConsider a domain as 'likely DGA' if:\n- At least 3 consecutive consonants appear\n- Vowels make up less than 30% of the domain name (excluding TLD)\n- The domain name (excluding TLD) is longer than 12 characters or shorter than 4 characters",
+          "prompt": "Write a function `detect_dga_pattern(queries)` that analyzes a list of DNS query domain names and identifies whether they exhibit DGA (Domain Generation Algorithm) characteristics.\n\n## DGA Characteristics\n\nDGA domains typically have:\n- High consonant-to-vowel ratio (more random)\n- Unusual lengths (not typical business domains)\n- Non-word patterns (no recognizable English words)\n\n## Function Behavior\n\nReceives a list of full domain names like `['abc123.com', 'hello.com', 'qwxyz.org']`\n\nReturns `True` if the pattern matches DGA characteristics, `False` otherwise.\n\n## DGA Detection Criteria\n\nA domain is considered 'likely DGA' if **any** of these conditions are true:\n- At least 3 consecutive consonants appear\n- Vowels make up less than 30% of the domain name (excluding TLD)\n- The domain name (excluding TLD) is longer than 12 characters or shorter than 4 characters",
           "starter_code": "def detect_dga_pattern(queries):\n    \"\"\"\n    Analyze a list of DNS query domains for DGA characteristics.\n    Returns True if the pattern suggests DGA activity, False otherwise.\n    \"\"\"\n    pass\n",
           "test_cases": [
             {
@@ -3837,7 +3837,7 @@
           "id": "CC02",
           "type": "code-challenge",
           "language": "python",
-          "prompt": "Write a function `parse_dns_records(record_string)` that parses a DNS record string and extracts the record type and value.\n\nInput is a raw DNS record like:\n- `example.com. 3600 IN A 192.0.2.1`\n- `example.com. 3600 IN CAA 0 issue \"letsencrypt.org\"`\n- `example.com. 3600 IN MX 10 mail.example.com`\n\nYour function should return a dictionary with keys: 'domain', 'ttl', 'type', 'value'\n- domain: the FQDN (with trailing dot removed)\n- ttl: the time-to-live as an integer\n- type: the record type (A, AAAA, CAA, MX, TXT, etc.)\n- value: the record data (IP, flags/tag/value for CAA, etc.)",
+          "prompt": "Write a function `parse_dns_records(record_string)` that parses a DNS record string and extracts structured components.\n\n## Input Format\n\nRaw DNS record strings like:\n- `example.com. 3600 IN A 192.0.2.1`\n- `example.com. 3600 IN CAA 0 issue \"letsencrypt.org\"`\n- `example.com. 3600 IN MX 10 mail.example.com`\n\n## Output Format\n\nReturn a dictionary with keys: `'domain'`, `'ttl'`, `'type'`, `'value'`\n\n## Field Descriptions\n\n- **domain**: the FQDN with trailing dot removed\n- **ttl**: time-to-live as an integer\n- **type**: the record type (A, AAAA, CAA, MX, TXT, etc.)\n- **value**: the record data (IP, flags/tag/value for CAA, etc.)",
           "starter_code": "def parse_dns_records(record_string):\n    \"\"\"\n    Parse a DNS record string into structured components.\n    Returns a dictionary with domain, ttl, type, value.\n    \"\"\"\n    pass\n",
           "test_cases": [
             {
@@ -3891,7 +3891,7 @@
           "id": "CC07",
           "type": "code-challenge",
           "language": "python",
-          "prompt": "Write a function `validate_bcrypt_params(bcrypt_hash)` that analyzes a bcrypt hash string and validates that it meets OWASP security recommendations.\n\nA bcrypt hash follows the format: `$2b$cost$salt+hash`\nExample: `$2b$12$R9h/cIPz0gi.URNNBU3faPbVi/rrq.yJZaoxbE5qXkiTLcKj19PBa`\n\nYour function receives a bcrypt hash string and returns a dictionary with:\n- 'valid': True/False (meets OWASP minimum)\n- 'cost': extracted cost factor (as integer)\n- 'reason': explanation if invalid (or empty string if valid)\n\nOWASP minimum requirement: cost factor ≥ 12. \nIf cost < 12, return reason 'cost_too_low'. \nIf the hash format is malformed, return reason 'invalid_format'.",
+          "prompt": "Write a function `validate_bcrypt_params(bcrypt_hash)` that analyzes a bcrypt hash string and validates it meets OWASP security recommendations.\n\n## Hash Format\n\nBcrypt hashes follow: `$2b$cost$salt+hash`\n\nExample: `$2b$12$R9h/cIPz0gi.URNNBU3faPbVi/rrq.yJZaoxbE5qXkiTLcKj19PBa`\n\n## Return Value\n\nReturn a dictionary with:\n- `'valid'`: True/False (meets OWASP minimum)\n- `'cost'`: extracted cost factor (as integer)\n- `'reason'`: explanation if invalid (empty string if valid)\n\n## Validation Rules\n\n- OWASP minimum requirement: cost factor ≥ 12\n- If cost < 12: return reason `'cost_too_low'`\n- If hash format is malformed: return reason `'invalid_format'`",
           "starter_code": "def validate_bcrypt_params(bcrypt_hash):\n    \"\"\"\n    Validate a bcrypt hash meets OWASP security requirements.\n    Returns a dictionary with 'valid', 'cost', and 'reason' keys.\n    \"\"\"\n    pass\n",
           "test_cases": [
             {
@@ -3936,7 +3936,7 @@
           "id": "CC08",
           "type": "code-challenge",
           "language": "python",
-          "prompt": "Write a function `validate_cert_chain(certificates)` that validates a certificate chain following RFC 5280 requirements.\n\nEach certificate in the input list is a dictionary with:\n- 'subject': domain/CN of the certificate\n- 'issuer': who signed it\n- 'signature_valid': True/False (already verified)\n- 'valid_from': year cert becomes valid\n- 'valid_until': year cert expires\n- 'revoked': True/False (revocation status)\n- 'is_root': True if this is a root CA cert\n\nYour function validates four RFC 5280 checks:\n1. Signature validation (signature_valid must be True)\n2. Validity period (certificate current year must be between valid_from and valid_until)\n3. Revocation status (revoked must be False)\n4. Path - at least one cert must be root (is_root: True)\n\nReturn a dictionary: {'valid': True/False, 'failed_checks': [list of failed check names]}",
+          "prompt": "Write a function `validate_cert_chain(certificates)` that validates a certificate chain following RFC 5280 requirements.\n\n## Input Format\n\nEach certificate is a dictionary with:\n- `'subject'`: domain/CN of the certificate\n- `'issuer'`: who signed it\n- `'signature_valid'`: True/False (already verified)\n- `'valid_from'`: year cert becomes valid\n- `'valid_until'`: year cert expires\n- `'revoked'`: True/False (revocation status)\n- `'is_root'`: True if this is a root CA cert\n\n## RFC 5280 Validation Checks\n\n1. **Signature validation**: signature_valid must be True\n2. **Validity period**: current year (2026) must be between valid_from and valid_until\n3. **Revocation status**: revoked must be False\n4. **Path**: at least one cert must be root (is_root: True)\n\n## Return Value\n\nReturn a dictionary: `{'valid': True/False, 'failed_checks': [list of failed check names]}`",
           "starter_code": "def validate_cert_chain(certificates):\n    \"\"\"\n    Validate certificate chain against RFC 5280 requirements.\n    Returns dictionary with 'valid' and 'failed_checks' keys.\n    Current year is assumed to be 2026.\n    \"\"\"\n    pass\n",
           "test_cases": [
             {
@@ -3989,7 +3989,7 @@
           "id": "CC03",
           "type": "code-challenge",
           "language": "python",
-          "prompt": "Write a function `identify_suid_files(ls_output_lines)` that analyzes `ls -l` output and identifies files with the SUID bit set.\n\nThe SUID bit appears as 's' in the owner execute position. For example:\n- `-rwsr-xr-x` has SUID set (the 's' in positions 1-3)\n- `-rwxr-xr-x` does NOT have SUID set\n\nYour function receives a list of strings from `ls -l` output and returns a list of filenames that have SUID set, in the order they appear.\n\nExample output line: `-rwsr-xr-x 1 root root 1234 Jan 1 00:00 /usr/bin/passwd`\nExtract the filename (rightmost field) if the permissions show SUID.",
+          "prompt": "Write a function `identify_suid_files(ls_output_lines)` that analyzes `ls -l` output and identifies files with the SUID bit set.\n\n## SUID Bit Indicator\n\nThe SUID bit appears as 's' in the owner execute position:\n- `-rwsr-xr-x` has SUID set (the 's' in positions 1-3)\n- `-rwxr-xr-x` does NOT have SUID set\n\n## Function Behavior\n\nReceives a list of strings from `ls -l` output and returns a list of filenames that have SUID set, in the order they appear.\n\n## Example\n\nInput line: `-rwsr-xr-x 1 root root 1234 Jan 1 00:00 /usr/bin/passwd`\n\nExtract the filename (rightmost field) if the permissions show SUID.",
           "starter_code": "def identify_suid_files(ls_output_lines):\n    \"\"\"\n    Identify files with SUID bit set from ls -l output.\n    Returns a list of filenames with SUID set.\n    \"\"\"\n    pass\n",
           "test_cases": [
             {
@@ -4034,7 +4034,7 @@
           "id": "CC04",
           "type": "code-challenge",
           "language": "python",
-          "prompt": "Write a function `find_overprivileged_files(ls_output_lines)` that identifies potentially dangerous permissions on files.\n\nA file is considered 'overprivileged' if any of these conditions are true:\n1. World-writable (other bit includes 'w': e.g., `-rw-rw-rw-`)\n2. Group-writable executable (group bits are 'w' and execute is 'x', e.g., `-rwxrwx---`)\n3. SUID on a file in /tmp or /var/tmp\n4. SUID executable owned by an unprivileged user (UID != root)\n\nYour function receives a list of `ls -l` output lines (filename at the end) and returns a list of tuples: (filename, reason) where reason is one of: 'world_writable', 'group_writable_exec', 'suid_in_tmp', 'suid_unprivileged'.",
+          "prompt": "Write a function `find_overprivileged_files(ls_output_lines)` that identifies potentially dangerous permissions on files.\n\n## Overprivileged Conditions\n\nA file is considered 'overprivileged' if **any** of these are true:\n\n1. **world_writable**: Other bit includes 'w' (e.g., `-rw-rw-rw-`)\n2. **group_writable_exec**: Group bits are 'w' and execute is 'x' (e.g., `-rwxrwx---`)\n3. **suid_in_tmp**: SUID on a file in /tmp or /var/tmp\n4. **suid_unprivileged**: SUID executable owned by unprivileged user (UID != root)\n\n## Return Value\n\nReceives `ls -l` output lines and returns a list of tuples:\n\n`(filename, reason)`\n\nWhere reason is one of the four conditions above.",
           "starter_code": "def find_overprivileged_files(ls_output_lines):\n    \"\"\"\n    Identify files with potentially dangerous permissions.\n    Returns a list of (filename, reason) tuples.\n    \"\"\"\n    pass\n",
           "test_cases": [
             {
@@ -4088,7 +4088,7 @@
           "id": "CC05",
           "type": "code-challenge",
           "language": "python",
-          "prompt": "Write a function `parse_crontab(crontab_entries)` that analyzes crontab lines and identifies suspicious entries.\n\nEach crontab line follows the format: `minute hour day-of-month month day-of-week user command`\n\nExample: `0 3 * * * root /tmp/cleanup.sh`\n\nYour function receives a list of crontab lines and returns a list of suspicious entries as tuples: (line_number, reason, command)\n\nSuspicious patterns:\n1. 'suspicious_path' — command path starts with /tmp, /var/tmp, /dev/shm, or ~\n2. 'hidden_command' — command starts with . or contains ..\n3. 'early_hour' — runs between 2 AM and 4 AM (common for malware)\n4. 'obfuscated_cmd' — command contains pipes to base64, xxd, or hex decoders",
+          "prompt": "Write a function `parse_crontab(crontab_entries)` that analyzes crontab lines and identifies suspicious entries.\n\n## Crontab Format\n\nEach line follows: `minute hour day-of-month month day-of-week user command`\n\nExample: `0 3 * * * root /tmp/cleanup.sh`\n\n## Function Behavior\n\nReceives a list of crontab lines and returns a list of suspicious entries as tuples:\n\n`(line_number, reason, command)`\n\n## Suspicious Patterns\n\n1. **suspicious_path**: command starts with /tmp, /var/tmp, /dev/shm, or ~\n2. **hidden_command**: command starts with . or contains ..\n3. **early_hour**: runs between 2 AM and 4 AM (common for malware)\n4. **obfuscated_cmd**: command contains pipes to base64, xxd, or hex decoders",
           "starter_code": "def parse_crontab(crontab_entries):\n    \"\"\"\n    Analyze crontab entries for suspicious patterns.\n    Returns a list of (line_number, reason, command) tuples for suspicious entries.\n    \"\"\"\n    pass\n",
           "test_cases": [
             {
@@ -4141,7 +4141,7 @@
           "id": "CC06",
           "type": "code-challenge",
           "language": "python",
-          "prompt": "Write a function `correlate_events(event_logs)` that analyzes a sequence of Windows event log entries and identifies suspicious authentication patterns.\n\nEach event is a dictionary with: 'event_id', 'logon_type', 'process_name', 'ip_address', 'computername'\n\nYour function should identify suspicious patterns and return a list of issues as (event_id, issue_type):\n1. 'network_logon_suspicious' — LogonType 3 (network) followed immediately by process access to lsass.exe\n2. 'rdp_then_execution' — LogonType 10 (RDP) followed by unusual process execution\n3. 'anomalous_protocol' — any logon with 'NTLM' protocol (should be Kerberos in domain environments)\n4. 'failed_followed_by_success' — same IP/user attempting auth, fail then success within 5 events\n\nInput events are provided in order of occurrence.",
+          "prompt": "Write a function `correlate_events(event_logs)` that analyzes a sequence of Windows event log entries and identifies suspicious authentication patterns.\n\n## Input Format\n\nEach event is a dictionary with:\n- `'event_id'`: unique identifier\n- `'logon_type'`: authentication type code\n- `'protocol'`: Kerberos, NTLM, etc.\n- `'ip'`: source IP address\n- `'status'`: 'success' or 'failed' (optional)\n\n## Suspicious Patterns to Detect\n\n1. **network_logon_suspicious**: LogonType 3 (network) followed by process access to lsass.exe\n2. **rdp_then_execution**: LogonType 10 (RDP) followed by unusual process execution\n3. **anomalous_protocol**: any logon with 'NTLM' protocol (should be Kerberos in domain environments)\n4. **failed_followed_by_success**: same IP/user with failed auth then success within 5 events\n\n## Return Value\n\nReturn a list of tuples:\n\n`(event_id, issue_type)`\n\nEvents are provided in order of occurrence.",
           "starter_code": "def correlate_events(event_logs):\n    \"\"\"\n    Correlate Windows events to identify suspicious authentication patterns.\n    Returns a list of (event_id, issue_type) tuples for suspicious patterns.\n    \"\"\"\n    pass\n",
           "test_cases": [
             {

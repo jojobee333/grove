@@ -8,7 +8,7 @@
       "id": "CC03",
       "type": "code-challenge",
       "language": "python",
-      "prompt": "Write a function `identify_suid_files(ls_output_lines)` that analyzes `ls -l` output and identifies files with the SUID bit set.\n\nThe SUID bit appears as 's' in the owner execute position. For example:\n- `-rwsr-xr-x` has SUID set (the 's' in positions 1-3)\n- `-rwxr-xr-x` does NOT have SUID set\n\nYour function receives a list of strings from `ls -l` output and returns a list of filenames that have SUID set, in the order they appear.\n\nExample output line: `-rwsr-xr-x 1 root root 1234 Jan 1 00:00 /usr/bin/passwd`\nExtract the filename (rightmost field) if the permissions show SUID.",
+      "prompt": "Write a function `identify_suid_files(ls_output_lines)` that analyzes `ls -l` output and identifies files with the SUID bit set.\n\n## SUID Bit Indicator\n\nThe SUID bit appears as 's' in the owner execute position:\n- `-rwsr-xr-x` has SUID set (the 's' in positions 1-3)\n- `-rwxr-xr-x` does NOT have SUID set\n\n## Function Behavior\n\nReceives a list of strings from `ls -l` output and returns a list of filenames that have SUID set, in the order they appear.\n\n## Example\n\nInput line: `-rwsr-xr-x 1 root root 1234 Jan 1 00:00 /usr/bin/passwd`\n\nExtract the filename (rightmost field) if the permissions show SUID.",
       "starter_code": "def identify_suid_files(ls_output_lines):\n    \"\"\"\n    Identify files with SUID bit set from ls -l output.\n    Returns a list of filenames with SUID set.\n    \"\"\"\n    pass\n",
       "test_cases": [
         {
@@ -48,7 +48,7 @@
       "id": "CC04",
       "type": "code-challenge",
       "language": "python",
-      "prompt": "Write a function `find_overprivileged_files(ls_output_lines)` that identifies potentially dangerous permissions on files.\n\nA file is considered 'overprivileged' if any of these conditions are true:\n1. World-writable (other bit includes 'w': e.g., `-rw-rw-rw-`)\n2. Group-writable executable (group bits are 'w' and execute is 'x', e.g., `-rwxrwx---`)\n3. SUID on a file in /tmp or /var/tmp\n4. SUID executable owned by an unprivileged user (UID != root)\n\nYour function receives a list of `ls -l` output lines (filename at the end) and returns a list of tuples: (filename, reason) where reason is one of: 'world_writable', 'group_writable_exec', 'suid_in_tmp', 'suid_unprivileged'.",
+      "prompt": "Write a function `find_overprivileged_files(ls_output_lines)` that identifies potentially dangerous permissions on files.\n\n## Overprivileged Conditions\n\nA file is considered 'overprivileged' if **any** of these are true:\n\n1. **world_writable**: Other bit includes 'w' (e.g., `-rw-rw-rw-`)\n2. **group_writable_exec**: Group bits are 'w' and execute is 'x' (e.g., `-rwxrwx---`)\n3. **suid_in_tmp**: SUID on a file in /tmp or /var/tmp\n4. **suid_unprivileged**: SUID executable owned by unprivileged user (UID != root)\n\n## Return Value\n\nReceives `ls -l` output lines and returns a list of tuples:\n\n`(filename, reason)`\n\nWhere reason is one of the four conditions above.",
       "starter_code": "def find_overprivileged_files(ls_output_lines):\n    \"\"\"\n    Identify files with potentially dangerous permissions.\n    Returns a list of (filename, reason) tuples.\n    \"\"\"\n    pass\n",
       "test_cases": [
         {
