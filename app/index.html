@@ -1256,7 +1256,7 @@ function showChallenge(moduleId, challengeId) {
     <h1 style="font-size:20px;margin-bottom:0.5rem">${challengeId}</h1>
     ${statusBanner}
     <div class="card card-sm" style="margin-bottom:1rem">
-      <div class="question-text" style="font-size:15px">${challenge.prompt}</div>
+      <div class="question-text" style="font-size:15px">${simpleMarkdown(challenge.prompt)}</div>
       <p class="text-muted" style="margin-top:8px;margin-bottom:0">Pass threshold: ${Math.round((challenge.pass_criteria ?? 0.70) * 100)}% · ${challenge.test_cases.length} tests (${hiddenCount} hidden)</p>
     </div>
     <div class="code-editor">
