@@ -1,0 +1,169 @@
+{
+  "id": "quiz-M04",
+  "type": "module",
+  "module": "M04",
+  "title": "Assessment: Tree and Graph Traversal — BFS/DFS Duality",
+  "generated": "2025-01-01",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "You need to find the shortest path from node S to node T in an unweighted, undirected graph. Which traversal guarantees the shortest path found first is truly the shortest?",
+      "options": {
+        "A": "DFS with memoisation",
+        "B": "BFS — it explores all nodes at distance d before any at distance d+1",
+        "C": "Both BFS and DFS find the shortest path; BFS is just typically faster",
+        "D": "Neither — you need Dijkstra's algorithm for shortest path"
+      },
+      "correct": "B",
+      "explanation": "BFS explores in layers: all nodes at distance 1, then 2, etc. The first time it reaches T, the path used is guaranteed to be via the minimum number of edges. DFS does not have this property — it may find a longer path first. Dijkstra's is needed for weighted graphs.",
+      "lesson_ref": "L12",
+      "claim_ref": "L12",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "In-order traversal of a Binary Search Tree produces nodes in what order?",
+      "options": {
+        "A": "Root, left subtree, right subtree",
+        "B": "Left subtree, root, right subtree — ascending sorted order",
+        "C": "Left subtree, right subtree, root",
+        "D": "Level by level from root to leaves"
+      },
+      "correct": "B",
+      "explanation": "BST property: all left descendants < node < all right descendants. In-order (left, root, right) processes nodes in ascending order. This is the basis for BST-based sorting and finding the kth smallest element.",
+      "lesson_ref": "L11",
+      "claim_ref": "L11",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "DFS three-colour marking uses white, gray, and black. You are processing a directed graph DFS and you encounter an edge from the current node U to a gray node V. What does this tell you?",
+      "options": {
+        "A": "V has already been fully processed and the edge is a cross edge",
+        "B": "V is currently on the DFS call stack — this edge closes a cycle (back edge)",
+        "C": "V is an unvisited node and will be explored next",
+        "D": "V and U are in different connected components"
+      },
+      "correct": "B",
+      "explanation": "Gray = on the current DFS call stack (currently being processed). An edge from U to gray V means V is an ancestor of U in the DFS tree — this creates a directed cycle. This is the cycle-detection mechanism in directed graph DFS.",
+      "lesson_ref": "L13",
+      "claim_ref": "L13",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "Kahn's topological sort processes a graph with n=5 nodes and produces a result list of length 4 before the queue is empty. What can you conclude?",
+      "options": {
+        "A": "One node was isolated (no edges) and was correctly excluded",
+        "B": "The graph contains at least one directed cycle",
+        "C": "The topological sort is valid but incomplete — restart from a different node",
+        "D": "The graph has multiple valid topological orderings"
+      },
+      "correct": "B",
+      "explanation": "Kahn's adds a node to result only when its in-degree reaches 0. If len(result) < n, at least one node's in-degree never reached 0, which means it was part of a cycle where no node in the cycle could go first.",
+      "lesson_ref": "L14",
+      "claim_ref": "L14",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "Multi-source BFS starts with multiple source nodes in the queue simultaneously. What problem does this elegantly solve that single-source BFS cannot?",
+      "options": {
+        "A": "Shortest path in a weighted graph",
+        "B": "Minimum distance from any one of several source nodes to every other node simultaneously",
+        "C": "Topological ordering of a DAG",
+        "D": "Cycle detection in a directed graph"
+      },
+      "correct": "B",
+      "explanation": "Multi-source BFS computes shortest distance from the nearest source in one pass. Example: '01 Matrix' finds the shortest distance to the nearest 0 for every cell. Single-source BFS would require running BFS from each source separately, giving O(S × (V+E)).",
+      "lesson_ref": "L12",
+      "claim_ref": "L12",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "You want to compute the maximum depth of a binary tree. Which traversal pattern gives the cleanest recursive implementation?",
+      "options": {
+        "A": "Pre-order — process the node before computing children depths",
+        "B": "In-order — natural for BST problems but works for depth too",
+        "C": "Post-order — compute left depth and right depth first, then return max + 1",
+        "D": "Level-order BFS — count the number of levels"
+      },
+      "correct": "C",
+      "explanation": "Post-order naturally computes two child results then derives the parent result: `return 1 + max(maxDepth(left), maxDepth(right))`. Both left and right results are needed before the parent can return. BFS level-order also works but requires more code.",
+      "lesson_ref": "L11",
+      "claim_ref": "L11",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "DFS post-order topological sort represents the topological order as the reverse of the DFS finish times. Why is the reverse needed?",
+      "options": {
+        "A": "Because DFS processing order is right-to-left and must be corrected",
+        "B": "A node finishes (turns black) after all its descendants finish. Later finish time = earlier in topological order, so reversing gives the correct dependency-first order",
+        "C": "DFS produces a BFS-equivalent ordering that must be reversed to get depth-first order",
+        "D": "Reversing ensures we satisfy Kahn's in-degree constraint"
+      },
+      "correct": "B",
+      "explanation": "In topological order, if A depends on B, B must come first. DFS finishes B (and all its descendants) before finishing A — so B has a later finish time. Reversing means later-finish = earlier position, giving B before A.",
+      "lesson_ref": "L14",
+      "claim_ref": "L14",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "Explain why a `visited` set is necessary for BFS on a general graph (not a tree), and describe what happens if you omit it.",
+      "answer_key": {
+        "required_points": [
+          "Graphs can have cycles (unlike trees); without a visited set, BFS will revisit nodes",
+          "Revisiting leads to infinite loops — the queue never empties because already-visited nodes keep being re-enqueued",
+          "Space can also blow up as nodes are enqueued multiple times"
+        ],
+        "acceptable_variations": "May describe the problem in terms of TLE or infinite loop",
+        "full_credit": "Identifies cycles as root cause, describes the infinite-loop consequence",
+        "partial_credit": "Identifies that nodes are revisited without explaining the cycle cause or consequence"
+      },
+      "lesson_ref": "L12",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "You must implement topological sort on a directed graph. Write the decision criteria for choosing Kahn's BFS vs. DFS post-order for each of these two requirements: (a) smallest lexicographic order, (b) detect a cycle and abort processing.",
+      "answer_key": {
+        "required_points": [
+          "(a) Lexicographic order: Use Kahn's with a min-heap (priority queue) instead of a regular queue — dequeue the smallest available node first",
+          "(b) Cycle detection: Both work, but Kahn's is simpler — just check if len(result) < n. DFS requires maintaining gray/black state explicitly.",
+          "Neither approach is strictly always better; choose based on secondary requirement"
+        ],
+        "acceptable_variations": "May mention that DFS post-order with a set for in-progress nodes is equivalent to three-color",
+        "full_credit": "Correctly addresses both requirements with specific implementation detail",
+        "partial_credit": "Correctly addresses one requirement"
+      },
+      "lesson_ref": "L14",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "Compare BFS and DFS as complementary tools rather than competitors. Describe the specific problem properties that make each the correct choice, and explain at least one scenario where using the wrong traversal produces an incorrect — not just slow — result.",
+      "guidance": "A strong answer identifies: BFS guarantees shortest path in unweighted graphs (DFS does not — incorrect, not slow); DFS is natural for cycle detection, topological sort, and post-order tree aggregation; space tradeoff depends on graph shape. Concrete examples required.",
+      "rubric": {
+        "A": "Identifies a scenario where wrong choice produces incorrect result (not just slower), describes 2+ correct-use cases for each, discusses space tradeoff",
+        "B": "Describes when each is appropriate with examples but doesn't identify an incorrectness scenario",
+        "C": "Describes one traversal well but not the other, or gives only vague 'usually BFS/DFS is better for X' answers"
+      },
+      "lesson_ref": "L11-L14",
+      "difficulty": "analysis"
+    }
+  ]
+}

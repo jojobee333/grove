@@ -1,0 +1,28 @@
+{
+  "id": "modcheck-M06",
+  "module": "M06",
+  "title": "Module Check: Complexity Analysis",
+  "generated": "2025-01-01",
+  "questions": [
+    {
+      "id": "MC01",
+      "question": "What is the formal definition of f(n) = O(g(n))?",
+      "answer": "∃ constants c > 0 and n₀ ≥ 1 such that for all n ≥ n₀, f(n) ≤ c·g(n)"
+    },
+    {
+      "id": "MC02",
+      "question": "Apply the Master Theorem to T(n) = 2T(n/2) + O(n). What is the result?",
+      "answer": "Θ(n log n) — Case 2 (f(n) = Θ(n^log_b(a)))"
+    },
+    {
+      "id": "MC03",
+      "question": "What is amortised analysis and how does it differ from worst-case analysis?",
+      "answer": "Amortised measures average cost per operation over a sequence; worst-case measures a single operation's worst possible cost. Amortised is a guarantee over n operations, not a probability."
+    },
+    {
+      "id": "MC04",
+      "question": "If n ≤ 10⁵, which is the slowest algorithm that will still pass in 1 second?",
+      "answer": "O(n log n) — approximately 1.7×10⁶ operations, well within 10⁸"
+    }
+  ]
+}

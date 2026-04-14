@@ -1,0 +1,393 @@
+{
+  "slug": "coding-algorithms-technical-interviews",
+  "generated": "2025-01-01",
+  "concepts": [
+    {
+      "id": "pattern-frequency",
+      "label": "Algorithm Pattern Frequency",
+      "description": "The empirical fact that 15–20 algorithm patterns cover ~80% of FAANG interview problems.",
+      "taught_in": "L01",
+      "difficulty": 1,
+      "module": "M01",
+      "tags": ["meta-strategy"]
+    },
+    {
+      "id": "interview-pareto-principle",
+      "label": "Interview Pareto Principle",
+      "description": "The 80/20 rule applied to interview prep: a small set of high-frequency patterns yields disproportionate coverage.",
+      "taught_in": "L01",
+      "difficulty": 1,
+      "module": "M01",
+      "tags": ["meta-strategy"]
+    },
+    {
+      "id": "study-sequence",
+      "label": "Empirically Validated Study Sequence",
+      "description": "The dependency-ordered learning path (Arrays → Hashing → Trees → Graphs → DP) derived from NeetCode, Blind 75, and Grind 75.",
+      "taught_in": "L02",
+      "difficulty": 1,
+      "module": "M01",
+      "tags": ["meta-strategy"]
+    },
+    {
+      "id": "dependency-dag",
+      "label": "Study Dependency DAG",
+      "description": "The directed acyclic graph of algorithm topic dependencies that determines the optimal study order.",
+      "taught_in": "L02",
+      "difficulty": 2,
+      "module": "M01",
+      "tags": ["meta-strategy"]
+    },
+    {
+      "id": "interview-communication",
+      "label": "Interview Communication",
+      "description": "The practice of narrating your problem-solving process clearly during a coding interview.",
+      "taught_in": "L03",
+      "difficulty": 1,
+      "module": "M01",
+      "tags": ["soft-skills"]
+    },
+    {
+      "id": "umpire-framework",
+      "label": "UMPIRE Framework",
+      "description": "The six-step interview scaffold: Understand, Match, Plan, Implement, Review, Evaluate.",
+      "taught_in": "L03",
+      "difficulty": 2,
+      "module": "M01",
+      "tags": ["soft-skills", "problem-solving"]
+    },
+    {
+      "id": "hash-map",
+      "label": "Hash Map",
+      "description": "Key-value store with O(1) average lookup, insertion, and deletion based on hash functions.",
+      "taught_in": "L04",
+      "difficulty": 2,
+      "module": "M02",
+      "tags": ["data-structure", "core"]
+    },
+    {
+      "id": "hash-set",
+      "label": "Hash Set",
+      "description": "Unordered collection with O(1) average membership test, insertion, and deletion.",
+      "taught_in": "L04",
+      "difficulty": 2,
+      "module": "M02",
+      "tags": ["data-structure", "core"]
+    },
+    {
+      "id": "space-time-tradeoff",
+      "label": "Space-Time Tradeoff",
+      "description": "The principle of using extra memory (a hash map or set) to reduce time complexity.",
+      "taught_in": "L04",
+      "difficulty": 2,
+      "module": "M02",
+      "tags": ["complexity", "design-principle"]
+    },
+    {
+      "id": "frequency-counting",
+      "label": "Frequency Counting Pattern",
+      "description": "Using a hash map to count occurrences of elements for anagram detection, sliding window, and Top-K problems.",
+      "taught_in": "L05",
+      "difficulty": 2,
+      "module": "M02",
+      "tags": ["pattern", "hash-map"]
+    },
+    {
+      "id": "complement-lookup",
+      "label": "Complement Lookup Pattern",
+      "description": "Two Sum style: store seen values; for each element check if (target - element) exists in the map.",
+      "taught_in": "L05",
+      "difficulty": 2,
+      "module": "M02",
+      "tags": ["pattern", "hash-map"]
+    },
+    {
+      "id": "index-as-key",
+      "label": "Index-as-Key Pattern",
+      "description": "Using array indices as hash map keys when values are bounded integers (e.g. first missing positive).",
+      "taught_in": "L05",
+      "difficulty": 3,
+      "module": "M02",
+      "tags": ["pattern", "hash-map"]
+    },
+    {
+      "id": "language-hidden-costs",
+      "label": "Language Hidden Complexity Costs",
+      "description": "Operations that appear O(1) but are O(n) or worse in specific language implementations.",
+      "taught_in": "L06",
+      "difficulty": 3,
+      "module": "M02",
+      "tags": ["language-specific", "complexity"]
+    },
+    {
+      "id": "two-pointer",
+      "label": "Two-Pointer Pattern",
+      "description": "Left-right converging or fast-slow pointer techniques for pair search, cycle detection, and partition.",
+      "taught_in": "L07",
+      "difficulty": 2,
+      "module": "M03",
+      "tags": ["pattern", "array", "core"]
+    },
+    {
+      "id": "sliding-window",
+      "label": "Sliding Window Pattern",
+      "description": "Expand-right / shrink-left window for fixed-size and variable-size subarray/substring optimisation.",
+      "taught_in": "L08",
+      "difficulty": 3,
+      "module": "M03",
+      "tags": ["pattern", "array", "core"]
+    },
+    {
+      "id": "prefix-sum",
+      "label": "Prefix Sum",
+      "description": "Precomputed cumulative sum array enabling O(1) range sum queries after O(n) setup.",
+      "taught_in": "L09",
+      "difficulty": 2,
+      "module": "M03",
+      "tags": ["pattern", "array", "core"]
+    },
+    {
+      "id": "sorting-preprocessing",
+      "label": "Sort Preprocessing",
+      "description": "Sorting first in O(n log n) to enable O(n) two-pointer or O(log n) binary search, beating O(n²) brute force.",
+      "taught_in": "L10",
+      "difficulty": 2,
+      "module": "M03",
+      "tags": ["technique", "array"]
+    },
+    {
+      "id": "tree-traversal",
+      "label": "Tree Traversal",
+      "description": "Pre-order, in-order, post-order, and level-order traversal templates for binary trees.",
+      "taught_in": "L11",
+      "difficulty": 2,
+      "module": "M04",
+      "tags": ["pattern", "tree", "core"]
+    },
+    {
+      "id": "bst-invariant",
+      "label": "BST Invariant",
+      "description": "All left descendants < node ≤ all right descendants; enables in-order sorted output and O(log n) lookup in balanced BSTs.",
+      "taught_in": "L11",
+      "difficulty": 2,
+      "module": "M04",
+      "tags": ["data-structure", "tree"]
+    },
+    {
+      "id": "bfs",
+      "label": "BFS (Breadth-First Search)",
+      "description": "Level-by-level traversal using a deque; guarantees shortest path in unweighted graphs; O(V+E).",
+      "taught_in": "L12",
+      "difficulty": 3,
+      "module": "M04",
+      "tags": ["algorithm", "graph", "core"]
+    },
+    {
+      "id": "dfs",
+      "label": "DFS (Depth-First Search)",
+      "description": "Recursive or iterative depth-first traversal for path existence, cycle detection, and topological sort; O(V+E).",
+      "taught_in": "L13",
+      "difficulty": 3,
+      "module": "M04",
+      "tags": ["algorithm", "graph", "core"]
+    },
+    {
+      "id": "cycle-detection",
+      "label": "Cycle Detection",
+      "description": "DFS three-colour marking (white/gray/black) to detect directed cycles; Floyd's fast-slow for linked-list cycles.",
+      "taught_in": "L13",
+      "difficulty": 3,
+      "module": "M04",
+      "tags": ["algorithm", "graph"]
+    },
+    {
+      "id": "topological-sort",
+      "label": "Topological Sort",
+      "description": "Linear ordering of DAG nodes where each node precedes its dependents; Kahn's BFS or DFS post-order reversal.",
+      "taught_in": "L14",
+      "difficulty": 3,
+      "module": "M04",
+      "tags": ["algorithm", "graph"]
+    },
+    {
+      "id": "binary-search",
+      "label": "Binary Search",
+      "description": "Unified `while lo < hi` template for finding leftmost or rightmost True in a monotone predicate; O(log n).",
+      "taught_in": "L15",
+      "difficulty": 3,
+      "module": "M05",
+      "tags": ["algorithm", "array", "core"]
+    },
+    {
+      "id": "heap",
+      "label": "Heap (Priority Queue)",
+      "description": "Complete binary tree satisfying the heap property; O(log n) push/pop, O(n) heapify, O(1) peek.",
+      "taught_in": "L16",
+      "difficulty": 3,
+      "module": "M05",
+      "tags": ["data-structure", "core"]
+    },
+    {
+      "id": "top-k-pattern",
+      "label": "Top-K Heap Pattern",
+      "description": "Use a min-heap of size K to find the K largest elements in O(n log K); root is the Kth largest.",
+      "taught_in": "L16",
+      "difficulty": 3,
+      "module": "M05",
+      "tags": ["pattern", "heap"]
+    },
+    {
+      "id": "monotonic-stack",
+      "label": "Monotonic Stack",
+      "description": "Stack maintained in sorted order; while-violated-pop-then-push loop for Next Greater Element, histogram, and rain water in O(n) amortised.",
+      "taught_in": "L17",
+      "difficulty": 3,
+      "module": "M05",
+      "tags": ["pattern", "stack", "core"]
+    },
+    {
+      "id": "big-o",
+      "label": "Big-O Notation",
+      "description": "Formal asymptotic upper bound: f(n) = O(g(n)) iff ∃ c, n₀ such that f(n) ≤ c·g(n) for all n ≥ n₀.",
+      "taught_in": "L18",
+      "difficulty": 2,
+      "module": "M06",
+      "tags": ["complexity", "core"]
+    },
+    {
+      "id": "growth-hierarchy",
+      "label": "Complexity Growth Hierarchy",
+      "description": "O(1) < O(log n) < O(n) < O(n log n) < O(n²) < O(2ⁿ) < O(n!) — the canonical ordering for interview complexity comparisons.",
+      "taught_in": "L18",
+      "difficulty": 2,
+      "module": "M06",
+      "tags": ["complexity"]
+    },
+    {
+      "id": "master-theorem",
+      "label": "Master Theorem",
+      "description": "Three-case formula for solving divide-and-conquer recurrences T(n) = aT(n/b) + f(n).",
+      "taught_in": "L19",
+      "difficulty": 3,
+      "module": "M06",
+      "tags": ["complexity", "algorithm-analysis"]
+    },
+    {
+      "id": "divide-and-conquer",
+      "label": "Divide and Conquer",
+      "description": "Problem decomposition into independent subproblems of size n/b, solved recursively, then combined.",
+      "taught_in": "L19",
+      "difficulty": 3,
+      "module": "M06",
+      "tags": ["technique", "algorithm"]
+    },
+    {
+      "id": "amortized-analysis",
+      "label": "Amortised Analysis",
+      "description": "Aggregate method: average per-operation cost over a sequence of n operations; table doubling proof.",
+      "taught_in": "L20",
+      "difficulty": 4,
+      "module": "M06",
+      "tags": ["complexity", "algorithm-analysis"]
+    },
+    {
+      "id": "union-find",
+      "label": "Union-Find (DSU)",
+      "description": "Disjoint set union with path compression and union by rank; O(α(n)) ≈ O(1) amortised per operation.",
+      "taught_in": "L20",
+      "difficulty": 3,
+      "module": "M06",
+      "tags": ["data-structure", "graph"]
+    },
+    {
+      "id": "recursion-space",
+      "label": "Recursion Space Complexity",
+      "description": "Call stack depth equals recursion space: O(log n) for balanced trees, O(n) for skewed trees and linear recursion.",
+      "taught_in": "L21",
+      "difficulty": 2,
+      "module": "M07",
+      "tags": ["complexity", "recursion"]
+    },
+    {
+      "id": "recursion-limit",
+      "label": "Python Recursion Limit",
+      "description": "Python's default 1000-frame limit and OS stack limit; iterative stack as the robust workaround.",
+      "taught_in": "L22",
+      "difficulty": 3,
+      "module": "M07",
+      "tags": ["language-specific", "recursion", "python"]
+    },
+    {
+      "id": "dynamic-programming",
+      "label": "Dynamic Programming",
+      "description": "Optimisation technique for problems with optimal substructure and overlapping subproblems; brute-force → memoised → tabulated pipeline.",
+      "taught_in": "L24",
+      "difficulty": 3,
+      "module": "M08",
+      "tags": ["algorithm", "core"]
+    },
+    {
+      "id": "memoization",
+      "label": "Memoisation (Top-Down DP)",
+      "description": "Caching recursive call results with @functools.cache; converts O(2^n) to O(n) for Fibonacci-style problems.",
+      "taught_in": "L25",
+      "difficulty": 3,
+      "module": "M08",
+      "tags": ["technique", "dp"]
+    },
+    {
+      "id": "tabulation",
+      "label": "Tabulation (Bottom-Up DP)",
+      "description": "Iterative DP filling a table from base cases; eliminates call-stack overhead and enables space optimisation.",
+      "taught_in": "L26",
+      "difficulty": 3,
+      "module": "M08",
+      "tags": ["technique", "dp"]
+    },
+    {
+      "id": "dp-space-optimization",
+      "label": "DP Space Optimisation",
+      "description": "Reducing O(n²) DP table to O(n) or O(1) by keeping only the rows/columns the recurrence depends on.",
+      "taught_in": "L26",
+      "difficulty": 4,
+      "module": "M08",
+      "tags": ["technique", "dp"]
+    },
+    {
+      "id": "dp-state",
+      "label": "DP State Design",
+      "description": "Defining the minimum state that captures all information needed for optimal forward decisions (Markov property).",
+      "taught_in": "L27",
+      "difficulty": 4,
+      "module": "M08",
+      "tags": ["technique", "dp"]
+    },
+    {
+      "id": "python-hidden-costs",
+      "label": "Python Hidden O(n) Operations",
+      "description": "list.pop(0), list.insert(0,x), string +=, x in list — operations that appear O(1) but are O(n) in Python.",
+      "taught_in": "L28",
+      "difficulty": 3,
+      "module": "M09",
+      "tags": ["language-specific", "python", "complexity"]
+    },
+    {
+      "id": "string-concat-trap",
+      "label": "String Concatenation O(n²) Trap",
+      "description": "Immutable strings mean result += char creates a new copy on every iteration; total cost O(n²). Fix: join() or StringBuilder.",
+      "taught_in": "L30",
+      "difficulty": 2,
+      "module": "M09",
+      "tags": ["language-specific", "complexity", "trap"]
+    },
+    {
+      "id": "backtracking",
+      "label": "Backtracking",
+      "description": "Systematic search via choose–explore–unchoose; builds a search tree with pruning to eliminate invalid branches early.",
+      "taught_in": "L31",
+      "difficulty": 3,
+      "module": "M10",
+      "tags": ["algorithm", "core"]
+    }
+  ]
+}

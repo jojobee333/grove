@@ -1,0 +1,33 @@
+{
+  "id": "modcheck-M05",
+  "module": "M05",
+  "title": "Module Check: Binary Search, Heaps, and Monotonic Stacks",
+  "generated": "2025-01-01",
+  "questions": [
+    {
+      "id": "MC01",
+      "question": "In the unified binary search template `while lo < hi`, what is the value of `lo` when the loop terminates?",
+      "answer": "`lo == hi` — pointing to the answer position"
+    },
+    {
+      "id": "MC02",
+      "question": "To find the K largest elements in a stream, do you use a min-heap or max-heap of size K?",
+      "answer": "Min-heap of size K — the root is the Kth largest; discard smaller elements by comparing to the root"
+    },
+    {
+      "id": "MC03",
+      "question": "What is the recognition pattern for a monotonic stack problem?",
+      "answer": "For each element, find the nearest element to the left or right that is greater or smaller"
+    },
+    {
+      "id": "MC04",
+      "question": "Why is heapify O(n) and not O(n log n)?",
+      "answer": "Bottom-up construction processes mostly lower-level nodes with small subtrees; total sift cost sums to O(n) (geometric series convergence)"
+    },
+    {
+      "id": "MC05",
+      "question": "What formula prevents integer overflow when computing binary search midpoint?",
+      "answer": "`lo + (hi - lo) // 2` instead of `(lo + hi) // 2`"
+    }
+  ]
+}

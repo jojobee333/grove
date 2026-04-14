@@ -1,0 +1,170 @@
+{
+  "id": "quiz-M03",
+  "type": "module",
+  "module": "M03",
+  "title": "Assessment: Linear Traversal Patterns — Arrays, Pointers, Windows",
+  "generated": "2025-01-01",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "You are given a sorted array. You want to determine if any two elements sum to a target value T. Which approach is most space-efficient?",
+      "options": {
+        "A": "Use a hash set to store all elements, then check if T - nums[i] exists for each i",
+        "B": "Use converging two pointers: lo=0, hi=len-1, advancing inward based on the sum",
+        "C": "Use nested loops to check all pairs with early exit",
+        "D": "Sort the array, then binary search for the complement of each element"
+      },
+      "correct": "B",
+      "explanation": "The array is already sorted. Converging two pointers gives O(n) time and O(1) extra space — no hash map needed. Option A is O(n) space. The array being sorted is the key precondition that makes two pointers applicable.",
+      "lesson_ref": "L07",
+      "claim_ref": "L07",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Floyd's cycle detection (fast/slow pointers) detects a cycle in a linked list. What happens when fast and slow first meet?",
+      "options": {
+        "A": "Slow is at the head and fast is at the tail — the distance between them gives the cycle length",
+        "B": "Both pointers are at the cycle's entry point",
+        "C": "Both pointers are somewhere inside the cycle, not necessarily at the entry",
+        "D": "Fast is exactly twice as far from the head as slow"
+      },
+      "correct": "C",
+      "explanation": "When fast and slow first meet, they are guaranteed to be inside the cycle, but the meeting point is not the cycle entry. To find the entry: reset one pointer to head and advance both by one step at a time — they will meet at the entry.",
+      "lesson_ref": "L07",
+      "claim_ref": "L07",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "Problem: minimum window substring containing all characters of T. During the shrink phase of the variable sliding window, when do you stop shrinking?",
+      "options": {
+        "A": "When the window length equals len(T)",
+        "B": "When the window no longer contains all characters of T",
+        "C": "When left pointer equals right pointer",
+        "D": "When removing the leftmost character would not change the window's validity"
+      },
+      "correct": "B",
+      "explanation": "The shrink phase continues as long as the window is still valid (contains all characters of T), recording the minimum window length each iteration. You stop shrinking only when the window loses a required character and becomes invalid.",
+      "lesson_ref": "L08",
+      "claim_ref": "L08",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "Given `nums = [1, 1, 1]` and the prefix sum array `prefix = [0, 1, 2, 3]`, what is `sum(nums[1..2])` (0-indexed inclusive)?",
+      "options": {
+        "A": "1",
+        "B": "2",
+        "C": "3",
+        "D": "prefix[3] - prefix[1] = 2"
+      },
+      "correct": "B",
+      "explanation": "Sum of nums[1..2] = prefix[3] - prefix[1] = 3 - 1 = 2. Prefix sum formula: sum(l, r) = prefix[r+1] - prefix[l]. Options A and C are wrong values; D shows the formula and evaluates to 2, so B and D both represent the same correct answer — B is the numeric value.",
+      "lesson_ref": "L09",
+      "claim_ref": "L09",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "Problem: count subarrays with sum == k. You use prefix sums and a hash map initialised as `{0: 1}`. Why must the map be initialised with `{0: 1}` and not `{}`?",
+      "options": {
+        "A": "To handle the empty subarray edge case where sum equals k immediately from index 0",
+        "B": "To prevent a KeyError when looking up prefix[0]",
+        "C": "To ensure every prefix sum maps to at least 1 occurrence for counting",
+        "D": "Initialising with 0 has no effect; it is a style convention only"
+      },
+      "correct": "A",
+      "explanation": "If prefix[i] == k, then the subarray nums[0..i] has sum k. The lookup checks map.get(prefix[i] - k, 0) = map.get(0, 0). Without {0: 1}, this lookup returns 0 and we miss the valid subarray starting from index 0.",
+      "lesson_ref": "L09",
+      "claim_ref": "L09",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "You are given an unsorted list of intervals. You want to find all pairs with the same sum. Sorting first reduces time complexity from O(n²) to O(n log n). This is valid only when:",
+      "options": {
+        "A": "The array has no duplicates",
+        "B": "The sorted order enables a linear-time scan (e.g. two pointers) that wouldn't work on unsorted data",
+        "C": "The array length is at least 100 elements",
+        "D": "All elements are non-negative"
+      },
+      "correct": "B",
+      "explanation": "Sorting as preprocessing is only beneficial when sorted order unlocks a linear sub-algorithm (two pointers, binary search lookups). The total cost is O(n log n) sort + O(n) scan. If no linear sub-algorithm is possible on sorted data, sorting doesn't help.",
+      "lesson_ref": "L10",
+      "claim_ref": "L10",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "Which two-pointer sub-pattern is best suited for detecting a cycle in a linked list, and which is best for finding whether two values in a sorted array sum to a target?",
+      "options": {
+        "A": "Fast/slow for cycles; converging for pair sum",
+        "B": "Converging for cycles; fast/slow for pair sum",
+        "C": "Both problems use converging two pointers",
+        "D": "Both problems require a hash map instead of pointers"
+      },
+      "correct": "A",
+      "explanation": "Fast/slow (Floyd's): both pointers traverse same direction at different speeds — designed for cycle detection and finding midpoints in linear structures. Converging: pointers start at opposite ends of sorted array — designed for pair search and three-sum problems.",
+      "lesson_ref": "L07",
+      "claim_ref": "L07",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "A problem asks for the maximum sum subarray of exactly length k. Write the algorithm in pseudocode using a fixed sliding window and state its time and space complexity.",
+      "answer_key": {
+        "required_points": [
+          "Compute initial window sum for nums[0..k-1]",
+          "max_sum = window_sum",
+          "Slide: for i from k to len(nums)-1: window_sum += nums[i] - nums[i-k]; max_sum = max(max_sum, window_sum)",
+          "Time: O(n), Space: O(1)"
+        ],
+        "acceptable_variations": "May use left/right pointer style instead of index offset; any equivalent formulation",
+        "full_credit": "Correct initial window, correct slide formula, correct complexities",
+        "partial_credit": "Correct logic but complexities wrong or slide formula incorrect"
+      },
+      "lesson_ref": "L08",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "Explain the key precondition that determines whether to use two pointers vs. a hash map for a pair-sum problem. Give one example where two pointers works and one where a hash map is necessary.",
+      "answer_key": {
+        "required_points": [
+          "Precondition for two pointers: array must be sorted (or sortable without breaking problem constraints)",
+          "Two-pointer example: Two Sum on a sorted array — sorted enables converging pointers",
+          "Hash map example: Two Sum on an unsorted array where indices must be preserved — sorting would break index requirements"
+        ],
+        "acceptable_variations": "Any correct pair-sum example where sorting is blocked by index constraints",
+        "full_credit": "Identifies sortability as the deciding factor, gives one example for each",
+        "partial_credit": "Correctly identifies the precondition without providing both examples"
+      },
+      "lesson_ref": "L07",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "The prefix sum and sliding window patterns both solve subarray problems in O(n) time. Compare them: what properties of a problem indicate prefix sum is the right tool, and what properties indicate sliding window? Give a concrete problem for each and explain how to recognise which to apply.",
+      "guidance": "A strong response distinguishes: prefix sum works on arbitrary range queries and subarray-sum-equals-k style problems; sliding window works on contiguous subarray optimisation with a shrinkable constraint. The distinction is whether the window is query-based (prefix) or constraint-driven (sliding window).",
+      "rubric": {
+        "A": "Clearly distinguishes when each applies with correct terminology, gives a concrete problem for each, and articulates the recognition signal",
+        "B": "Correctly describes both techniques and gives examples but conflates when each is better",
+        "C": "Describes one technique accurately, the other vaguely or incorrectly"
+      },
+      "lesson_ref": "L08-L09",
+      "difficulty": "analysis"
+    }
+  ]
+}

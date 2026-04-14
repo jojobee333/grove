@@ -1,0 +1,33 @@
+{
+  "id": "modcheck-M03",
+  "module": "M03",
+  "title": "Module Check: Linear Traversal Patterns",
+  "generated": "2025-01-01",
+  "questions": [
+    {
+      "id": "MC01",
+      "question": "What precondition must hold for converging two pointers (lo/hi) to be applicable to a pair-sum problem?",
+      "answer": "The array must be sorted"
+    },
+    {
+      "id": "MC02",
+      "question": "What is the formula for computing range sum(l, r) using a prefix sum array?",
+      "answer": "prefix[r+1] - prefix[l]"
+    },
+    {
+      "id": "MC03",
+      "question": "In a variable sliding window, when do you shrink the left pointer?",
+      "answer": "When the window violates the constraint (e.g. too many distinct characters, sum too large)"
+    },
+    {
+      "id": "MC04",
+      "question": "What value should `prefix[0]` be set to, and why?",
+      "answer": "0 — it represents the sum of an empty prefix, enabling range queries starting at index 0"
+    },
+    {
+      "id": "MC05",
+      "question": "What is the time and space complexity of the fixed sliding window maximum sum algorithm?",
+      "answer": "O(n) time, O(1) space"
+    }
+  ]
+}

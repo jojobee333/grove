@@ -1,0 +1,33 @@
+{
+  "id": "modcheck-M08",
+  "module": "M08",
+  "title": "Module Check: Dynamic Programming — The Three-Stage Pipeline",
+  "generated": "2025-01-01",
+  "questions": [
+    {
+      "id": "MC01",
+      "question": "What are the two conditions both required for dynamic programming to apply?",
+      "answer": "Optimal substructure and overlapping subproblems"
+    },
+    {
+      "id": "MC02",
+      "question": "What decorator converts a Python recursive function to memoised DP with one line?",
+      "answer": "`@functools.cache` (Python 3.9+) or `@functools.lru_cache(maxsize=None)` (Python 3.8+)"
+    },
+    {
+      "id": "MC03",
+      "question": "In 0/1 Knapsack 1D DP, why must the capacity loop iterate in reverse order?",
+      "answer": "To prevent using the current item more than once — forward iteration would use updated values from the same item, effectively allowing unlimited use"
+    },
+    {
+      "id": "MC04",
+      "question": "What is the main advantage of top-down memoisation over bottom-up tabulation?",
+      "answer": "Top-down only computes subproblems that are actually needed (lazy evaluation) — efficient for sparse subproblem graphs"
+    },
+    {
+      "id": "MC05",
+      "question": "Name one interview problem that requires a 2D DP state because a 1D state is insufficient.",
+      "answer": "Buy and Sell Stock with Cooldown (state = day × holding status), or any problem with two independent decisions per step"
+    }
+  ]
+}

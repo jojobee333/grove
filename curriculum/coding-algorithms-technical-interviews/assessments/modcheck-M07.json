@@ -1,0 +1,28 @@
+{
+  "id": "modcheck-M07",
+  "module": "M07",
+  "title": "Module Check: Space Complexity and Recursion Depth",
+  "generated": "2025-01-01",
+  "questions": [
+    {
+      "id": "MC01",
+      "question": "What determines the call stack depth of a recursive DFS on a tree?",
+      "answer": "The height h of the tree — O(log n) for balanced, O(n) for skewed/degenerate"
+    },
+    {
+      "id": "MC02",
+      "question": "Why is sys.setrecursionlimit(10**6) insufficient for very deep Python recursion?",
+      "answer": "The OS limits the C call stack (typically ~8MB, ~20K-40K Python frames); Python's limit doesn't override the OS limit"
+    },
+    {
+      "id": "MC03",
+      "question": "BFS space = O(w) and DFS space = O(h). For a balanced binary tree, which is smaller?",
+      "answer": "DFS: O(log n) vs BFS: O(n/2). DFS is more space-efficient for balanced trees."
+    },
+    {
+      "id": "MC04",
+      "question": "What is the correct fix for Python RecursionError on a large DFS?",
+      "answer": "Convert to iterative DFS using an explicit `stack = []` (heap-allocated, no OS limit)"
+    }
+  ]
+}

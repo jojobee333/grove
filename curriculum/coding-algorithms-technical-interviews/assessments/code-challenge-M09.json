@@ -1,0 +1,100 @@
+{
+  "id": "code-challenge-M09",
+  "type": "module",
+  "module": "M09",
+  "title": "Coding Challenge: Language-Specific Complexity Traps",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `reverse_words(sentence)` that takes a string of space-separated words and returns the words in reversed order as a single string, joined by spaces.\n\nImplement this using the correct O(n) string-building pattern: split into a list, reverse, then use `' '.join(parts)` — do NOT build the result with string `+=` in a loop (that would be O(n²)).\n\nExample: `reverse_words('hello world foo')` → `'foo world hello'`",
+      "starter_code": "def reverse_words(sentence):\n    \"\"\"\n    Reverse the word order in a space-separated sentence.\n    1. Split the sentence into a list of words.\n    2. Reverse the list.\n    3. Join with a single space using ''.join() — NOT string +=.\n    Returns a string.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Three words",
+          "input": "'hello world foo'",
+          "expected_output": "foo world hello",
+          "visibility": "visible"
+        },
+        {
+          "name": "Two words",
+          "input": "'alpha beta'",
+          "expected_output": "beta alpha",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single word",
+          "input": "'python'",
+          "expected_output": "python",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Five words",
+          "input": "'one two three four five'",
+          "expected_output": "five four three two one",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Mixed case preserved",
+          "input": "'Hello World'",
+          "expected_output": "World Hello",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["string-concat-trap", "python-hidden-costs"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L30",
+      "pass_criteria": 1.0,
+      "remediation_lesson_ids": ["L28", "L30"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `sliding_window_max(problem)` that takes a dict with keys `nums` (a list of integers) and `k` (a window size), and returns a list of the maximums of each sliding window of size `k`.\n\nUse a `collections.deque` as a monotonic decreasing deque of indices. The front of the deque is always the index of the maximum in the current window. Use `deque.appendleft` / `deque.popleft` for O(1) operations — do NOT use `list.insert(0, ...)` or `list.pop(0)` (those are O(n)).\n\nExample: `sliding_window_max({'nums': [1, 3, -1, -3, 5, 3, 6, 7], 'k': 3})` → `[3, 3, 5, 5, 6, 7]`",
+      "starter_code": "def sliding_window_max(problem):\n    \"\"\"\n    Return the max of each k-size window in problem['nums'].\n    Maintain a monotonic decreasing deque of indices.\n    Before adding index i, pop from the right any index whose value <= nums[i].\n    Pop from the left if the front index is outside the window (i - dq[0] >= k).\n    The answer for window ending at i is nums[dq[0]].\n    Returns a list of integers.\n    \"\"\"\n    from collections import deque\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Classic eight-element, k=3",
+          "input": "{'nums': [1, 3, -1, -3, 5, 3, 6, 7], 'k': 3}",
+          "expected_output": "[3, 3, 5, 5, 6, 7]",
+          "visibility": "visible"
+        },
+        {
+          "name": "k equals array length",
+          "input": "{'nums': [4, 2, 7, 1], 'k': 4}",
+          "expected_output": "[7]",
+          "visibility": "visible"
+        },
+        {
+          "name": "k equals 1",
+          "input": "{'nums': [3, 1, 4, 1, 5], 'k': 1}",
+          "expected_output": "[3, 1, 4, 1, 5]",
+          "visibility": "hidden"
+        },
+        {
+          "name": "All same values",
+          "input": "{'nums': [5, 5, 5, 5], 'k': 2}",
+          "expected_output": "[5, 5, 5]",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Decreasing sequence",
+          "input": "{'nums': [5, 4, 3, 2, 1], 'k': 3}",
+          "expected_output": "[5, 4, 3]",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["python-hidden-costs", "sliding-window", "monotonic-stack"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 4,
+      "lesson_ref": "L28",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L28", "L08"]
+    }
+  ]
+}

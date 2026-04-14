@@ -1,0 +1,169 @@
+{
+  "id": "quiz-M09",
+  "type": "module",
+  "module": "M09",
+  "title": "Assessment: Language-Specific Complexity Traps",
+  "generated": "2025-01-01",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What is the time complexity of `result = []` followed by `result.insert(0, x)` called n times?",
+      "options": {
+        "A": "O(n) total — insert is O(1) amortised like append",
+        "B": "O(n²) total — each `insert(0, x)` shifts all existing elements right in O(n)",
+        "C": "O(n log n) total — insert uses binary search internally",
+        "D": "O(n) total if the list was pre-allocated with n slots"
+      },
+      "correct": "B",
+      "explanation": "`list.insert(0, x)` shifts every existing element one position right: O(k) for a list of k elements. Over n insertions: 0+1+2+...+(n-1) = O(n²). Fix: `result.append(x)` then `result.reverse()` — O(n) total.",
+      "lesson_ref": "L28",
+      "claim_ref": "L28",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Python code: `result = ''; for s in string_list: result += s`. What is the time complexity and why?",
+      "options": {
+        "A": "O(n) — string += is equivalent to list.append, amortised O(1)",
+        "B": "O(n²) — each += creates a new string object copying all previous characters, total characters copied = 1+2+...+n",
+        "C": "O(n log n) — Python optimises string concatenation with a rope",
+        "D": "O(n) in CPython 3.x due to the PEP 393 compact string optimisation"
+      },
+      "correct": "B",
+      "explanation": "Python strings are immutable. Each `result += s` allocates a new string object of length len(result)+len(s) and copies all characters. Total copies: sum of lengths = O(n²) in the worst case (equal-length strings). Fix: `''.join(string_list)` — O(n) total.",
+      "lesson_ref": "L30",
+      "claim_ref": "L30",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "In Java, `int lo = 1_500_000_000; int hi = 1_500_000_000; int mid = (lo + hi) / 2;`. What is the value of mid?",
+      "options": {
+        "A": "1,500,000,000 — correct midpoint",
+        "B": "-647,483,648 — integer overflow: lo+hi = 3,000,000,000 > Integer.MAX_VALUE (2,147,483,647)",
+        "C": "750,000,000 — Java silently promotes to long for arithmetic",
+        "D": "A compile error — Java does not allow literals > 2,147,483,647"
+      },
+      "correct": "B",
+      "explanation": "Java int: MAX_VALUE = 2,147,483,647. lo+hi = 3,000,000,000 overflows to a negative value (wraps around). mid = negative/2 = negative. Fix: `int mid = lo + (hi - lo) / 2;` — no overflow since hi-lo ≤ MAX_VALUE.",
+      "lesson_ref": "L29",
+      "claim_ref": "L29",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "JavaScript: `[10, 9, 2, 1, 100].sort()`. What does this return?",
+      "options": {
+        "A": "[1, 2, 9, 10, 100]",
+        "B": "[1, 10, 100, 2, 9]",
+        "C": "[100, 10, 9, 2, 1]",
+        "D": "TypeError — sort() requires a comparator"
+      },
+      "correct": "B",
+      "explanation": "JavaScript's default sort converts elements to strings and sorts lexicographically. '10' < '100' < '2' < '9' (string comparison). Fix: `arr.sort((a, b) => a - b)` for ascending numeric sort. This is one of the most common interview bugs in JavaScript.",
+      "lesson_ref": "L29",
+      "claim_ref": "L29",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "Python: `from collections import Counter; c = Counter('aabbc'); c['x']`. What does this return?",
+      "options": {
+        "A": "KeyError: 'x'",
+        "B": "0 — Counter returns 0 for missing keys",
+        "C": "None",
+        "D": "An empty Counter object"
+      },
+      "correct": "B",
+      "explanation": "Counter is a subclass of dict but returns 0 (the default) for missing keys rather than raising KeyError. This makes it convenient for frequency comparisons without explicit membership checks: `if c[char] > 0:` won't crash for unseen characters.",
+      "lesson_ref": "L06",
+      "claim_ref": "L06",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "Your Python backtracking function builds strings by `path += char` at each recursion level and reconstructs the result. What is the hidden space problem?",
+      "options": {
+        "A": "No problem — string += in backtracking is the recommended pattern",
+        "B": "Each recursive call creates a new string object of increasing length: O(depth²) total allocation across all live frames",
+        "C": "String immutability causes the backtrack step to fail — path doesn't restore itself",
+        "D": "Python deduplicates equal string objects, causing incorrect results when path values collide"
+      },
+      "correct": "B",
+      "explanation": "At depth d, path has d characters. Creating a new string at each depth: 1+2+...+n = O(n²) total allocations for a single root-to-leaf path. In backtracking with many branches, this multiplies. Fix: use a list, append/pop, and `''.join(path)` only at leaf nodes.",
+      "lesson_ref": "L30",
+      "claim_ref": "L30",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "Python dict preserves insertion order as of Python 3.7. Which of the following is still O(n) and NOT O(1)?",
+      "options": {
+        "A": "d[key] = value  (insertion)",
+        "B": "del d[key]  (deletion by key)",
+        "C": "list(d.keys())[0]  (get first inserted key)",
+        "D": "key in d  (membership test)"
+      },
+      "correct": "C",
+      "explanation": "`list(d.keys())` materialises all keys into a new list — O(n). Then `[0]` is O(1). The overall operation is O(n). All of insert, delete, and `in` on a dict are O(1) average. To get the first key in O(1), use `next(iter(d))`.",
+      "lesson_ref": "L28",
+      "claim_ref": "L28",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "List three Python-specific O(n) operations that are commonly mistaken for O(1), and for each, give the O(1) or faster alternative.",
+      "answer_key": {
+        "required_points": [
+          "1. list.pop(0) or list.insert(0, x) → use collections.deque with popleft()/appendleft(); O(1)",
+          "2. x in list → use x in set or x in dict; O(1) average",
+          "3. ''.join inside a loop with += → collect in list, join once; O(n) total vs O(n²)"
+        ],
+        "acceptable_variations": "list.copy() O(n) is also valid; sorted() being O(n log n) when you only need min/max (use min/max O(n)) is also acceptable",
+        "full_credit": "Three correct pairs of O(n) operation and O(1) alternative",
+        "partial_credit": "Two correct pairs"
+      },
+      "lesson_ref": "L28",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "Explain why integer overflow is a significant risk in Java and C but not in Python, and describe the two most common interview locations where Java overflow appears.",
+      "answer_key": {
+        "required_points": [
+          "Java int = 32-bit signed, max ~2.1×10⁹. Operations exceeding this silently wrap. Python integers have arbitrary precision — no overflow.",
+          "Location 1: binary search midpoint: (lo+hi)/2 overflows when lo+hi > MAX_VALUE",
+          "Location 2: large multiplication: (long)a * b in 64-bit problems; forgetting to cast before multiply"
+        ],
+        "acceptable_variations": "May mention C/C++ undefined behaviour for signed overflow",
+        "full_credit": "Explains Python's arbitrary precision, identifies both overflow locations with fixes",
+        "partial_credit": "Explains the difference without identifying the interview-specific locations"
+      },
+      "lesson_ref": "L29",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "Language-specific quirks cause real interview failures. Select two languages (from Python, Java, and JavaScript) and for each: identify the single most dangerous performance trap for algorithm problems and the single most dangerous correctness trap. Explain why each trap is hard to notice without specific knowledge.",
+      "guidance": "Strong answer identifies: Python — deque vs list (perf), mutable default arguments or shallow copy (correctness). Java — string concatenation in loops (perf), integer overflow (correctness). JS — O(n²) spreading/slicing (perf), default sort (correctness). 'Hard to notice' explanation required for full marks.",
+      "rubric": {
+        "A": "Two languages covered, one perf trap and one correctness trap each, explains why each is non-obvious",
+        "B": "Two languages covered with correct traps but missing the 'hard to notice' explanation",
+        "C": "Only one language covered well, or traps identified without concrete examples"
+      },
+      "lesson_ref": "L28-L30",
+      "difficulty": "analysis"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "id": "modcheck-M10",
+  "module": "M10",
+  "title": "Module Check: Backtracking, Union-Find, Debates, and Gaps",
+  "generated": "2025-01-01",
+  "questions": [
+    {
+      "id": "MC01",
+      "question": "In backtracking, why must you `result.append(path[:])` instead of `result.append(path)`?",
+      "answer": "path is a mutable reference; appending without copying stores a reference that later becomes empty. `path[:]` makes a snapshot copy."
+    },
+    {
+      "id": "MC02",
+      "question": "What do the three steps of the backtracking template (choose, explore, unchoose) accomplish?",
+      "answer": "Choose: make a decision and update state. Explore: recurse. Unchoose: undo the decision so siblings start from the same state."
+    },
+    {
+      "id": "MC03",
+      "question": "What does it mean when DSU `union(u, v)` returns False?",
+      "answer": "u and v are already in the same connected component — adding this edge would create a cycle"
+    },
+    {
+      "id": "MC04",
+      "question": "Name the two optimisations that give Union-Find O(α(n)) amortised complexity.",
+      "answer": "Path compression (during find) and union by rank (during union)"
+    },
+    {
+      "id": "MC05",
+      "question": "What minimum test does greedy require before you can trust it over DP?",
+      "answer": "Try 2-3 counterexamples; if none exist, attempt an exchange argument showing swapping doesn't improve the result"
+    }
+  ]
+}

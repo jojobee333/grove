@@ -1,0 +1,25 @@
+{
+  "slug": "coding-algorithms-technical-interviews",
+  "phase": "complete",
+  "created": "2026-04-13",
+  "updated": "2025-01-01",
+  "steps_completed": ["validate", "learner", "course-map", "lessons", "cards", "assessments", "v3-artifacts"],
+  "course_map": {
+    "modules": 10,
+    "lessons": 34,
+    "estimated_hours": 19.3
+  },
+  "lessons_completed": [
+    "L01","L02","L03","L04","L05","L06","L07","L08","L09","L10",
+    "L11","L12","L13","L14","L15","L16","L17","L18","L19","L20",
+    "L21","L22","L23","L24","L25","L26","L27","L28","L29","L30",
+    "L31","L32","L33","L34"
+  ],
+  "cards_generated": true,
+  "cards_total": 64,
+  "assessments_generated": true,
+  "module_quizzes": 10,
+  "module_checks": 10,
+  "v3_artifacts": ["concepts.json", "learning-paths.json", "adaptive-rules.json"],
+  "bundle_built": true
+}

@@ -1,0 +1,146 @@
+{
+  "id": "code-challenge-M03",
+  "type": "module",
+  "module": "M03",
+  "title": "Coding Challenge: Linear Traversal Patterns",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `max_water(heights)` that takes a list of non-negative integers representing vertical bar heights and returns the maximum area of water that can be contained between any two bars.\n\nUse the left-right converging two-pointer pattern: start with pointers at both ends, move the shorter side inward on each step.\n\nExample: `max_water([1, 8, 6, 2, 5, 4, 8, 3, 7])` → `49`",
+      "starter_code": "def max_water(heights):\n    \"\"\"\n    Find the maximum water area between two bars.\n    Area = min(heights[left], heights[right]) * (right - left).\n    Use two pointers starting at the outermost bars.\n    Move the pointer pointing to the shorter bar inward.\n    Returns an integer.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Classic nine-bar example",
+          "input": "[1, 8, 6, 2, 5, 4, 8, 3, 7]",
+          "expected_output": "49",
+          "visibility": "visible"
+        },
+        {
+          "name": "Two bars only",
+          "input": "[1, 1]",
+          "expected_output": "1",
+          "visibility": "visible"
+        },
+        {
+          "name": "Ascending heights",
+          "input": "[1, 2, 3, 4, 5]",
+          "expected_output": "6",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Equal heights",
+          "input": "[4, 4, 4, 4]",
+          "expected_output": "12",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Single tall bar in center",
+          "input": "[1, 3, 2, 5, 2, 3, 1]",
+          "expected_output": "12",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["two-pointer", "space-time-tradeoff"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L07",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L07"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `longest_no_repeat(s)` that takes a string and returns the length of the longest substring without any repeating characters.\n\nUse the variable-size sliding window pattern: maintain a window `[left, right]` and a set of characters currently in the window. When a duplicate is found, shrink from the left until it is removed.\n\nExample: `longest_no_repeat('abcabcbb')` → `3` (window `'abc'`)",
+      "starter_code": "def longest_no_repeat(s):\n    \"\"\"\n    Find the length of the longest substring with all unique characters.\n    Use a sliding window: expand right, shrink left when a duplicate is added.\n    Track characters in the current window with a set or hash map.\n    Returns an integer.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Classic example",
+          "input": "'abcabcbb'",
+          "expected_output": "3",
+          "visibility": "visible"
+        },
+        {
+          "name": "All same character",
+          "input": "'bbbbb'",
+          "expected_output": "1",
+          "visibility": "visible"
+        },
+        {
+          "name": "No repeats at all",
+          "input": "'abcdef'",
+          "expected_output": "6",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Empty string",
+          "input": "''",
+          "expected_output": "0",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Repeat after long gap",
+          "input": "'pwwkew'",
+          "expected_output": "3",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["sliding-window", "hash-set", "hash-map"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L08",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L07", "L08"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `subarray_sum_k(problem)` that takes a dict with keys `nums` (a list of integers) and `k` (an integer target sum), and returns the number of contiguous subarrays whose elements sum to exactly `k`.\n\nUse prefix sums combined with a frequency hash map: store how many times each prefix sum has been seen. For each position, check if `prefix_sum - k` is already in the map.\n\nExample: `subarray_sum_k({'nums': [1, 1, 1], 'k': 2})` → `2`",
+      "starter_code": "def subarray_sum_k(problem):\n    \"\"\"\n    Count subarrays summing to problem['k'] in problem['nums'].\n    Build prefix sums as you scan. For each running total t,\n    the count of subarrays ending here that sum to k equals\n    how many times (t - k) has appeared as a prefix sum.\n    Initialise the map with {0: 1} for the empty prefix.\n    Returns an integer.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Two subarrays",
+          "input": "{'nums': [1, 1, 1], 'k': 2}",
+          "expected_output": "2",
+          "visibility": "visible"
+        },
+        {
+          "name": "Negative numbers",
+          "input": "{'nums': [1, 2, 3], 'k': 3}",
+          "expected_output": "2",
+          "visibility": "visible"
+        },
+        {
+          "name": "No valid subarray",
+          "input": "{'nums': [1, 2, 3], 'k': 7}",
+          "expected_output": "0",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Whole array sums to k",
+          "input": "{'nums': [1, 2, 3, 4], 'k': 10}",
+          "expected_output": "1",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Negatives allow overlap",
+          "input": "{'nums': [1, -1, 1, -1, 1], 'k': 0}",
+          "expected_output": "4",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["prefix-sum", "hash-map", "space-time-tradeoff"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 4,
+      "lesson_ref": "L09",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L09", "L04"]
+    }
+  ]
+}

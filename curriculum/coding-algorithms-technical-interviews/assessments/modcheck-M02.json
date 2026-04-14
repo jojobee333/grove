@@ -1,0 +1,28 @@
+{
+  "id": "modcheck-M02",
+  "module": "M02",
+  "title": "Module Check: Hash Maps — The Universal Speed-Up",
+  "generated": "2025-01-01",
+  "questions": [
+    {
+      "id": "MC01",
+      "question": "What is the average-case time complexity of hash map lookup, insertion, and deletion?",
+      "answer": "O(1) average for all three operations"
+    },
+    {
+      "id": "MC02",
+      "question": "Name the three core hash map patterns covered in this module.",
+      "answer": "Complement lookup (e.g. Two Sum), frequency count (e.g. Valid Anagram), group-by (e.g. Group Anagrams)"
+    },
+    {
+      "id": "MC03",
+      "question": "What is the time complexity of `x in some_list` vs `x in some_set`?",
+      "answer": "`x in list` is O(n); `x in set` is O(1) average"
+    },
+    {
+      "id": "MC04",
+      "question": "Which Python collection initialises missing keys with an empty list automatically?",
+      "answer": "`defaultdict(list)` from the `collections` module"
+    }
+  ]
+}

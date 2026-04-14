@@ -1,0 +1,17 @@
+{
+  "slug": "coding-algorithms-technical-interviews",
+  "created": "2026-04-13",
+  "goal": "apply-practically",
+  "goal_label": "Apply practically — solve real LeetCode/interview problems confidently",
+  "background": "some-exposure",
+  "background_label": "Some exposure — seen sorting/arrays but haven't practiced systematically",
+  "time_per_session": "1-hour",
+  "time_label": "1 hour — deep dives with practice problems",
+  "implications": {
+    "lesson_depth": "intermediate — explain the why behind each template, include worked examples with complexity analysis",
+    "lesson_length": "long-form (800–1200 words per lesson) with pattern recognition cues",
+    "flashcard_density": "high — one card per operation, per template step, per gotcha",
+    "assessment_difficulty": "medium — mix of recognition and recall; include complexity analysis questions",
+    "pacing": "1 lesson per session; 6–8 sessions per module"
+  }
+}

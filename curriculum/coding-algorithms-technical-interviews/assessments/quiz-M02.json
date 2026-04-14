@@ -1,0 +1,169 @@
+{
+  "id": "quiz-M02",
+  "type": "module",
+  "module": "M02",
+  "title": "Assessment: Hash Maps — The Universal Speed-Up",
+  "generated": "2025-01-01",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "Why does a hash map guarantee O(1) average-case lookup rather than O(1) worst-case?",
+      "options": {
+        "A": "Hash maps use binary search internally, which is guaranteed O(log n)",
+        "B": "A poorly designed hash function can map many keys to the same bucket, forcing O(n) traversal of a collision chain",
+        "C": "The Python dict implementation guarantees O(1) in all cases through open addressing",
+        "D": "Hash maps are O(1) worst-case because each slot holds exactly one value"
+      },
+      "correct": "B",
+      "explanation": "Hash maps rely on a good hash function to distribute keys uniformly. In pathological cases (all keys hash to the same bucket), lookup degrades to O(n) linked-list traversal. With a good hash function and load-factor management, expected case is O(1).",
+      "lesson_ref": "L04",
+      "claim_ref": "L04",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Given `nums = [2, 7, 11, 15]` and `target = 9`, trace the one-pass Two Sum algorithm. What is stored in the hash map after processing the element 7?",
+      "options": {
+        "A": "{2: 0}",
+        "B": "{2: 0, 7: 1}",
+        "C": "{7: 1}",
+        "D": "The algorithm already returned [0, 1] before reaching 7"
+      },
+      "correct": "D",
+      "explanation": "When processing nums[1]=7: check if target-7=2 is in the map. {2:0} is already in the map. Return [0, 1]. The algorithm terminates before 7 is stored, because the complement was found immediately.",
+      "lesson_ref": "L05",
+      "claim_ref": "L05",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "You need to group a list of strings by their sorted characters (anagram groups). Which hash map pattern applies?",
+      "options": {
+        "A": "Complement lookup — store each string and check if its complement exists",
+        "B": "Frequency count — count character occurrences and compare counts",
+        "C": "Group-by — use sorted(word) as key; append each word to the corresponding list",
+        "D": "De-duplicate — use a set to track which strings have been seen"
+      },
+      "correct": "C",
+      "explanation": "Group-by pattern: transform each element into a canonical key (sorted letters), accumulate all elements sharing that key into a list. `from collections import defaultdict; d=defaultdict(list); d[tuple(sorted(w))].append(w)`.",
+      "lesson_ref": "L05",
+      "claim_ref": "L05",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "What output does `from collections import Counter; Counter('aabbc')` produce?",
+      "options": {
+        "A": "{'a': 2, 'b': 2, 'c': 1}",
+        "B": "['a', 'a', 'b', 'b', 'c']",
+        "C": "{2: 'a', 2: 'b', 1: 'c'}",
+        "D": "3  (number of distinct characters)"
+      },
+      "correct": "A",
+      "explanation": "Counter produces a dict-like object mapping each element to its count. 'a' appears twice, 'b' twice, 'c' once. This is the standard frequency-count pattern for character frequency problems.",
+      "lesson_ref": "L06",
+      "claim_ref": "L06",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "Your solution checks `if x in seen_list:` inside a loop over n elements. The interviewer says 'great logic, but this is O(n²).' What single change fixes this?",
+      "options": {
+        "A": "Replace `seen_list` with `seen_set = set()` and use `if x in seen_set:`",
+        "B": "Sort `seen_list` before the loop so membership checks become O(log n)",
+        "C": "Replace the list with a deque for O(1) popleft",
+        "D": "Use `any(x == item for item in seen_list)` for cleaner code"
+      },
+      "correct": "A",
+      "explanation": "Set membership `x in set` is O(1) average (hash-based). List membership `x in list` is O(n) (linear scan). Converting to a set before the loop makes the outer loop O(n) × O(1) = O(n) total.",
+      "lesson_ref": "L06",
+      "claim_ref": "L06",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "When should you reach for `defaultdict(list)` instead of a regular `dict`?",
+      "options": {
+        "A": "When you need O(1) lookup for individual keys",
+        "B": "When you are grouping items under keys that may not exist yet, avoiding KeyError on first assignment",
+        "C": "When you need to count occurrences — defaultdict(list) initialises counts to zero",
+        "D": "defaultdict is slower than dict; only use it when code clarity is more important than performance"
+      },
+      "correct": "B",
+      "explanation": "defaultdict(list) auto-creates an empty list for missing keys, so `d[key].append(value)` works without checking `if key in d` first. defaultdict(int) (not list) initialises to 0 for counting. Performance is equivalent to dict.",
+      "lesson_ref": "L06",
+      "claim_ref": "L06",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "Problem: find the longest subarray with equal numbers of 0s and 1s. You convert 0s to -1s and use a prefix sum approach. What role does a hash map play in the O(n) solution?",
+      "options": {
+        "A": "It stores the frequencies of each prefix sum for counting",
+        "B": "It maps each prefix sum to the earliest index where that sum was seen, enabling O(1) subarray length calculation",
+        "C": "It replaces the prefix sum array for O(1) space",
+        "D": "It is not needed — the prefix sum array alone is sufficient"
+      },
+      "correct": "B",
+      "explanation": "When prefix[i] == prefix[j] (both equal k), the subarray nums[j+1..i] has sum 0 (equal 1s and -1s). Storing `first_seen[prefix] = index` lets you compute subarray length as i - first_seen[prefix[i]] in O(1).",
+      "lesson_ref": "L05",
+      "claim_ref": "L05",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "Describe the three main hash map patterns covered in this module (complement lookup, frequency count, group-by) and give one interview problem that exemplifies each.",
+      "answer_key": {
+        "required_points": [
+          "Complement lookup: store seen values; for each new element, check if (target - element) exists. Example: Two Sum.",
+          "Frequency count: map each element to its occurrence count. Example: Valid Anagram, Ransom Note.",
+          "Group-by: map a canonical key to a list of matching elements. Example: Group Anagrams."
+        ],
+        "acceptable_variations": "Any correct LeetCode problem for each category. Counter pattern is a sub-case of frequency count.",
+        "full_credit": "All three patterns named accurately with a correct example problem each",
+        "partial_credit": "Two patterns correctly named and exemplified"
+      },
+      "lesson_ref": "L05",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "Explain why using a Python list as a queue inside BFS is a time complexity bug, and show the two-line fix.",
+      "answer_key": {
+        "required_points": [
+          "list.pop(0) removes the first element in O(n) because all remaining elements shift left",
+          "Over V vertices, total BFS cost becomes O(V×n) = O(n²) instead of O(V+E)",
+          "Fix: from collections import deque; queue = deque(); use queue.popleft() — O(1) both operations"
+        ],
+        "acceptable_variations": "May show code instead of prose for the fix",
+        "full_credit": "Identifies O(n) pop cost, explains the compounding effect, provides deque fix",
+        "partial_credit": "Identifies the problem without quantifying or without providing the fix"
+      },
+      "lesson_ref": "L06",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "A colleague claims that hash maps are a 'brute force shortcut' that avoids real algorithmic thinking. Evaluate this claim. When does adding a hash map represent elegant algorithm design, and when might it obscure a more efficient solution?",
+      "guidance": "A strong response shows: when O(n) hash map trades space for time correctly (Two Sum, subarray problems); when it is genuinely the optimal approach; and one case where a different technique (sorting + two pointers, sliding window) avoids the hash map's O(n) space overhead.",
+      "rubric": {
+        "A": "Defends the hash map's role with 2+ concrete examples, identifies the space tradeoff, and gives a legitimate alternative that avoids the hash map",
+        "B": "Defends the hash map with examples but doesn't identify a case where an alternative is better",
+        "C": "Either dismisses the claim without examples or agrees with it without nuance"
+      },
+      "lesson_ref": "L04-L06",
+      "difficulty": "analysis"
+    }
+  ]
+}

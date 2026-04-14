@@ -1,0 +1,172 @@
+{
+  "id": "quiz-M01",
+  "type": "module",
+  "module": "M01",
+  "title": "Assessment: The Interview Algorithm Landscape",
+  "generated": "2025-01-01",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "A candidate has one week to prepare for a software engineering interview at a mid-tier company. Which allocation makes the best strategic use of their time?",
+      "options": {
+        "A": "Study each LeetCode problem category equally across all 20+ tags",
+        "B": "Focus exclusively on dynamic programming as it is the hardest topic",
+        "C": "Focus on hash maps, BFS/DFS, and two pointers — the three highest-frequency patterns",
+        "D": "Read a full algorithms textbook before attempting any problems"
+      },
+      "correct": "C",
+      "explanation": "The Pareto principle applied to interview prep means the top 3-5 patterns cover ~70-80% of medium-difficulty problems. With only one week, equal coverage wastes time on rare tags; DP-only ignores higher-frequency patterns; textbook reading without practice is ineffective.",
+      "lesson_ref": "L01",
+      "claim_ref": "L01",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "You are on the U (Understand) step of UMPIRE when your interviewer says 'we're a bit pressed for time.' What is the correct response?",
+      "options": {
+        "A": "Skip directly to implementation to show speed",
+        "B": "Briefly summarise the constraints you've confirmed, then proceed to M (Match) with their agreement",
+        "C": "Jump to E (Evaluate) complexity first so the interviewer sees your depth",
+        "D": "Ask for more time — never skip Understand"
+      },
+      "correct": "B",
+      "explanation": "Abbreviated problem understanding is still required; starting code with ambiguous constraints leads to wrong implementations. Verbally summarising what you know and getting quick agreement is faster than misimplementing. Never skip Understand entirely, but it can be done quickly.",
+      "lesson_ref": "L03",
+      "claim_ref": "L03",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "What does the M (Match) step of UMPIRE ask you to do?",
+      "options": {
+        "A": "Write the matching logic for a hash map lookup",
+        "B": "Identify which algorithmic pattern or data structure the problem resembles",
+        "C": "Verify your answer matches the expected output",
+        "D": "Calculate the time complexity of your match algorithm"
+      },
+      "correct": "B",
+      "explanation": "Match = pattern recognition. You ask 'which pattern does this problem resemble?' (e.g. two pointers, BFS, DP). This step directly informs the Plan step and avoids coding random logic.",
+      "lesson_ref": "L03",
+      "claim_ref": "L03",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "After completing UMPIRE's Review step, you find your code fails edge cases. What should you do first?",
+      "options": {
+        "A": "Immediately abandon the approach and start over with a different pattern",
+        "B": "Trace through the failing case step by step on paper before changing any code",
+        "C": "Skip to E (Evaluate) and discuss complexity to show progress",
+        "D": "Ask the interviewer for a hint"
+      },
+      "correct": "B",
+      "explanation": "Before changing code, tracing through the failing case manually reveals whether it is a logic error, boundary off-by-one, or a fundamental flaw. Blind rewrites waste time. Hints should be a last resort.",
+      "lesson_ref": "L03",
+      "claim_ref": "L03",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "An optimal 4-week interview study sequence would place Linked Lists and Trees in week 2. Why does this ordering make sense?",
+      "options": {
+        "A": "Trees are easier than hash maps and build confidence before harder topics",
+        "B": "Trees and linked lists use pointers — understanding them is prerequisite to BFS/DFS on graphs in week 3",
+        "C": "Interviewers always ask tree questions in round 2 of interviews",
+        "D": "Hash maps have no relationship to tree traversal, so the order is arbitrary"
+      },
+      "correct": "B",
+      "explanation": "BFS and DFS on graphs share the same traversal mechanics as tree traversal. Studying trees first builds the mental model (node, children, recursion) that transfers directly to graph problems in week 3.",
+      "lesson_ref": "L02",
+      "claim_ref": "L02",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "In the UMPIRE framework, the E (Evaluate) step involves analysing time and space complexity. When should you perform this evaluation?",
+      "options": {
+        "A": "Before writing any code so you choose the most efficient approach first",
+        "B": "Only after your solution is accepted by the online judge",
+        "C": "After implementation and review, as a final step to communicate tradeoffs",
+        "D": "Simultaneously with coding to catch inefficiencies in real time"
+      },
+      "correct": "C",
+      "explanation": "UMPIRE is sequential by design. Plan and implement first with a known-correct approach; then communicate complexity analysis to the interviewer as a final signal of understanding. Premature optimisation during plan/implement adds cognitive load.",
+      "lesson_ref": "L03",
+      "claim_ref": "L03",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "Which of the following describes a study approach that will NOT prepare a candidate efficiently for breadth-first coding interviews?",
+      "options": {
+        "A": "Practising pattern recognition by solving 5-7 problems per pattern before moving on",
+        "B": "Timed problem-solving sessions to simulate interview pressure",
+        "C": "Grinding >100 random LeetCode problems across all difficulty levels without a structured pattern order",
+        "D": "Reviewing your own past mistakes and categorising errors by pattern type"
+      },
+      "correct": "C",
+      "explanation": "Random grinding without pattern structure leads to pattern blindness — you cannot recognise which algorithm applies in a new context. Structured pattern practice builds the recognition instinct that makes interviews tractable.",
+      "lesson_ref": "L01",
+      "claim_ref": "L01",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "Name the 6 steps of the UMPIRE framework and describe, in one sentence each, what the candidate does at each step.",
+      "answer_key": {
+        "required_points": [
+          "U – Understand: clarify problem statement, constraints, and edge cases",
+          "M – Match: identify the algorithm pattern or data structure the problem resembles",
+          "P – Plan: describe the high-level approach verbally before coding",
+          "I – Implement: write code following the plan",
+          "R – Review: trace through test cases and check for bugs",
+          "E – Evaluate: state time and space complexity and discuss tradeoffs"
+        ],
+        "acceptable_variations": "Order must be U-M-P-I-R-E; descriptions may paraphrase",
+        "full_credit": "All 6 steps named with accurate one-sentence descriptions",
+        "partial_credit": "4-5 steps named correctly with reasonable descriptions"
+      },
+      "lesson_ref": "L03",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "A candidate studying for an interview 3 weeks away wants to cover as many patterns as possible. Explain, using the Pareto principle, why this goal is misguided and what a better goal would be.",
+      "answer_key": {
+        "required_points": [
+          "~20% of patterns cover ~80% of problems (Pareto / 80-20 principle)",
+          "LeetCode has >20 pattern tags; covering all equally dilutes depth on high-frequency patterns",
+          "Better goal: deep practice on 5-6 high-frequency patterns until pattern recognition is automatic"
+        ],
+        "acceptable_variations": "Exact ratios may vary (70/30, 80/20); any accurate framing of diminishing returns on rare patterns",
+        "full_credit": "Mentions Pareto ratio, identifies problem with breadth strategy, proposes focused-depth alternative",
+        "partial_credit": "Identifies the breadth problem without connecting it to Pareto principle"
+      },
+      "lesson_ref": "L01",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "A colleague argues that UMPIRE is too structured and wastes time in time-pressured interviews. They prefer to 'just code' as soon as they understand the problem. Evaluate both approaches and explain when, if ever, 'just coding' is appropriate.",
+      "guidance": "A strong response discusses the failure modes of premature coding (wrong problem understanding, no plan → spaghetti code, back-tracking), explains what UMPIRE prevents, and acknowledges the valid case for shortening U/M/P on very familiar patterns.",
+      "rubric": {
+        "A": "Identifies failure modes of no-plan coding, defends UMPIRE stage-by-stage, names one legitimate shortcut case with conditions",
+        "B": "Identifies 2+ failure modes and defends UMPIRE but doesn't explore when shortcuts are valid",
+        "C": "Defends one approach without engaging the tradeoffs of the other"
+      },
+      "lesson_ref": "L01-L03",
+      "difficulty": "analysis"
+    }
+  ]
+}

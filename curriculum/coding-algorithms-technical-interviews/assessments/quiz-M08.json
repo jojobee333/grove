@@ -1,0 +1,173 @@
+{
+  "id": "quiz-M08",
+  "type": "module",
+  "module": "M08",
+  "title": "Assessment: Dynamic Programming — The Three-Stage Pipeline",
+  "generated": "2025-01-01",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "You see an optimisation problem that asks for the maximum profit from buying and selling stock. Which two properties would confirm it is solvable with DP?",
+      "options": {
+        "A": "The array is sorted and has no duplicates",
+        "B": "Optimal substructure: optimal solution uses optimal sub-decisions; overlapping subproblems: same sub-computations recur",
+        "C": "The problem involves a graph with weighted edges",
+        "D": "The answer is a single integer (not a sequence), indicating DP over enumeration"
+      },
+      "correct": "B",
+      "explanation": "DP requires both properties. Optimal substructure: maximum profit on days 1..i depends on optimal decisions on days 1..i-1. Overlapping subproblems: without caching, the naive recursion recomputes the same sub-results. A sorted array or integer answer does not by itself indicate DP.",
+      "lesson_ref": "L24",
+      "claim_ref": "L24",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Adding `@functools.cache` to a correct recursive function converts it to memoised DP. What is the time complexity of the memoised Fibonacci using this approach?",
+      "options": {
+        "A": "O(2^n) — the same as the non-memoised version",
+        "B": "O(n) — each Fibonacci number is computed exactly once and cached",
+        "C": "O(n log n) — cache lookup adds log n overhead per call",
+        "D": "O(1) — the cache stores all results after the first full run"
+      },
+      "correct": "B",
+      "explanation": "fib(n) without caching has O(2^n) calls (exponential branching). With caching, each unique argument n is computed exactly once. There are exactly n+1 unique arguments (0..n). Total time: O(n) calls × O(1) per call = O(n).",
+      "lesson_ref": "L25",
+      "claim_ref": "L25",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "You are implementing 0/1 Knapsack in 1D DP. The inner loop iterates `for cap in range(W, weight-1, -1)` in reverse. What happens if you iterate forward instead?",
+      "options": {
+        "A": "The result is the same — forward vs reverse makes no difference for 0/1 knapsack",
+        "B": "Items can be used multiple times (unbounded knapsack behaviour) because earlier updates pollute later lookups in the same row",
+        "C": "The algorithm produces an off-by-one error on the boundary condition",
+        "D": "The algorithm runs faster due to better cache locality"
+      },
+      "correct": "B",
+      "explanation": "In 1D DP, dp[cap] = max(dp[cap], dp[cap-weight]+value). Forward iteration: when computing dp[cap], dp[cap-weight] may already reflect the current item being added this iteration → item counted twice (unbounded knapsack). Reverse ensures dp[cap-weight] is from the previous item's state.",
+      "lesson_ref": "L26",
+      "claim_ref": "L26",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "Coin Change problem: given coins=[1,3,4] and amount=6. Greedy (always take largest coin ≤ remaining) takes: 4+1+1=3 coins. What does DP find?",
+      "options": {
+        "A": "3 coins — same as greedy, confirming greedy is optimal",
+        "B": "2 coins: 3+3=2 — DP finds the global optimum that greedy misses",
+        "C": "1 coin: 6=6 — DP finds a denomination that greedy doesn't see",
+        "D": "4 coins — greedy was better; DP is suboptimal for coin change"
+      },
+      "correct": "B",
+      "explanation": "DP recurrence: dp[0]=0, dp[v] = min(dp[v-c]+1) for each coin c. dp[6] via paths: dp[3]+1=2 (using coin 3 twice). Greedy takes 4 first, leaving 2, then 1+1. DP finds 3+3=2 coins. This is the canonical counterexample showing greedy fails on non-canonical coin sets.",
+      "lesson_ref": "L26",
+      "claim_ref": "L26",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "You need to optimise dp space for Longest Common Subsequence (LCS) from O(m×n) to O(min(m,n)). What property of the recurrence makes this possible?",
+      "options": {
+        "A": "LCS only depends on adjacent characters, so two variables suffice",
+        "B": "LCS dp[i][j] depends only on dp[i-1][j-1], dp[i-1][j], and dp[i][j-1] — only the current and previous row needed",
+        "C": "LCS can be solved greedily in O(n) without DP",
+        "D": "LCS values are monotonically increasing, allowing binary search over the table"
+      },
+      "correct": "B",
+      "explanation": "LCS recurrence: dp[i][j] = dp[i-1][j-1]+1 if match, else max(dp[i-1][j], dp[i][j-1]). Only row i-1 is needed to compute row i. Keep two 1D arrays (or one with careful update order), reducing space from O(m×n) to O(n) (or O(min(m,n)) by iterating over the shorter string).",
+      "lesson_ref": "L26",
+      "claim_ref": "L26",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "For Best Time to Buy and Sell Stock with Cooldown, a 1D dp[i] representing max profit on day i is insufficient. What additional dimension is needed and why?",
+      "options": {
+        "A": "dp[i][price] — track the current stock price to make the sell decision",
+        "B": "dp[i][state] where state ∈ {holding, sold, rest} — profit depends on which state you are in on that day",
+        "C": "dp[i][transactions] — number of transactions alters what actions are available",
+        "D": "dp[i][cash] — cash balance determines whether you can buy"
+      },
+      "correct": "B",
+      "explanation": "After selling (sold state), you must wait one day (rest state) before buying again (→ holding state). The available transitions differ per state: you can only buy when in rest, sell when holding, etc. 1D dp[i] can't distinguish these — you need dp[i][state].",
+      "lesson_ref": "L27",
+      "claim_ref": "L27",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "What is the primary advantage of top-down memoisation over bottom-up tabulation?",
+      "options": {
+        "A": "Top-down always uses less memory",
+        "B": "Top-down only computes subproblems that are actually needed; some subproblems may never be reached",
+        "C": "Top-down is always faster due to hash map caching vs array access",
+        "D": "Top-down avoids the need to identify base cases"
+      },
+      "correct": "B",
+      "explanation": "Top-down is lazy: it only computes a subproblem when first accessed. If the optimal solution requires only a fraction of all subproblems, top-down avoids the rest. Bottom-up fills the entire table even if most entries are unused. This matters for sparse problems like game trees.",
+      "lesson_ref": "L25",
+      "claim_ref": "L25",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "Write the memoised top-down Fibonacci function in Python using @cache. Then state its time complexity, space complexity (including call stack), and the base cases.",
+      "answer_key": {
+        "required_points": [
+          "from functools import cache",
+          "@cache decorator on the function",
+          "def fib(n): if n <= 1: return n; return fib(n-1) + fib(n-2)",
+          "Time: O(n) — each n computed once",
+          "Space: O(n) auxiliary for cache + O(n) call stack = O(n) total",
+          "Base cases: fib(0) = 0, fib(1) = 1"
+        ],
+        "acceptable_variations": "@lru_cache(maxsize=None) also accepted; base cases may include fib(0)=0, fib(1)=1 or fib(0)=1, fib(1)=1 (Fibonacci variant noted)",
+        "full_credit": "Correct code with @cache, correct base cases, correct complexities for both time and space",
+        "partial_credit": "Correct code but missing complexity analysis or incorrect complexity"
+      },
+      "lesson_ref": "L25",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "Describe the three-stage DP problem-solving pipeline (recognition, model, implement) and explain what happens if you skip the middle stage and go directly from recognition to implementation.",
+      "answer_key": {
+        "required_points": [
+          "Stage 1 Recognition: identify optimal substructure + overlapping subproblems",
+          "Stage 2 Model: define dp[...] precisely, write the recurrence, identify base cases, determine evaluation order",
+          "Stage 3 Implement: code the recurrence (either memoised or tabulated)",
+          "Skipping Stage 2: without a precise state definition and recurrence, code becomes trial-and-error. Common failure: wrong state dimension, missing cases, incorrect base case → wrong answer with difficult-to-debug logic"
+        ],
+        "acceptable_variations": "Stage names may vary; emphasise the necessity of state definition before coding",
+        "full_credit": "All three stages described accurately, consequence of skipping Stage 2 explained",
+        "partial_credit": "Two stages correctly described"
+      },
+      "lesson_ref": "L24",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "A colleague always writes tabulation (bottom-up) DP and never uses memoisation, arguing it is always faster. Evaluate this claim. When is tabulation preferable, when is memoisation preferable, and what property of the problem determines the choice?",
+      "guidance": "Strong answer: tabulation iterative = no call stack, easier space optimisation (rolling array), cache-friendly array access. Memoisation = only compute needed subproblems, natural recursion structure matches problem. Key property: if all states must be computed (dense subproblem graph), tabulation wins. If many states never reached (sparse subproblem graph), memoisation wins.",
+      "rubric": {
+        "A": "Evaluates both approaches with specific advantages, identifies the dense/sparse subproblem property as the deciding factor with an example",
+        "B": "Correctly describes when each is better but uses vague criteria instead of the density of subproblem access",
+        "C": "Describes one approach as universally better without engaging the tradeoff"
+      },
+      "lesson_ref": "L25-L26",
+      "difficulty": "analysis"
+    }
+  ]
+}

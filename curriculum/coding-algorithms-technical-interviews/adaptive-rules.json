@@ -1,0 +1,93 @@
+{
+  "slug": "coding-algorithms-technical-interviews",
+  "generated": "2025-01-01",
+  "rules": [
+    {
+      "id": "unlock-sequential",
+      "trigger": "lesson_complete",
+      "condition": "lesson.unlock_rule === 'all_prerequisites_mastered'",
+      "action": "unlock_lesson",
+      "description": "Unlock a lesson only when all its prerequisite lessons reach mastery_threshold."
+    },
+    {
+      "id": "unlock-none",
+      "trigger": "session_start",
+      "condition": "lesson.unlock_rule === 'none'",
+      "action": "unlock_lesson",
+      "description": "Lessons with no prerequisites are unlocked from the start."
+    },
+    {
+      "id": "reinforce-card-trigger",
+      "trigger": "quiz_score_below_threshold",
+      "condition": "quiz.score < 0.70",
+      "action": "surface_flashcards",
+      "params": {
+        "select_by": "lesson_refs_in_failed_questions",
+        "max_cards": 10
+      },
+      "description": "When a module quiz score falls below 70%, surface flashcards for the lessons referenced in the wrong answers."
+    },
+    {
+      "id": "remediation-lesson",
+      "trigger": "quiz_mcq_wrong",
+      "condition": "question.type === 'mcq' && attempts >= 2",
+      "action": "recommend_lesson",
+      "params": {
+        "lesson_id": "question.lesson_ref"
+      },
+      "description": "After two wrong answers on the same MCQ, recommend revisiting the source lesson."
+    },
+    {
+      "id": "spaced-repetition-review",
+      "trigger": "daily_session_start",
+      "condition": "card.sr.next_review <= today",
+      "action": "add_card_to_session",
+      "description": "Surface cards whose next_review date has passed according to SM-2 scheduling."
+    },
+    {
+      "id": "mastery-badge",
+      "trigger": "modcheck_complete",
+      "condition": "modcheck.all_correct === true",
+      "action": "award_badge",
+      "params": {
+        "badge": "module_mastered",
+        "module": "modcheck.module"
+      },
+      "description": "Award a module mastery badge when all module-check questions are answered correctly."
+    },
+    {
+      "id": "final-assessment-unlock",
+      "trigger": "quiz_complete",
+      "condition": "completed_quizzes.length === 10 && all_scores >= 0.70",
+      "action": "unlock_final_assessment",
+      "description": "Unlock the cumulative final assessment only after all 10 module quizzes pass at 70%."
+    },
+    {
+      "id": "fast-track-recommendation",
+      "trigger": "learner_profile_set",
+      "condition": "learner.background === 'strong-foundation'",
+      "action": "recommend_path",
+      "params": {
+        "path_id": "advanced-patterns"
+      },
+      "description": "Learners with a strong foundation are directed to the advanced-patterns path, skipping the core pattern modules."
+    },
+    {
+      "id": "low-confidence-card-boost",
+      "trigger": "card_reviewed",
+      "condition": "card.sr.ease < 2.0",
+      "action": "reduce_interval",
+      "params": {
+        "interval_multiplier": 0.5
+      },
+      "description": "Cards with ease factor below 2.0 (struggling) get their review interval halved."
+    },
+    {
+      "id": "course-completion",
+      "trigger": "quiz_complete",
+      "condition": "all_module_quizzes_passed && all_modchecks_passed",
+      "action": "mark_course_complete",
+      "description": "Mark the course complete when all module quizzes and all module checks have been passed."
+    }
+  ]
+}

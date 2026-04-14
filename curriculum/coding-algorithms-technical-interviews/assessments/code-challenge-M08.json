@@ -1,0 +1,146 @@
+{
+  "id": "code-challenge-M08",
+  "type": "module",
+  "module": "M08",
+  "title": "Coding Challenge: Dynamic Programming — The Three-Stage Pipeline",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `climb_stairs(n)` that takes a positive integer `n` and returns the number of distinct ways to climb `n` stairs, given you can take 1 or 2 steps at a time.\n\nImplement bottom-up tabulation: `dp[i]` = number of ways to reach stair `i`. The recurrence is `dp[i] = dp[i-1] + dp[i-2]`. Optimise to O(1) space by keeping only the previous two values.\n\nExample: `climb_stairs(5)` → `8`",
+      "starter_code": "def climb_stairs(n):\n    \"\"\"\n    Count ways to climb n stairs taking 1 or 2 steps at a time.\n    dp[i] = dp[i-1] + dp[i-2]; dp[1] = 1, dp[2] = 2.\n    Optimise to O(1) space: only keep the last two values (prev2, prev1).\n    Returns an integer.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Five stairs",
+          "input": "5",
+          "expected_output": "8",
+          "visibility": "visible"
+        },
+        {
+          "name": "Three stairs",
+          "input": "3",
+          "expected_output": "3",
+          "visibility": "visible"
+        },
+        {
+          "name": "One stair",
+          "input": "1",
+          "expected_output": "1",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Two stairs",
+          "input": "2",
+          "expected_output": "2",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Ten stairs",
+          "input": "10",
+          "expected_output": "89",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["dynamic-programming", "tabulation", "dp-space-optimization"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L26",
+      "pass_criteria": 1.0,
+      "remediation_lesson_ids": ["L24", "L25", "L26"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `coin_change(problem)` that takes a dict with keys `coins` (a list of coin denominations) and `amount` (a target integer), and returns the minimum number of coins needed to make up `amount`. Return `-1` if it is impossible.\n\nUse bottom-up DP: `dp[i]` = minimum coins for amount `i`. Initialise `dp[0] = 0` and all others to `amount + 1` (infinity). For each amount from 1 to `amount`, try every coin.\n\nExample: `coin_change({'coins': [1, 5, 6, 9], 'amount': 11})` → `2` (coins 5 + 6)",
+      "starter_code": "def coin_change(problem):\n    \"\"\"\n    Find minimum coins to reach problem['amount'] using problem['coins'].\n    dp[i] = min coins to make amount i.\n    Initialise dp[0] = 0 and dp[1..amount] = amount + 1.\n    For each amount i, for each coin c where c <= i: dp[i] = min(dp[i], dp[i-c] + 1).\n    Return dp[amount] if < amount + 1, else -1.\n    Returns an integer.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Two coins sufficient",
+          "input": "{'coins': [1, 5, 6, 9], 'amount': 11}",
+          "expected_output": "2",
+          "visibility": "visible"
+        },
+        {
+          "name": "Classic example",
+          "input": "{'coins': [1, 2, 5], 'amount': 11}",
+          "expected_output": "3",
+          "visibility": "visible"
+        },
+        {
+          "name": "Impossible",
+          "input": "{'coins': [2], 'amount': 3}",
+          "expected_output": "-1",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Amount zero",
+          "input": "{'coins': [1, 2, 5], 'amount': 0}",
+          "expected_output": "0",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Greedy is suboptimal",
+          "input": "{'coins': [1, 3, 4], 'amount': 6}",
+          "expected_output": "2",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["dynamic-programming", "tabulation", "dp-state"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L27",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L26", "L27"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `lcs_length(problem)` that takes a dict with keys `s` and `t` (two strings) and returns the length of their Longest Common Subsequence (LCS).\n\nUse 2D bottom-up tabulation: `dp[i][j]` = LCS length for `s[:i]` and `t[:j]`. If `s[i-1] == t[j-1]`, `dp[i][j] = dp[i-1][j-1] + 1`; otherwise `dp[i][j] = max(dp[i-1][j], dp[i][j-1])`.\n\nThis exercise demonstrates why a 2D state is required — 1D is insufficient because both indices advance independently.\n\nExample: `lcs_length({'s': 'abcde', 't': 'ace'})` → `3`",
+      "starter_code": "def lcs_length(problem):\n    \"\"\"\n    Return the length of the Longest Common Subsequence of s and t.\n    s = problem['s'], t = problem['t'].\n    Build dp table of size (len(s)+1) x (len(t)+1).\n    dp[i][j] = LCS of s[:i] and t[:j].\n    Returns an integer.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Classic LCS",
+          "input": "{'s': 'abcde', 't': 'ace'}",
+          "expected_output": "3",
+          "visibility": "visible"
+        },
+        {
+          "name": "Identical strings",
+          "input": "{'s': 'abc', 't': 'abc'}",
+          "expected_output": "3",
+          "visibility": "visible"
+        },
+        {
+          "name": "No common characters",
+          "input": "{'s': 'abc', 't': 'def'}",
+          "expected_output": "0",
+          "visibility": "hidden"
+        },
+        {
+          "name": "One empty string",
+          "input": "{'s': 'abc', 't': ''}",
+          "expected_output": "0",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Longer example",
+          "input": "{'s': 'AGGTAB', 't': 'GXTXAYB'}",
+          "expected_output": "4",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["dynamic-programming", "tabulation", "dp-state"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 4,
+      "lesson_ref": "L27",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L26", "L27"]
+    }
+  ]
+}

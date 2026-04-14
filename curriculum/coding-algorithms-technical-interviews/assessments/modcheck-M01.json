@@ -1,0 +1,33 @@
+{
+  "id": "modcheck-M01",
+  "module": "M01",
+  "title": "Module Check: The Interview Algorithm Landscape",
+  "generated": "2025-01-01",
+  "questions": [
+    {
+      "id": "MC01",
+      "question": "Name the 6 steps of the UMPIRE framework in order.",
+      "answer": "Understand, Match, Plan, Implement, Review, Evaluate"
+    },
+    {
+      "id": "MC02",
+      "question": "According to the Pareto principle applied to interviews, approximately what percentage of problems can be solved with the top 20% of patterns?",
+      "answer": "~80% of problems"
+    },
+    {
+      "id": "MC03",
+      "question": "In a 4-week study plan, which topic cluster belongs in week 3?",
+      "answer": "Binary search, two pointers, and sliding window"
+    },
+    {
+      "id": "MC04",
+      "question": "At which UMPIRE step should you write the first line of code?",
+      "answer": "I (Implement) — only after completing U, M, and P"
+    },
+    {
+      "id": "MC05",
+      "question": "What are the top 5 high-frequency algorithm patterns that cover the majority of interview problems?",
+      "answer": "Hash maps, two pointers/sliding window, BFS/DFS, binary search, dynamic programming"
+    }
+  ]
+}

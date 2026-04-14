@@ -1,0 +1,146 @@
+{
+  "id": "code-challenge-M05",
+  "type": "module",
+  "module": "M05",
+  "title": "Coding Challenge: Binary Search, Heaps, and Monotonic Stacks",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `search_rotated(problem)` that takes a dict with keys `nums` (a sorted array that was rotated at some unknown pivot) and `target` (an integer), and returns the index of `target` in `nums`, or `-1` if not found.\n\nUse binary search. At each step, determine which half is sorted: if `nums[left] <= nums[mid]`, the left half is sorted; otherwise the right half is. Use this to decide which half to recurse into.\n\nExample: `search_rotated({'nums': [4, 5, 6, 7, 0, 1, 2], 'target': 0})` → `4`",
+      "starter_code": "def search_rotated(problem):\n    \"\"\"\n    Binary search in a rotated sorted array.\n    nums = problem['nums'], target = problem['target'].\n    At each step, one of the two halves must be sorted.\n    If target is in the sorted half, narrow to that half; otherwise take the other.\n    Returns the index of target, or -1 if absent.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Target in right portion",
+          "input": "{'nums': [4, 5, 6, 7, 0, 1, 2], 'target': 0}",
+          "expected_output": "4",
+          "visibility": "visible"
+        },
+        {
+          "name": "Target not present",
+          "input": "{'nums': [4, 5, 6, 7, 0, 1, 2], 'target': 3}",
+          "expected_output": "-1",
+          "visibility": "visible"
+        },
+        {
+          "name": "Target in left portion",
+          "input": "{'nums': [4, 5, 6, 7, 0, 1, 2], 'target': 5}",
+          "expected_output": "1",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Single element, found",
+          "input": "{'nums': [1], 'target': 1}",
+          "expected_output": "0",
+          "visibility": "hidden"
+        },
+        {
+          "name": "No rotation",
+          "input": "{'nums': [1, 2, 3, 4, 5], 'target': 3}",
+          "expected_output": "2",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["binary-search", "sorting-preprocessing"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 4,
+      "lesson_ref": "L15",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L15"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `kth_largest(problem)` that takes a dict with keys `nums` (a list of integers) and `k` (a positive integer), and returns the Kth largest element in `nums`.\n\nUse the min-heap top-K pattern: maintain a min-heap of exactly size K. The root of the heap is always the Kth largest. Push each element and if the heap grows beyond K, pop the smallest.\n\nExample: `kth_largest({'nums': [3, 2, 1, 5, 6, 4], 'k': 2})` → `5`",
+      "starter_code": "def kth_largest(problem):\n    \"\"\"\n    Return the Kth largest element using a min-heap of size K.\n    nums = problem['nums'], k = problem['k'].\n    Maintain a min-heap: push each number, then pop if heap size > k.\n    After processing all numbers, heap[0] is the Kth largest.\n    Returns an integer.\n    \"\"\"\n    import heapq\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Second largest",
+          "input": "{'nums': [3, 2, 1, 5, 6, 4], 'k': 2}",
+          "expected_output": "5",
+          "visibility": "visible"
+        },
+        {
+          "name": "Fourth largest",
+          "input": "{'nums': [3, 2, 3, 1, 2, 4, 5, 5, 6], 'k': 4}",
+          "expected_output": "4",
+          "visibility": "visible"
+        },
+        {
+          "name": "K equals 1 (maximum)",
+          "input": "{'nums': [7, 3, 5, 2, 8], 'k': 1}",
+          "expected_output": "8",
+          "visibility": "hidden"
+        },
+        {
+          "name": "K equals length (minimum)",
+          "input": "{'nums': [4, 2, 7], 'k': 3}",
+          "expected_output": "2",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Negative numbers",
+          "input": "{'nums': [-5, -1, -3, -2, -4], 'k': 2}",
+          "expected_output": "-2",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["heap", "top-k-pattern"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L16",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L16"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `daily_temperatures(temps)` that takes a list of daily temperatures and returns a list of the same length where each entry is the number of days you must wait until a warmer temperature. If there is no future warmer day, put `0`.\n\nUse a monotonic decreasing stack. Push indices onto the stack. When a warmer temperature is found, pop all smaller temperatures from the stack and record the waiting days.\n\nExample: `daily_temperatures([73, 74, 75, 71, 69, 72, 76, 73])` → `[1, 1, 4, 2, 1, 1, 0, 0]`",
+      "starter_code": "def daily_temperatures(temps):\n    \"\"\"\n    For each day, find the number of days until a warmer temperature.\n    Use a monotonic decreasing stack of indices.\n    When temps[i] > temps[stack[-1]], pop and record answer[popped] = i - popped.\n    Returns a list of integers the same length as temps.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Classic eight-day example",
+          "input": "[73, 74, 75, 71, 69, 72, 76, 73]",
+          "expected_output": "[1, 1, 4, 2, 1, 1, 0, 0]",
+          "visibility": "visible"
+        },
+        {
+          "name": "Monotonically decreasing",
+          "input": "[30, 20, 10]",
+          "expected_output": "[0, 0, 0]",
+          "visibility": "visible"
+        },
+        {
+          "name": "Monotonically increasing",
+          "input": "[10, 20, 30]",
+          "expected_output": "[1, 1, 0]",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Single element",
+          "input": "[50]",
+          "expected_output": "[0]",
+          "visibility": "hidden"
+        },
+        {
+          "name": "All equal temperatures",
+          "input": "[25, 25, 25, 25]",
+          "expected_output": "[0, 0, 0, 0]",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["monotonic-stack"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L17",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L17"]
+    }
+  ]
+}

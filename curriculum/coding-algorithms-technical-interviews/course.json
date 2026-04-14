@@ -1,0 +1,676 @@
+{
+  "topic": "Coding Algorithms for Technical Interview Mastery",
+  "slug": "coding-algorithms-technical-interviews",
+  "strata_source": "research/coding-algorithms-technical-interviews/",
+  "generated": "2026-04-13",
+  "learner": {
+    "goal": "apply-practically",
+    "background": "some-exposure",
+    "session_time_min": 60
+  },
+  "summary": "A systematic, template-first course covering the 15–20 algorithm patterns, complexity analysis, and language-specific traps required for consistent FAANG-level coding interview performance.",
+  "modules": [
+    {
+      "id": "M01",
+      "title": "The Interview Algorithm Landscape",
+      "strata_theme": "Theme 3 + Theme 10: pattern frequency and empirically validated study sequence",
+      "description": "Understand the scope of what needs to be mastered, how community-derived study sequences work, and how to apply a structured communication framework during interviews.",
+      "objectives": [
+        "Identify the 6 high-priority pattern families that cover the majority of FAANG interview problems",
+        "Apply the empirically validated study sequence from Arrays → Hashing → Trees → Graphs → DP",
+        "Use the UMPIRE framework to structure interview communication, emphasising the Match and Review steps"
+      ],
+      "lessons": [
+        {
+          "id": "L01",
+          "title": "15–20 Templates Cover 80%+ of FAANG Interview Problems",
+          "strata_claim": "C1, C2",
+          "type": "core",
+          "estimated_minutes": 30,
+          "description": "The Pareto principle of interview preparation — a small set of high-frequency patterns covers the vast majority of what FAANG companies actually test.",
+          "difficulty": 2,
+          "prerequisites": [],
+          "teaches_concepts": ["pattern-frequency", "interview-pareto-principle"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "none",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L02",
+          "title": "The Empirically Validated Study Sequence",
+          "strata_claim": "C11",
+          "type": "core",
+          "estimated_minutes": 25,
+          "description": "How NeetCode 150, Blind 75, Grind 75, and TIH independently converge on the same dependency DAG — and why following that order minimises time to competence.",
+          "difficulty": 2,
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["study-sequence", "dependency-dag"],
+          "reinforces_concepts": ["pattern-frequency"],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L03",
+          "title": "The UMPIRE Interview Communication Framework",
+          "strata_claim": "C10",
+          "type": "applied",
+          "estimated_minutes": 35,
+          "description": "A six-step scaffold — Understand, Match, Plan, Implement, Review, Evaluate — for communicating your problem-solving process; the Match and Review steps are most skipped and most valued.",
+          "difficulty": 2,
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["interview-communication", "umpire-framework"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M02",
+      "title": "Hash Maps — The Universal Speed-Up",
+      "strata_theme": "Theme 8: hash map / set is the universal improve-time-with-space optimisation",
+      "description": "Master the hash map as the primary tool for eliminating O(n) scans and O(n²) nested loops — the single most widely applicable data structure in coding interviews.",
+      "objectives": [
+        "Apply hash maps to convert O(n²) brute force to O(n) using complement lookup",
+        "Implement frequency counting, sliding-window counters, and index-as-key patterns",
+        "Distinguish O(1) average, O(n) worst-case, and bounded O(1) space scenarios"
+      ],
+      "lessons": [
+        {
+          "id": "L04",
+          "title": "Hash Map and Set: The Interview Foundation",
+          "strata_claim": "C13",
+          "type": "core",
+          "estimated_minutes": 35,
+          "description": "Why hash maps are the most commonly used data structure for time improvement, and the mechanics behind O(1) average-case performance.",
+          "difficulty": 2,
+          "prerequisites": [],
+          "teaches_concepts": ["hash-map", "hash-set", "space-time-tradeoff"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "none",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L05",
+          "title": "Frequency Counting, Complement Lookup, and Index-as-Key",
+          "strata_claim": "C13",
+          "type": "applied",
+          "estimated_minutes": 40,
+          "description": "Three canonical hash map patterns: frequency counters for anagram detection, complement lookup for Two Sum, and using array indices as a hash map for cyclic-integer values.",
+          "difficulty": 3,
+          "prerequisites": ["L04"],
+          "teaches_concepts": ["frequency-counting", "complement-lookup", "index-as-key"],
+          "reinforces_concepts": ["hash-map", "space-time-tradeoff"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L06",
+          "title": "Hash Map Language Traps — Python, Java, JavaScript",
+          "strata_claim": "C4, C6",
+          "type": "applied",
+          "estimated_minutes": 30,
+          "description": "Language-specific hash map pitfalls: Java HashMap pre-JDK8 O(n) worst case vs JDK8+ O(log n), and JavaScript's silent Map-vs-object-property assignment bug.",
+          "difficulty": 3,
+          "prerequisites": ["L04"],
+          "teaches_concepts": ["language-hidden-costs"],
+          "reinforces_concepts": ["hash-map"],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14, 30]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M03",
+      "title": "Linear Traversal Patterns — Arrays, Pointers, and Windows",
+      "strata_theme": "Theme 1: templates as primary unit — linear array patterns (two-pointer, sliding window, prefix sum)",
+      "description": "Master the template-based approach for the most frequent linear scan patterns: two pointers, sliding window, prefix sums, and the sort preprocessing heuristic.",
+      "objectives": [
+        "Implement two-pointer convergence and fast/slow cycle-detection for pair-sum and list-cycle problems",
+        "Apply fixed-size and variable-size sliding window templates to substring and subarray problems",
+        "Use prefix sums to convert range-query problems from O(n) per query to O(1)",
+        "Apply the sort-preprocessing heuristic to identify when O(n log n) sort + O(n) scan beats O(n²) brute force"
+      ],
+      "lessons": [
+        {
+          "id": "L07",
+          "title": "Two-Pointer Pattern — Four Canonical Variants",
+          "strata_claim": "C3",
+          "type": "core",
+          "estimated_minutes": 40,
+          "description": "Left-right convergence, fast-slow cycle detection, same-direction expansion, and opposite-end split — four variants with recognition signals and worked examples.",
+          "difficulty": 2,
+          "prerequisites": ["L04"],
+          "teaches_concepts": ["two-pointer"],
+          "reinforces_concepts": ["pattern-frequency"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L08",
+          "title": "Sliding Window — Fixed-Size and Variable-Size Templates",
+          "strata_claim": "C3",
+          "type": "core",
+          "estimated_minutes": 40,
+          "description": "Expand-right/shrink-left for variable-size windows; fixed-window entry/expiry for sum/product problems; monotonic deque for sliding window maximum.",
+          "difficulty": 3,
+          "prerequisites": ["L07"],
+          "teaches_concepts": ["sliding-window"],
+          "reinforces_concepts": ["two-pointer", "frequency-counting"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L09",
+          "title": "Prefix Sums — O(n) Build, O(1) Query",
+          "strata_claim": "C3",
+          "type": "core",
+          "estimated_minutes": 30,
+          "description": "Build a prefix-sum array in O(n) to answer arbitrary range-sum queries in O(1); extension to 2D prefix sums for matrix subarray problems.",
+          "difficulty": 2,
+          "prerequisites": ["L04"],
+          "teaches_concepts": ["prefix-sum"],
+          "reinforces_concepts": ["space-time-tradeoff"],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L10",
+          "title": "Sort Preprocessing — Unlock Binary Search and Two Pointers",
+          "strata_claim": "C14",
+          "type": "applied",
+          "estimated_minutes": 25,
+          "description": "Sort-first heuristic: when problem order is irrelevant, sort in O(n log n) to enable O(n) two-pointer or O(log n) binary search — converting O(n²) brute force to O(n log n) total.",
+          "difficulty": 2,
+          "prerequisites": ["L07"],
+          "teaches_concepts": ["sorting-preprocessing"],
+          "reinforces_concepts": ["two-pointer"],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M04",
+      "title": "Tree and Graph Traversal — BFS/DFS Duality",
+      "strata_theme": "Theme 4: BFS and DFS are dual solutions — the same problem often has both",
+      "description": "Understand BFS and DFS as complementary, not competing, strategies and learn which problem type dictates which traversal on trees, graphs, and matrices.",
+      "objectives": [
+        "Implement recursive and iterative DFS with three-colour cycle detection",
+        "Implement BFS with a deque for shortest-path and level-order traversal",
+        "Apply topological sort using both Kahn's BFS and DFS post-order reversal",
+        "Match flood fill, shortest distance, path existence, and dependency-ordering problems to the correct traversal"
+      ],
+      "lessons": [
+        {
+          "id": "L11",
+          "title": "Tree Traversal Templates — Pre, In, Post, and Level-Order",
+          "strata_claim": "C12",
+          "type": "core",
+          "estimated_minutes": 35,
+          "description": "The four canonical tree traversal templates: pre-order (root then children), in-order (BST sorted output), post-order (children before root), and level-order BFS.",
+          "difficulty": 2,
+          "prerequisites": ["L04"],
+          "teaches_concepts": ["tree-traversal", "bst-invariant"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L12",
+          "title": "BFS — Shortest Path, Level-Order, and Connected Components",
+          "strata_claim": "C12",
+          "type": "core",
+          "estimated_minutes": 40,
+          "description": "BFS deque template, O(V+E) traversal, guarantee of shortest path in unweighted graphs, level-order enumeration, and the 2D matrix direction-tuple idiom.",
+          "difficulty": 3,
+          "prerequisites": ["L11"],
+          "teaches_concepts": ["bfs"],
+          "reinforces_concepts": ["tree-traversal"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L13",
+          "title": "DFS — Cycle Detection, Path Existence, and Recursive Decomposition",
+          "strata_claim": "C12",
+          "type": "core",
+          "estimated_minutes": 40,
+          "description": "DFS recursive and iterative templates, three-coloring (white/gray/black) for directed-graph cycle detection, back-edge classification, and entry/exit timestamps.",
+          "difficulty": 3,
+          "prerequisites": ["L11"],
+          "teaches_concepts": ["dfs", "cycle-detection"],
+          "reinforces_concepts": ["tree-traversal"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L14",
+          "title": "Topological Sort — Kahn's BFS vs. DFS Post-Order",
+          "strata_claim": "C12",
+          "type": "applied",
+          "estimated_minutes": 35,
+          "description": "Both algorithms reach O(V+E); Kahn's BFS is preferred for explicit cycle detection (result size < V → cycle); DFS post-order reversal is preferred when DFS is already in use.",
+          "difficulty": 3,
+          "prerequisites": ["L12", "L13"],
+          "teaches_concepts": ["topological-sort"],
+          "reinforces_concepts": ["bfs", "dfs", "cycle-detection"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M05",
+      "title": "Binary Search, Heaps, and Monotonic Stacks",
+      "strata_theme": "Theme 1: templates as primary unit — binary search, heap, monotonic stack",
+      "description": "Three patterns requiring distinct mental models: binary search for monotone decision spaces, heaps for priority-based selection, and monotonic stacks for next-greater-element problems.",
+      "objectives": [
+        "Apply the unified binary search template to find leftmost/rightmost boundary in O(log n)",
+        "Implement the heap top-K pattern with a size-K min-heap in O(n log K)",
+        "Apply the monotonic stack while-violated-pop-then-push loop to NGE and histogram problems in O(n) amortized"
+      ],
+      "lessons": [
+        {
+          "id": "L15",
+          "title": "Unified Binary Search Template — Three Modification Points",
+          "strata_claim": "C3",
+          "type": "core",
+          "estimated_minutes": 40,
+          "description": "Single canonical template: while lo < hi, mid = lo + (hi-lo)//2; three variants for exact match, leftmost boundary, and rightmost boundary; rotated-array extension.",
+          "difficulty": 3,
+          "prerequisites": ["L10"],
+          "teaches_concepts": ["binary-search"],
+          "reinforces_concepts": ["sorting-preprocessing"],
+          "mastery_threshold": 0.8,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L16",
+          "title": "Heap and Top-K Pattern",
+          "strata_claim": "C3",
+          "type": "core",
+          "estimated_minutes": 35,
+          "description": "heapify in O(n), push/pop in O(log n), and the top-K interview pattern: maintain a size-K min-heap to find the K largest elements in O(n log K).",
+          "difficulty": 3,
+          "prerequisites": ["L04"],
+          "teaches_concepts": ["heap", "top-k-pattern"],
+          "reinforces_concepts": ["frequency-counting"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L17",
+          "title": "Monotonic Stack — Next Greater Element in O(n) Amortized",
+          "strata_claim": "C3",
+          "type": "core",
+          "estimated_minutes": 35,
+          "description": "The while-violated-pop-then-push loop that achieves O(n) amortized cost; applications to next-greater-element, largest rectangle in histogram, and trapping rain water.",
+          "difficulty": 3,
+          "prerequisites": ["L04"],
+          "teaches_concepts": ["monotonic-stack"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M06",
+      "title": "Complexity Analysis — Big-O, Master Theorem, and Amortized",
+      "strata_theme": "Claims C6, C7, C8: the formal complexity vocabulary FAANG interviewers expect",
+      "description": "Build the formal complexity vocabulary — from Big-O definition through Master Theorem mechanical derivation to amortized analysis proofs — that FAANG interviewers expect at mid and senior level.",
+      "objectives": [
+        "Apply the formal Big-O definition to drop constants and identify dominant terms",
+        "Use the Master Theorem to derive complexities for divide-and-conquer recurrences in all three cases",
+        "Explain why dynamic array append is O(1) amortized using the geometric series argument",
+        "State the inverse-Ackermann O(α(n)) amortized cost for Union-Find with both optimisations"
+      ],
+      "lessons": [
+        {
+          "id": "L18",
+          "title": "Big-O Formal Definition and the Growth Hierarchy",
+          "strata_claim": "C6",
+          "type": "core",
+          "estimated_minutes": 35,
+          "description": "T(n) ∈ O(f(n)) defined with c and n₀; Big-Θ squeeze and Ω lower bound; canonical growth hierarchy O(1) < O(log n) < O(n) < O(n log n) < O(n²) < O(2ⁿ) < O(n!).",
+          "difficulty": 2,
+          "prerequisites": [],
+          "teaches_concepts": ["big-o", "growth-hierarchy"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "none",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L19",
+          "title": "Master Theorem — Mechanical Derivation for Divide-and-Conquer",
+          "strata_claim": "C8",
+          "type": "core",
+          "estimated_minutes": 40,
+          "description": "T(n) = aT(n/b) + f(n): three cases comparing f(n) vs n^(log_b a); worked derivations for merge sort, binary search, and Strassen; identifying inadmissible cases.",
+          "difficulty": 3,
+          "prerequisites": ["L18"],
+          "teaches_concepts": ["master-theorem", "divide-and-conquer"],
+          "reinforces_concepts": ["big-o"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L20",
+          "title": "Amortized Analysis — Dynamic Arrays, Two-Stack Queue, Union-Find",
+          "strata_claim": "C7",
+          "type": "core",
+          "estimated_minutes": 40,
+          "description": "Aggregate method for table doubling (total resize cost O(n) / n operations = O(1) amortized); accounting method for two-stack queue; O(α(n)) for DSU with path compression and union by rank.",
+          "difficulty": 4,
+          "prerequisites": ["L18"],
+          "teaches_concepts": ["amortized-analysis", "union-find"],
+          "reinforces_concepts": ["big-o"],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14, 30]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M07",
+      "title": "Space Complexity and Recursion Depth",
+      "strata_theme": "Theme 5: recursion depth is the space complexity for tree and graph traversal",
+      "description": "Understand how call-stack depth determines recursion space, the O(h) vs O(n) tree cases, Python's 1000-frame limit hazard, and when iterative alternatives are necessary.",
+      "objectives": [
+        "Calculate recursion space as O(h) for balanced trees and O(n) for skewed trees",
+        "Recognise when Python's default 1000-frame recursion limit requires an iterative solution",
+        "Compare BFS space O(w) vs DFS space O(h) and identify which is preferable per problem type"
+      ],
+      "lessons": [
+        {
+          "id": "L21",
+          "title": "Recursion Space = Call Stack Depth — O(h) Trees, O(V) Graphs",
+          "strata_claim": "C5",
+          "type": "core",
+          "estimated_minutes": 30,
+          "description": "Each stack frame is O(1) space; maximum frame depth = recursion space; O(log n) for balanced trees, O(n) for skewed, O(V) worst case for general DFS.",
+          "difficulty": 2,
+          "prerequisites": ["L13", "L18"],
+          "teaches_concepts": ["recursion-space"],
+          "reinforces_concepts": ["dfs", "big-o"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L22",
+          "title": "Python Recursion Limit and the Iterative Stack Pattern",
+          "strata_claim": "C5",
+          "type": "applied",
+          "estimated_minutes": 30,
+          "description": "Python's 1000-frame default triggers RecursionError for deep trees; three options: iterative with explicit stack, sys.setrecursionlimit, or restructuring to tail-recursive form.",
+          "difficulty": 3,
+          "prerequisites": ["L21"],
+          "teaches_concepts": ["recursion-limit"],
+          "reinforces_concepts": ["recursion-space", "dfs"],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L23",
+          "title": "BFS vs DFS Space Trade-offs — Width vs Depth",
+          "strata_claim": "C5",
+          "type": "applied",
+          "estimated_minutes": 25,
+          "description": "BFS uses O(w) space where w = maximum level width (up to O(n) for complete binary trees); DFS uses O(h); for sparse graphs DFS often wins; for very wide shallow trees BFS wins.",
+          "difficulty": 3,
+          "prerequisites": ["L12", "L21"],
+          "teaches_concepts": [],
+          "reinforces_concepts": ["bfs", "recursion-space"],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M08",
+      "title": "Dynamic Programming — The Three-Stage Pipeline",
+      "strata_theme": "Theme 7: DP has a systematic brute-force → top-down → bottom-up pipeline",
+      "description": "Learn DP via its canonical pipeline — not by memorising solutions but by systematically transforming brute-force recursion into memoised, then tabulated, then space-optimised solutions.",
+      "objectives": [
+        "Identify optimal substructure and overlapping subproblems in a problem description",
+        "Add @functools.cache to a brute-force recursion and verify the time improvement",
+        "Convert a top-down memoised solution to bottom-up tabulation",
+        "Apply space optimisation by keeping only the previous row/column of the DP table"
+      ],
+      "lessons": [
+        {
+          "id": "L24",
+          "title": "DP Recognition — Optimal Substructure and Overlapping Subproblems",
+          "strata_claim": "C9",
+          "type": "core",
+          "estimated_minutes": 35,
+          "description": "The two structural properties that make DP applicable; contrast with greedy (suboptimal subproblems acceptable) and divide-and-conquer (non-overlapping subproblems).",
+          "difficulty": 3,
+          "prerequisites": ["L18", "L22"],
+          "teaches_concepts": ["dynamic-programming"],
+          "reinforces_concepts": ["divide-and-conquer"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L25",
+          "title": "Top-Down Memoisation — @functools.cache in Python",
+          "strata_claim": "C9",
+          "type": "applied",
+          "estimated_minutes": 35,
+          "description": "Add @functools.cache (Python 3.9+) to a recursive solution; verify O(2^n) → O(n) time reduction with Fibonacci; understand how unbounded LRU cache stores subproblem results.",
+          "difficulty": 3,
+          "prerequisites": ["L24"],
+          "teaches_concepts": ["memoization"],
+          "reinforces_concepts": ["dynamic-programming", "recursion-space"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L26",
+          "title": "Bottom-Up Tabulation and Space Optimisation",
+          "strata_claim": "C9",
+          "type": "applied",
+          "estimated_minutes": 40,
+          "description": "Convert top-down @cache to iterative bottom-up table; identify which previous states are actually needed; reduce O(n²) space to O(n) by keeping only the previous row.",
+          "difficulty": 3,
+          "prerequisites": ["L25"],
+          "teaches_concepts": ["tabulation", "dp-space-optimization"],
+          "reinforces_concepts": ["dynamic-programming", "memoization"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L27",
+          "title": "DP State Design — The Hardest Step",
+          "strata_claim": "C9",
+          "type": "applied",
+          "estimated_minutes": 40,
+          "description": "The Markov property for DP state — state must capture exactly what is needed for optimal forward decisions; worked examples with Climbing Stairs, Coin Change, LCS, and 0/1 Knapsack.",
+          "difficulty": 4,
+          "prerequisites": ["L26"],
+          "teaches_concepts": ["dp-state"],
+          "reinforces_concepts": ["dynamic-programming", "tabulation"],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14, 30]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M09",
+      "title": "Language-Specific Complexity Traps",
+      "strata_theme": "Theme 2 + Theme 9: hidden O(n) costs and language-specific runtime details",
+      "description": "Systematic coverage of every hidden O(n) and correctness trap in Python, Java, and JavaScript — the operations that look O(1) but are not, and the correctness bugs they silently introduce.",
+      "objectives": [
+        "Identify the 5 most common Python hidden-cost operations and their O(1) substitutes",
+        "Explain why result += char in a loop is O(n²) in Python, Java, and JavaScript",
+        "Describe the Java HashMap JDK7 vs JDK8 worst-case complexity change and its interview implications"
+      ],
+      "lessons": [
+        {
+          "id": "L28",
+          "title": "Python Hidden O(n) Operations — list, deque, and Strings",
+          "strata_claim": "C4",
+          "type": "applied",
+          "estimated_minutes": 35,
+          "description": "list.insert(0,x), list.pop(0), slice in loop, string += in loop — each appears cheap but runs O(n) or O(n²); deque.popleft(), ''.join(parts), and pre-allocated lists as correct substitutes.",
+          "difficulty": 3,
+          "prerequisites": ["L18"],
+          "teaches_concepts": ["python-hidden-costs"],
+          "reinforces_concepts": ["language-hidden-costs", "big-o"],
+          "mastery_threshold": 0.8,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L29",
+          "title": "Java and JavaScript Complexity Pitfalls",
+          "strata_claim": "C4, C6",
+          "type": "applied",
+          "estimated_minutes": 30,
+          "description": "Java: LinkedList.get(index) O(n), ArrayList.add(index) O(n), HashMap JDK7 O(n) worst → JDK8 O(log n); JS: Array.shift/unshift O(n), obj[key] silently fails to use Map.",
+          "difficulty": 3,
+          "prerequisites": ["L06"],
+          "teaches_concepts": [],
+          "reinforces_concepts": ["language-hidden-costs", "python-hidden-costs"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L30",
+          "title": "String Concatenation — The Universal O(n²) Trap",
+          "strata_claim": "C4",
+          "type": "applied",
+          "estimated_minutes": 25,
+          "description": "Why result += char is O(n²) in Python, Java, and JavaScript due to immutable string semantics; the correct fix in each language; sorting algorithm trivia for bonus points.",
+          "difficulty": 2,
+          "prerequisites": ["L28"],
+          "teaches_concepts": ["string-concat-trap"],
+          "reinforces_concepts": ["language-hidden-costs", "python-hidden-costs"],
+          "mastery_threshold": 0.8,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M10",
+      "title": "Backtracking, Union-Find, Debates, and Gaps",
+      "strata_theme": "Contradictions 1–2 + remaining templates (backtracking, DSU) + coverage gaps",
+      "description": "Complete the template set with backtracking and Union-Find, navigate the DP priority debate, and acknowledge the coverage gaps in linked lists, tries, and greedy algorithms.",
+      "objectives": [
+        "Implement the backtracking template — explore, recurse, undo — for permutations, combinations, and N-queens",
+        "Use Union-Find for faster repeated-connectivity queries in Course Schedule-style problems",
+        "Apply the company-tier heuristic to decide how much DP investment your own prep warrants",
+        "Identify the three coverage gaps and the recommended resources to fill them"
+      ],
+      "lessons": [
+        {
+          "id": "L31",
+          "title": "Backtracking Template — Explore, Recurse, Undo",
+          "strata_claim": "C3",
+          "type": "core",
+          "estimated_minutes": 40,
+          "description": "The canonical scaffold: choose / recurse / unchoose; applied to permutations, combinations, subsets, and N-queens; pruning strategies to reduce the search tree.",
+          "difficulty": 3,
+          "prerequisites": ["L24"],
+          "teaches_concepts": ["backtracking"],
+          "reinforces_concepts": ["dfs", "recursion-space"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L32",
+          "title": "Union-Find (DSU) — Path Compression and Union by Rank",
+          "strata_claim": "C7",
+          "type": "core",
+          "estimated_minutes": 35,
+          "description": "DSU with both optimisations achieves O(α(n)) ≈ O(1) amortized; superior to repeated DFS for connectivity queries; template for detecting cycles in Course Schedule II-style problems.",
+          "difficulty": 3,
+          "prerequisites": ["L13", "L20"],
+          "teaches_concepts": [],
+          "reinforces_concepts": ["union-find", "amortized-analysis"],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14, 30]
+        },
+        {
+          "id": "L33",
+          "title": "The DP Priority Debate — General Prep vs. Google Track",
+          "strata_claim": "C9",
+          "type": "debate",
+          "estimated_minutes": 25,
+          "description": "TIH: 'DP low ROI except Google' vs. Safronov: 'DP is core'. The evidence resolves to a context-dependent recommendation: learn DP after high-priority patterns, not instead of them.",
+          "difficulty": 3,
+          "prerequisites": ["L27"],
+          "teaches_concepts": [],
+          "reinforces_concepts": ["dynamic-programming", "study-sequence"],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14, 30]
+        },
+        {
+          "id": "L34",
+          "title": "Coverage Gaps — Linked Lists, Tries, and Greedy",
+          "strata_claim": null,
+          "type": "gap",
+          "estimated_minutes": 30,
+          "description": "Three topics present in sources but not deeply covered: linked-list pointer manipulation (dummy head, fast/slow), Trie construction and prefix search, and the greedy exchange-argument criterion.",
+          "difficulty": 3,
+          "prerequisites": ["L02"],
+          "teaches_concepts": [],
+          "reinforces_concepts": ["pattern-frequency", "study-sequence"],
+          "mastery_threshold": 0.65,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14, 30]
+        }
+      ],
+      "has_assessment": true
+    }
+  ],
+  "total_lessons": 34,
+  "total_estimated_hours": 19.3,
+  "learning_plan": {
+    "sessions_to_complete": 34,
+    "suggested_schedule": "4–5 sessions per week (7–8 weeks total)",
+    "milestone_lessons": ["L03", "L08", "L14", "L20", "L27", "L30", "L34"]
+  }
+}

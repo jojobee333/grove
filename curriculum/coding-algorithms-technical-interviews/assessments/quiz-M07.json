@@ -1,0 +1,170 @@
+{
+  "id": "quiz-M07",
+  "type": "module",
+  "module": "M07",
+  "title": "Assessment: Space Complexity and Recursion Depth",
+  "generated": "2025-01-01",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "A recursive DFS processes each node once in a balanced binary tree with n nodes. What is the space complexity from the call stack alone?",
+      "options": {
+        "A": "O(1) — DFS does not allocate additional memory",
+        "B": "O(n) — all nodes can be on the call stack simultaneously",
+        "C": "O(log n) — the call stack depth equals the tree height for a balanced tree",
+        "D": "O(n log n) — each level of the tree contributes log n frames"
+      },
+      "correct": "C",
+      "explanation": "Call stack depth = maximum number of simultaneously active recursive calls = path from root to deepest node = tree height h. For a balanced binary tree, h = O(log n), so call stack space = O(log n). Only one root-to-leaf path is active at a time.",
+      "lesson_ref": "L21",
+      "claim_ref": "L21",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "The same DFS on a degenerate (linked-list shaped) binary tree with n nodes. What is the call stack space complexity?",
+      "options": {
+        "A": "O(log n) — tree balance guarantees O(log n) stack depth",
+        "B": "O(1) — the iterative stack is O(n) but the recursive call stack is O(1)",
+        "C": "O(n) — the only path from root to leaf has length n",
+        "D": "O(n²) — each node processes its parent, doubling the stack"
+      },
+      "correct": "C",
+      "explanation": "Degenerate tree = each node has only one child. The single path from root to leaf has length n-1. The entire path is on the call stack simultaneously. Space = O(n). This is why you cannot always claim O(log n) recursive space for trees.",
+      "lesson_ref": "L21",
+      "claim_ref": "L21",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "Your Python DFS solution raises `RecursionError: maximum recursion depth exceeded` on a test with n=10,000 nodes and a degenerate tree. What is the most robust fix?",
+      "options": {
+        "A": "Add `sys.setrecursionlimit(100000)` at the start of the script",
+        "B": "Convert the DFS to iterative using an explicit stack list (heap-allocated)",
+        "C": "Add `sys.setrecursionlimit(100000)` and also increase thread stack size",
+        "D": "Use BFS instead — it automatically avoids recursion depth issues for all tree problems"
+      },
+      "correct": "B",
+      "explanation": "The OS imposes a hard limit on the C call stack (typically ~8MB, ~20K–40K Python frames). `sys.setrecursionlimit` raises Python's internal limit but not the OS limit. Converting to iterative with a `stack = []` list moves depth tracking to the heap (no OS limit). BFS changes the traversal order and may not be valid for all use cases.",
+      "lesson_ref": "L22",
+      "claim_ref": "L22",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "BFS on a wide, shallow tree (all n nodes at depth 1) uses how much queue space?",
+      "options": {
+        "A": "O(1) — BFS only holds one level at a time",
+        "B": "O(n) — all n leaves are in the queue simultaneously at depth 1",
+        "C": "O(log n) — BFS has the same space as the tree height",
+        "D": "O(n²) — each level references all prior levels in the queue"
+      },
+      "correct": "B",
+      "explanation": "BFS space = maximum queue size = maximum width of the graph. For a 'star' tree with n-1 leaves: after processing the root, all n-1 leaves are enqueued simultaneously. Queue space = O(n). This is the worst case for BFS, and the best case for DFS (O(1) for this tree).",
+      "lesson_ref": "L23",
+      "claim_ref": "L23",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "For which graph shape is DFS more space-efficient than BFS?",
+      "options": {
+        "A": "A linear chain (path graph) with n nodes",
+        "B": "A complete graph where every node connects to every other node",
+        "C": "A balanced binary tree",
+        "D": "A star graph with one hub and n-1 leaf nodes"
+      },
+      "correct": "C",
+      "explanation": "Balanced binary tree: DFS stack depth = O(log n) (tree height). BFS queue at bottom level = O(n/2) = O(n). DFS wins for balanced trees. For a linear chain: DFS = O(n) stack, BFS = O(1) queue (BFS wins). For a star: DFS = O(1), BFS = O(n) (DFS wins again — D would also work).",
+      "lesson_ref": "L23",
+      "claim_ref": "L23",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "A recursive function `f(n)` calls itself once with `f(n-1)` and holds O(1) local data per frame. If Python raises RecursionError at n=5000, what is the implied stack depth?",
+      "options": {
+        "A": "5000 frames — each recursive call is one frame",
+        "B": "5001 frames — the initial call plus 5000 recursive calls",
+        "C": "~5000 live frames, since f(n) needs f(n-1) through f(0) all on the stack simultaneously",
+        "D": "~1000 frames — Python's default recursion limit is 1000"
+      },
+      "correct": "C",
+      "explanation": "f(5000) calls f(4999) which calls f(4998) ... down to f(0). All calls are live simultaneously: f(5000) hasn't returned yet when f(0) is executing. Stack depth = n+1 frames. Python's default limit is 1000; `sys.setrecursionlimit` can raise this and the error at n=5000 confirms the limit is somewhere around 5000.",
+      "lesson_ref": "L21",
+      "claim_ref": "L21",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "An algorithm visits every cell in an m×n grid using recursive DFS. What is the call stack space complexity?",
+      "options": {
+        "A": "O(m×n) worst case — the entire grid could be a single path",
+        "B": "O(min(m,n)) — the stack depth is bounded by the shorter dimension",
+        "C": "O(m+n) — stack depth is bounded by the perimeter",
+        "D": "O(log(m×n)) — DFS on grids is inherently O(log n)"
+      },
+      "correct": "A",
+      "explanation": "DFS call stack depth = maximum depth of the DFS tree = maximum path length in the grid. In the worst case (infinite recursion allowed), a single DFS path visits all m×n cells (e.g. a spiral). Call stack space = O(m×n). This is why grid DFS Python solutions often hit recursion limits.",
+      "lesson_ref": "L22",
+      "claim_ref": "L22",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "You have a correct recursive DFS function. Show the general template for converting it to iterative DFS using an explicit stack, preserving the same traversal semantics.",
+      "answer_key": {
+        "required_points": [
+          "Replace recursive call with an explicit stack: `stack = [start_node]`",
+          "Loop: `while stack: node = stack.pop()` (replaces the recursive frame)",
+          "Push children/neighbors: `for neighbor in graph[node]: if neighbor not in visited: stack.append(neighbor)`",
+          "Mark visited either before pushing or immediately after popping (to avoid duplicates)"
+        ],
+        "acceptable_variations": "Code or pseudocode both accepted; exact visited-marking position noted with tradeoff explanation if mentioned",
+        "full_credit": "Stack initialisation, pop, process, push children pattern all present",
+        "partial_credit": "Correct concept but missing visited check or wrong push order"
+      },
+      "lesson_ref": "L22",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "Explain the space complexity tradeoff between BFS and DFS for graph traversal, and state which you would choose for: (a) a graph known to be wide and shallow, (b) a graph known to be deep and narrow.",
+      "answer_key": {
+        "required_points": [
+          "BFS space = O(max width w) of the graph; DFS space = O(max depth d)",
+          "(a) Wide and shallow: depth d is small → DFS uses O(d) space (better). BFS would hold the entire wide level in queue",
+          "(b) Deep and narrow: width w is small → BFS uses O(w) space (better). DFS call stack = O(d) = large"
+        ],
+        "acceptable_variations": "O(B·d) vs O(b^d) notation from tree search is acceptable if correctly applied",
+        "full_credit": "Correctly states O(w) BFS and O(d) DFS, correctly identifies which to use for each shape",
+        "partial_credit": "Correct tradeoff stated without both correct application examples"
+      },
+      "lesson_ref": "L23",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "Most candidates state 'O(1) extra space' for recursive algorithms. Explain why this is almost always wrong and describe what should be said instead. When, if ever, is a recursive algorithm genuinely O(1) extra space (excluding the call stack)?",
+      "guidance": "Strong answer: recursive algorithms use the call stack — O(h) for tree DFS, O(n) for linear recursion. 'Extra space' should be qualified as 'O(1) auxiliary space excluding the call stack, O(h) total including the call stack.' Tail recursion optimisation (TCO) in langs like Scheme creates O(1) stack space — Python does not do TCO.",
+      "rubric": {
+        "A": "Explains the call stack issue clearly, gives the correct phrasing with qualification, identifies TCO as the one genuine O(1) exception and notes Python doesn't support it",
+        "B": "Explains the call stack issue and gives correct phrasing but doesn't discuss TCO",
+        "C": "Identifies the issue without a concrete corrected formulation"
+      },
+      "lesson_ref": "L21-L23",
+      "difficulty": "analysis"
+    }
+  ]
+}

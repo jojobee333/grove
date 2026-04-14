@@ -1,0 +1,106 @@
+{
+  "id": "code-challenge-M06",
+  "type": "module",
+  "module": "M06",
+  "title": "Coding Challenge: Complexity Analysis",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `classify_complexity(code_id)` that takes an integer (1–6) identifying a code snippet, and returns a string representing its Big-O time complexity.\n\nThe snippets and expected answers are:\n- 1: `for i in range(n): for j in range(n): pass` → `'O(n^2)'`\n- 2: `while n > 1: n //= 2` → `'O(log n)'`\n- 3: `for i in range(n): pass` → `'O(n)'`\n- 4: Merge sort over n elements → `'O(n log n)'`\n- 5: A single lookup `d[key]` in a hash map → `'O(1)'`\n- 6: Generating all permutations of n elements → `'O(n!)'`\n\nYour function should return the correct string for each ID.",
+      "starter_code": "def classify_complexity(code_id):\n    \"\"\"\n    Return the Big-O time complexity string for the identified code snippet.\n    Use the growth hierarchy: O(1) < O(log n) < O(n) < O(n log n) < O(n^2) < O(n!).\n    Valid return strings: 'O(1)', 'O(log n)', 'O(n)', 'O(n log n)', 'O(n^2)', 'O(n!)'\n    Returns a string.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Nested loop",
+          "input": "1",
+          "expected_output": "O(n^2)",
+          "visibility": "visible"
+        },
+        {
+          "name": "Halving loop",
+          "input": "2",
+          "expected_output": "O(log n)",
+          "visibility": "visible"
+        },
+        {
+          "name": "Linear scan",
+          "input": "3",
+          "expected_output": "O(n)",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Merge sort",
+          "input": "4",
+          "expected_output": "O(n log n)",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Hash map lookup",
+          "input": "5",
+          "expected_output": "O(1)",
+          "visibility": "hidden"
+        },
+        {
+          "name": "All permutations",
+          "input": "6",
+          "expected_output": "O(n!)",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["big-o", "growth-hierarchy"],
+      "cognitive_level": "comprehension",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L18",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L18"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `count_inversions(arr)` that takes a list of integers and returns the number of inversions — pairs `(i, j)` where `i < j` but `arr[i] > arr[j]`.\n\nImplement this using a modified merge sort (divide-and-conquer). Count inversions during the merge step: whenever a right-half element is placed before remaining left-half elements, all those remaining left-half elements form inversions with it.\n\nThis gives O(n log n) time — the Master Theorem Case 2 result for merge sort.\n\nExample: `count_inversions([3, 1, 2])` → `2` (pairs: (3,1) and (3,2))",
+      "starter_code": "def count_inversions(arr):\n    \"\"\"\n    Count the number of inversions in arr using divide-and-conquer.\n    Split arr into two halves, recursively count inversions in each half,\n    then count split inversions during the merge step.\n    A split inversion occurs when a right element is smaller than remaining\n    left elements — add len(left) - left_ptr to the count at that point.\n    Returns an integer.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Two inversions",
+          "input": "[3, 1, 2]",
+          "expected_output": "2",
+          "visibility": "visible"
+        },
+        {
+          "name": "Already sorted (zero inversions)",
+          "input": "[1, 2, 3, 4]",
+          "expected_output": "0",
+          "visibility": "visible"
+        },
+        {
+          "name": "Fully reversed (maximum inversions)",
+          "input": "[4, 3, 2, 1]",
+          "expected_output": "6",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Single element",
+          "input": "[42]",
+          "expected_output": "0",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Larger example",
+          "input": "[6, 5, 4, 3, 2, 1]",
+          "expected_output": "15",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["divide-and-conquer", "master-theorem", "big-o"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 4,
+      "lesson_ref": "L19",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L18", "L19"]
+    }
+  ]
+}

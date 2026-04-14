@@ -1,0 +1,170 @@
+{
+  "id": "quiz-M10",
+  "type": "module",
+  "module": "M10",
+  "title": "Assessment: Backtracking, Union-Find, Debates, and Gaps",
+  "generated": "2025-01-01",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "Your backtracking solution for Subsets collects results: `result.append(path)`. After running, all sublists in result are empty. What is the bug?",
+      "options": {
+        "A": "You forgot to initialise result before the backtrack call",
+        "B": "path is a mutable list; you stored a reference that was later emptied. Fix: `result.append(path[:])`",
+        "C": "Backtracking with lists is not possible — use strings for path tracking",
+        "D": "The append should be at the end of the function, not inside the recursive call"
+      },
+      "correct": "B",
+      "explanation": "When you `result.append(path)`, you store a reference to the same list object. As the backtracking continues, path is modified (elements removed). By the time backtracking completes, path is empty, and all stored references point to the same empty list. Fix: store a copy with `path[:]`.",
+      "lesson_ref": "L31",
+      "claim_ref": "L31",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "In a backtracking template: choose → explore → unchoose. What is the purpose of the 'unchoose' (undo) step?",
+      "options": {
+        "A": "To improve time complexity by reusing partial computations",
+        "B": "To restore the state so that when the recursive call returns, the next sibling branch explores from the same precondition",
+        "C": "To mark the current choice as invalid so it is not chosen again in future branches",
+        "D": "To handle base cases where no valid choice exists"
+      },
+      "correct": "B",
+      "explanation": "Backtracking explores a search tree. After exploring all paths through a choice, undoing it restores the state for the next sibling choice. Without undo, each branch would see the effects of previous branches — paths would concatenate incorrectly.",
+      "lesson_ref": "L31",
+      "claim_ref": "L31",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "Union-Find `union(u, v)` returns False (u and v already in the same set). You are using this inside an algorithm that processes graph edges. What does a False return tell you?",
+      "options": {
+        "A": "u and v are in different components — this edge should be added to the spanning tree",
+        "B": "u and v are in the same component — adding this edge creates a cycle",
+        "C": "The union-find data structure is corrupted and should be re-initialised",
+        "D": "The edge (u, v) is a self-loop and should be ignored"
+      },
+      "correct": "B",
+      "explanation": "DSU.union(u, v) returns False when find(u) == find(v) — both already share a root. If you add this edge to a graph, you create a cycle. This is used in Kruskal's MST (skip edges that would create cycles) and in Redundant Connection problems.",
+      "lesson_ref": "L32",
+      "claim_ref": "L32",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "Path compression in Union-Find modifies the structure during `find()`. What change does it make?",
+      "options": {
+        "A": "It sorts the parent array to enable binary search for root finding",
+        "B": "It relabels roots with lower numbers to reduce rank",
+        "C": "It relinks every node on the find path directly to the root, flattening the tree",
+        "D": "It merges the two subtrees at the point of first common ancestor"
+      },
+      "correct": "C",
+      "explanation": "During `find(x)`, as you traverse the chain x → parent[x] → ... → root, path compression sets `parent[x] = root` (and all intermediate nodes) directly — flat tree for future queries. This amortises to O(α(n)) per operation combined with union by rank.",
+      "lesson_ref": "L32",
+      "claim_ref": "L32",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "In an interview, you are presented with an optimisation problem where making the locally optimal choice at each step feels obvious. What is the minimum verification required before committing to a greedy approach instead of DP?",
+      "options": {
+        "A": "No verification needed — greedy is always correct for optimisation problems",
+        "B": "Test 2-3 small counterexamples; if none disprove it, also verify an exchange argument",
+        "C": "Run both greedy and DP, compare outputs, replace DP with greedy only if they match",
+        "D": "Greedy is only valid for scheduling problems — always use DP otherwise"
+      },
+      "correct": "B",
+      "explanation": "Greedy requires proof, not just intuition. The practical interview test: (1) try to construct a counterexample (small cases, edge cases, non-standard coin sets). (2) Attempt an exchange argument: show swapping any greedy choice for a non-greedy choice doesn't improve the result. If both checks pass, greedy is likely correct.",
+      "lesson_ref": "L33",
+      "claim_ref": "L33",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "The course explicitly does not cover Dijkstra's shortest path algorithm. If your target company frequently asks graph distance problems, what should you do?",
+      "options": {
+        "A": "This course provides enough; Dijkstra's is not needed for standard SWE interviews",
+        "B": "Extend your preparation with Dijkstra's (min-heap + distance array) as a targeted gap fill",
+        "C": "Use BFS instead of Dijkstra's — they are equivalent for all graph types",
+        "D": "Only study Dijkstra's if the job description explicitly mentions graph algorithms"
+      },
+      "correct": "B",
+      "explanation": "This course covers BFS (shortest path in unweighted graphs). For weighted graphs, Dijkstra's is the standard algorithm. If the company asks weighted shortest path (a common FAANG question), you need it. The meta-lesson: know your coverage gaps and fill based on company-specific signals.",
+      "lesson_ref": "L34",
+      "claim_ref": "L34",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "Coin change: coins=[1,5,6,9], amount=11. Greedy proposes 9+1+1=3 coins. What does DP find, and what does this illustrate?",
+      "options": {
+        "A": "DP also finds 3 coins, confirming greedy is optimal here",
+        "B": "DP finds 6+5=2 coins, showing greedy is incorrect for non-canonical coin sets",
+        "C": "DP finds 11 coins (all 1s), showing DP doesn't optimise correctly without sorting",
+        "D": "DP finds 9+2=11 but 2 is not a valid coin, causing an error"
+      },
+      "correct": "B",
+      "explanation": "dp[11]: dp[5]+1=dp[6]+1=... dp[6]=dp[0]+1=1, dp[11]=dp[5]+1=dp[1]+1+1=3... wait: dp[6]=1, dp[11]=dp[5]+1=2? 5+6=11. Yes, 6+5=2 coins. Greedy took 9 first, leaving 2=1+1 for 3 total. DP explores 6+5=2. This is another counterexample for greedy on non-standard coin sets.",
+      "lesson_ref": "L33",
+      "claim_ref": "L33",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "Write the Union-Find class in Python with path compression and union by rank. Include find(), union(), and __init__() methods.",
+      "answer_key": {
+        "required_points": [
+          "__init__(n): self.parent = list(range(n)); self.rank = [0]*n",
+          "find(x): path compression — while parent[x] != x: parent[x] = parent[parent[x]]; x = parent[x]; return x",
+          "union(x, y): rx, ry = find(x), find(y); if rx == ry: return False; if rank[rx] < rank[ry]: swap; parent[ry] = rx; if rank[rx] == rank[ry]: rank[rx]++; return True"
+        ],
+        "acceptable_variations": "Recursive path compression (parent[x] = find(parent[x])) is also valid; exact variable names may differ",
+        "full_credit": "All three methods correct with both path compression and union by rank",
+        "partial_credit": "Two of three methods correct, or all three missing one optimisation"
+      },
+      "lesson_ref": "L32",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "Describe the choose–explore–unchoose template for backtracking and explain what condition should be checked at the start of each recursive call to prune the search tree.",
+      "answer_key": {
+        "required_points": [
+          "Choose: make a selection from available choices (add to path, mark visited)",
+          "Explore: recurse with the updated state",
+          "Unchoose: undo the selection (remove from path, unmark visited) so the next sibling starts clean",
+          "Pruning check at start: base case (goal reached → record result) or constraint violation (too large, exceeds limit → return early without exploring)"
+        ],
+        "acceptable_variations": "May express as if-base-case then for-choice in choose-explore-unchoose structure",
+        "full_credit": "All three steps described, pruning condition explained with a concrete example",
+        "partial_credit": "All three steps described without pruning"
+      },
+      "lesson_ref": "L31",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "You are at the end of this curriculum. Identify the three most significant gaps (topics not covered) that you believe are most likely to arise in a FAANG-level technical interview. For each gap, describe: the topic, why it is important, and a specific LeetCode problem you would use to fill that gap.",
+      "guidance": "Strong answer draws from L34's coverage gap analysis. Expected gaps: Dijkstra's/weighted shortest path (Network Delay Time #743), Trie data structure (Implement Trie #208, Word Search II), Bit manipulation (Single Number #136, Count Bits). Strong answers also note segment trees, suffix arrays, or advanced DP (bitmask DP) as less common but real FAANG topics.",
+      "rubric": {
+        "A": "Three specific and accurate gaps identified, reasoning for importance given, specific LeetCode problems cited for each",
+        "B": "Three gaps identified but reasoning or problems are vague",
+        "C": "Fewer than three gaps, or gaps are trivial (e.g. 'more DP practice') without specificity"
+      },
+      "lesson_ref": "L34",
+      "difficulty": "analysis"
+    }
+  ]
+}

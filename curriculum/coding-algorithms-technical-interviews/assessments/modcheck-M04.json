@@ -1,0 +1,28 @@
+{
+  "id": "modcheck-M04",
+  "module": "M04",
+  "title": "Module Check: Tree and Graph Traversal — BFS/DFS Duality",
+  "generated": "2025-01-01",
+  "questions": [
+    {
+      "id": "MC01",
+      "question": "In DFS three-colour marking, what do white, gray, and black represent?",
+      "answer": "White: unvisited. Gray: on the current DFS call stack. Black: fully processed."
+    },
+    {
+      "id": "MC02",
+      "question": "Why does BFS guarantee shortest path in an unweighted graph?",
+      "answer": "BFS explores all nodes at distance d before any at d+1 — the first reach is via the minimum number of edges"
+    },
+    {
+      "id": "MC03",
+      "question": "After Kahn's topological sort, `len(result) < n`. What does this mean?",
+      "answer": "The graph contains a directed cycle"
+    },
+    {
+      "id": "MC04",
+      "question": "Which traversal processes children before the parent? Give one problem where this is required.",
+      "answer": "Post-order DFS. Example: maximum depth of tree, tree diameter, serialise/deserialise tree"
+    }
+  ]
+}

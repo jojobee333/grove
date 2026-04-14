@@ -1,0 +1,140 @@
+{
+  "id": "code-challenge-M10",
+  "type": "module",
+  "module": "M10",
+  "title": "Coding Challenge: Backtracking and Union-Find",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `all_subsets(nums)` that takes a list of distinct integers and returns all possible subsets (the power set), including the empty set and the full set. The subsets may appear in any order, but each subset must be sorted internally.\n\nUse the backtracking template: for each decision point, choose an element, recurse with the remaining elements starting from the next index, then unchoose. Append a **copy** of the current path (`path[:]`) to the result — not a reference.\n\nExample: `all_subsets([1, 2, 3])` → `[[], [1], [1, 2], [1, 2, 3], [1, 3], [2], [2, 3], [3]]`",
+      "starter_code": "def all_subsets(nums):\n    \"\"\"\n    Return all subsets of nums (the power set).\n    Use backtracking: recurse with start index to avoid duplicate subsets.\n    For each index i from start to end: choose nums[i], recurse(i+1), unchoose.\n    IMPORTANT: append path[:] (a copy), not path itself.\n    Returns a sorted list of sorted lists.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Three elements",
+          "input": "[1, 2, 3]",
+          "expected_output": "[[], [1], [1, 2], [1, 2, 3], [1, 3], [2], [2, 3], [3]]",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single element",
+          "input": "[1]",
+          "expected_output": "[[], [1]]",
+          "visibility": "visible"
+        },
+        {
+          "name": "Empty input",
+          "input": "[]",
+          "expected_output": "[[]]",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Two elements",
+          "input": "[1, 2]",
+          "expected_output": "[[], [1], [1, 2], [2]]",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Four elements — correct count (16 subsets)",
+          "input": "[1, 2, 3, 4]",
+          "expected_output": "[[], [1], [1, 2], [1, 2, 3], [1, 2, 3, 4], [1, 2, 4], [1, 3], [1, 3, 4], [1, 4], [2], [2, 3], [2, 3, 4], [2, 4], [3], [3, 4], [4]]",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["backtracking", "dfs", "recursion-space"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L31",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L31"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `count_components(problem)` that takes a dict with keys `n` (number of nodes, labelled 0 to n-1) and `edges` (a list of `[u, v]` pairs representing undirected edges), and returns the number of connected components.\n\nImplement Union-Find (DSU) with **path compression** in `find` and **union by rank** in `union`. Count components by starting at `n` and decrementing each time `union` successfully merges two different trees.\n\nExample: `count_components({'n': 5, 'edges': [[0, 1], [1, 2], [3, 4]]})` → `2`",
+      "starter_code": "def count_components(problem):\n    \"\"\"\n    Return the number of connected components using Union-Find.\n    n = problem['n'], edges = problem['edges'].\n    Implement find(x) with path compression: parent[x] = find(parent[x]).\n    Implement union(x, y) with rank: attach smaller-rank tree under larger-rank.\n    Start with n components, decrement when two nodes merge.\n    Returns an integer.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Two components",
+          "input": "{'n': 5, 'edges': [[0, 1], [1, 2], [3, 4]]}",
+          "expected_output": "2",
+          "visibility": "visible"
+        },
+        {
+          "name": "All connected",
+          "input": "{'n': 4, 'edges': [[0, 1], [1, 2], [2, 3]]}",
+          "expected_output": "1",
+          "visibility": "visible"
+        },
+        {
+          "name": "No edges — all isolated",
+          "input": "{'n': 5, 'edges': []}",
+          "expected_output": "5",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Redundant edge (cycle)",
+          "input": "{'n': 3, 'edges': [[0, 1], [1, 2], [0, 2]]}",
+          "expected_output": "1",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Single node",
+          "input": "{'n': 1, 'edges': []}",
+          "expected_output": "1",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["union-find", "amortized-analysis", "cycle-detection"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 4,
+      "lesson_ref": "L32",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L32", "L20"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `permutations(nums)` that takes a list of distinct integers and returns all permutations as a sorted list of lists.\n\nUse the backtracking choose-explore-unchoose template with a `used` boolean array. At each position, try every unused element, mark it used, recurse for the next position, then unmark it.\n\nExample: `permutations([1, 2, 3])` → `[[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]`",
+      "starter_code": "def permutations(nums):\n    \"\"\"\n    Return all permutations of nums as a sorted list of lists.\n    Use a 'used' array and backtracking: for each position, try every unused\n    element, set used[i] = True, recurse, then set used[i] = False.\n    Append a copy of path (path[:]) when len(path) == len(nums).\n    Returns a sorted list of lists.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Three elements (6 permutations)",
+          "input": "[1, 2, 3]",
+          "expected_output": "[[1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], [3, 2, 1]]",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single element",
+          "input": "[1]",
+          "expected_output": "[[1]]",
+          "visibility": "visible"
+        },
+        {
+          "name": "Two elements",
+          "input": "[1, 2]",
+          "expected_output": "[[1, 2], [2, 1]]",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Negative numbers",
+          "input": "[-1, 0, 1]",
+          "expected_output": "[[-1, 0, 1], [-1, 1, 0], [0, -1, 1], [0, 1, -1], [1, -1, 0], [1, 0, -1]]",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["backtracking", "recursion-space", "dfs"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L31",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L31"]
+    }
+  ]
+}

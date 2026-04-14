@@ -1,0 +1,100 @@
+{
+  "id": "code-challenge-M07",
+  "type": "module",
+  "module": "M07",
+  "title": "Coding Challenge: Space Complexity and Recursion Depth",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `max_depth(tree)` that takes a binary tree represented as a nested dict `{'val': int, 'left': ..., 'right': ...}` (absent children are `None`) and returns the maximum depth (number of nodes on the longest root-to-leaf path).\n\nImplement this recursively. The recursive call stack depth equals the tree height, demonstrating O(h) space complexity.\n\nExample: `max_depth({'val': 3, 'left': {'val': 9, 'left': None, 'right': None}, 'right': {'val': 20, 'left': {'val': 15, 'left': None, 'right': None}, 'right': {'val': 7, 'left': None, 'right': None}}})` → `3`",
+      "starter_code": "def max_depth(tree):\n    \"\"\"\n    Return the maximum depth of the binary tree (1-indexed from root).\n    Base case: None -> 0.\n    Recursive case: 1 + max(max_depth(left), max_depth(right)).\n    Call stack depth = tree height, illustrating O(h) recursion space.\n    Returns an integer.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Three-level tree",
+          "input": "{'val': 3, 'left': {'val': 9, 'left': None, 'right': None}, 'right': {'val': 20, 'left': {'val': 15, 'left': None, 'right': None}, 'right': {'val': 7, 'left': None, 'right': None}}}",
+          "expected_output": "3",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single node",
+          "input": "{'val': 1, 'left': None, 'right': None}",
+          "expected_output": "1",
+          "visibility": "visible"
+        },
+        {
+          "name": "None tree",
+          "input": "None",
+          "expected_output": "0",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Left-skewed (O(n) space case)",
+          "input": "{'val': 1, 'left': {'val': 2, 'left': {'val': 3, 'left': {'val': 4, 'left': None, 'right': None}, 'right': None}, 'right': None}, 'right': None}",
+          "expected_output": "4",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Unbalanced right-heavy",
+          "input": "{'val': 1, 'left': {'val': 2, 'left': None, 'right': None}, 'right': {'val': 3, 'left': None, 'right': {'val': 4, 'left': None, 'right': {'val': 5, 'left': None, 'right': None}}}}",
+          "expected_output": "4",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["recursion-space", "tree-traversal", "dfs"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L21",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L21"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `iterative_preorder(tree)` that takes a binary tree represented as a nested dict `{'val': int, 'left': ..., 'right': ...}` (absent children are `None`) and returns the list of node values in pre-order (root, left, right) using an **iterative** approach with an explicit stack — no recursion allowed.\n\nThis pattern is the safe alternative when Python's 1000-frame recursion limit would be exceeded on a deep tree.\n\nExample: `iterative_preorder({'val': 1, 'left': {'val': 2, 'left': {'val': 4, 'left': None, 'right': None}, 'right': {'val': 5, 'left': None, 'right': None}}, 'right': {'val': 3, 'left': None, 'right': None}})` → `[1, 2, 4, 5, 3]`",
+      "starter_code": "def iterative_preorder(tree):\n    \"\"\"\n    Return pre-order traversal values using an explicit stack (no recursion).\n    Push root, then pop and append val, then push right child then left child\n    (push right first so left is processed first — stack is LIFO).\n    Returns a list of integers.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Five-node tree",
+          "input": "{'val': 1, 'left': {'val': 2, 'left': {'val': 4, 'left': None, 'right': None}, 'right': {'val': 5, 'left': None, 'right': None}}, 'right': {'val': 3, 'left': None, 'right': None}}",
+          "expected_output": "[1, 2, 4, 5, 3]",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single node",
+          "input": "{'val': 42, 'left': None, 'right': None}",
+          "expected_output": "[42]",
+          "visibility": "visible"
+        },
+        {
+          "name": "None tree",
+          "input": "None",
+          "expected_output": "[]",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Left-skewed chain",
+          "input": "{'val': 1, 'left': {'val': 2, 'left': {'val': 3, 'left': None, 'right': None}, 'right': None}, 'right': None}",
+          "expected_output": "[1, 2, 3]",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Right-only chain",
+          "input": "{'val': 1, 'left': None, 'right': {'val': 2, 'left': None, 'right': {'val': 3, 'left': None, 'right': None}}}",
+          "expected_output": "[1, 2, 3]",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["recursion-limit", "recursion-space", "dfs", "tree-traversal"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L22",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L22", "L21"]
+    }
+  ]
+}

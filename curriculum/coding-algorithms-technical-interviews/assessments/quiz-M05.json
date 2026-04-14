@@ -1,0 +1,169 @@
+{
+  "id": "quiz-M05",
+  "type": "module",
+  "module": "M05",
+  "title": "Assessment: Binary Search, Heaps, and Monotonic Stacks",
+  "generated": "2025-01-01",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "The condition `while lo < hi` (rather than `while lo <= hi`) is used in the leftmost-True binary search template. What does `lo` equal at loop termination?",
+      "options": {
+        "A": "`lo` equals the last index checked before the loop exited",
+        "B": "`lo == hi`, pointing to the leftmost position where the predicate is True",
+        "C": "`lo == hi - 1`, pointing one before the answer",
+        "D": "`lo` equals -1 if the target is not found"
+      },
+      "correct": "B",
+      "explanation": "With `while lo < hi`, when the loop exits, `lo == hi`. The loop maintains: everything left of `lo` is False and everything from `lo` onward may be True. At termination, `lo` is the leftmost True position (or n if no True exists).",
+      "lesson_ref": "L15",
+      "claim_ref": "L15",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "You need to binary search on the answer space for 'minimum integer k such that some_predicate(k) is True'. The predicate is monotone (once True, stays True). What do you set as `lo` and `hi`?",
+      "options": {
+        "A": "`lo = 0, hi = len(input) - 1` as in standard array binary search",
+        "B": "`lo` = minimum possible answer value, `hi` = maximum possible answer value + 1",
+        "C": "`lo = 1, hi = max(input)` regardless of the problem",
+        "D": "Binary search on the answer space is not valid — enumerate all possible k values"
+      },
+      "correct": "B",
+      "explanation": "Binary search on answer space: lo = lower bound of valid answers (often 1 or 0), hi = upper bound + 1 (exclusive, e.g. max(piles)+1 in Koko problem). The monotone predicate ensures the standard leftmost-True template applies.",
+      "lesson_ref": "L15",
+      "claim_ref": "L15",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "You need the Kth largest element in a stream of integers. Which data structure maintains the answer in O(log K) per insertion?",
+      "options": {
+        "A": "Max-heap of all elements seen so far — root is always the largest",
+        "B": "Min-heap of size K — root is the Kth largest",
+        "C": "Sorted list — find Kth largest by index",
+        "D": "Max-heap of size K — root is the Kth largest"
+      },
+      "correct": "B",
+      "explanation": "A min-heap of size K holds the K largest elements seen so far. The root is the smallest of those K elements — i.e. the Kth largest. For each new element: if larger than root, pop and push. O(log K) per insertion. Max-heap of size K would give the largest, not the Kth largest from root.",
+      "lesson_ref": "L16",
+      "claim_ref": "L16",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "Python's `heapq` module implements a min-heap. You need to use it as a max-heap. What is the standard workaround?",
+      "options": {
+        "A": "Use `heapq.heappush_max()` which exists as a built-in counterpart",
+        "B": "Negate the values before pushing and negate again after popping",
+        "C": "Reverse the list after `heapify` to convert min-heap to max-heap",
+        "D": "Use `sorted()` with `reverse=True` instead of heapq for max-heap behaviour"
+      },
+      "correct": "B",
+      "explanation": "Python has no built-in max-heap. The standard pattern: push `-value` to make larger values sort first (min-heap treats -10 as smaller than -5, so -10 is at root → actual max 10 is at root). Negate again on pop to recover the original value.",
+      "lesson_ref": "L16",
+      "claim_ref": "L16",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "The monotonic stack for 'Next Greater Element' processes `[2, 1, 2, 4, 3]`. What is in the stack immediately after processing the element `4` (index 3)?",
+      "options": {
+        "A": "[2, 1, 2, 4]",
+        "B": "[4]",
+        "C": "[2, 4]",
+        "D": "[]"
+      },
+      "correct": "B",
+      "explanation": "Stack before index 3: [2, 1, 2] (indices 0,1,2). Process 4: pop while stack top < 4: pop 2 (NGE=4), pop 1 (NGE=4), pop 2 (NGE=4). Stack empty, push 4. Stack = [4]. 4 has no NGE yet since it hasn't been popped.",
+      "lesson_ref": "L17",
+      "claim_ref": "L17",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "Why is the total time complexity of the monotonic stack NGE algorithm O(n) even though there is a while loop inside the for loop?",
+      "options": {
+        "A": "The while loop only runs for the first and last element, so it runs O(1) total",
+        "B": "Each element is pushed to the stack at most once and popped at most once — O(2n) = O(n) total work",
+        "C": "The while loop runs at most log n times per element due to the monotone ordering",
+        "D": "The stack never holds more than 2 elements at a time, bounding the while loop"
+      },
+      "correct": "B",
+      "explanation": "Amortised analysis: over all n iterations of the outer for loop, each element is pushed exactly once and popped at most once. Total push+pop operations = O(2n) = O(n), regardless of how many pops happen per iteration.",
+      "lesson_ref": "L17",
+      "claim_ref": "L17",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "Which problem property should trigger the thought 'I might need a monotonic stack'?",
+      "options": {
+        "A": "The problem involves finding maximum/minimum in a sliding window",
+        "B": "For each element, find the nearest element to its left or right that is greater or smaller",
+        "C": "The array must be processed in sorted order",
+        "D": "The problem requires finding all pairs with a given sum"
+      },
+      "correct": "B",
+      "explanation": "The monotonic stack recognition pattern: 'nearest element to the left/right that satisfies some ordering property (greater/smaller/equal).' Examples: Daily Temperatures (next warmer), Largest Rectangle in Histogram (nearest shorter bar), Next Greater Element.",
+      "lesson_ref": "L17",
+      "claim_ref": "L17",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "Describe the three modification points in the unified binary search template (`lo`, `hi`, `return value`) and explain what to change for: (a) find the leftmost True, (b) find the rightmost True.",
+      "answer_key": {
+        "required_points": [
+          "Three points: initial hi value, the case when predicate is True (set hi=mid or lo=mid+1), and what to return at the end",
+          "(a) Leftmost True: hi = n, when True: hi = mid, return lo",
+          "(b) Rightmost True: lo = -1, when True: lo = mid, when False: hi = mid - 1, return lo"
+        ],
+        "acceptable_variations": "May describe in code form; exact variable names may differ",
+        "full_credit": "Correctly describes both variants with the right boundary movements",
+        "partial_credit": "Correctly describes one variant"
+      },
+      "lesson_ref": "L15",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "Explain why building a heap with heapify is O(n) rather than O(n log n), and describe when you should use heapify instead of inserting elements one by one.",
+      "answer_key": {
+        "required_points": [
+          "heapify sifts down from bottom up: most nodes are at lower levels with small subtrees → O(1) sift cost. Total = sum of sift costs = O(n) (series converges). Inserting n elements one by one: each insert is O(log n), total O(n log n).",
+          "Use heapify when you have all n elements upfront: O(n) vs O(n log n) for sequential inserts",
+          "Use sequential inserts for streaming data where elements arrive one at a time"
+        ],
+        "acceptable_variations": "Geometric series convergence argument accepted without full proof",
+        "full_credit": "Correct complexity, correct intuition, correct decision rule for when to use each",
+        "partial_credit": "States O(n) without justification but correctly describes when to use heapify"
+      },
+      "lesson_ref": "L16",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "You are interviewing and are given a problem you haven't seen before. Describe how you would diagnose whether the correct tool is binary search, a heap, or a monotonic stack. What specific cues in the problem statement trigger each, and what is a common mistake when misidentifying the tool?",
+      "guidance": "Strong answer: binary search cues (sorted array, monotone predicate, answer space), heap cues (streaming top-K, priority queue, merge K sorted), monotonic stack cues (nearest greater/lesser, histogram, span). Common mistakes: using sorted() for each query instead of heap for running top-K; using nested loops instead of monotonic stack for NGE.",
+      "rubric": {
+        "A": "Gives recognition signals for all 3 tools with concrete examples, identifies at least one common misidentification mistake per tool",
+        "B": "Gives recognition signals for all 3 tools with examples but doesn't identify mistakes",
+        "C": "Accurately describes 2 of 3 tools or gives signals without concrete examples"
+      },
+      "lesson_ref": "L15-L17",
+      "difficulty": "analysis"
+    }
+  ]
+}

@@ -1,0 +1,28 @@
+{
+  "id": "modcheck-M09",
+  "module": "M09",
+  "title": "Module Check: Language-Specific Complexity Traps",
+  "generated": "2025-01-01",
+  "questions": [
+    {
+      "id": "MC01",
+      "question": "What is the time complexity of `list.pop(0)` and what is the O(1) alternative?",
+      "answer": "O(n) — shifts all elements. Use `collections.deque.popleft()` for O(1)."
+    },
+    {
+      "id": "MC02",
+      "question": "Why is string concatenation with `+=` in a loop O(n²) in Python?",
+      "answer": "Strings are immutable; each `+=` creates a new copy of the entire string. Total characters copied = 1+2+...+n = O(n²). Use `''.join(list)` instead."
+    },
+    {
+      "id": "MC03",
+      "question": "What bug does `[10, 9, 2, 1, 100].sort()` introduce in JavaScript?",
+      "answer": "Sorts lexicographically (string order) giving [1, 10, 100, 2, 9]. Fix: `.sort((a, b) => a - b)`."
+    },
+    {
+      "id": "MC04",
+      "question": "In Java binary search, what causes the midpoint calculation `(lo + hi) / 2` to be unsafe?",
+      "answer": "Integer overflow when lo + hi > Integer.MAX_VALUE. Use `lo + (hi - lo) / 2` instead."
+    }
+  ]
+}

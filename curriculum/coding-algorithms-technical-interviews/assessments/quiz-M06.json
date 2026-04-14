@@ -1,0 +1,170 @@
+{
+  "id": "quiz-M06",
+  "type": "module",
+  "module": "M06",
+  "title": "Assessment: Complexity Analysis — Big-O, Master Theorem, Amortised",
+  "generated": "2025-01-01",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "f(n) = 3n² + 100n + 500. Which of the following is the correct Big-O classification?",
+      "options": {
+        "A": "O(3n²) because the leading coefficient matters",
+        "B": "O(n² + n) because lower-order terms affect growth for small n",
+        "C": "O(n²) — dominant term only, constant factors and lower-order terms dropped",
+        "D": "O(n³) — always round up to a higher order for safety"
+      },
+      "correct": "C",
+      "explanation": "Big-O drops constant factors and lower-order terms. For large n, 3n² dominates 100n and 500. Constants 3, 100, 500 are absorbed by the c in the formal definition. O(n²) is the correct tightest Big-O upper bound.",
+      "lesson_ref": "L18",
+      "claim_ref": "L18",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "A coding problem states n ≤ 10⁶. Your current solution is O(n log n). Will it pass within 1 second (assuming ~10⁸ simple operations/second)?",
+      "options": {
+        "A": "No — n log n with n=10⁶ ≈ 2×10⁷ operations, which exceeds 10⁸",
+        "B": "Yes — n log n with n=10⁶ ≈ 2×10⁷ operations, well within 10⁸",
+        "C": "Impossible to determine without knowing the constant factor",
+        "D": "No — O(n log n) is too slow for n > 10⁴"
+      },
+      "correct": "B",
+      "explanation": "n=10⁶, log₂(10⁶) ≈ 20. n log n ≈ 2×10⁷ operations — well within the ~10⁸ budget. O(n²) = 10¹² would TLE. O(n log n) is the standard sorting-based upper limit that passes for n up to ~10⁷.",
+      "lesson_ref": "L18",
+      "claim_ref": "L18",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "Apply the Master Theorem to T(n) = 4T(n/2) + O(n). What is the tight bound?",
+      "options": {
+        "A": "Θ(n log n) — Case 2",
+        "B": "Θ(n²) — Case 1 (recursive work dominates)",
+        "C": "Θ(n log² n)",
+        "D": "Θ(n) — Case 3 (f(n) dominates)"
+      },
+      "correct": "B",
+      "explanation": "a=4, b=2, log₂(4)=2. Compare f(n)=O(n)=O(n¹) to n^log_b(a) = n². Since n¹ = O(n^(2-ε)) for ε=1, Case 1 applies: T(n) = Θ(n^log_b(a)) = Θ(n²). The recursive subproblems dominate.",
+      "lesson_ref": "L19",
+      "claim_ref": "L19",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "A binary search tree's height is O(log n) for a balanced tree but O(n) for a skewed tree. What does this imply about BST lookup complexity?",
+      "options": {
+        "A": "BST lookup is always O(log n) — the binary search property ensures this",
+        "B": "BST lookup is O(h) where h is the height — O(log n) for balanced, O(n) worst-case for skewed",
+        "C": "BST lookup is Θ(log n) average across all possible insertions",
+        "D": "BST lookup is O(1) amortised for red-black trees regardless of height"
+      },
+      "correct": "B",
+      "explanation": "BST lookup traverses one root-to-node path of length h. Balanced BST (AVL, red-black): O(log n). Skewed insertion order (1,2,3,4,5 into a BST): degenerates to a linked list, h=n, O(n) lookup.",
+      "lesson_ref": "L18",
+      "claim_ref": "L18",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "Union-Find with both path compression and union by rank has O(α(n)) amortised complexity. In practice for all feasible n, α(n) ≤ 5. What does this mean for interview complexity discussions?",
+      "options": {
+        "A": "State that DSU is O(1) amortised since α(n) is so small it is negligible",
+        "B": "State O(α(n)) precisely — interviewers know this notation and it signals rigour",
+        "C": "Always state O(log n) as a conservative safe estimate",
+        "D": "Avoid DSU in interviews since its complexity is too complex to explain"
+      },
+      "correct": "B",
+      "explanation": "Saying O(α(n)) is precise and expected for DSU. Saying O(1) is technically wrong (it's a soft approximation). O(log n) overstates the cost. Using the correct notation signals understanding of amortised analysis and the inverse Ackermann function.",
+      "lesson_ref": "L20",
+      "claim_ref": "L20",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "Which of the following best distinguishes Θ (Theta) from O (Big-O)?",
+      "options": {
+        "A": "O gives the exact running time; Θ gives the worst-case upper bound",
+        "B": "O is an upper bound (at most); Θ is both upper and lower (exactly this growth rate, up to constant)",
+        "C": "Θ adds constant factors that O drops; they differ only for small n",
+        "D": "O and Θ are interchangeable; industry uses O colloquially to mean Θ"
+      },
+      "correct": "B",
+      "explanation": "O(g): f ≤ c·g (upper bound). Ω(g): f ≥ c·g (lower bound). Θ(g): f is both O(g) and Ω(g) — tight bound. In practice, interviewers say 'O(n log n)' but often mean Θ. Knowing the distinction — and being precise when asked — demonstrates theoretical rigour.",
+      "lesson_ref": "L18",
+      "claim_ref": "L18",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "The amortised cost of Python list.append() is O(1). A colleague argues: 'But occasionally it is O(n), so the amortised claim is misleading.' How do you respond?",
+      "options": {
+        "A": "You agree — O(1) amortised is just a mathematical shortcut that hides the real cost",
+        "B": "You explain: amortised analysis accounts for the infrequent O(n) resizes. The per-operation average over n appends is O(1) — a worst-case guarantee on the average, not an approximation",
+        "C": "You agree that append is O(n) worst-case and recommend pre-allocating lists",
+        "D": "Amortised analysis is approximate; the colleague is correct to be skeptical"
+      },
+      "correct": "B",
+      "explanation": "Amortised O(1) is a rigorous guarantee: the total cost of n appends is O(n) (table doubling ensures each element is copied O(1) times on average). It's not approximate — infrequent expensive operations are paid for by the 'credit' saved during cheap operations.",
+      "lesson_ref": "L20",
+      "claim_ref": "L20",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "State the three cases of the Master Theorem for T(n) = aT(n/b) + f(n) and give a concrete example algorithm for each case.",
+      "answer_key": {
+        "required_points": [
+          "Case 1: f(n) = O(n^(log_b(a) - ε)) → T(n) = Θ(n^log_b(a)). Example: naive Strassen 4T(n/2)+O(n) = Θ(n²)",
+          "Case 2: f(n) = Θ(n^log_b(a) · log^k(n)) → T(n) = Θ(n^log_b(a) · log^(k+1)(n)). Example: merge sort 2T(n/2)+O(n) = Θ(n log n)",
+          "Case 3: f(n) = Ω(n^(log_b(a) + ε)) and regularity condition → T(n) = Θ(f(n)). Example: T(n) = T(n/2) + O(n) = Θ(n)"
+        ],
+        "acceptable_variations": "Exact wording of conditions may vary; any correct algorithm example for each case accepted",
+        "full_credit": "All three cases correctly stated with an example for each",
+        "partial_credit": "Two cases correctly stated with examples"
+      },
+      "lesson_ref": "L19",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "A function's inner loop runs O(log n) times for each of the n outer iterations: `for i in range(n): j=n; while j>1: j//=2`. State the total complexity and justify your answer with an explicit counting argument.",
+      "answer_key": {
+        "required_points": [
+          "Inner while loop halves j each time → runs log₂(n) iterations",
+          "Outer for loop runs n times",
+          "Total: n × log₂(n) = O(n log n)",
+          "Justification: operations at each outer step = log₂(n); summing over all n steps = n·log n"
+        ],
+        "acceptable_variations": "May write as sum ∑ₙ log n = n log n",
+        "full_credit": "Correct O(n log n) with explicit multiplication argument",
+        "partial_credit": "Correct answer without sufficient justification"
+      },
+      "lesson_ref": "L18",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "Why is amortised analysis more useful than worst-case analysis for data structures like dynamic arrays and Union-Find? Describe a scenario where relying on worst-case analysis alone would lead you to choose a worse data structure.",
+      "guidance": "Strong answer: worst-case for a single append is O(n) → suggests always using linked lists; amortised shows O(1) per append making arrays competitive. For DSU: log n per operation (no optimisations) vs O(α(n)) amortised with both optimisations — wrong data structure choice if comparing log n DSU to better alternatives.",
+      "rubric": {
+        "A": "Defines amortised vs worst-case clearly, gives concrete data structure example where worst-case misleads, identifies the correct data structure choice using amortised reasoning",
+        "B": "Explains the concept correctly but gives only one example or the example is vague",
+        "C": "Describes the difference between amortised and worst-case without applying it to a concrete data structure decision"
+      },
+      "lesson_ref": "L20",
+      "difficulty": "analysis"
+    }
+  ]
+}
