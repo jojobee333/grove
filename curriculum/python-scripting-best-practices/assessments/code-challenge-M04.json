@@ -8,7 +8,7 @@
       "id": "CC01",
       "type": "code-challenge",
       "language": "python",
-      "prompt": "Write a function `join_paths(parts)` that takes a tuple of path parts (base, *components) and returns the joined path as a string using pathlib-style joining. For example, ('/home', 'user', 'file.txt') should return '/home/user/file.txt'.",
+      "prompt": "Write a function `join_paths(parts)` that joins path components using pathlib semantics.\n\n## Input Format\n\nReceives a tuple of path parts: `(base, *components)`\n\nExample: `('/home', 'user', 'file.txt')`\n\n## Return Value\n\nReturn the joined path as a string.\n\n## Expected Output\n\nExample output: `'/home/user/file.txt'`\n\n## Path Semantics\n\nUse forward slashes to join components (Unix-style path joining).",
       "starter_code": "def join_paths(parts):\n    \"\"\"\n    Join path components using pathlib / operator semantics.\n    Args:\n        parts: tuple of (base, *components) path strings\n    Returns:\n        str: joined path\n    \"\"\"\n    pass\n",
       "test_cases": [
         {
@@ -48,7 +48,7 @@
       "id": "CC02",
       "type": "code-challenge",
       "language": "python",
-      "prompt": "Write a function `extract_parent(path_str)` that takes a file path string and returns the parent directory path. Use pathlib semantics. For example, '/home/user/file.txt' returns '/home/user'.",
+      "prompt": "Write a function `extract_parent(path_str)` that extracts the parent directory from a file path using pathlib semantics.\n\n## Input Format\n\nFile path as a string.\n\nExample: `'/home/user/file.txt'`\n\n## Return Value\n\nThe parent directory path as a string.\n\n## Expected Behavior\n\nExample: `'/home/user/file.txt'` → `'/home/user'`\n\n## Pathlib Semantics\n\nUse `.parent` directory semantics for path extraction.",
       "starter_code": "def extract_parent(path_str):\n    \"\"\"\n    Extract parent directory from path using pathlib .parent.\n    Args:\n        path_str: file path as string\n    Returns:\n        str: parent directory path\n    \"\"\"\n    pass\n",
       "test_cases": [
         {

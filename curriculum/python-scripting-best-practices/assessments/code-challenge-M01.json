@@ -8,7 +8,7 @@
       "id": "CC01",
       "type": "code-challenge",
       "language": "python",
-      "prompt": "Write a function `validate_tool_config(config)` that takes a dictionary representing a pyproject.toml tool section and returns True if it contains all three required quality tools (ruff, mypy, pytest), False otherwise. The config dict has keys like 'tool.ruff', 'tool.mypy', 'tool.pytest.ini_options'.",
+      "prompt": "Write a function `validate_tool_config(config)` that validates a pyproject.toml tool configuration section.\n\n## Function Behavior\n\nReceives a dictionary representing tool configurations and returns True if it contains all three required quality tools, False otherwise.\n\n## Configuration Format\n\nThe config dict has keys like:\n- `'tool.ruff'`\n- `'tool.mypy'`\n- `'tool.pytest.ini_options'`\n\n## Validation Requirement\n\nAll three quality tools must be present in the config.",
       "starter_code": "def validate_tool_config(config):\n    \"\"\"\n    Check if config dict contains all three required quality tools.\n    Args:\n        config: dict with keys like 'tool.ruff', 'tool.mypy', 'tool.pytest.ini_options'\n    Returns:\n        bool: True if all three tools present, False otherwise\n    \"\"\"\n    pass\n",
       "test_cases": [
         {
@@ -48,7 +48,7 @@
       "id": "CC02",
       "type": "code-challenge",
       "language": "python",
-      "prompt": "Write a function `count_mypy_violations(annotations)` that takes a list of function signatures (as strings) and returns the number that would fail `mypy --strict` due to missing return type annotations. A signature fails if it doesn't contain ' -> ' (the return type annotation marker). Example: 'def foo():' fails, 'def foo() -> int:' passes.",
+      "prompt": "Write a function `count_mypy_violations(annotations)` that analyzes function signatures and counts those that would fail `mypy --strict`.\n\n## Mypy Strict Requirement\n\nA function fails `mypy --strict` if it lacks a return type annotation.\n\n## Detection Marker\n\nA return type annotation is marked by ` -> ` in the signature.\n\n## Examples\n\n- `'def foo():'` fails (no return type)\n- `'def foo() -> int:'` passes (has return type)\n- `'def bar() -> str:'` passes\n\n## Return Value\n\nReturn the count of signatures missing ` -> `",
       "starter_code": "def count_mypy_violations(annotations):\n    \"\"\"\n    Count how many function signatures lack return type annotations.\n    Args:\n        annotations: list of function signature strings\n    Returns:\n        int: number of signatures missing ' -> '\n    \"\"\"\n    pass\n",
       "test_cases": [
         {
@@ -88,7 +88,7 @@
       "id": "CC03",
       "type": "code-challenge",
       "language": "python",
-      "prompt": "Write a function `select_modern_union_syntax(type_str)` that takes a type annotation string and returns True if it uses modern Python 3.10+ union syntax (with |), False if it uses old Optional/Union syntax. Examples: 'str | None' returns True, 'Optional[str]' returns False, 'Union[str, int]' returns False.",
+      "prompt": "Write a function `select_modern_union_syntax(type_str)` that identifies if a type annotation uses modern Python 3.10+ syntax.\n\n## Modern Syntax\n\nPython 3.10+ uses the `|` operator for union types:\n- `'str | None'` is modern\n\n## Legacy Syntax (deprecated)\n\nOlder Python versions use `Optional` and `Union`:\n- `'Optional[str]'` is legacy\n- `'Union[str, int]'` is legacy\n\n## Return Value\n\nReturn `True` if the annotation uses modern `|` syntax, `False` if it uses `Optional` or `Union`.",
       "starter_code": "def select_modern_union_syntax(type_str):\n    \"\"\"\n    Check if type annotation uses modern union syntax.\n    Args:\n        type_str: string representing a type annotation\n    Returns:\n        bool: True if uses |, False if uses Optional or Union\n    \"\"\"\n    pass\n",
       "test_cases": [
         {

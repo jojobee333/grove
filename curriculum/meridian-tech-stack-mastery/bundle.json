@@ -1,7 +1,7 @@
 {
   "version": "3.0",
   "slug": "meridian-tech-stack-mastery",
-  "bundled": "2026-04-13T20:56:13.726Z",
+  "bundled": "2026-04-14T02:20:59.528Z",
   "course": {
     "topic": "Meridian Tech Stack Mastery",
     "slug": "meridian-tech-stack-mastery",
@@ -6050,7 +6050,7 @@
           "id": "CC01",
           "type": "code-challenge",
           "language": "javascript",
-          "prompt": "Write a function `countStrictFlags(config)` that takes a tsconfig.json compilerOptions object and returns the number of strict mode sub-flags that are explicitly set to true. Count only these nine flags: noImplicitAny, strictNullChecks, strictFunctionTypes, strictBindCallApply, strictPropertyInitialization, noImplicitThis, alwaysStrict, useUnknownInCatchVariables, exactOptionalPropertyTypes.",
+          "prompt": "Write a function `countStrictFlags(config)` that analyzes a TypeScript `tsconfig.json` configuration and counts strict mode sub-flags.\n\n## Strict Mode Sub-Flags\n\nCount only these nine flags when set to `true`:\n- noImplicitAny\n- strictNullChecks\n- strictFunctionTypes\n- strictBindCallApply\n- strictPropertyInitialization\n- noImplicitThis\n- alwaysStrict\n- useUnknownInCatchVariables\n- exactOptionalPropertyTypes\n\n## Return Value\n\nReturn the count of flags explicitly set to `true`.",
           "starter_code": "function countStrictFlags(config) {\n  // Count how many of the nine strict sub-flags are true\n  // config is an object like { noImplicitAny: true, strictNullChecks: false, ... }\n}\n",
           "test_cases": [
             {
@@ -6095,7 +6095,7 @@
           "id": "CC02",
           "type": "code-challenge",
           "language": "javascript",
-          "prompt": "Write a function `hasCriticalFlags(config)` that returns true if a tsconfig compilerOptions object has BOTH noImplicitAny and strictNullChecks set to true (the two critical flags for Meridian), false otherwise.",
+          "prompt": "Write a function `hasCriticalFlags(config)` that validates a TypeScript configuration has both critical strict mode flags enabled.\n\n## Critical Flags for Meridian\n\nMeridian requires BOTH of these flags to be `true`:\n- `noImplicitAny`\n- `strictNullChecks`\n\n## Return Value\n\nReturn `true` if both critical flags are present and set to true, `false` otherwise.\n\n## Purpose\n\nThese two flags are essential for library type safety in Meridian.",
           "starter_code": "function hasCriticalFlags(config) {\n  // Check if both noImplicitAny and strictNullChecks are true\n  // These are the two critical flags for library type safety\n}\n",
           "test_cases": [
             {
@@ -6194,7 +6194,7 @@
           "id": "CC01",
           "type": "code-challenge",
           "language": "javascript",
-          "prompt": "Write a function `validateDocumentInput(doc)` that returns true if the input object has a non-empty string 'title' property AND an optional boolean 'isPublished' property (if present, must be boolean). Return false otherwise. This simulates Zod schema validation.",
+          "prompt": "Write a function `validateDocumentInput(doc)` that validates an input object against document schema constraints.\n\n## Required Field\n\n- `'title'`: must be a non-empty string\n\n## Optional Field\n\n- `'isPublished'`: optional boolean (if present, must be boolean; if absent, that's OK)\n\n## Return Value\n\nReturn `true` if the object satisfies all constraints, `false` otherwise.\n\n## Constraints\n\n- Missing fields: acceptable only for optional fields\n- Empty string for title: not acceptable\n- Wrong type for isPublished: not acceptable",
           "starter_code": "function validateDocumentInput(doc) {\n  // Validate: title is non-empty string, isPublished is optional boolean\n  // Returns true if valid, false otherwise\n}\n",
           "test_cases": [
             {
@@ -6239,7 +6239,7 @@
           "id": "CC02",
           "type": "code-challenge",
           "language": "javascript",
-          "prompt": "Write a function `inferFieldType(schema)` that takes a simplified Drizzle column definition object and returns the inferred TypeScript type as a string. The object has a 'type' property ('text'|'int'|'bool') and an optional 'nullable' boolean. Return 'string', 'number', 'boolean', or add ' | null' if nullable is true.",
+          "prompt": "Write a function `inferFieldType(schema)` that infers a TypeScript type from a Drizzle ORM column definition.\n\n## Input Format\n\nA simplified Drizzle column definition object:\n- `'type'`: one of `'text'`, `'int'`, `'bool'`\n- `'nullable'`: optional boolean flag\n\n## Type Mapping\n\n- `'text'` → `'string'`\n- `'int'` → `'number'`\n- `'bool'` → `'boolean'`\n\n## Nullable Handling\n\nIf `nullable: true`, append ` | null` to the type.\n\n## Examples\n\n- `{type: 'text', nullable: false}` → `'string'`\n- `{type: 'int', nullable: true}` → `'number | null'`",
           "starter_code": "function inferFieldType(schema) {\n  // Infer TS type from Drizzle column: {type: 'text'|'int'|'bool', nullable?: boolean}\n  // Returns: 'string', 'number', 'boolean', or with ' | null' if nullable\n}\n",
           "test_cases": [
             {

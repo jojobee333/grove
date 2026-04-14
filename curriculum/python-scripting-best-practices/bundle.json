@@ -1,7 +1,7 @@
 {
   "version": "3.0",
   "slug": "python-scripting-best-practices",
-  "bundled": "2026-04-13T20:58:50.822Z",
+  "bundled": "2026-04-14T02:20:59.108Z",
   "course": {
     "topic": "Python Scripting Best Practices",
     "slug": "python-scripting-best-practices",
@@ -3681,7 +3681,7 @@
           "id": "CC01",
           "type": "code-challenge",
           "language": "python",
-          "prompt": "Write a function `validate_tool_config(config)` that takes a dictionary representing a pyproject.toml tool section and returns True if it contains all three required quality tools (ruff, mypy, pytest), False otherwise. The config dict has keys like 'tool.ruff', 'tool.mypy', 'tool.pytest.ini_options'.",
+          "prompt": "Write a function `validate_tool_config(config)` that validates a pyproject.toml tool configuration section.\n\n## Function Behavior\n\nReceives a dictionary representing tool configurations and returns True if it contains all three required quality tools, False otherwise.\n\n## Configuration Format\n\nThe config dict has keys like:\n- `'tool.ruff'`\n- `'tool.mypy'`\n- `'tool.pytest.ini_options'`\n\n## Validation Requirement\n\nAll three quality tools must be present in the config.",
           "starter_code": "def validate_tool_config(config):\n    \"\"\"\n    Check if config dict contains all three required quality tools.\n    Args:\n        config: dict with keys like 'tool.ruff', 'tool.mypy', 'tool.pytest.ini_options'\n    Returns:\n        bool: True if all three tools present, False otherwise\n    \"\"\"\n    pass\n",
           "test_cases": [
             {
@@ -3728,7 +3728,7 @@
           "id": "CC02",
           "type": "code-challenge",
           "language": "python",
-          "prompt": "Write a function `count_mypy_violations(annotations)` that takes a list of function signatures (as strings) and returns the number that would fail `mypy --strict` due to missing return type annotations. A signature fails if it doesn't contain ' -> ' (the return type annotation marker). Example: 'def foo():' fails, 'def foo() -> int:' passes.",
+          "prompt": "Write a function `count_mypy_violations(annotations)` that analyzes function signatures and counts those that would fail `mypy --strict`.\n\n## Mypy Strict Requirement\n\nA function fails `mypy --strict` if it lacks a return type annotation.\n\n## Detection Marker\n\nA return type annotation is marked by ` -> ` in the signature.\n\n## Examples\n\n- `'def foo():'` fails (no return type)\n- `'def foo() -> int:'` passes (has return type)\n- `'def bar() -> str:'` passes\n\n## Return Value\n\nReturn the count of signatures missing ` -> `",
           "starter_code": "def count_mypy_violations(annotations):\n    \"\"\"\n    Count how many function signatures lack return type annotations.\n    Args:\n        annotations: list of function signature strings\n    Returns:\n        int: number of signatures missing ' -> '\n    \"\"\"\n    pass\n",
           "test_cases": [
             {
@@ -3774,7 +3774,7 @@
           "id": "CC03",
           "type": "code-challenge",
           "language": "python",
-          "prompt": "Write a function `select_modern_union_syntax(type_str)` that takes a type annotation string and returns True if it uses modern Python 3.10+ union syntax (with |), False if it uses old Optional/Union syntax. Examples: 'str | None' returns True, 'Optional[str]' returns False, 'Union[str, int]' returns False.",
+          "prompt": "Write a function `select_modern_union_syntax(type_str)` that identifies if a type annotation uses modern Python 3.10+ syntax.\n\n## Modern Syntax\n\nPython 3.10+ uses the `|` operator for union types:\n- `'str | None'` is modern\n\n## Legacy Syntax (deprecated)\n\nOlder Python versions use `Optional` and `Union`:\n- `'Optional[str]'` is legacy\n- `'Union[str, int]'` is legacy\n\n## Return Value\n\nReturn `True` if the annotation uses modern `|` syntax, `False` if it uses `Optional` or `Union`.",
           "starter_code": "def select_modern_union_syntax(type_str):\n    \"\"\"\n    Check if type annotation uses modern union syntax.\n    Args:\n        type_str: string representing a type annotation\n    Returns:\n        bool: True if uses |, False if uses Optional or Union\n    \"\"\"\n    pass\n",
           "test_cases": [
             {
@@ -3828,7 +3828,7 @@
           "id": "CC01",
           "type": "code-challenge",
           "language": "python",
-          "prompt": "Write a function `parse_log_line(line)` that parses a single log line in the format `LEVEL:MESSAGE` and returns a tuple `(level, message)`. If the line does not match the format, return `('UNKNOWN', line.strip())`.",
+          "prompt": "Write a function `parse_log_line(line)` that parses a single structured log line.\n\n## Log Format\n\nLog lines follow the format: `LEVEL:MESSAGE`\n\nExample: `'INFO:Server started'`\n\n## Return Value\n\nReturn a tuple `(level, message)`\n\n## Invalid Format Handling\n\nIf the line does not match the format, return `('UNKNOWN', line.strip())`",
           "starter_code": "def parse_log_line(line):\n    \"\"\"\n    Parse a log line in the format 'LEVEL:MESSAGE'.\n    Returns a tuple (level, message).\n    If the format is invalid, return ('UNKNOWN', line.strip()).\n    \"\"\"\n    pass\n",
           "test_cases": [
             {
@@ -3874,7 +3874,7 @@
           "id": "CC02",
           "type": "code-challenge",
           "language": "python",
-          "prompt": "Write a function `get_log_level(severity)` that returns the appropriate Python logging level name as a string. Map: severity 0-1 → `'DEBUG'`, 2-3 → `'INFO'`, 4-6 → `'WARNING'`, 7-9 → `'ERROR'`, 10+ → `'CRITICAL'`.",
+          "prompt": "Write a function `get_log_level(severity)` that converts a numeric severity score to a Python logging level name.\n\n## Severity Mapping\n\n- `0-1` → `'DEBUG'`\n- `2-3` → `'INFO'`\n- `4-6` → `'WARNING'`\n- `7-9` → `'ERROR'`\n- `10+` → `'CRITICAL'`\n\n## Return Value\n\nReturn the appropriate logging level as a string.",
           "starter_code": "def get_log_level(severity):\n    \"\"\"\n    Convert a numeric severity to a Python logging level name.\n    0-1: DEBUG, 2-3: INFO, 4-6: WARNING, 7-9: ERROR, 10+: CRITICAL\n    \"\"\"\n    pass\n",
           "test_cases": [
             {
@@ -3934,7 +3934,7 @@
           "id": "CC01",
           "type": "code-challenge",
           "language": "python",
-          "prompt": "Write a function `modernize_type_annotation(old)` that converts old-style type annotations to modern Python 3.10+ syntax. Replace 'Optional[X]' with 'X | None', 'List[X]' with 'list[X]', and 'Dict[K, V]' with 'dict[K, V]'. Return the modernized string.",
+          "prompt": "Write a function `modernize_type_annotation(old)` that converts old-style type annotations to modern Python 3.10+ syntax.\n\n## Conversion Rules\n\n- `'Optional[X]'` → `'X | None'`\n- `'List[X]'` → `'list[X]'`\n- `'Dict[K, V]'` → `'dict[K, V]'`\n\n## Return Value\n\nReturn the modernized string.\n\n## Already Modern\n\nIf the input is already modern syntax, return it unchanged.",
           "starter_code": "def modernize_type_annotation(old):\n    \"\"\"\n    Convert old typing syntax to Python 3.10+ syntax.\n    Args:\n        old: string with old-style type annotation\n    Returns:\n        str: modernized annotation\n    \"\"\"\n    pass\n",
           "test_cases": [
             {
@@ -3979,7 +3979,7 @@
           "id": "CC02",
           "type": "code-challenge",
           "language": "python",
-          "prompt": "Write a function `validate_config_keys(cfg)` that takes a dictionary and returns True if it has exactly the keys 'host' (str), 'port' (int), and 'debug' (bool) with correct types, False otherwise. This simulates TypedDict validation at runtime.",
+          "prompt": "Write a function `validate_config_keys(cfg)` that validates a configuration dictionary using TypedDict-like constraints.\n\n## Required Keys and Types\n\nThe config must have exactly these keys with correct types:\n- `'host'`: string\n- `'port'`: integer\n- `'debug'`: boolean\n\n## Validation Rules\n\n- Return `True` if all keys present with correct types\n- Return `False` if any key is missing or has wrong type\n- Return `False` if there are extra keys\n\nThis simulates runtime TypedDict validation.",
           "starter_code": "def validate_config_keys(cfg):\n    \"\"\"\n    Validate config dict has required keys with correct types.\n    Args:\n        cfg: dict to validate\n    Returns:\n        bool: True if has host:str, port:int, debug:bool, False otherwise\n    \"\"\"\n    pass\n",
           "test_cases": [
             {
@@ -4077,7 +4077,7 @@
           "id": "CC01",
           "type": "code-challenge",
           "language": "python",
-          "prompt": "Write a function `join_paths(parts)` that takes a tuple of path parts (base, *components) and returns the joined path as a string using pathlib-style joining. For example, ('/home', 'user', 'file.txt') should return '/home/user/file.txt'.",
+          "prompt": "Write a function `join_paths(parts)` that joins path components using pathlib semantics.\n\n## Input Format\n\nReceives a tuple of path parts: `(base, *components)`\n\nExample: `('/home', 'user', 'file.txt')`\n\n## Return Value\n\nReturn the joined path as a string.\n\n## Expected Output\n\nExample output: `'/home/user/file.txt'`\n\n## Path Semantics\n\nUse forward slashes to join components (Unix-style path joining).",
           "starter_code": "def join_paths(parts):\n    \"\"\"\n    Join path components using pathlib / operator semantics.\n    Args:\n        parts: tuple of (base, *components) path strings\n    Returns:\n        str: joined path\n    \"\"\"\n    pass\n",
           "test_cases": [
             {
@@ -4121,7 +4121,7 @@
           "id": "CC02",
           "type": "code-challenge",
           "language": "python",
-          "prompt": "Write a function `extract_parent(path_str)` that takes a file path string and returns the parent directory path. Use pathlib semantics. For example, '/home/user/file.txt' returns '/home/user'.",
+          "prompt": "Write a function `extract_parent(path_str)` that extracts the parent directory from a file path using pathlib semantics.\n\n## Input Format\n\nFile path as a string.\n\nExample: `'/home/user/file.txt'`\n\n## Return Value\n\nThe parent directory path as a string.\n\n## Expected Behavior\n\nExample: `'/home/user/file.txt'` → `'/home/user'`\n\n## Pathlib Semantics\n\nUse `.parent` directory semantics for path extraction.",
           "starter_code": "def extract_parent(path_str):\n    \"\"\"\n    Extract parent directory from path using pathlib .parent.\n    Args:\n        path_str: file path as string\n    Returns:\n        str: parent directory path\n    \"\"\"\n    pass\n",
           "test_cases": [
             {

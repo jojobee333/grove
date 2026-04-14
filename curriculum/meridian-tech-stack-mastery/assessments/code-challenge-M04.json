@@ -8,7 +8,7 @@
       "id": "CC01",
       "type": "code-challenge",
       "language": "javascript",
-      "prompt": "Write a function `validateDocumentInput(doc)` that returns true if the input object has a non-empty string 'title' property AND an optional boolean 'isPublished' property (if present, must be boolean). Return false otherwise. This simulates Zod schema validation.",
+      "prompt": "Write a function `validateDocumentInput(doc)` that validates an input object against document schema constraints.\n\n## Required Field\n\n- `'title'`: must be a non-empty string\n\n## Optional Field\n\n- `'isPublished'`: optional boolean (if present, must be boolean; if absent, that's OK)\n\n## Return Value\n\nReturn `true` if the object satisfies all constraints, `false` otherwise.\n\n## Constraints\n\n- Missing fields: acceptable only for optional fields\n- Empty string for title: not acceptable\n- Wrong type for isPublished: not acceptable",
       "starter_code": "function validateDocumentInput(doc) {\n  // Validate: title is non-empty string, isPublished is optional boolean\n  // Returns true if valid, false otherwise\n}\n",
       "test_cases": [
         {
@@ -48,7 +48,7 @@
       "id": "CC02",
       "type": "code-challenge",
       "language": "javascript",
-      "prompt": "Write a function `inferFieldType(schema)` that takes a simplified Drizzle column definition object and returns the inferred TypeScript type as a string. The object has a 'type' property ('text'|'int'|'bool') and an optional 'nullable' boolean. Return 'string', 'number', 'boolean', or add ' | null' if nullable is true.",
+      "prompt": "Write a function `inferFieldType(schema)` that infers a TypeScript type from a Drizzle ORM column definition.\n\n## Input Format\n\nA simplified Drizzle column definition object:\n- `'type'`: one of `'text'`, `'int'`, `'bool'`\n- `'nullable'`: optional boolean flag\n\n## Type Mapping\n\n- `'text'` → `'string'`\n- `'int'` → `'number'`\n- `'bool'` → `'boolean'`\n\n## Nullable Handling\n\nIf `nullable: true`, append ` | null` to the type.\n\n## Examples\n\n- `{type: 'text', nullable: false}` → `'string'`\n- `{type: 'int', nullable: true}` → `'number | null'`",
       "starter_code": "function inferFieldType(schema) {\n  // Infer TS type from Drizzle column: {type: 'text'|'int'|'bool', nullable?: boolean}\n  // Returns: 'string', 'number', 'boolean', or with ' | null' if nullable\n}\n",
       "test_cases": [
         {

@@ -8,7 +8,7 @@
       "id": "CC01",
       "type": "code-challenge",
       "language": "javascript",
-      "prompt": "Write a function `countStrictFlags(config)` that takes a tsconfig.json compilerOptions object and returns the number of strict mode sub-flags that are explicitly set to true. Count only these nine flags: noImplicitAny, strictNullChecks, strictFunctionTypes, strictBindCallApply, strictPropertyInitialization, noImplicitThis, alwaysStrict, useUnknownInCatchVariables, exactOptionalPropertyTypes.",
+      "prompt": "Write a function `countStrictFlags(config)` that analyzes a TypeScript `tsconfig.json` configuration and counts strict mode sub-flags.\n\n## Strict Mode Sub-Flags\n\nCount only these nine flags when set to `true`:\n- noImplicitAny\n- strictNullChecks\n- strictFunctionTypes\n- strictBindCallApply\n- strictPropertyInitialization\n- noImplicitThis\n- alwaysStrict\n- useUnknownInCatchVariables\n- exactOptionalPropertyTypes\n\n## Return Value\n\nReturn the count of flags explicitly set to `true`.",
       "starter_code": "function countStrictFlags(config) {\n  // Count how many of the nine strict sub-flags are true\n  // config is an object like { noImplicitAny: true, strictNullChecks: false, ... }\n}\n",
       "test_cases": [
         {
@@ -48,7 +48,7 @@
       "id": "CC02",
       "type": "code-challenge",
       "language": "javascript",
-      "prompt": "Write a function `hasCriticalFlags(config)` that returns true if a tsconfig compilerOptions object has BOTH noImplicitAny and strictNullChecks set to true (the two critical flags for Meridian), false otherwise.",
+      "prompt": "Write a function `hasCriticalFlags(config)` that validates a TypeScript configuration has both critical strict mode flags enabled.\n\n## Critical Flags for Meridian\n\nMeridian requires BOTH of these flags to be `true`:\n- `noImplicitAny`\n- `strictNullChecks`\n\n## Return Value\n\nReturn `true` if both critical flags are present and set to true, `false` otherwise.\n\n## Purpose\n\nThese two flags are essential for library type safety in Meridian.",
       "starter_code": "function hasCriticalFlags(config) {\n  // Check if both noImplicitAny and strictNullChecks are true\n  // These are the two critical flags for library type safety\n}\n",
       "test_cases": [
         {

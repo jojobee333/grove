@@ -8,7 +8,7 @@
       "id": "CC01",
       "type": "code-challenge",
       "language": "python",
-      "prompt": "Write a function `modernize_type_annotation(old)` that converts old-style type annotations to modern Python 3.10+ syntax. Replace 'Optional[X]' with 'X | None', 'List[X]' with 'list[X]', and 'Dict[K, V]' with 'dict[K, V]'. Return the modernized string.",
+      "prompt": "Write a function `modernize_type_annotation(old)` that converts old-style type annotations to modern Python 3.10+ syntax.\n\n## Conversion Rules\n\n- `'Optional[X]'` → `'X | None'`\n- `'List[X]'` → `'list[X]'`\n- `'Dict[K, V]'` → `'dict[K, V]'`\n\n## Return Value\n\nReturn the modernized string.\n\n## Already Modern\n\nIf the input is already modern syntax, return it unchanged.",
       "starter_code": "def modernize_type_annotation(old):\n    \"\"\"\n    Convert old typing syntax to Python 3.10+ syntax.\n    Args:\n        old: string with old-style type annotation\n    Returns:\n        str: modernized annotation\n    \"\"\"\n    pass\n",
       "test_cases": [
         {
@@ -48,7 +48,7 @@
       "id": "CC02",
       "type": "code-challenge",
       "language": "python",
-      "prompt": "Write a function `validate_config_keys(cfg)` that takes a dictionary and returns True if it has exactly the keys 'host' (str), 'port' (int), and 'debug' (bool) with correct types, False otherwise. This simulates TypedDict validation at runtime.",
+      "prompt": "Write a function `validate_config_keys(cfg)` that validates a configuration dictionary using TypedDict-like constraints.\n\n## Required Keys and Types\n\nThe config must have exactly these keys with correct types:\n- `'host'`: string\n- `'port'`: integer\n- `'debug'`: boolean\n\n## Validation Rules\n\n- Return `True` if all keys present with correct types\n- Return `False` if any key is missing or has wrong type\n- Return `False` if there are extra keys\n\nThis simulates runtime TypedDict validation.",
       "starter_code": "def validate_config_keys(cfg):\n    \"\"\"\n    Validate config dict has required keys with correct types.\n    Args:\n        cfg: dict to validate\n    Returns:\n        bool: True if has host:str, port:int, debug:bool, False otherwise\n    \"\"\"\n    pass\n",
       "test_cases": [
         {
