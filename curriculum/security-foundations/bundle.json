@@ -1,7 +1,7 @@
 {
   "version": "3.0",
   "slug": "security-foundations",
-  "bundled": "2026-04-14T00:06:58.021Z",
+  "bundled": "2026-04-14T00:12:47.825Z",
   "course": {
     "topic": "Security Foundations",
     "slug": "security-foundations",
@@ -3790,7 +3790,9 @@
         "title": "Protocol Attack Surface",
         "description": "Every protocol feature embeds a trust assumption; that assumption is the attack vector.",
         "depends_on": [],
-        "introduced_in": "L01",
+        "introduced_in": [
+          "L01"
+        ],
         "reinforced_in": [
           "L02",
           "L07"
@@ -3807,7 +3809,9 @@
         "depends_on": [
           "protocol-attack-surface"
         ],
-        "introduced_in": "L02",
+        "introduced_in": [
+          "L02"
+        ],
         "reinforced_in": [
           "L16"
         ],
@@ -3823,7 +3827,9 @@
         "depends_on": [
           "protocol-attack-surface"
         ],
-        "introduced_in": "L02",
+        "introduced_in": [
+          "L02"
+        ],
         "reinforced_in": [
           "L16"
         ],
@@ -3839,7 +3845,9 @@
         "depends_on": [
           "protocol-attack-surface"
         ],
-        "introduced_in": "L02",
+        "introduced_in": [
+          "L02"
+        ],
         "reinforced_in": [],
         "assessment_sources": [
           "quiz-M01"
@@ -3850,7 +3858,9 @@
         "title": "DNS Architecture and Hierarchy",
         "description": "Recursive resolution, authoritative servers, caching, and trust model.",
         "depends_on": [],
-        "introduced_in": "L03",
+        "introduced_in": [
+          "L03"
+        ],
         "reinforced_in": [
           "L04"
         ],
@@ -3867,7 +3877,9 @@
           "dns-architecture",
           "protocol-attack-surface"
         ],
-        "introduced_in": "L03",
+        "introduced_in": [
+          "L03"
+        ],
         "reinforced_in": [
           "L04"
         ],
@@ -3883,7 +3895,9 @@
         "depends_on": [
           "dns-attacks"
         ],
-        "introduced_in": "L04",
+        "introduced_in": [
+          "L04"
+        ],
         "reinforced_in": [],
         "assessment_sources": [
           "quiz-M02",
@@ -3895,7 +3909,9 @@
         "title": "CBC Mode Vulnerabilities",
         "description": "Padding oracle attacks: BEAST, Lucky13, POODLE exploiting MAC-then-encrypt separation.",
         "depends_on": [],
-        "introduced_in": "L05",
+        "introduced_in": [
+          "L05"
+        ],
         "reinforced_in": [
           "L06"
         ],
@@ -3911,7 +3927,9 @@
         "depends_on": [
           "cbc-vulnerabilities"
         ],
-        "introduced_in": "L05",
+        "introduced_in": [
+          "L05"
+        ],
         "reinforced_in": [
           "L06"
         ],
@@ -3928,7 +3946,9 @@
           "aead-encryption",
           "forward-secrecy"
         ],
-        "introduced_in": "L06",
+        "introduced_in": [
+          "L06"
+        ],
         "reinforced_in": [],
         "assessment_sources": [
           "quiz-M03",
@@ -3942,7 +3962,9 @@
         "depends_on": [
           "cipher-suite-selection"
         ],
-        "introduced_in": "L06",
+        "introduced_in": [
+          "L06"
+        ],
         "reinforced_in": [],
         "assessment_sources": [
           "quiz-M03"
@@ -3955,7 +3977,9 @@
         "depends_on": [
           "aead-encryption"
         ],
-        "introduced_in": "L07",
+        "introduced_in": [
+          "L07"
+        ],
         "reinforced_in": [
           "L08"
         ],
@@ -3969,7 +3993,9 @@
         "title": "Key Derivation Functions for Password Storage",
         "description": "bcrypt, Argon2id parameters; GPU resistance; 72-byte truncation mitigation.",
         "depends_on": [],
-        "introduced_in": "L08",
+        "introduced_in": [
+          "L08"
+        ],
         "reinforced_in": [],
         "assessment_sources": [
           "quiz-M04",
@@ -3981,7 +4007,9 @@
         "title": "PKI Certificate Chain Validation",
         "description": "RFC 5280 four-check validation: signature, validity, revocation, path length.",
         "depends_on": [],
-        "introduced_in": "L08",
+        "introduced_in": [
+          "L08"
+        ],
         "reinforced_in": [],
         "assessment_sources": [
           "quiz-M04",
@@ -3995,7 +4023,9 @@
         "depends_on": [
           "kdf-password-storage"
         ],
-        "introduced_in": "L08",
+        "introduced_in": [
+          "L08"
+        ],
         "reinforced_in": [],
         "assessment_sources": [
           "quiz-M04"
@@ -4006,7 +4036,9 @@
         "title": "Linux Permissions Model",
         "description": "rwx triplet, SUID/SGID bits, sudo configuration, privilege escalation paths.",
         "depends_on": [],
-        "introduced_in": "L09",
+        "introduced_in": [
+          "L09"
+        ],
         "reinforced_in": [
           "L10"
         ],
@@ -4022,7 +4054,9 @@
         "depends_on": [
           "linux-permissions"
         ],
-        "introduced_in": "L10",
+        "introduced_in": [
+          "L10"
+        ],
         "reinforced_in": [],
         "assessment_sources": [
           "quiz-M05",
@@ -4036,7 +4070,9 @@
         "depends_on": [
           "linux-filesystem"
         ],
-        "introduced_in": "L10",
+        "introduced_in": [
+          "L10"
+        ],
         "reinforced_in": [],
         "assessment_sources": [
           "quiz-M05"
@@ -4049,7 +4085,9 @@
         "depends_on": [
           "linux-filesystem"
         ],
-        "introduced_in": "L11",
+        "introduced_in": [
+          "L11"
+        ],
         "reinforced_in": [
           "L12"
         ],
@@ -4065,7 +4103,9 @@
         "depends_on": [
           "persistence-mechanisms"
         ],
-        "introduced_in": "L12",
+        "introduced_in": [
+          "L12"
+        ],
         "reinforced_in": [],
         "assessment_sources": [
           "quiz-M06",
@@ -4077,7 +4117,9 @@
         "title": "Windows Security Event Logs",
         "description": "Event 4624 LogonType/LmPackageName/IpAddress; Event 4662; Event 4698.",
         "depends_on": [],
-        "introduced_in": "L13",
+        "introduced_in": [
+          "L13"
+        ],
         "reinforced_in": [
           "L14",
           "L15"
@@ -4092,7 +4134,9 @@
         "title": "Sysmon Event Coverage",
         "description": "Events 1/3/7/10/12/13/19/20/21/22; ProcessGUID correlation; Sysmon configuration.",
         "depends_on": [],
-        "introduced_in": "L13",
+        "introduced_in": [
+          "L13"
+        ],
         "reinforced_in": [
           "L14"
         ],
@@ -4109,7 +4153,9 @@
           "windows-event-logs",
           "sysmon"
         ],
-        "introduced_in": "L14",
+        "introduced_in": [
+          "L14"
+        ],
         "reinforced_in": [],
         "assessment_sources": [
           "quiz-M07",
@@ -4123,7 +4169,9 @@
         "depends_on": [
           "sysmon"
         ],
-        "introduced_in": "L14",
+        "introduced_in": [
+          "L14"
+        ],
         "reinforced_in": [],
         "assessment_sources": [
           "quiz-M07",
@@ -4137,7 +4185,9 @@
         "depends_on": [
           "windows-event-logs"
         ],
-        "introduced_in": "L15",
+        "introduced_in": [
+          "L15"
+        ],
         "reinforced_in": [
           "L16"
         ],
@@ -4153,7 +4203,9 @@
         "depends_on": [
           "windows-event-logs"
         ],
-        "introduced_in": "L15",
+        "introduced_in": [
+          "L15"
+        ],
         "reinforced_in": [
           "L16"
         ],
@@ -4170,7 +4222,9 @@
           "ntlm-attacks",
           "kerberoasting"
         ],
-        "introduced_in": "L16",
+        "introduced_in": [
+          "L16"
+        ],
         "reinforced_in": [],
         "assessment_sources": [
           "quiz-M08",
@@ -4184,7 +4238,9 @@
         "depends_on": [
           "layered-authentication"
         ],
-        "introduced_in": "L16",
+        "introduced_in": [
+          "L16"
+        ],
         "reinforced_in": [],
         "assessment_sources": [
           "quiz-M08",
