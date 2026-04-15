@@ -614,8 +614,8 @@ function showModcheck(moduleId) {
   const done = !!progress.modchecks?.[moduleId]?.done;
   const hasMCQ = mc.questions.some(q => q.type === 'mcq');
   const subtitle = hasMCQ
-    ? `${mc.questions.length} questions · Multiple choice auto-scored; short-answer self-scored.`
-    : `${mc.questions.length} recall questions · Reveal each answer, then self-score honestly.`;
+    ? `${mc.questions.length} questions · Multiple choice auto-scored; short-answer keyword-checked.`
+    : `${mc.questions.length} recall questions · Type your answer, then submit to check it.`;
 
   const rows = mc.questions.map((q, i) => {
     const qText   = q.question ?? q.q ?? '';
@@ -635,17 +635,17 @@ function showModcheck(moduleId) {
     </div>`;
     }
 
-    // Open-ended (self-scored)
+    // Open-ended (keyword-checked)
     return `
     <div class="modcheck-q" id="mcq-${moduleId}-${q.id}">
       <div class="question-text">${i + 1}. ${qText}</div>
+      <textarea class="modcheck-textarea" id="mcta-${moduleId}-${q.id}" placeholder="Type your answer here…" rows="3"></textarea>
+      <div class="modcheck-self-score" id="mcs-${moduleId}-${q.id}">
+        <button class="btn btn-primary" style="font-size:12px;padding:5px 12px" onclick="checkModcheckAnswer('${moduleId}','${q.id}')">Check answer</button>
+      </div>
+      <div class="modcheck-feedback" id="mcfb-${moduleId}-${q.id}"></div>
       <div class="modcheck-answer" id="mca-${moduleId}-${q.id}">
         <strong>Answer:</strong> ${qAnswer}
-      </div>
-      <div class="modcheck-self-score">
-        <button class="btn" style="font-size:12px;padding:5px 10px" onclick="toggleModcheckAnswer('${moduleId}','${q.id}')">Reveal answer</button>
-        <button class="btn" style="font-size:12px;padding:5px 10px;border-color:var(--accent);color:var(--accent-text)" onclick="scoreModcheckQ('${moduleId}','${q.id}',true)">✓ Got it</button>
-        <button class="btn" style="font-size:12px;padding:5px 10px;border-color:var(--danger);color:var(--danger)" onclick="scoreModcheckQ('${moduleId}','${q.id}',false)">✗ Missed</button>
       </div>
     </div>`;
   }).join('');
@@ -653,7 +653,7 @@ function showModcheck(moduleId) {
   main.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
       <button class="btn" onclick="showModule('${moduleId}')" style="font-size:12px;padding:5px 10px">← Back to module</button>
-      ${done ? '<span class="badge badge-green">Previously completed ✓</span>' : ''}
+      ${done ? `<div style="display:flex;gap:8px;align-items:center"><span class="badge badge-green">Previously completed ✓</span><button class="btn" style="font-size:12px;padding:5px 10px" onclick="retakeModcheck('${moduleId}')">↺ Retake</button></div>` : ''}
     </div>
     <h1>${mc.title}</h1>
     <p class="text-muted">${subtitle}</p>
@@ -706,6 +706,76 @@ function toggleModcheckAnswer(moduleId, qId) {
   if (el) el.classList.toggle('show');
 }
 
+function checkModcheckAnswer(moduleId, qId) {
+  const q = bundle?.modchecks?.[moduleId]?.questions.find(x => x.id === qId);
+  if (!q) return;
+
+  const textarea = document.getElementById(`mcta-${moduleId}-${qId}`);
+  const userText = textarea?.value?.trim() ?? '';
+  if (!userText) { alert('Please write an answer first.'); return; }
+
+  const isCorrect = scoreOpenAnswer(userText, q.answer ?? q.a ?? '');
+
+  if (textarea) textarea.disabled = true;
+
+  const scoreEl = document.getElementById(`mcs-${moduleId}-${qId}`);
+  if (scoreEl) {
+    scoreEl.dataset.restored = '1';
+    scoreEl.innerHTML = `
+      <span style="font-size:12px;color:var(--text-muted)">Override:</span>
+      <button class="btn" style="font-size:12px;padding:4px 10px;border-color:var(--accent);color:var(--accent-text)" onclick="overrideModcheckScore('${moduleId}','${qId}',true)">✓ Got it</button>
+      <button class="btn" style="font-size:12px;padding:4px 10px;border-color:var(--danger);color:var(--danger)" onclick="overrideModcheckScore('${moduleId}','${qId}',false)">✗ Missed</button>
+    `;
+  }
+
+  const fbEl = document.getElementById(`mcfb-${moduleId}-${qId}`);
+  if (fbEl) {
+    fbEl.textContent = isCorrect ? '✓ Looks right — good answer!' : '✗ Not quite — review the full answer';
+    fbEl.style.color = isCorrect ? 'var(--accent)' : 'var(--danger)';
+    fbEl.classList.add('show');
+  }
+
+  const ansEl = document.getElementById(`mca-${moduleId}-${qId}`);
+  if (ansEl) ansEl.classList.add('show');
+
+  scoreModcheckQ(moduleId, qId, isCorrect);
+}
+
+function scoreOpenAnswer(userText, correctAnswer) {
+  const STOP = new Set([
+    'a','an','the','is','are','was','were','be','been','being','have','has','had',
+    'do','does','did','will','would','could','should','may','might','must','shall',
+    'can','it','its','this','that','these','those','i','we','you','he','she','they',
+    'me','us','him','her','them','my','our','your','his','their','what','which','who',
+    'when','where','why','how','all','each','every','both','few','more','most','other',
+    'some','such','no','nor','not','only','same','so','than','too','very','just','but',
+    'and','or','for','of','to','in','on','at','by','with','from','as','into','through',
+    'about','between','after','before','up','out','if','then','because','while',
+    'although','however','therefore','also','any','use','used','using'
+  ]);
+  const tokenize = (str) => str.toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .split(/\s+/)
+    .filter(w => w.length > 2 && !STOP.has(w));
+
+  const answerTokens = tokenize(correctAnswer);
+  if (answerTokens.length === 0) return true;
+
+  const userTokenSet = new Set(tokenize(userText));
+  const matched = answerTokens.filter(t => userTokenSet.has(t)).length;
+  return matched >= 2 || (matched / answerTokens.length) >= 0.30;
+}
+
+function overrideModcheckScore(moduleId, qId, correct) {
+  scoreModcheckQ(moduleId, qId, correct);
+  const fbEl = document.getElementById(`mcfb-${moduleId}-${qId}`);
+  if (fbEl) {
+    fbEl.textContent = correct ? '✓ Marked correct' : '✗ Marked missed';
+    fbEl.style.color = correct ? 'var(--accent)' : 'var(--danger)';
+    fbEl.classList.add('show');
+  }
+}
+
 function scoreModcheckQ(moduleId, qId, correct) {
   if (!progress.modchecks) progress.modchecks = {};
   if (!progress.modchecks[moduleId]) progress.modchecks[moduleId] = { scores: {}, done: false };
@@ -718,6 +788,35 @@ function applyModcheckScore(moduleId, qId, correct, revealAnswer) {
   const card = document.getElementById(`mcq-${moduleId}-${qId}`);
   if (!card) return;
   card.style.borderColor = correct ? 'var(--accent)' : 'var(--danger)';
+
+  // For open-ended questions, restore the submitted state
+  const q = bundle?.modchecks?.[moduleId]?.questions.find(x => x.id === qId);
+  if (q?.type !== 'mcq') {
+    const textarea = document.getElementById(`mcta-${moduleId}-${qId}`);
+    if (textarea) textarea.disabled = true;
+
+    const scoreEl = document.getElementById(`mcs-${moduleId}-${qId}`);
+    if (scoreEl && !scoreEl.dataset.restored) {
+      scoreEl.dataset.restored = '1';
+      scoreEl.innerHTML = `
+        <span style="font-size:12px;color:var(--text-muted)">Override:</span>
+        <button class="btn" style="font-size:12px;padding:4px 10px;border-color:var(--accent);color:var(--accent-text)" onclick="overrideModcheckScore('${moduleId}','${qId}',true)">✓ Got it</button>
+        <button class="btn" style="font-size:12px;padding:4px 10px;border-color:var(--danger);color:var(--danger)" onclick="overrideModcheckScore('${moduleId}','${qId}',false)">✗ Missed</button>
+      `;
+    }
+
+    const fbEl = document.getElementById(`mcfb-${moduleId}-${qId}`);
+    if (fbEl && !fbEl.classList.contains('show')) {
+      fbEl.textContent = correct ? '✓ Looks right — good answer!' : '✗ Not quite — review the full answer';
+      fbEl.style.color = correct ? 'var(--accent)' : 'var(--danger)';
+      fbEl.classList.add('show');
+    }
+
+    const ans = document.getElementById(`mca-${moduleId}-${qId}`);
+    if (ans) ans.classList.add('show');
+    return;
+  }
+
   if (revealAnswer) {
     const ans = document.getElementById(`mca-${moduleId}-${qId}`);
     if (ans) ans.classList.add('show');
@@ -748,12 +847,23 @@ function submitModcheck(moduleId) {
         <div class="quiz-score">${correct}/${total}</div>
         <div class="quiz-score-label">self-assessed correct</div>
         <p style="margin-top:0.75rem">Review any missed questions, then move on to the next module.</p>
-        <button class="btn btn-primary" style="margin-top:0.75rem" onclick="renderPlan()">Back to learning plan</button>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:0.75rem">
+          <button class="btn btn-primary" onclick="renderPlan()">Back to learning plan</button>
+          <button class="btn" onclick="retakeModcheck('${moduleId}')">↺ Retake</button>
+        </div>
       </div>
     `;
   }
   const btn = document.getElementById('mc-submit-btn');
   if (btn) btn.disabled = true;
+}
+
+function retakeModcheck(moduleId) {
+  if (!progress.modchecks?.[moduleId]) return;
+  progress.modchecks[moduleId] = { scores: {}, done: false };
+  saveProgress();
+  buildSidebar();
+  showModcheck(moduleId);
 }
 
 // ── FLASHCARDS (SM-2) ──────────────────────────────────────
@@ -1301,6 +1411,7 @@ function renderTestResults(results, challengeId) {
 Object.assign(window, {
   loadCourse, showView, showModule, toggleModule,
   showLesson, markDone, showModcheck, toggleModcheckAnswer,
+  checkModcheckAnswer, overrideModcheckScore, retakeModcheck,
   scoreModcheckQ, selectModcheckOption, submitModcheck, renderPlan, promptQuiz,
   submitQuiz, selectOption, renderCodeView, showChallenge,
   runChallengeTests, submitChallenge, renderCards, flipCard,

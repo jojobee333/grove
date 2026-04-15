@@ -158,7 +158,12 @@ p { font-size: 14px; line-height: 1.7; color: var(--muted); margin-bottom: 0.75r
 .modcheck-q { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 12px; }
 .modcheck-answer { margin-top: 10px; padding: 10px 14px; background: var(--accent-light); border-radius: var(--radius); font-size: 13px; line-height: 1.6; display: none; }
 .modcheck-answer.show { display: block; }
-.modcheck-self-score { display: flex; gap: 8px; margin-top: 8px; }
+.modcheck-self-score { display: flex; gap: 8px; margin-top: 8px; align-items: center; flex-wrap: wrap; }
+.modcheck-textarea { width: 100%; min-height: 80px; margin-top: 10px; padding: 10px 12px; font-size: 13px; line-height: 1.6; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--text); resize: vertical; font-family: inherit; box-sizing: border-box; }
+.modcheck-textarea:focus { outline: none; border-color: var(--accent); }
+.modcheck-textarea:disabled { opacity: 0.65; background: var(--surface, #f5f5f5); cursor: default; }
+.modcheck-feedback { margin-top: 8px; font-size: 13px; font-weight: 600; display: none; }
+.modcheck-feedback.show { display: block; }
 
 /* File loader */
 .drop-zone { border: 2px dashed var(--border-strong); border-radius: var(--radius-lg); padding: 3rem 2rem; text-align: center; cursor: pointer; transition: border-color 0.15s; }
