@@ -1,26 +1,52 @@
 {
+  "id": "modcheck-M07",
   "module": "M07",
-  "title": "RAG as AI Memory Architecture — Quick Check",
+  "title": "Module Check: AI Memory Architecture",
+  "generated": "2026-04-14",
   "questions": [
     {
-      "id": "MC07-1",
-      "q": "What is the difference between parametric memory and contextual memory in an LLM, and which type does RAG augment?",
-      "a": "Parametric memory is knowledge baked into the model's weights during training — facts the model 'knows' without any retrieval. Contextual memory is knowledge provided in the prompt context window at inference time. RAG (Retrieval-Augmented Generation) augments contextual memory by retrieving relevant documents and inserting them into the prompt context. RAG does not modify the model's weights; it expands what the model has access to in the current request."
+      "id": "MC01",
+      "type": "open",
+      "question": "Distinguish parametric memory from contextual memory in Meridian's AI layer.",
+      "answer": "Parametric memory is knowledge baked into the model's weights during training — the LLM's general world knowledge. Contextual memory is dynamic: it is retrieved at inference time from external storage (pgvector), assembled into the prompt context window, and changes without retraining. Meridian uses contextual memory for user-specific facts."
     },
     {
-      "id": "MC07-2",
-      "q": "Walk through the write path of Meridian's memory system: from a user action to a stored embedding.",
-      "a": "1. User interaction occurs (e.g. writes a document, completes a task, gives AI feedback). 2. A memory-worthy event is detected (by pattern matching or AI scoring). 3. The relevant text is extracted and sent to an embedding model (e.g. `text-embedding-3-small`) which returns a high-dimensional vector. 4. The text + embedding + metadata (user_id, workspace_id, source_type, created_at) are inserted into the `memory_fragments` table. 5. The pgvector index updates automatically for future similarity searches."
+      "id": "MC02",
+      "type": "open",
+      "question": "Describe the RAG write path: what happens when Meridian stores a new memory fragment?",
+      "answer": "(1) Text is chunked at semantic boundaries. (2) Each chunk is embedded via the embedding model (Voyage/OpenAI). (3) The vector and metadata are inserted into the memories table with user_id + workspace_id. (4) An audit_log entry is written. On retrieval, the query is embedded and nearest neighbours are fetched with both filters."
     },
     {
-      "id": "MC07-3",
-      "q": "What is the context window budget problem in RAG, and how does Meridian's context assembler address it?",
-      "a": "Each LLM request has a fixed context window (e.g. 200k tokens for Claude). A naive RAG implementation might retrieve 20 memory chunks + the full conversation history + instructions, potentially exceeding the limit or sending low-value content. Meridian's context assembler applies a budget: it ranks retrieved chunks by similarity score, truncates conversation history to the most recent N turns, and assembles only as much context as fits within the reserved token budget, always preserving the system prompt and user message."
+      "id": "MC03",
+      "type": "open",
+      "question": "Why must the context window budget be managed explicitly before sending a prompt to the LLM?",
+      "answer": "LLMs have a fixed token limit. Exceeding it truncates the prompt or raises an API error. Budget management ensures the system prompt, retrieved memories, conversation history, and user message all fit. The typical order of priority is: system prompt > recent messages > retrieved memories > older history."
     },
     {
-      "id": "MC07-4",
-      "q": "Why does Meridian's RAG search filter by BOTH `user_id` and `workspace_id`? What security property does each filter enforce?",
-      "a": "`workspace_id` enforces multi-tenancy: prevents User A in Workspace 1 from retrieving memories stored by anyone in Workspace 2. `user_id` enforces per-user privacy within a workspace: prevents User A in Workspace 1 from retrieving User B's personal memories even though they share the workspace. Both filters are required simultaneously. Using only workspace_id would allow cross-user memory leakage within a workspace; using only user_id would allow cross-workspace leakage if a user is a member of multiple workspaces."
+      "id": "MC04",
+      "type": "mcq",
+      "question": "Which two database fields must BOTH be present in every vector search query in Meridian?",
+      "options": {
+        "A": "user_id and document_id",
+        "B": "user_id and workspace_id",
+        "C": "workspace_id and embedding_model",
+        "D": "session_id and workspace_id"
+      },
+      "correct": "B",
+      "explanation": "user_id scopes results to the right user's memories. workspace_id enforces tenant isolation. Without both, a query could return another user's memories (missing user_id) or another tenant's data (missing workspace_id). This is a non-negotiable security constraint in Meridian."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "What is the primary purpose of the LLM router in Meridian's AI layer?",
+      "options": {
+        "A": "Load-balance requests across multiple LLM servers",
+        "B": "Direct requests to different models based on task type and cost constraints",
+        "C": "Cache repeated LLM responses to reduce API calls",
+        "D": "Validate that LLM outputs are safe before returning them to users"
+      },
+      "correct": "B",
+      "explanation": "The router selects the best model for a task: cheap/fast models for autocomplete, powerful models for synthesis, specialised models for code. This optimises cost and quality. Load balancing, caching, and safety filtering are separate concerns handled by other components."
     }
   ]
 }

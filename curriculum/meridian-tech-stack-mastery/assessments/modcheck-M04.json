@@ -1,26 +1,52 @@
 {
+  "id": "modcheck-M04",
   "module": "M04",
-  "title": "Schema, RLS, and pgvector — Quick Check",
+  "title": "Module Check: PostgreSQL, RLS, and pgvector",
+  "generated": "2026-04-14",
   "questions": [
     {
-      "id": "MC04-1",
-      "q": "What two SQL statements implement row-level security for a Meridian table, and what does each do?",
-      "a": "1. `ALTER TABLE your_table ENABLE ROW LEVEL SECURITY;` — activates RLS enforcement on the table. 2. `CREATE POLICY workspace_isolation ON your_table USING (workspace_id = current_setting('app.current_workspace_id')::uuid);` — creates the restriction predicate. Without the first statement, the policy exists but is never enforced. Without the second, enabling RLS blocks ALL access (the default-deny behaviour of RLS with no policy)."
+      "id": "MC01",
+      "type": "open",
+      "question": "What two SQL statements are needed to enable Row Level Security on a table and why is the policy required in addition to enabling RLS?",
+      "answer": "`ALTER TABLE t ENABLE ROW LEVEL SECURITY;` enables the feature. `CREATE POLICY ... USING (...)` defines which rows each session is allowed to see. Without a policy, enabling RLS denies all access by default (no rows match). The policy provides the per-session workspace filter."
     },
     {
-      "id": "MC04-2",
-      "q": "Why must every pgvector similarity search include BOTH `user_id = $1` AND `workspace_id = $2` in the WHERE clause?",
-      "a": "Scoping to `workspace_id` alone enforces multi-tenancy (one tenant can't see another's data) but doesn't prevent one user within the same workspace from reading another member's personal memories. Scoping to `user_id` alone would fail in a shared workspace where the same content belongs to different users. Both conditions are necessary to simultaneously enforce workspace isolation and per-user privacy."
+      "id": "MC02",
+      "type": "open",
+      "question": "Why must every vector search in Meridian include both `user_id = $1` AND `workspace_id = $2`?",
+      "answer": "user_id scopes results to the right person's memories. workspace_id enforces tenant isolation — without it a cross-workspace query could leak another tenant's documents. Either filter alone is insufficient: user_id alone allows cross-tenant leakage; workspace_id alone allows one user to see another's private memories."
     },
     {
-      "id": "MC04-3",
-      "q": "What does `drizzle-zod` do, and at what point in the request lifecycle does it eliminate manual work?",
-      "a": "drizzle-zod generates Zod validation schemas directly from Drizzle table definitions via `createInsertSchema()` and `createSelectSchema()`. At the API route level, you can call `.parse(req.body)` against the generated schema without writing a separate Zod schema. When the Drizzle table gains a new column, the Zod schema is automatically updated — no manual synchronization between the database schema and the API validator."
+      "id": "MC03",
+      "type": "open",
+      "question": "What does drizzle-zod provide and at which layer does it belong?",
+      "answer": "drizzle-zod auto-generates Zod validation schemas from Drizzle table definitions. It belongs at the API validation layer — the generated schema validates request bodies before any DB query, keeping the Zod schema in sync with the DB schema automatically."
     },
     {
-      "id": "MC04-4",
-      "q": "What does `<=>` mean in a PostgreSQL pgvector query, and how does it differ from `<->` or `<#>`?",
-      "a": "`<=>` is the cosine distance operator — it measures the angle between two vectors (values 0–2, lower is more similar). It is appropriate for semantic similarity search because it is independent of vector magnitude. `<->` is Euclidean (L2) distance — affected by magnitude, better for spatial data. `<#>` is negative inner product — equivalent to cosine for normalized vectors. For embedding-based semantic search, `<=>` is the standard choice."
+      "id": "MC04",
+      "type": "mcq",
+      "question": "Which pgvector operator finds the nearest neighbours by cosine distance?",
+      "options": {
+        "A": "<=>",
+        "B": "<->",
+        "C": "<#>",
+        "D": "<~>"
+      },
+      "correct": "A",
+      "explanation": "`<=>` is cosine distance (most common for text embeddings). `<->` is L2 (Euclidean) distance. `<#>` is inner product (negative dot product — minimise for maximum similarity). `<~>` is not a pgvector operator."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "In Meridian's tenant middleware, where is the workspace_id sourced from, and why?",
+      "options": {
+        "A": "From req.body.workspace_id, to keep the API flexible",
+        "B": "From the JWT payload, after the token is verified",
+        "C": "From a query parameter, for REST compatibility",
+        "D": "From the database session variable, set before each query"
+      },
+      "correct": "B",
+      "explanation": "workspace_id is sourced from the verified JWT — never from req.body or query params, which are attacker-controlled. The JWT is signed by the server, so workspace_id inside it cannot be forged. The middleware then sets `SET LOCAL app.current_workspace_id` from this verified value."
     }
   ]
 }

@@ -1,26 +1,52 @@
 {
+  "id": "modcheck-M05",
   "module": "M05",
-  "title": "React 18 + Vite Frontend Architecture — Quick Check",
+  "title": "Module Check: React 18 Patterns and Lexical Editor",
+  "generated": "2026-04-14",
   "questions": [
     {
-      "id": "MC05-1",
-      "q": "What is the difference between `ReactDOM.render()` and `ReactDOM.createRoot()` in terms of rendering behaviour?",
-      "a": "ReactDOM.render() is the legacy synchronous API — the scheduler runs in blocking mode, holding the main thread for the entire render pass. ReactDOM.createRoot() opts into concurrent rendering, enabling the scheduler to yield, prioritize, and interrupt renders. All of React 18's concurrent features (`startTransition`, `useTransition`, `useDeferredValue`) are no-ops with the legacy API — they compile and run without errors but have no effect on scheduling."
+      "id": "MC01",
+      "type": "open",
+      "question": "What is the difference between `ReactDOM.render` and `createRoot`, and why does Meridian use `createRoot`?",
+      "answer": "`ReactDOM.render` is the legacy synchronous renderer (React 17 and below). `createRoot` enables React 18 concurrent features: automatic batching, transitions, and Suspense streaming. Meridian needs `startTransition` for the AI panel updates and `Suspense` for lazy-loaded editor modules."
     },
     {
-      "id": "MC05-2",
-      "q": "What does `startTransition` do, and which specific Meridian interaction is it designed to protect?",
-      "a": "startTransition marks a state update as non-urgent, allowing React to interrupt and re-plan it if a higher-priority update (like a user keystroke) arrives. In Meridian, it protects the editor experience: when an AI panel update (loading 50+ suggestions) is wrapped in startTransition, a user typing in the Lexical editor still gets immediate visual feedback — the AI panel update yields to the keystroke rather than blocking it."
+      "id": "MC02",
+      "type": "open",
+      "question": "What does `startTransition` tell React, and when should Meridian use it?",
+      "answer": "`startTransition` marks a state update as non-urgent — React may defer it to keep the UI responsive. Use it for AI result rendering and collaborative cursor updates, where dropping frames is preferable to blocking the editor's keystroke response."
     },
     {
-      "id": "MC05-3",
-      "q": "What is Lexical's 'EditorState as the source of truth' pattern, and why is mutating the DOM directly a bug even if it produces the correct visual result?",
-      "a": "Lexical maintains a reconciliation model: it diffs the previous EditorState against the new one and applies the minimal DOM changes needed. If you mutate the DOM directly, Lexical's next reconcile will overwrite your change because the EditorState still reflects the old content. The DOM is Lexical's output, not its input — the editor state always drives the DOM, never the reverse."
+      "id": "MC03",
+      "type": "open",
+      "question": "What is a Lexical EditorState and why is it immutable?",
+      "answer": "EditorState is a serialisable snapshot of the entire document — nodes, selection, and metadata. It is immutable so that Lexical can maintain a history stack for undo/redo, diff states efficiently, and replay operations without side effects. Mutations go through a registered command that produces a new EditorState."
     },
     {
-      "id": "MC05-4",
-      "q": "How does Vite's development server differ from Webpack's dev server in terms of module serving, and what specific development benefit does this produce?",
-      "a": "Vite's dev server serves ES modules directly to the browser without bundling — the browser handles module graph resolution natively. Webpack bundles all modules into one or more chunks before serving. Consequence: Vite's cold start time scales with the number of changed files (milliseconds per module), not total project size. Hot module replacement replaces the changed module only. In large projects, this produces sub-100ms HMR vs. Webpack's multi-second full bundle rebuilds."
+      "id": "MC04",
+      "type": "mcq",
+      "question": "What is React 18 automatic batching?",
+      "options": {
+        "A": "React bundles multiple component renders into a single DOM commit",
+        "B": "Multiple `setState` calls in async callbacks are batched into a single re-render",
+        "C": "Components are rendered in parallel using Web Workers",
+        "D": "React skips re-renders when props are deeply equal"
+      },
+      "correct": "B",
+      "explanation": "In React 17, setState calls inside async callbacks (setTimeout, Promise) each triggered a separate re-render. React 18 batches them automatically — all setState calls in the same event loop tick (including async) produce one re-render. Option A describes Reconciler behaviour, not automatic batching specifically."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "In Lexical, how do you safely read the document content outside of a command handler?",
+      "options": {
+        "A": "Access `editor._editorState.root` directly",
+        "B": "Call `editor.getEditorState().read(callback)`",
+        "C": "Register a mutation listener with `editor.registerMutationListener`",
+        "D": "Serialise via `editor.getRootElement().innerHTML`"
+      },
+      "correct": "B",
+      "explanation": "`editor.getEditorState().read(callback)` provides safe read-only access inside Lexical's reconciler context. Accessing internal `_editorState` breaks encapsulation. MutationListeners are for observing DOM changes, not reading document content. innerHTML bypasses Lexical's type system entirely."
     }
   ]
 }

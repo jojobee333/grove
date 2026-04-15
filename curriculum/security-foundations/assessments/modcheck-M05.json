@@ -1,27 +1,52 @@
 {
+  "id": "modcheck-M05",
   "module": "M05",
-  "title": "Retention Check: Linux Security — Permissions and Filesystem",
-  "generated": "2026-04-13",
+  "title": "Module Check: Linux Persistence and Privilege Escalation",
+  "generated": "2026-04-14",
   "questions": [
     {
-      "id": "MC05-1",
-      "q": "What does the SUID bit do when set on a root-owned executable?",
-      "a": "The process runs with root's effective UID regardless of who launches it. Any user who executes the binary gets root's privilege level for the duration of that process execution."
+      "id": "MC01",
+      "type": "open",
+      "question": "How does the SUID bit allow a low-privilege user to execute code as root?",
+      "answer": "The SUID bit on an executable sets the effective UID to the file owner (e.g., root) when executed, regardless of who runs it. The process inherits root privileges for its duration. If the binary allows code execution (e.g., a shell, vim, find with -exec), the attacker gains a root shell."
     },
     {
-      "id": "MC05-2",
-      "q": "Write the bash command to find all SUID binaries on a Linux system.",
-      "a": "`find / -perm -4000 -type f 2>/dev/null` — finds all files with the SUID bit set, suppressing permission errors from directories the current user cannot read."
+      "id": "MC02",
+      "type": "open",
+      "question": "Write the `find` command that lists all SUID-bit files on a Linux system.",
+      "answer": "`find / -perm -4000 -type f 2>/dev/null` — searches from root, matches files with the SUID permission bit set (4000 in octal), suppresses permission errors. Adding `-ls` gives ownership details."
     },
     {
-      "id": "MC05-3",
-      "q": "Name the four standard Linux persistence locations for cron and startup mechanisms.",
-      "a": "/etc/cron.d/ (system cron jobs), /var/spool/cron/crontabs/ (user crontabs), ~/.config/systemd/user/ (user systemd services), /etc/rc.local (legacy startup script)."
+      "id": "MC03",
+      "type": "open",
+      "question": "Name four locations an attacker uses to establish persistence on Linux.",
+      "answer": "(1) ~/.bashrc or ~/.profile — runs on user login. (2) /etc/cron.d/ or crontab — scheduled execution. (3) systemd unit file in /etc/systemd/system/ — survives reboot. (4) LD_PRELOAD in /etc/ld.so.preload — injects a shared library into every process. Also: SSH authorized_keys, /etc/rc.local."
     },
     {
-      "id": "MC05-4",
-      "q": "Why does the Filesystem Hierarchy Standard (FHS) aid detection even without specific monitoring rules?",
-      "a": "FHS defines canonical locations for each type of file and service. Legitimate services run from /usr/bin, /opt, /usr/local. Any persistent process running from /tmp, /dev/shm, or user home directories violates FHS norms and is immediately anomalous — the predictability of legitimate software is the detection signal."
+      "id": "MC04",
+      "type": "mcq",
+      "question": "What detection benefit does the Linux Filesystem Hierarchy Standard (FHS) provide for threat hunting?",
+      "options": {
+        "A": "FHS enforces file permission standards that block malware writes",
+        "B": "FHS defines expected locations — executables outside standard paths are anomalous and easier to detect",
+        "C": "FHS checksums system binaries at boot",
+        "D": "FHS prevents modification of /etc without root"
+      },
+      "correct": "B",
+      "explanation": "FHS defines conventions: binaries in /usr/bin, libraries in /usr/lib, config in /etc. An executable in /tmp, /var/www, or a home directory is an immediate anomaly. Threat hunters use this baseline to filter noise from true positives. FHS has no enforcement mechanism — it is a convention, not a control."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "What is the difference between privilege escalation and lateral movement?",
+      "options": {
+        "A": "Privilege escalation moves between hosts; lateral movement elevates within one host",
+        "B": "Privilege escalation elevates access level on the current host; lateral movement moves to a different host",
+        "C": "Both terms describe the same technique at different stages of the kill chain",
+        "D": "Lateral movement is only possible after full privilege escalation"
+      },
+      "correct": "B",
+      "explanation": "Privilege escalation: low-priv user → root on the same machine. Lateral movement: compromised host → another host in the network. Both are post-exploitation techniques but target different attack dimensions. Lateral movement does not require root; credential theft often enables lateral movement at user level."
     }
   ]
 }

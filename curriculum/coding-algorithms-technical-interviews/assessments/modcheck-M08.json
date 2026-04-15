@@ -2,32 +2,51 @@
   "id": "modcheck-M08",
   "module": "M08",
   "title": "Module Check: Dynamic Programming — The Three-Stage Pipeline",
-  "generated": "2025-01-01",
+  "generated": "2026-04-14",
   "questions": [
     {
       "id": "MC01",
-      "question": "What are the two conditions both required for dynamic programming to apply?",
-      "answer": "Optimal substructure and overlapping subproblems"
+      "type": "open",
+      "question": "What are the two conditions required for dynamic programming to apply?",
+      "answer": "Optimal substructure (the optimal solution to the full problem can be built from optimal solutions to subproblems) and overlapping subproblems (the same subproblems are solved multiple times in naive recursion)."
     },
     {
       "id": "MC02",
-      "question": "What decorator converts a Python recursive function to memoised DP with one line?",
-      "answer": "`@functools.cache` (Python 3.9+) or `@functools.lru_cache(maxsize=None)` (Python 3.8+)"
+      "type": "open",
+      "question": "In 0/1 Knapsack 1D DP, why must the capacity loop iterate in reverse order?",
+      "answer": "Forward iteration would use the already-updated dp[w - weight] value from the current item, effectively allowing the item to be chosen multiple times. Iterating backwards ensures dp[w - weight] still reflects the previous row (item not included yet), enforcing the 0/1 constraint."
     },
     {
       "id": "MC03",
-      "question": "In 0/1 Knapsack 1D DP, why must the capacity loop iterate in reverse order?",
-      "answer": "To prevent using the current item more than once — forward iteration would use updated values from the same item, effectively allowing unlimited use"
+      "type": "open",
+      "question": "What is the main advantage of top-down memoisation over bottom-up tabulation?",
+      "answer": "Top-down only computes subproblems that are actually needed (lazy evaluation). For problems with sparse subproblem graphs, this can save significant time. Bottom-up always fills all states, which is wasteful if most states are unreachable."
     },
     {
       "id": "MC04",
-      "question": "What is the main advantage of top-down memoisation over bottom-up tabulation?",
-      "answer": "Top-down only computes subproblems that are actually needed (lazy evaluation) — efficient for sparse subproblem graphs"
+      "type": "mcq",
+      "question": "Which Python decorator converts a recursive function to memoised DP in one line (Python 3.9+)?",
+      "options": {
+        "A": "@functools.lru_cache()",
+        "B": "@functools.cache",
+        "C": "@memoize",
+        "D": "@cache(maxsize=None)"
+      },
+      "correct": "B",
+      "explanation": "`@functools.cache` is the simpler alias added in Python 3.9 — equivalent to `@lru_cache(maxsize=None)`. `@functools.lru_cache()` works in 3.8+ but requires call parentheses. `@memoize` and `@cache(maxsize=None)` are not stdlib."
     },
     {
       "id": "MC05",
-      "question": "Name one interview problem that requires a 2D DP state because a 1D state is insufficient.",
-      "answer": "Buy and Sell Stock with Cooldown (state = day × holding status), or any problem with two independent decisions per step"
+      "type": "mcq",
+      "question": "Which problem requires a 2D DP state because a 1D state is insufficient?",
+      "options": {
+        "A": "Fibonacci sequence",
+        "B": "Climbing stairs (1 or 2 steps)",
+        "C": "Buy and Sell Stock with Cooldown",
+        "D": "Maximum subarray (Kadane's)"
+      },
+      "correct": "C",
+      "explanation": "Stock with Cooldown needs state = (day, holding_status) — two independent dimensions. Fibonacci and Climbing Stairs only need the current index. Kadane's uses a single running max with no subproblem overlap."
     }
   ]
 }

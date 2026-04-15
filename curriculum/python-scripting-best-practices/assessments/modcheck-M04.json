@@ -1,26 +1,52 @@
 {
+  "id": "modcheck-M04",
   "module": "M04",
-  "title": "Resource Management and Configuration — Quick Check",
+  "title": "Module Check: File I/O, Config, and Secrets Management",
+  "generated": "2026-04-14",
   "questions": [
     {
-      "id": "MC04-1",
-      "q": "Name three concrete API improvements pathlib.Path offers over os.path.",
-      "a": "1. `/` operator for joining paths instead of os.path.join(). 2. `.read_text()` / `.write_text()` replacing open() boilerplate. 3. `.suffix`, `.stem`, `.parent` as attributes rather than function calls."
+      "id": "MC01",
+      "type": "open",
+      "question": "Name three improvements pathlib.Path offers over os.path string operations.",
+      "answer": "(1) Operator overloading: `base / \"subdir\" / \"file.txt\"` instead of `os.path.join(...)`. (2) Object methods: `.read_text()`, `.write_text()`, `.mkdir(parents=True)` — no separate imports. (3) `.suffix`, `.stem`, `.parent` attributes replace string manipulation. Paths are typed objects, not raw strings."
     },
     {
-      "id": "MC04-2",
-      "q": "Why are context managers mandatory for all resource lifecycles, not just file I/O?",
-      "a": "Context managers guarantee the `__exit__` / cleanup path runs even when exceptions occur, preventing resource leaks (file handles, DB connections, network sockets, temporary directories) regardless of how the code exits."
+      "id": "MC02",
+      "type": "open",
+      "question": "Why are context managers mandatory for file operations in production scripts?",
+      "answer": "Context managers (`with open(...) as f`) guarantee the file is closed even if an exception occurs. Without them, a crash leaves the file descriptor open — leading to resource leaks, data not being flushed, and `Too many open files` errors on long-running scripts or high throughput."
     },
     {
-      "id": "MC04-3",
-      "q": "What is the correct layered priority order for a CLI script's configuration, from highest to lowest?",
-      "a": "CLI flags > environment variables > config file > built-in defaults. This allows deployment overrides without code changes while keeping sensible defaults for local use."
+      "id": "MC03",
+      "type": "open",
+      "question": "State the config priority order for a Python script and explain why environment variables beat config files.",
+      "answer": "Priority (highest first): CLI arguments > environment variables > config file > defaults. Env vars beat config files because they can be injected at deployment time without touching files — critical for containers and CI/CD. They also cannot accidentally be committed to version control."
     },
     {
-      "id": "MC04-4",
-      "q": "Why should secrets never appear in a config file committed to source control, even in an encrypted form?",
-      "a": "Encrypted secrets still leak the encryption key problem; key rotation requires code changes; and git history preserves plaintext if the secret is accidentally committed even once. Environment variables or a dedicated secrets manager decouple secrets from the code lifecycle entirely."
+      "id": "MC04",
+      "type": "mcq",
+      "question": "Why must secrets never be stored in config files even if those files are in .gitignore?",
+      "options": {
+        "A": ".gitignore rules can be accidentally removed, committing the file",
+        "B": "Config files are world-readable by default on Linux",
+        "C": "Secrets in files persist in the working directory and may appear in logs, backups, or deployment artefacts",
+        "D": "All of the above"
+      },
+      "correct": "D",
+      "explanation": "All three risks are real: .gitignore can be bypassed (`git add -f`); file permissions are easy to misconfigure; and config files are copied into Docker images, log directories, and backups where they outlive the original deployment. Environment variables or secret managers are the secure alternative."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "Which Python stdlib function reads an environment variable and returns a fallback if it is not set?",
+      "options": {
+        "A": "os.environ[\"VAR\"]",
+        "B": "os.getenv(\"VAR\", \"default\")",
+        "C": "os.environ.get(\"VAR\", default=\"default\")",
+        "D": "sys.env.get(\"VAR\", \"default\")"
+      },
+      "correct": "B",
+      "explanation": "`os.getenv(\"VAR\", \"default\")` returns the env var value or the fallback. `os.environ[\"VAR\"]` raises KeyError if missing. `os.environ.get()` also works but the signature is `.get(key, default)` without the keyword argument. `sys.env` does not exist."
     }
   ]
 }

@@ -1,27 +1,52 @@
 {
+  "id": "modcheck-M01",
   "module": "M01",
-  "title": "Retention Check: The Protocol Feature Mental Model",
-  "generated": "2026-04-13",
+  "title": "Module Check: Network Protocol Security Fundamentals",
+  "generated": "2026-04-14",
   "questions": [
     {
-      "id": "MC01-1",
-      "q": "State the protocol feature mental model in one sentence.",
-      "a": "Every protocol encodes a trust assumption required for it to function, and that same trusted input is the mechanism an attacker exploits."
+      "id": "MC01",
+      "type": "open",
+      "question": "Describe the mental model for evaluating a network protocol's attack surface based on its design features.",
+      "answer": "Ask: (1) Does the protocol authenticate peers, or trust by address? (2) Is data encrypted, or plaintext? (3) Is there a stateless trust mechanism an attacker can spoof? Each unanswered \"yes\" is a potential attack vector. ARP trusts by design (no auth); TCP trusts by sequence number (forgeable); TLS adds auth + encryption."
     },
     {
-      "id": "MC01-2",
-      "q": "What is the specific ARP design feature that enables ARP spoofing?",
-      "a": "ARP trusts that the last reply to a broadcast is authoritative, with no authentication. Any host on the LAN can send an unsolicited reply claiming ownership of any IP."
+      "id": "MC02",
+      "type": "open",
+      "question": "Explain the ARP spoofing mechanism. What condition enables it and what is its consequence?",
+      "answer": "ARP has no authentication. An attacker broadcasts a gratuitous ARP reply mapping their MAC to the victim's IP. LAN hosts cache this mapping and forward traffic to the attacker — enabling man-in-the-middle interception. Condition: attacker must be on the same broadcast domain."
     },
     {
-      "id": "MC01-3",
-      "q": "What TCP feature enables RST injection, and what is the outcome of a successful attack?",
-      "a": "TCP accepts RST segments without cryptographic verification; an attacker who guesses the approximate sequence number can terminate any established TCP connection."
+      "id": "MC03",
+      "type": "open",
+      "question": "How does TCP RST injection work and what does it allow an attacker to do?",
+      "answer": "An attacker forges a TCP RST packet with a valid sequence number from within the current window, addressed to one endpoint. The receiving host treats it as a legitimate connection termination and drops the session. This enables denial-of-service against long-lived connections (BGP, SSH) if the attacker can observe sequence numbers."
     },
     {
-      "id": "MC01-4",
-      "q": "Name two bash commands you would run to verify ARP cache integrity on a Linux host during an investigation.",
-      "a": "`arp -n` (show current ARP cache) and `ip neigh show` (netlink equivalent). Compare entries to DHCP logs or known MAC-to-IP mappings to identify duplicates or unexpected MAC addresses."
+      "id": "MC04",
+      "type": "mcq",
+      "question": "Which command verifies that an ARP entry was populated by a legitimate host (not a spoofed reply)?",
+      "options": {
+        "A": "ping -a <ip>",
+        "B": "arp -a && nmap --script broadcast-arp",
+        "C": "traceroute <ip>",
+        "D": "netstat -rn"
+      },
+      "correct": "B",
+      "explanation": "`arp -a` shows the local ARP cache. `nmap --script broadcast-arp` sends ARP probes and reports all hosts that respond, allowing comparison. If two different MACs claim the same IP, spoofing is occurring. ping, traceroute, and netstat do not expose ARP cache entries directly."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "What is the primary security limitation of trusting IP addresses for access control?",
+      "options": {
+        "A": "IP addresses change too frequently to be reliable",
+        "B": "IP source addresses can be spoofed in packets, especially for protocols without handshake state",
+        "C": "IPv4 addresses are publicly enumerable",
+        "D": "NAT prevents accurate IP attribution"
+      },
+      "correct": "B",
+      "explanation": "IP source addresses are set by the sender and not verified by intermediate routers (BCP38 filtering helps but is not universal). Stateless protocols (UDP) are trivially spoofed. TCP's three-way handshake raises the bar but blind injection is still possible from the same network segment."
     }
   ]
 }

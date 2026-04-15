@@ -1,21 +1,52 @@
 {
+  "id": "modcheck-M07",
   "module": "M07",
-  "title": "Teaching Complications and Honest Limits — Quick Check",
+  "title": "Module Check: Contested Practices and Open Research Gaps",
+  "generated": "2026-04-14",
   "questions": [
     {
-      "id": "MC07-1",
-      "q": "How do you present the PEP 484 vs Google Style Guide annotation debate to a team without dismissing either position?",
-      "a": "Frame them as operating at different levels: PEP 484 is a language specification that keeps Python flexible across all use cases; the Google Style Guide is a team-level engineering standard that trades flexibility for consistency and tooling reliability. Both are correct in their own context. Your team gets to choose where it sits on that spectrum."
+      "id": "MC01",
+      "type": "open",
+      "question": "How would you present the PEP 484 vs Google Style docstring debate to a junior developer who asks which one to use?",
+      "answer": "Use both: PEP 484 type annotations in the function signature for machine verification (mypy), plus Google Style docstrings for the narrative — why parameters exist, side effects, usage examples. They serve different audiences: type checkers vs. human readers. The debate is a false dichotomy."
     },
     {
-      "id": "MC07-2",
-      "q": "Name the three open research gaps from this course and what a learner should do to address each.",
-      "a": "1. dataclasses vs attrs/pydantic — read PEP 557 and the attrs/pydantic docs to compare. 2. Packaging scripts as installable tools — read the pyproject.toml [project.scripts] and pipx documentation. 3. pre-commit hooks for automated enforcement — read the pre-commit.com docs and the ruff pre-commit hook setup."
+      "id": "MC02",
+      "type": "open",
+      "question": "Name two open research gaps in Python scripting best practices and state what assumption each gap tests.",
+      "answer": "Examples: (1) At what script size does asyncio overhead outweigh its benefits for I/O-bound scripts? Assumes asyncio is always better for I/O — may not hold for scripts making fewer than ~5 concurrent calls. (2) Does ruff's auto-fix for all rules always produce semantically equivalent code? Assumes automated fixes are safe — some rule fixes may change behaviour."
     },
     {
-      "id": "MC07-3",
-      "q": "When teaching a contested best practice, what should you do when the evidence from your research runs out before a clear answer emerges?",
-      "a": "State the known evidence and its limits explicitly. Describe the tradeoffs as they currently stand, name what would change the answer (e.g. team size, codebase age, Python version), and direct learners to the primary sources. Do not fabricate a consensus that does not exist."
+      "id": "MC03",
+      "type": "open",
+      "question": "How should a learner approach a contested best practice (e.g., tabs vs spaces, type hints everywhere vs only on public APIs)?",
+      "answer": "Understand the arguments on both sides, note the context in which each recommendation was made (codebase size, team, language version), follow the dominant community convention (PEP 8: spaces, type hints on public interfaces), and document the decision rationale in the project's contributing guide so future contributors understand the choice."
+    },
+    {
+      "id": "MC04",
+      "type": "mcq",
+      "question": "What is the contested claim about type annotations on internal helper functions?",
+      "options": {
+        "A": "They slow down runtime performance",
+        "B": "They add maintenance cost without proportional benefit on functions never called externally",
+        "C": "mypy cannot check private functions",
+        "D": "They conflict with docstring-based documentation tools"
+      },
+      "correct": "B",
+      "explanation": "The debate is about ROI: internal helpers change frequently, and keeping their annotations in sync adds friction. The counter-argument is that annotations catch bugs even in private code. The balanced practice: annotate all public API functions always; annotate internal functions where the logic is complex or the types are non-obvious."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "What does \"cargo culting\" mean in the context of adopting Python best practices?",
+      "options": {
+        "A": "Using pip to install packages without a virtual environment",
+        "B": "Adopting a tool or pattern without understanding why it was recommended or whether it fits your context",
+        "C": "Copying code from Stack Overflow without attribution",
+        "D": "Using multiprocessing when threading would suffice"
+      },
+      "correct": "B",
+      "explanation": "Cargo culting is copying a practice by imitation because it \"looks like the right thing\" without understanding its purpose or tradeoffs. Example: adding asyncio to a single-threaded data pipeline script because \"asyncio is modern\" — it adds complexity without benefit if there is no concurrent I/O."
     }
   ]
 }

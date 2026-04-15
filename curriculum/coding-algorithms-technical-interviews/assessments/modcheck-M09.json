@@ -2,27 +2,51 @@
   "id": "modcheck-M09",
   "module": "M09",
   "title": "Module Check: Language-Specific Complexity Traps",
-  "generated": "2025-01-01",
+  "generated": "2026-04-14",
   "questions": [
     {
       "id": "MC01",
+      "type": "open",
       "question": "What is the time complexity of `list.pop(0)` and what is the O(1) alternative?",
-      "answer": "O(n) — shifts all elements. Use `collections.deque.popleft()` for O(1)."
+      "answer": "O(n) — shifts all remaining elements left. Use `collections.deque.popleft()` for O(1) amortised removal from the front."
     },
     {
       "id": "MC02",
-      "question": "Why is string concatenation with `+=` in a loop O(n²) in Python?",
-      "answer": "Strings are immutable; each `+=` creates a new copy of the entire string. Total characters copied = 1+2+...+n = O(n²). Use `''.join(list)` instead."
+      "type": "open",
+      "question": "Why is string concatenation with `+=` in a loop O(n²) in Python, and what is the fix?",
+      "answer": "Strings are immutable; each `+=` allocates a new string and copies all characters so far. Total copies = 1+2+…+n = O(n²). Fix: collect parts in a list and call `''.join(parts)` at the end — O(n) total."
     },
     {
       "id": "MC03",
-      "question": "What bug does `[10, 9, 2, 1, 100].sort()` introduce in JavaScript?",
-      "answer": "Sorts lexicographically (string order) giving [1, 10, 100, 2, 9]. Fix: `.sort((a, b) => a - b)`."
+      "type": "open",
+      "question": "What bug does `[10, 9, 2, 1, 100].sort()` introduce in JavaScript, and how do you fix it?",
+      "answer": "JS's default sort converts elements to strings and sorts lexicographically, giving [1, 10, 100, 2, 9]. Fix: `.sort((a, b) => a - b)` for ascending numeric sort."
     },
     {
       "id": "MC04",
-      "question": "In Java binary search, what causes the midpoint calculation `(lo + hi) / 2` to be unsafe?",
-      "answer": "Integer overflow when lo + hi > Integer.MAX_VALUE. Use `lo + (hi - lo) / 2` instead."
+      "type": "mcq",
+      "question": "In Java binary search, what risk does `(lo + hi) / 2` carry?",
+      "options": {
+        "A": "Floating-point rounding error",
+        "B": "Integer overflow producing a negative midpoint",
+        "C": "Division truncates toward negative infinity",
+        "D": "No risk — Java promotes to long automatically"
+      },
+      "correct": "B",
+      "explanation": "When lo and hi are both near Integer.MAX_VALUE (~2×10⁹), their sum overflows to a negative number. `lo + (hi - lo) / 2` avoids the overflow. Java does not auto-promote int arithmetic to long."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "Which Python operation is O(n) and commonly triggers accidental quadratic behaviour inside a loop?",
+      "options": {
+        "A": "`dict[key]` lookup",
+        "B": "`set.add(elem)`",
+        "C": "`list.insert(0, elem)`",
+        "D": "`tuple[i]` index access"
+      },
+      "correct": "C",
+      "explanation": "`list.insert(0, elem)` shifts all existing elements one position right — O(n). Inside a loop it becomes O(n²). Using `collections.deque.appendleft()` is O(1). Dict lookup, set.add, and tuple indexing are all O(1) average."
     }
   ]
 }

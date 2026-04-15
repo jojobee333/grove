@@ -6,28 +6,47 @@
   "questions": [
     {
       "id": "MC01",
-      "question": "In the unified binary search template `while lo < hi`, what is the value of `lo` when the loop terminates?",
-      "answer": "`lo == hi` — pointing to the answer position"
+      "type": "open",
+      "question": "In the unified binary search template `while lo < hi`, what value does `lo` hold when the loop exits, and why is this useful?",
+      "answer": "lo == hi, pointing to the single remaining candidate — the answer position. This is useful because you don't need a separate post-loop check for a found/not-found case; the loop terminates with lo as the target index regardless of whether you're doing exact search or finding a boundary."
     },
     {
       "id": "MC02",
-      "question": "To find the K largest elements in a stream, do you use a min-heap or max-heap of size K?",
-      "answer": "Min-heap of size K — the root is the Kth largest; discard smaller elements by comparing to the root"
+      "type": "open",
+      "question": "To find the K largest elements in a stream, do you use a min-heap or max-heap of size K? Explain the reasoning.",
+      "answer": "A min-heap of size K. The root is always the Kth largest seen so far. When a new element arrives, compare it to the root: if larger, pop the root and push the new element. This maintains the K largest with O(log K) per insertion. A max-heap of size K would require you to pop K times to get the answer."
     },
     {
       "id": "MC03",
-      "question": "What is the recognition pattern for a monotonic stack problem?",
-      "answer": "For each element, find the nearest element to the left or right that is greater or smaller"
+      "type": "open",
+      "question": "Why is heapify O(n) rather than O(n log n), even though each sift-down is O(log n)?",
+      "answer": "In bottom-up heapify, most nodes are near the leaves and have small subtrees. The sift-down cost per node is proportional to its subtree height, and half the nodes are leaves (height 0). The sum converges as a geometric series: n/2·0 + n/4·1 + n/8·2 + … = O(n)."
     },
     {
       "id": "MC04",
-      "question": "Why is heapify O(n) and not O(n log n)?",
-      "answer": "Bottom-up construction processes mostly lower-level nodes with small subtrees; total sift cost sums to O(n) (geometric series convergence)"
+      "type": "mcq",
+      "question": "What is the recognition signal for a monotonic stack problem?",
+      "options": {
+        "A": "The problem asks for a subarray with maximum sum",
+        "B": "For each element, find the nearest element to the left or right that is greater or smaller",
+        "C": "The problem involves merging overlapping intervals",
+        "D": "The problem requires finding the median of a stream"
+      },
+      "correct": "B",
+      "explanation": "Monotonic stacks solve 'next greater/smaller element' queries in O(n) by maintaining a stack where elements are always in monotone order. Max subarray sum uses Kadane's; intervals use sorting; stream median uses two heaps."
     },
     {
       "id": "MC05",
-      "question": "What formula prevents integer overflow when computing binary search midpoint?",
-      "answer": "`lo + (hi - lo) // 2` instead of `(lo + hi) // 2`"
+      "type": "mcq",
+      "question": "Which midpoint formula prevents integer overflow in binary search?",
+      "options": {
+        "A": "`(lo + hi) // 2`",
+        "B": "`lo + (hi - lo) // 2`",
+        "C": "`hi - (hi - lo) // 2`",
+        "D": "`(lo + hi) >> 1`"
+      },
+      "correct": "B",
+      "explanation": "`(lo + hi)` overflows when both values are near INT_MAX. `lo + (hi - lo) // 2` computes the offset first, keeping all values within range. Option C is equivalent but less idiomatic. Option A and D both suffer the same overflow risk."
     }
   ]
 }

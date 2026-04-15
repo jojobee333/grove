@@ -1,7 +1,7 @@
 {
   "version": "3.0",
   "slug": "coding-algorithms-technical-interviews",
-  "bundled": "2026-04-14T04:42:11.292Z",
+  "bundled": "2026-04-15T01:13:44.326Z",
   "course": {
     "topic": "Coding Algorithms for Technical Interview Mastery",
     "slug": "coding-algorithms-technical-interviews",
@@ -1189,8 +1189,8 @@
       "type": "application",
       "module": "M01",
       "lesson": "L02",
-      "front": "You have 4 weeks to prepare for a technical interview. In what order should you study the top 5 patterns?",
-      "back": "Week 1: Hash maps + arrays. Week 2: Trees + BFS/DFS. Week 3: Binary search + two pointers + sliding window. Week 4: DP (1D → 2D) + review weak areas.",
+      "front": "What property must an input have for binary search to be applicable, and why does that property matter?",
+      "back": "The input must be sorted (or have a monotonic property). This lets each comparison eliminate half the remaining search space — achieving O(log n) instead of O(n). Without it, you cannot safely discard half the range.",
       "source_ref": "L02",
       "confidence_required": "medium",
       "tags": [
@@ -5369,32 +5369,51 @@
       "id": "modcheck-M01",
       "module": "M01",
       "title": "Module Check: The Interview Algorithm Landscape",
-      "generated": "2025-01-01",
+      "generated": "2026-04-14",
       "questions": [
         {
           "id": "MC01",
-          "question": "Name the 6 steps of the UMPIRE framework in order.",
-          "answer": "Understand, Match, Plan, Implement, Review, Evaluate"
+          "type": "open",
+          "question": "Name the 6 steps of the UMPIRE framework in order and state what happens at each step.",
+          "answer": "Understand (clarify the problem and constraints), Match (identify the pattern), Plan (outline the algorithm in pseudocode), Implement (write code), Review (trace through examples), Evaluate (state time/space complexity)."
         },
         {
           "id": "MC02",
-          "question": "According to the Pareto principle applied to interviews, approximately what percentage of problems can be solved with the top 20% of patterns?",
-          "answer": "~80% of problems"
+          "type": "open",
+          "question": "What property must an input have for binary search to be applicable, and why does that property matter?",
+          "answer": "The input must be sorted (or have a monotonic property). This allows each comparison to eliminate half the remaining search space, achieving O(log n) instead of O(n)."
         },
         {
           "id": "MC03",
-          "question": "In a 4-week study plan, which topic cluster belongs in week 3?",
-          "answer": "Binary search, two pointers, and sliding window"
+          "type": "open",
+          "question": "At which UMPIRE step should you write the first line of code, and what three steps must precede it?",
+          "answer": "I (Implement) — only after completing U (Understand), M (Match), and P (Plan). Writing code before planning leads to wasted effort on the wrong algorithm."
         },
         {
           "id": "MC04",
-          "question": "At which UMPIRE step should you write the first line of code?",
-          "answer": "I (Implement) — only after completing U, M, and P"
+          "type": "mcq",
+          "question": "According to the Pareto principle applied to algorithm interviews, approximately what share of problems can be solved with the top 20% of patterns?",
+          "options": {
+            "A": "~50% of problems",
+            "B": "~65% of problems",
+            "C": "~80% of problems",
+            "D": "~95% of problems"
+          },
+          "correct": "C",
+          "explanation": "The Pareto principle (80/20 rule) holds here: mastering hash maps, two pointers, BFS/DFS, binary search, and DP covers the large majority of interview problems. 50% and 65% understate the leverage; 95% overstates it."
         },
         {
           "id": "MC05",
-          "question": "What are the top 5 high-frequency algorithm patterns that cover the majority of interview problems?",
-          "answer": "Hash maps, two pointers/sliding window, BFS/DFS, binary search, dynamic programming"
+          "type": "mcq",
+          "question": "During the Review step of UMPIRE, what is the primary goal?",
+          "options": {
+            "A": "Refactor the code to use fewer lines",
+            "B": "Trace through the example inputs to verify correctness before the interviewer asks",
+            "C": "Look up standard library functions you may have missed",
+            "D": "Restate the problem to confirm you understood it"
+          },
+          "correct": "B",
+          "explanation": "Review means manually tracing your implementation against the given examples to catch off-by-one errors or missed edge cases. Refactoring and library lookup are secondary concerns; problem restatement belongs in the Understand step."
         }
       ]
     },
@@ -5406,23 +5425,47 @@
       "questions": [
         {
           "id": "MC01",
-          "question": "What is the average-case time complexity of hash map lookup, insertion, and deletion?",
-          "answer": "O(1) average for all three operations"
+          "type": "open",
+          "question": "Explain the complement lookup pattern. What makes it work, and which problem archetype does it solve?",
+          "answer": "For each element x, check whether target - x already exists in the map. It works because a single O(1) hash lookup replaces an inner O(n) scan. It solves pair-sum problems: Two Sum, variants with k difference, etc."
         },
         {
           "id": "MC02",
-          "question": "Name the three core hash map patterns covered in this module.",
-          "answer": "Complement lookup (e.g. Two Sum), frequency count (e.g. Valid Anagram), group-by (e.g. Group Anagrams)"
+          "type": "open",
+          "question": "When would you choose Counter over defaultdict(int) for frequency counting in Python?",
+          "answer": "Counter when you need built-in operations like most_common(), arithmetic between counters, or subtraction of counts. defaultdict(int) when you need a plain mutable mapping with no extra overhead and won't use Counter's extended API."
         },
         {
           "id": "MC03",
-          "question": "What is the time complexity of `x in some_list` vs `x in some_set`?",
-          "answer": "`x in list` is O(n); `x in set` is O(1) average"
+          "type": "open",
+          "question": "What causes a hash map collision, and how do Python's dicts handle it?",
+          "answer": "A collision occurs when two keys hash to the same bucket index. Python dicts use open addressing with pseudo-random probing — the conflicting key is stored in another slot determined by the probe sequence, not a linked list."
         },
         {
           "id": "MC04",
-          "question": "Which Python collection initialises missing keys with an empty list automatically?",
-          "answer": "`defaultdict(list)` from the `collections` module"
+          "type": "mcq",
+          "question": "What is the time complexity of `x in some_list` versus `x in some_set` in Python?",
+          "options": {
+            "A": "O(1) for both",
+            "B": "O(log n) for list, O(1) for set",
+            "C": "O(n) for list, O(1) average for set",
+            "D": "O(n) for both"
+          },
+          "correct": "C",
+          "explanation": "List membership requires a linear scan (O(n)); set membership uses a hash lookup (O(1) average). This is the core reason to convert a lookup list to a set before a repeated membership test."
+        },
+        {
+          "id": "MC05",
+          "type": "mcq",
+          "question": "Which Python construct automatically initialises a missing key with an empty list?",
+          "options": {
+            "A": "collections.OrderedDict()",
+            "B": "collections.defaultdict(list)",
+            "C": "dict.setdefault(key, [])",
+            "D": "dict.get(key, [])"
+          },
+          "correct": "B",
+          "explanation": "defaultdict(list) creates an empty list for any new key on first access. setdefault also works but requires explicit call each time. dict.get never stores the default. OrderedDict preserves insertion order but has no default-factory."
         }
       ]
     },
@@ -5434,28 +5477,47 @@
       "questions": [
         {
           "id": "MC01",
-          "question": "What precondition must hold for converging two pointers (lo/hi) to be applicable to a pair-sum problem?",
-          "answer": "The array must be sorted"
+          "type": "open",
+          "question": "What precondition must hold for converging two pointers (lo/hi) to solve a pair-sum problem, and why is that precondition necessary?",
+          "answer": "The array must be sorted. Sortedness lets you infer direction: if arr[lo]+arr[hi] < target, moving lo right increases the sum; if > target, moving hi left decreases it. Without sorted order, there's no valid inference and you'd need O(n²) brute force."
         },
         {
           "id": "MC02",
-          "question": "What is the formula for computing range sum(l, r) using a prefix sum array?",
-          "answer": "prefix[r+1] - prefix[l]"
+          "type": "open",
+          "question": "State the prefix sum range query formula and explain why prefix[0] must be 0.",
+          "answer": "sum(l, r) = prefix[r+1] - prefix[l]. prefix[0] = 0 represents the empty prefix (sum of zero elements), which makes range queries starting at index 0 consistent: sum(0, r) = prefix[r+1] - prefix[0] = prefix[r+1]."
         },
         {
           "id": "MC03",
-          "question": "In a variable sliding window, when do you shrink the left pointer?",
-          "answer": "When the window violates the constraint (e.g. too many distinct characters, sum too large)"
+          "type": "open",
+          "question": "In a variable sliding window, what is the general trigger for shrinking the left pointer, and what invariant does shrinking maintain?",
+          "answer": "Shrink when the window violates the constraint (e.g. sum too large, too many distinct chars). Shrinking restores the invariant: the window always represents a valid state. The inner while loop shrinks until valid, then the answer is recorded at the current right boundary."
         },
         {
           "id": "MC04",
-          "question": "What value should `prefix[0]` be set to, and why?",
-          "answer": "0 — it represents the sum of an empty prefix, enabling range queries starting at index 0"
+          "type": "mcq",
+          "question": "What is the time and space complexity of the fixed-size sliding window maximum sum algorithm?",
+          "options": {
+            "A": "O(n²) time, O(k) space",
+            "B": "O(n log n) time, O(1) space",
+            "C": "O(n) time, O(k) space",
+            "D": "O(n) time, O(1) space"
+          },
+          "correct": "D",
+          "explanation": "A single pass (O(n)) adds the incoming element and subtracts the outgoing element to maintain the window sum — no extra storage needed beyond a few variables (O(1))."
         },
         {
           "id": "MC05",
-          "question": "What is the time and space complexity of the fixed sliding window maximum sum algorithm?",
-          "answer": "O(n) time, O(1) space"
+          "type": "mcq",
+          "question": "Which pattern is the correct recognition signal for using a prefix sum?",
+          "options": {
+            "A": "Find the maximum element in a subarray",
+            "B": "Answer multiple range sum queries on a static array",
+            "C": "Find a subarray with distinct elements",
+            "D": "Detect a cycle in a linked list"
+          },
+          "correct": "B",
+          "explanation": "Prefix sums give O(1) per range sum query after O(n) preprocessing — ideal for multiple queries on an unchanging array. Max element needs a segment tree; distinct elements uses a sliding window; cycle detection uses Floyd's algorithm."
         }
       ]
     },
@@ -5467,23 +5529,47 @@
       "questions": [
         {
           "id": "MC01",
-          "question": "In DFS three-colour marking, what do white, gray, and black represent?",
-          "answer": "White: unvisited. Gray: on the current DFS call stack. Black: fully processed."
+          "type": "open",
+          "question": "In DFS three-colour marking, what do white, gray, and black mean, and how does encountering a gray node prove a cycle?",
+          "answer": "White = unvisited, gray = on the current call stack, black = fully processed. A gray node means we reached an ancestor still in the current DFS path — a back edge — which proves a directed cycle."
         },
         {
           "id": "MC02",
-          "question": "Why does BFS guarantee shortest path in an unweighted graph?",
-          "answer": "BFS explores all nodes at distance d before any at d+1 — the first reach is via the minimum number of edges"
+          "type": "open",
+          "question": "Why does BFS guarantee shortest path in an unweighted graph, and why does DFS not?",
+          "answer": "BFS explores all nodes at distance d before any at d+1, so the first time it reaches a node is via the minimum number of edges. DFS may reach a node via a longer path first, then never revisit it."
         },
         {
           "id": "MC03",
-          "question": "After Kahn's topological sort, `len(result) < n`. What does this mean?",
-          "answer": "The graph contains a directed cycle"
+          "type": "open",
+          "question": "After running Kahn's algorithm, len(result) < n. What does this reveal and why?",
+          "answer": "The graph contains a directed cycle. Nodes in a cycle never have their in-degree reach zero, so they are never enqueued. If result is shorter than the node count, the missing nodes are part of a cycle."
         },
         {
           "id": "MC04",
-          "question": "Which traversal processes children before the parent? Give one problem where this is required.",
-          "answer": "Post-order DFS. Example: maximum depth of tree, tree diameter, serialise/deserialise tree"
+          "type": "mcq",
+          "question": "Which traversal order processes all children before their parent node?",
+          "options": {
+            "A": "Pre-order DFS",
+            "B": "In-order DFS",
+            "C": "Post-order DFS",
+            "D": "BFS level-order"
+          },
+          "correct": "C",
+          "explanation": "Post-order visits left subtree → right subtree → root. This means children are fully processed before the parent is visited — required for problems like tree height, diameter, and serialisation."
+        },
+        {
+          "id": "MC05",
+          "type": "mcq",
+          "question": "In an adjacency list representation, what is the time complexity of iterating all neighbours of every node across the full graph?",
+          "options": {
+            "A": "O(V)",
+            "B": "O(E)",
+            "C": "O(V + E)",
+            "D": "O(V × E)"
+          },
+          "correct": "C",
+          "explanation": "Visiting each node is O(V); iterating all edges (once per endpoint) is O(E). Together O(V+E) is the standard BFS/DFS complexity on an adjacency list. O(V²) would apply to an adjacency matrix."
         }
       ]
     },
@@ -5495,28 +5581,47 @@
       "questions": [
         {
           "id": "MC01",
-          "question": "In the unified binary search template `while lo < hi`, what is the value of `lo` when the loop terminates?",
-          "answer": "`lo == hi` — pointing to the answer position"
+          "type": "open",
+          "question": "In the unified binary search template `while lo < hi`, what value does `lo` hold when the loop exits, and why is this useful?",
+          "answer": "lo == hi, pointing to the single remaining candidate — the answer position. This is useful because you don't need a separate post-loop check for a found/not-found case; the loop terminates with lo as the target index regardless of whether you're doing exact search or finding a boundary."
         },
         {
           "id": "MC02",
-          "question": "To find the K largest elements in a stream, do you use a min-heap or max-heap of size K?",
-          "answer": "Min-heap of size K — the root is the Kth largest; discard smaller elements by comparing to the root"
+          "type": "open",
+          "question": "To find the K largest elements in a stream, do you use a min-heap or max-heap of size K? Explain the reasoning.",
+          "answer": "A min-heap of size K. The root is always the Kth largest seen so far. When a new element arrives, compare it to the root: if larger, pop the root and push the new element. This maintains the K largest with O(log K) per insertion. A max-heap of size K would require you to pop K times to get the answer."
         },
         {
           "id": "MC03",
-          "question": "What is the recognition pattern for a monotonic stack problem?",
-          "answer": "For each element, find the nearest element to the left or right that is greater or smaller"
+          "type": "open",
+          "question": "Why is heapify O(n) rather than O(n log n), even though each sift-down is O(log n)?",
+          "answer": "In bottom-up heapify, most nodes are near the leaves and have small subtrees. The sift-down cost per node is proportional to its subtree height, and half the nodes are leaves (height 0). The sum converges as a geometric series: n/2·0 + n/4·1 + n/8·2 + … = O(n)."
         },
         {
           "id": "MC04",
-          "question": "Why is heapify O(n) and not O(n log n)?",
-          "answer": "Bottom-up construction processes mostly lower-level nodes with small subtrees; total sift cost sums to O(n) (geometric series convergence)"
+          "type": "mcq",
+          "question": "What is the recognition signal for a monotonic stack problem?",
+          "options": {
+            "A": "The problem asks for a subarray with maximum sum",
+            "B": "For each element, find the nearest element to the left or right that is greater or smaller",
+            "C": "The problem involves merging overlapping intervals",
+            "D": "The problem requires finding the median of a stream"
+          },
+          "correct": "B",
+          "explanation": "Monotonic stacks solve 'next greater/smaller element' queries in O(n) by maintaining a stack where elements are always in monotone order. Max subarray sum uses Kadane's; intervals use sorting; stream median uses two heaps."
         },
         {
           "id": "MC05",
-          "question": "What formula prevents integer overflow when computing binary search midpoint?",
-          "answer": "`lo + (hi - lo) // 2` instead of `(lo + hi) // 2`"
+          "type": "mcq",
+          "question": "Which midpoint formula prevents integer overflow in binary search?",
+          "options": {
+            "A": "`(lo + hi) // 2`",
+            "B": "`lo + (hi - lo) // 2`",
+            "C": "`hi - (hi - lo) // 2`",
+            "D": "`(lo + hi) >> 1`"
+          },
+          "correct": "B",
+          "explanation": "`(lo + hi)` overflows when both values are near INT_MAX. `lo + (hi - lo) // 2` computes the offset first, keeping all values within range. Option C is equivalent but less idiomatic. Option A and D both suffer the same overflow risk."
         }
       ]
     },
@@ -5524,27 +5629,51 @@
       "id": "modcheck-M06",
       "module": "M06",
       "title": "Module Check: Complexity Analysis",
-      "generated": "2025-01-01",
+      "generated": "2026-04-14",
       "questions": [
         {
           "id": "MC01",
+          "type": "open",
           "question": "What is the formal definition of f(n) = O(g(n))?",
-          "answer": "∃ constants c > 0 and n₀ ≥ 1 such that for all n ≥ n₀, f(n) ≤ c·g(n)"
+          "answer": "There exist constants c > 0 and n0 >= 1 such that for all n >= n0, f(n) <= c*g(n). This means g(n) is an upper bound on f(n) beyond some threshold."
         },
         {
           "id": "MC02",
-          "question": "Apply the Master Theorem to T(n) = 2T(n/2) + O(n). What is the result?",
-          "answer": "Θ(n log n) — Case 2 (f(n) = Θ(n^log_b(a)))"
+          "type": "open",
+          "question": "What is amortised analysis and how does it differ from worst-case analysis?",
+          "answer": "Amortised measures the average cost per operation over a sequence of n operations -- a guarantee, not a probability. Worst-case measures a single operation worst possible cost. Dynamic array append is O(n) worst-case but O(1) amortised because resizes are rare."
         },
         {
           "id": "MC03",
-          "question": "What is amortised analysis and how does it differ from worst-case analysis?",
-          "answer": "Amortised measures average cost per operation over a sequence; worst-case measures a single operation's worst possible cost. Amortised is a guarantee over n operations, not a probability."
+          "type": "open",
+          "question": "Apply the Master Theorem to T(n) = 2T(n/2) + O(n). Show which case applies and state the result.",
+          "answer": "a=2, b=2, f(n)=n. n^log_b(a) = n^1 = n. Since f(n) = Theta(n^log_b(a)), Case 2 applies, giving T(n) = Theta(n log n)."
         },
         {
           "id": "MC04",
-          "question": "If n ≤ 10⁵, which is the slowest algorithm that will still pass in 1 second?",
-          "answer": "O(n log n) — approximately 1.7×10⁶ operations, well within 10⁸"
+          "type": "mcq",
+          "question": "If n <= 10^5, which is the slowest algorithm complexity that still passes within 1 second?",
+          "options": {
+            "A": "O(n^2)",
+            "B": "O(n log n)",
+            "C": "O(n*sqrt(n))",
+            "D": "O(2^n)"
+          },
+          "correct": "B",
+          "explanation": "O(n log n) produces ~1.7x10^6 operations for n=10^5, well within the ~10^8 budget. O(n^2) gives 10^10 -- TLE."
+        },
+        {
+          "id": "MC05",
+          "type": "mcq",
+          "question": "Which statement about Theta notation is correct?",
+          "options": {
+            "A": "f(n)=Theta(g(n)) means f is only an upper bound of g",
+            "B": "f(n)=Theta(g(n)) means f grows both no faster and no slower than g",
+            "C": "f(n)=Theta(g(n)) implies f(n)=g(n) exactly",
+            "D": "Theta notation is equivalent to O notation"
+          },
+          "correct": "B",
+          "explanation": "Theta is a tight bound: f=Theta(g) means f=O(g) AND f=Omega(g). It characterises the exact growth rate."
         }
       ]
     },
@@ -5552,27 +5681,51 @@
       "id": "modcheck-M07",
       "module": "M07",
       "title": "Module Check: Space Complexity and Recursion Depth",
-      "generated": "2025-01-01",
+      "generated": "2026-04-14",
       "questions": [
         {
           "id": "MC01",
-          "question": "What determines the call stack depth of a recursive DFS on a tree?",
-          "answer": "The height h of the tree — O(log n) for balanced, O(n) for skewed/degenerate"
+          "type": "open",
+          "question": "What determines the call stack depth of a recursive DFS on a tree, and what are the best- and worst-case values?",
+          "answer": "The height h of the tree. Best case: O(log n) for a balanced tree. Worst case: O(n) for a degenerate (linear chain) tree."
         },
         {
           "id": "MC02",
-          "question": "Why is sys.setrecursionlimit(10**6) insufficient for very deep Python recursion?",
-          "answer": "The OS limits the C call stack (typically ~8MB, ~20K-40K Python frames); Python's limit doesn't override the OS limit"
+          "type": "open",
+          "question": "Why is `sys.setrecursionlimit(10**6)` insufficient for very deep Python recursion?",
+          "answer": "Python's limit controls the internal counter but the OS limits the C call stack (typically ~8MB, ~20K–40K Python frames). A very deep recursion hits the OS stack limit before Python's, causing a segfault rather than a clean RecursionError."
         },
         {
           "id": "MC03",
-          "question": "BFS space = O(w) and DFS space = O(h). For a balanced binary tree, which is smaller?",
-          "answer": "DFS: O(log n) vs BFS: O(n/2). DFS is more space-efficient for balanced trees."
+          "type": "open",
+          "question": "What is the correct fix for a Python RecursionError on a large DFS?",
+          "answer": "Convert to iterative DFS using an explicit stack list (heap-allocated, not limited by the OS call stack). Each frame's local state (node, children index) goes on the explicit stack instead of the call stack."
         },
         {
           "id": "MC04",
-          "question": "What is the correct fix for Python RecursionError on a large DFS?",
-          "answer": "Convert to iterative DFS using an explicit `stack = []` (heap-allocated, no OS limit)"
+          "type": "mcq",
+          "question": "For a balanced binary tree with n nodes, compare BFS and DFS space complexity.",
+          "options": {
+            "A": "BFS: O(log n), DFS: O(n)",
+            "B": "BFS: O(n), DFS: O(log n)",
+            "C": "Both O(log n)",
+            "D": "Both O(n)"
+          },
+          "correct": "B",
+          "explanation": "BFS holds the entire widest level in its queue — O(n/2) = O(n) for a balanced tree. DFS only holds one path from root to leaf on the call stack — O(log n) for balanced. DFS is more space-efficient on balanced trees."
+        },
+        {
+          "id": "MC05",
+          "type": "mcq",
+          "question": "When is BFS preferred over DFS despite its higher space cost?",
+          "options": {
+            "A": "When you need to detect cycles",
+            "B": "When you need the shortest path in an unweighted graph",
+            "C": "When the graph has very high branching factor",
+            "D": "When you need to perform topological sort"
+          },
+          "correct": "B",
+          "explanation": "BFS explores by level, so the first path found to any node is guaranteed the shortest (fewest edges). DFS may find a longer path first and never revisit. Cycle detection and topological sort both typically use DFS."
         }
       ]
     },
@@ -5580,32 +5733,51 @@
       "id": "modcheck-M08",
       "module": "M08",
       "title": "Module Check: Dynamic Programming — The Three-Stage Pipeline",
-      "generated": "2025-01-01",
+      "generated": "2026-04-14",
       "questions": [
         {
           "id": "MC01",
-          "question": "What are the two conditions both required for dynamic programming to apply?",
-          "answer": "Optimal substructure and overlapping subproblems"
+          "type": "open",
+          "question": "What are the two conditions required for dynamic programming to apply?",
+          "answer": "Optimal substructure (the optimal solution to the full problem can be built from optimal solutions to subproblems) and overlapping subproblems (the same subproblems are solved multiple times in naive recursion)."
         },
         {
           "id": "MC02",
-          "question": "What decorator converts a Python recursive function to memoised DP with one line?",
-          "answer": "`@functools.cache` (Python 3.9+) or `@functools.lru_cache(maxsize=None)` (Python 3.8+)"
+          "type": "open",
+          "question": "In 0/1 Knapsack 1D DP, why must the capacity loop iterate in reverse order?",
+          "answer": "Forward iteration would use the already-updated dp[w - weight] value from the current item, effectively allowing the item to be chosen multiple times. Iterating backwards ensures dp[w - weight] still reflects the previous row (item not included yet), enforcing the 0/1 constraint."
         },
         {
           "id": "MC03",
-          "question": "In 0/1 Knapsack 1D DP, why must the capacity loop iterate in reverse order?",
-          "answer": "To prevent using the current item more than once — forward iteration would use updated values from the same item, effectively allowing unlimited use"
+          "type": "open",
+          "question": "What is the main advantage of top-down memoisation over bottom-up tabulation?",
+          "answer": "Top-down only computes subproblems that are actually needed (lazy evaluation). For problems with sparse subproblem graphs, this can save significant time. Bottom-up always fills all states, which is wasteful if most states are unreachable."
         },
         {
           "id": "MC04",
-          "question": "What is the main advantage of top-down memoisation over bottom-up tabulation?",
-          "answer": "Top-down only computes subproblems that are actually needed (lazy evaluation) — efficient for sparse subproblem graphs"
+          "type": "mcq",
+          "question": "Which Python decorator converts a recursive function to memoised DP in one line (Python 3.9+)?",
+          "options": {
+            "A": "@functools.lru_cache()",
+            "B": "@functools.cache",
+            "C": "@memoize",
+            "D": "@cache(maxsize=None)"
+          },
+          "correct": "B",
+          "explanation": "`@functools.cache` is the simpler alias added in Python 3.9 — equivalent to `@lru_cache(maxsize=None)`. `@functools.lru_cache()` works in 3.8+ but requires call parentheses. `@memoize` and `@cache(maxsize=None)` are not stdlib."
         },
         {
           "id": "MC05",
-          "question": "Name one interview problem that requires a 2D DP state because a 1D state is insufficient.",
-          "answer": "Buy and Sell Stock with Cooldown (state = day × holding status), or any problem with two independent decisions per step"
+          "type": "mcq",
+          "question": "Which problem requires a 2D DP state because a 1D state is insufficient?",
+          "options": {
+            "A": "Fibonacci sequence",
+            "B": "Climbing stairs (1 or 2 steps)",
+            "C": "Buy and Sell Stock with Cooldown",
+            "D": "Maximum subarray (Kadane's)"
+          },
+          "correct": "C",
+          "explanation": "Stock with Cooldown needs state = (day, holding_status) — two independent dimensions. Fibonacci and Climbing Stairs only need the current index. Kadane's uses a single running max with no subproblem overlap."
         }
       ]
     },
@@ -5613,27 +5785,51 @@
       "id": "modcheck-M09",
       "module": "M09",
       "title": "Module Check: Language-Specific Complexity Traps",
-      "generated": "2025-01-01",
+      "generated": "2026-04-14",
       "questions": [
         {
           "id": "MC01",
+          "type": "open",
           "question": "What is the time complexity of `list.pop(0)` and what is the O(1) alternative?",
-          "answer": "O(n) — shifts all elements. Use `collections.deque.popleft()` for O(1)."
+          "answer": "O(n) — shifts all remaining elements left. Use `collections.deque.popleft()` for O(1) amortised removal from the front."
         },
         {
           "id": "MC02",
-          "question": "Why is string concatenation with `+=` in a loop O(n²) in Python?",
-          "answer": "Strings are immutable; each `+=` creates a new copy of the entire string. Total characters copied = 1+2+...+n = O(n²). Use `''.join(list)` instead."
+          "type": "open",
+          "question": "Why is string concatenation with `+=` in a loop O(n²) in Python, and what is the fix?",
+          "answer": "Strings are immutable; each `+=` allocates a new string and copies all characters so far. Total copies = 1+2+…+n = O(n²). Fix: collect parts in a list and call `''.join(parts)` at the end — O(n) total."
         },
         {
           "id": "MC03",
-          "question": "What bug does `[10, 9, 2, 1, 100].sort()` introduce in JavaScript?",
-          "answer": "Sorts lexicographically (string order) giving [1, 10, 100, 2, 9]. Fix: `.sort((a, b) => a - b)`."
+          "type": "open",
+          "question": "What bug does `[10, 9, 2, 1, 100].sort()` introduce in JavaScript, and how do you fix it?",
+          "answer": "JS's default sort converts elements to strings and sorts lexicographically, giving [1, 10, 100, 2, 9]. Fix: `.sort((a, b) => a - b)` for ascending numeric sort."
         },
         {
           "id": "MC04",
-          "question": "In Java binary search, what causes the midpoint calculation `(lo + hi) / 2` to be unsafe?",
-          "answer": "Integer overflow when lo + hi > Integer.MAX_VALUE. Use `lo + (hi - lo) / 2` instead."
+          "type": "mcq",
+          "question": "In Java binary search, what risk does `(lo + hi) / 2` carry?",
+          "options": {
+            "A": "Floating-point rounding error",
+            "B": "Integer overflow producing a negative midpoint",
+            "C": "Division truncates toward negative infinity",
+            "D": "No risk — Java promotes to long automatically"
+          },
+          "correct": "B",
+          "explanation": "When lo and hi are both near Integer.MAX_VALUE (~2×10⁹), their sum overflows to a negative number. `lo + (hi - lo) / 2` avoids the overflow. Java does not auto-promote int arithmetic to long."
+        },
+        {
+          "id": "MC05",
+          "type": "mcq",
+          "question": "Which Python operation is O(n) and commonly triggers accidental quadratic behaviour inside a loop?",
+          "options": {
+            "A": "`dict[key]` lookup",
+            "B": "`set.add(elem)`",
+            "C": "`list.insert(0, elem)`",
+            "D": "`tuple[i]` index access"
+          },
+          "correct": "C",
+          "explanation": "`list.insert(0, elem)` shifts all existing elements one position right — O(n). Inside a loop it becomes O(n²). Using `collections.deque.appendleft()` is O(1). Dict lookup, set.add, and tuple indexing are all O(1) average."
         }
       ]
     },
@@ -5641,32 +5837,51 @@
       "id": "modcheck-M10",
       "module": "M10",
       "title": "Module Check: Backtracking, Union-Find, Debates, and Gaps",
-      "generated": "2025-01-01",
+      "generated": "2026-04-14",
       "questions": [
         {
           "id": "MC01",
+          "type": "open",
           "question": "In backtracking, why must you `result.append(path[:])` instead of `result.append(path)`?",
-          "answer": "path is a mutable reference; appending without copying stores a reference that later becomes empty. `path[:]` makes a snapshot copy."
+          "answer": "path is a mutable list; appending the reference stores a pointer that gets modified (and eventually emptied) by later exploration. `path[:]` makes a shallow copy — a snapshot of the current state — that remains unchanged as recursion continues."
         },
         {
           "id": "MC02",
+          "type": "open",
           "question": "What do the three steps of the backtracking template (choose, explore, unchoose) accomplish?",
-          "answer": "Choose: make a decision and update state. Explore: recurse. Unchoose: undo the decision so siblings start from the same state."
+          "answer": "Choose: make a decision and update state (e.g., append element, mark visited). Explore: recurse into the next level. Unchoose: undo the decision so sibling branches start from the identical state (e.g., pop element, unmark visited)."
         },
         {
           "id": "MC03",
-          "question": "What does it mean when DSU `union(u, v)` returns False?",
-          "answer": "u and v are already in the same connected component — adding this edge would create a cycle"
+          "type": "open",
+          "question": "Name the two optimisations that give Union-Find O(α(n)) amortised complexity and briefly describe each.",
+          "answer": "Path compression (during find): make every node on the path point directly to the root, flattening the tree. Union by rank (during union): always attach the smaller-rank tree under the larger-rank root, preventing tall trees."
         },
         {
           "id": "MC04",
-          "question": "Name the two optimisations that give Union-Find O(α(n)) amortised complexity.",
-          "answer": "Path compression (during find) and union by rank (during union)"
+          "type": "mcq",
+          "question": "What does it mean when DSU `union(u, v)` returns False?",
+          "options": {
+            "A": "u or v does not exist in the set",
+            "B": "u and v are already in the same connected component",
+            "C": "The DSU has exceeded its size limit",
+            "D": "Path compression failed to converge"
+          },
+          "correct": "B",
+          "explanation": "find(u) == find(v) before the union means they share the same root — already connected. The edge is redundant and adding it would create a cycle. This is the cycle detection signal in Kruskal's MST algorithm."
         },
         {
           "id": "MC05",
-          "question": "What minimum test does greedy require before you can trust it over DP?",
-          "answer": "Try 2-3 counterexamples; if none exist, attempt an exchange argument showing swapping doesn't improve the result"
+          "type": "mcq",
+          "question": "What minimum validation step is required before trusting a greedy algorithm over DP?",
+          "options": {
+            "A": "Run both algorithms and compare outputs",
+            "B": "Prove the problem has no overlapping subproblems",
+            "C": "Attempt an exchange argument showing swapping any two adjacent decisions cannot improve the result",
+            "D": "Show the greedy choice produces the correct output on 10+ test cases"
+          },
+          "correct": "C",
+          "explanation": "An exchange argument is the standard proof technique for greedy correctness: if swapping any two adjacent choices never improves the solution, the greedy order is optimal. Passing test cases is insufficient — a counterexample might exist that you haven't tested."
         }
       ]
     }

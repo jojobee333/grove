@@ -1,32 +1,52 @@
 {
+  "id": "modcheck-M02",
   "module": "M02",
-  "title": "Retention Check: DNS — Single Protocol, Every Domain",
-  "generated": "2026-04-13",
+  "title": "Module Check: DNS Security and Intelligence",
+  "generated": "2026-04-14",
   "questions": [
     {
-      "id": "MC02-1",
-      "q": "What two fields does DNS use to match responses to outgoing queries, and what makes both exploitable?",
-      "a": "16-bit transaction ID and UDP source port. Both are predictable or have limited entropy. Without source port randomisation, only the transaction ID needs to be guessed (65,536 possibilities). With randomisation, both must be guessed simultaneously."
+      "id": "MC01",
+      "type": "open",
+      "question": "What two DNS transaction properties made classic DNS susceptible to cache poisoning, and what did the Kaminsky attack exploit?",
+      "answer": "Predictable 16-bit transaction ID (65,536 possibilities) and source port reuse (effectively reducing entropy further). Kaminsky flooded a resolver with forged responses for a target domain before the legitimate answer arrived, racing to match both the transaction ID and source port. DNSSEC validation prevents this; source port randomisation raises the attack cost significantly."
     },
     {
-      "id": "MC02-2",
-      "q": "What DNS response pattern indicates a host may be using a Domain Generation Algorithm?",
-      "a": "High NXDOMAIN rate — hundreds of failed lookups per minute for algorithmically-named, high-consonant-density domains with no real-word structure. The host is cycling through DGA names looking for an active C2 domain."
+      "id": "MC02",
+      "type": "open",
+      "question": "What is a Domain Generation Algorithm (DGA) and what NXDOMAIN pattern reveals its activity?",
+      "answer": "A DGA programmatically generates many domain names (e.g., using a time-based seed). Malware queries these sequentially until one is registered by the C2 operator. The pattern: high volume of NXDOMAIN responses from a single host for algorithmically similar (pseudo-random) domains, often at regular intervals."
     },
     {
-      "id": "MC02-3",
-      "q": "Name the specific DNS record type that restricts which CAs can issue certificates for a domain.",
-      "a": "CAA (Certificate Authority Authorization) record."
+      "id": "MC03",
+      "type": "open",
+      "question": "How does a CAA (Certification Authority Authorisation) record improve certificate issuance security?",
+      "answer": "A CAA record specifies which CAs are permitted to issue certificates for a domain. Compliant CAs check for a CAA record before issuing. If an attacker tricks a rogue CA into issuing a fraudulent certificate, the certificate is policy-violating (detectable via Certificate Transparency logs). CAA does not prevent issuance by non-compliant CAs."
     },
     {
-      "id": "MC02-4",
-      "q": "What makes Sysmon Event 22 more actionable than standard DNS server logs for detecting C2?",
-      "a": "Event 22 records the process image path of the querying process alongside the DNS query string. Standard DNS logs record the query but only the client IP — not which process on that host initiated the query. Process-level attribution is required to determine whether the query is from a known application or unexpected malware."
+      "id": "MC04",
+      "type": "mcq",
+      "question": "Which Sysmon event ID logs DNS query and response activity?",
+      "options": {
+        "A": "Event 1 (Process Create)",
+        "B": "Event 3 (Network Connection)",
+        "C": "Event 22 (DNS Query)",
+        "D": "Event 10 (Process Access)"
+      },
+      "correct": "C",
+      "explanation": "Sysmon Event 22 captures DNS query events: the queried name, response type, and result. It is essential for detecting DGA activity and C2 beaconing. Event 3 captures TCP/UDP connections (IP + port, not DNS names). Events 1 and 10 are process-related."
     },
     {
-      "id": "MC02-5",
-      "q": "What single DNS server configuration change eliminates zone transfer exposure?",
-      "a": "Restrict AXFR to authorised secondary server IPs only. In BIND: `allow-transfer { <secondary-IP>; };`. Equivalent restriction in Windows DNS Server zone properties."
+      "id": "MC05",
+      "type": "mcq",
+      "question": "What is the correct DNS server configuration to prevent zone transfer to arbitrary hosts?",
+      "options": {
+        "A": "Set TTL to 0 on all zone records",
+        "B": "Restrict AXFR transfers to specific authorised secondary server IPs using ACLs",
+        "C": "Disable DNSSEC to avoid exposing zone walk data",
+        "D": "Enable NSEC3 with opt-out on the zone"
+      },
+      "correct": "B",
+      "explanation": "Zone transfers (AXFR) export the entire DNS zone — a goldmine for reconnaissance. The fix is an ACL that allows AXFR only from authorised secondary nameservers. DNSSEC does not prevent zone transfers and should not be disabled. NSEC3 mitigates zone enumeration via DNSSEC but is unrelated to AXFR."
     }
   ]
 }

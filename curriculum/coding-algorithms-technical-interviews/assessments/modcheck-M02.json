@@ -6,23 +6,47 @@
   "questions": [
     {
       "id": "MC01",
-      "question": "What is the average-case time complexity of hash map lookup, insertion, and deletion?",
-      "answer": "O(1) average for all three operations"
+      "type": "open",
+      "question": "Explain the complement lookup pattern. What makes it work, and which problem archetype does it solve?",
+      "answer": "For each element x, check whether target - x already exists in the map. It works because a single O(1) hash lookup replaces an inner O(n) scan. It solves pair-sum problems: Two Sum, variants with k difference, etc."
     },
     {
       "id": "MC02",
-      "question": "Name the three core hash map patterns covered in this module.",
-      "answer": "Complement lookup (e.g. Two Sum), frequency count (e.g. Valid Anagram), group-by (e.g. Group Anagrams)"
+      "type": "open",
+      "question": "When would you choose Counter over defaultdict(int) for frequency counting in Python?",
+      "answer": "Counter when you need built-in operations like most_common(), arithmetic between counters, or subtraction of counts. defaultdict(int) when you need a plain mutable mapping with no extra overhead and won't use Counter's extended API."
     },
     {
       "id": "MC03",
-      "question": "What is the time complexity of `x in some_list` vs `x in some_set`?",
-      "answer": "`x in list` is O(n); `x in set` is O(1) average"
+      "type": "open",
+      "question": "What causes a hash map collision, and how do Python's dicts handle it?",
+      "answer": "A collision occurs when two keys hash to the same bucket index. Python dicts use open addressing with pseudo-random probing — the conflicting key is stored in another slot determined by the probe sequence, not a linked list."
     },
     {
       "id": "MC04",
-      "question": "Which Python collection initialises missing keys with an empty list automatically?",
-      "answer": "`defaultdict(list)` from the `collections` module"
+      "type": "mcq",
+      "question": "What is the time complexity of `x in some_list` versus `x in some_set` in Python?",
+      "options": {
+        "A": "O(1) for both",
+        "B": "O(log n) for list, O(1) for set",
+        "C": "O(n) for list, O(1) average for set",
+        "D": "O(n) for both"
+      },
+      "correct": "C",
+      "explanation": "List membership requires a linear scan (O(n)); set membership uses a hash lookup (O(1) average). This is the core reason to convert a lookup list to a set before a repeated membership test."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "Which Python construct automatically initialises a missing key with an empty list?",
+      "options": {
+        "A": "collections.OrderedDict()",
+        "B": "collections.defaultdict(list)",
+        "C": "dict.setdefault(key, [])",
+        "D": "dict.get(key, [])"
+      },
+      "correct": "B",
+      "explanation": "defaultdict(list) creates an empty list for any new key on first access. setdefault also works but requires explicit call each time. dict.get never stores the default. OrderedDict preserves insertion order but has no default-factory."
     }
   ]
 }

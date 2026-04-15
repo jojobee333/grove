@@ -1,27 +1,52 @@
 {
+  "id": "modcheck-M04",
   "module": "M04",
-  "title": "Retention Check: Forward Secrecy, KDFs, and PKI",
-  "generated": "2026-04-13",
+  "title": "Module Check: Authentication and PKI",
+  "generated": "2026-04-14",
   "questions": [
     {
-      "id": "MC04-1",
-      "q": "What does forward secrecy protect that static RSA key exchange does not?",
-      "a": "Forward secrecy ensures that compromise of the server's long-term private key cannot decrypt previously recorded sessions. ECDHE generates independent per-session key material that is discarded after the session — no past session keys are derivable from the long-term key."
+      "id": "MC01",
+      "type": "open",
+      "question": "Explain forward secrecy. What ephemeral key exchange achieves it and what does it protect?",
+      "answer": "Forward secrecy uses Ephemeral Diffie-Hellman (ECDHE or DHE) to generate a fresh session key per connection. The private key is discarded after the handshake. If the server's long-term private key is later stolen, previously recorded sessions remain undecryptable — the session key never existed outside RAM."
     },
     {
-      "id": "MC04-2",
-      "q": "What is the OWASP minimum cost factor for bcrypt, and what does it mean operationally?",
-      "a": "Cost factor 12. This means bcrypt performs 2^12 = 4,096 iterations of its internal key derivation. At this cost factor, a single hash takes approximately 100–300ms on modern hardware, making offline brute force expensive regardless of GPU resources."
+      "id": "MC02",
+      "type": "open",
+      "question": "What bcrypt cost factor does OWASP recommend in 2024, and what is the reasoning?",
+      "answer": "OWASP recommends cost factor 12 (bcrypt) or higher. The reasoning: bcrypt cost factor is a work parameter — each increment doubles the computation. Factor 12 produces ~200–400ms hashing time on a modern CPU, making offline brute force slow (millions of hashes/second is infeasible at this cost). Lower factors (8, 10) were calibrated for older hardware."
     },
     {
-      "id": "MC04-3",
-      "q": "What are the three Argon2id minimum recommended parameters and what does each control?",
-      "a": "m=19456 (memory: 19 MB per computation, defeating GPU cracking by exhausting per-core memory), t=2 (time cost: 2 iterations over the memory block), p=1 (parallelism: 1 thread)."
+      "id": "MC03",
+      "type": "open",
+      "question": "What are the three parameters of Argon2id and what does each control?",
+      "answer": "Memory cost (m): kilobytes of RAM required per hash — resists GPU/ASIC parallelism. Time cost (t): number of iterations — resists fast CPUs. Parallelism (p): number of threads — tuned to server capability. Argon2id combines Argon2i (side-channel resistance) and Argon2d (GPU resistance)."
     },
     {
-      "id": "MC04-4",
-      "q": "Name the four checks RFC 5280 requires for certificate chain validation.",
-      "a": "1. Signature validation (each cert signed by the cert above). 2. Validity period (notBefore/notAfter current). 3. Revocation status (not on CRL/OCSP). 4. Path length constraint (pathLenConstraint limiting intermediate CA depth)."
+      "id": "MC04",
+      "type": "mcq",
+      "question": "How many certificate chain checks does RFC 5280 require for path validation?",
+      "options": {
+        "A": "2",
+        "B": "4",
+        "C": "6",
+        "D": "8"
+      },
+      "correct": "B",
+      "explanation": "RFC 5280 path validation performs 4 checks per certificate in the chain: (1) signature valid against issuer, (2) current time within validity period, (3) certificate not revoked (CRL/OCSP), (4) certificate usage matches intended purpose (key usage, extended key usage). All 4 must pass."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "What attack does salting a password hash prevent?",
+      "options": {
+        "A": "Timing attacks on hash comparison",
+        "B": "Rainbow table lookups and precomputed hash database attacks",
+        "C": "Brute-force dictionary attacks",
+        "D": "Length-extension attacks"
+      },
+      "correct": "B",
+      "explanation": "A random salt, unique per user, ensures that two users with the same password have different hash values. This defeats precomputed rainbow tables and shared hash databases — an attacker must brute-force each hash individually. Salts do not prevent brute force (that's the work factor's job), timing attacks (constant-time comparison's job), or length extension (HMAC's job)."
     }
   ]
 }

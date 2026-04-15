@@ -2,27 +2,51 @@
   "id": "modcheck-M07",
   "module": "M07",
   "title": "Module Check: Space Complexity and Recursion Depth",
-  "generated": "2025-01-01",
+  "generated": "2026-04-14",
   "questions": [
     {
       "id": "MC01",
-      "question": "What determines the call stack depth of a recursive DFS on a tree?",
-      "answer": "The height h of the tree — O(log n) for balanced, O(n) for skewed/degenerate"
+      "type": "open",
+      "question": "What determines the call stack depth of a recursive DFS on a tree, and what are the best- and worst-case values?",
+      "answer": "The height h of the tree. Best case: O(log n) for a balanced tree. Worst case: O(n) for a degenerate (linear chain) tree."
     },
     {
       "id": "MC02",
-      "question": "Why is sys.setrecursionlimit(10**6) insufficient for very deep Python recursion?",
-      "answer": "The OS limits the C call stack (typically ~8MB, ~20K-40K Python frames); Python's limit doesn't override the OS limit"
+      "type": "open",
+      "question": "Why is `sys.setrecursionlimit(10**6)` insufficient for very deep Python recursion?",
+      "answer": "Python's limit controls the internal counter but the OS limits the C call stack (typically ~8MB, ~20K–40K Python frames). A very deep recursion hits the OS stack limit before Python's, causing a segfault rather than a clean RecursionError."
     },
     {
       "id": "MC03",
-      "question": "BFS space = O(w) and DFS space = O(h). For a balanced binary tree, which is smaller?",
-      "answer": "DFS: O(log n) vs BFS: O(n/2). DFS is more space-efficient for balanced trees."
+      "type": "open",
+      "question": "What is the correct fix for a Python RecursionError on a large DFS?",
+      "answer": "Convert to iterative DFS using an explicit stack list (heap-allocated, not limited by the OS call stack). Each frame's local state (node, children index) goes on the explicit stack instead of the call stack."
     },
     {
       "id": "MC04",
-      "question": "What is the correct fix for Python RecursionError on a large DFS?",
-      "answer": "Convert to iterative DFS using an explicit `stack = []` (heap-allocated, no OS limit)"
+      "type": "mcq",
+      "question": "For a balanced binary tree with n nodes, compare BFS and DFS space complexity.",
+      "options": {
+        "A": "BFS: O(log n), DFS: O(n)",
+        "B": "BFS: O(n), DFS: O(log n)",
+        "C": "Both O(log n)",
+        "D": "Both O(n)"
+      },
+      "correct": "B",
+      "explanation": "BFS holds the entire widest level in its queue — O(n/2) = O(n) for a balanced tree. DFS only holds one path from root to leaf on the call stack — O(log n) for balanced. DFS is more space-efficient on balanced trees."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "When is BFS preferred over DFS despite its higher space cost?",
+      "options": {
+        "A": "When you need to detect cycles",
+        "B": "When you need the shortest path in an unweighted graph",
+        "C": "When the graph has very high branching factor",
+        "D": "When you need to perform topological sort"
+      },
+      "correct": "B",
+      "explanation": "BFS explores by level, so the first path found to any node is guaranteed the shortest (fewest edges). DFS may find a longer path first and never revisit. Cycle detection and topological sort both typically use DFS."
     }
   ]
 }

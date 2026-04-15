@@ -2,32 +2,51 @@
   "id": "modcheck-M10",
   "module": "M10",
   "title": "Module Check: Backtracking, Union-Find, Debates, and Gaps",
-  "generated": "2025-01-01",
+  "generated": "2026-04-14",
   "questions": [
     {
       "id": "MC01",
+      "type": "open",
       "question": "In backtracking, why must you `result.append(path[:])` instead of `result.append(path)`?",
-      "answer": "path is a mutable reference; appending without copying stores a reference that later becomes empty. `path[:]` makes a snapshot copy."
+      "answer": "path is a mutable list; appending the reference stores a pointer that gets modified (and eventually emptied) by later exploration. `path[:]` makes a shallow copy — a snapshot of the current state — that remains unchanged as recursion continues."
     },
     {
       "id": "MC02",
+      "type": "open",
       "question": "What do the three steps of the backtracking template (choose, explore, unchoose) accomplish?",
-      "answer": "Choose: make a decision and update state. Explore: recurse. Unchoose: undo the decision so siblings start from the same state."
+      "answer": "Choose: make a decision and update state (e.g., append element, mark visited). Explore: recurse into the next level. Unchoose: undo the decision so sibling branches start from the identical state (e.g., pop element, unmark visited)."
     },
     {
       "id": "MC03",
-      "question": "What does it mean when DSU `union(u, v)` returns False?",
-      "answer": "u and v are already in the same connected component — adding this edge would create a cycle"
+      "type": "open",
+      "question": "Name the two optimisations that give Union-Find O(α(n)) amortised complexity and briefly describe each.",
+      "answer": "Path compression (during find): make every node on the path point directly to the root, flattening the tree. Union by rank (during union): always attach the smaller-rank tree under the larger-rank root, preventing tall trees."
     },
     {
       "id": "MC04",
-      "question": "Name the two optimisations that give Union-Find O(α(n)) amortised complexity.",
-      "answer": "Path compression (during find) and union by rank (during union)"
+      "type": "mcq",
+      "question": "What does it mean when DSU `union(u, v)` returns False?",
+      "options": {
+        "A": "u or v does not exist in the set",
+        "B": "u and v are already in the same connected component",
+        "C": "The DSU has exceeded its size limit",
+        "D": "Path compression failed to converge"
+      },
+      "correct": "B",
+      "explanation": "find(u) == find(v) before the union means they share the same root — already connected. The edge is redundant and adding it would create a cycle. This is the cycle detection signal in Kruskal's MST algorithm."
     },
     {
       "id": "MC05",
-      "question": "What minimum test does greedy require before you can trust it over DP?",
-      "answer": "Try 2-3 counterexamples; if none exist, attempt an exchange argument showing swapping doesn't improve the result"
+      "type": "mcq",
+      "question": "What minimum validation step is required before trusting a greedy algorithm over DP?",
+      "options": {
+        "A": "Run both algorithms and compare outputs",
+        "B": "Prove the problem has no overlapping subproblems",
+        "C": "Attempt an exchange argument showing swapping any two adjacent decisions cannot improve the result",
+        "D": "Show the greedy choice produces the correct output on 10+ test cases"
+      },
+      "correct": "C",
+      "explanation": "An exchange argument is the standard proof technique for greedy correctness: if swapping any two adjacent choices never improves the solution, the greedy order is optimal. Passing test cases is insufficient — a counterexample might exist that you haven't tested."
     }
   ]
 }

@@ -1,27 +1,52 @@
 {
+  "id": "modcheck-M03",
   "module": "M03",
-  "title": "Retention Check: Symmetric Encryption — From CBC to AEAD",
-  "generated": "2026-04-13",
+  "title": "Module Check: TLS and Cryptographic Protocol Security",
+  "generated": "2026-04-14",
   "questions": [
     {
-      "id": "MC03-1",
-      "q": "Name three TLS attacks that all exploit the same CBC structural weak point.",
-      "a": "BEAST (2011), Lucky13 (2013), POODLE (2014). All three exploit the separation of encryption and authentication in CBC mode, creating a padding oracle that leaks plaintext byte-by-byte."
+      "id": "MC01",
+      "type": "open",
+      "question": "Name three attacks against CBC mode in TLS and state the underlying weakness each exploits.",
+      "answer": "BEAST: predictable IV (chained from previous ciphertext) enables chosen-plaintext attack against TLS 1.0. Lucky 13: timing side-channel in CBC-HMAC padding validation leaks plaintext. POODLE: SSL 3.0 CBC padding is ambiguous — attacker forces downgrade then exploits padding oracle. Root cause: CBC requires padding validation, which creates timing and oracle vulnerabilities."
     },
     {
-      "id": "MC03-2",
-      "q": "What does AEAD stand for, and what property does it provide atomically that CBC does not?",
-      "a": "Authenticated Encryption with Associated Data. Provides confidentiality AND integrity in a single indivisible operation. CBC encrypts first, authenticates second — the gap between these operations is the oracle. In AEAD, there is no valid decryption output without a correct authentication tag."
+      "id": "MC02",
+      "type": "open",
+      "question": "What is AEAD encryption and why does TLS 1.3 mandate it?",
+      "answer": "AEAD (Authenticated Encryption with Associated Data) provides confidentiality and integrity in one operation — the ciphertext includes an authentication tag. TLS 1.3 removed all non-AEAD cipher suites because they require separate MAC computation, which historically created side-channels (Lucky 13, BEAST). AEAD eliminates the padding oracle class entirely."
     },
     {
-      "id": "MC03-3",
-      "q": "List the three TLS 1.3 cipher suites.",
-      "a": "TLS_AES_128_GCM_SHA256, TLS_AES_256_GCM_SHA384, TLS_CHACHA20_POLY1305_SHA256."
+      "id": "MC03",
+      "type": "open",
+      "question": "What happens if the same AES-GCM nonce is reused with the same key, and why is this catastrophic?",
+      "answer": "AES-GCM computes a keystream as AES(key, nonce || counter). Reusing nonce+key produces the same keystream. XORing two ciphertexts encrypted with the same keystream cancels it out, revealing C1⊕C2 = P1⊕P2. With cribs, both plaintexts can be recovered. The auth tag also becomes forgeable. Nonce reuse completely breaks GCM."
     },
     {
-      "id": "MC03-4",
-      "q": "For AES-GCM specifically, what is the one requirement for correct usage that has catastrophic consequences if violated?",
-      "a": "Nonces must never be reused under the same key. Nonce reuse leaks the GCM authentication key (H value) and enables plaintext recovery and authentication tag forgery for both messages sharing the nonce."
+      "id": "MC04",
+      "type": "mcq",
+      "question": "Which cipher suites does TLS 1.3 support (all others are removed)?",
+      "options": {
+        "A": "AES-CBC and RC4",
+        "B": "AES-GCM and ChaCha20-Poly1305",
+        "C": "AES-GCM, ChaCha20-Poly1305, and AES-CCM",
+        "D": "AES-GCM only"
+      },
+      "correct": "C",
+      "explanation": "TLS 1.3 mandates AEAD-only suites. The three mandated are: AES-128-GCM-SHA256, AES-256-GCM-SHA384, and ChaCha20-Poly1305-SHA256. AES-CCM is also in the spec for constrained devices (RFC 8446). CBC and RC4 are removed entirely."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "What does \"forward secrecy\" guarantee that static RSA key exchange does not?",
+      "options": {
+        "A": "The server certificate cannot be forged",
+        "B": "Session keys cannot be decrypted even if the server's long-term private key is later compromised",
+        "C": "The client is authenticated to the server",
+        "D": "Traffic is encrypted with 256-bit keys"
+      },
+      "correct": "B",
+      "explanation": "Forward secrecy (via ephemeral Diffie-Hellman) generates a fresh session key per session. The private key is discarded after the handshake. An attacker who later steals the server's long-term key cannot decrypt previously recorded sessions. Static RSA sends the session key encrypted with the server's long-term public key — steal the key, decrypt everything."
     }
   ]
 }

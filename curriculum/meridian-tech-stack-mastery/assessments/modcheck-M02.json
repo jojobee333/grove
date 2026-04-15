@@ -1,26 +1,52 @@
 {
+  "id": "modcheck-M02",
   "module": "M02",
-  "title": "Immutability and Concurrent State — Quick Check",
+  "title": "Module Check: State Architecture — Zustand and Yjs",
+  "generated": "2026-04-14",
   "questions": [
     {
-      "id": "MC02-1",
-      "q": "What is state tearing in React 18 concurrent mode, and which API prevents it for external stores?",
-      "a": "State tearing occurs when React's concurrent scheduler yields mid-render and external state changes during the pause, causing different parts of the same render to see different versions of a store. `useSyncExternalStore` prevents this by making state reads atomic within a render pass — React guarantees that once it starts reading the snapshot, it won't yield until the render is complete."
+      "id": "MC01",
+      "type": "open",
+      "question": "Why must a Zustand selector return a stable reference, and what is the consequence if it does not?",
+      "answer": "Zustand re-renders a component whenever the selector's return value changes by reference. Returning a new object or array literal every call (even with the same contents) causes infinite re-render loops. Selectors should return primitives or memoised stable object references."
     },
     {
-      "id": "MC02-2",
-      "q": "What invariant must a Zustand store's `getSnapshot()` function satisfy, and what breaks if violated?",
-      "a": "getSnapshot() must return the exact same object reference if the store state has not changed. If it returns a new reference (e.g. `{...state}` or `JSON.stringify(state)`) on every call, React detects a constant 'change' signal and enters an infinite render loop, crashing the application."
+      "id": "MC02",
+      "type": "open",
+      "question": "Explain CRDT commutativity and idempotency. Why do both properties matter for collaborative editing?",
+      "answer": "Commutativity: A ⊕ B = B ⊕ A — operations can arrive in any order and produce the same result. Idempotency: A ⊕ A = A — applying the same operation twice is safe. Together they allow Yjs to merge document fragments from different peers without needing a central coordinator or explicit conflict resolution."
     },
     {
-      "id": "MC02-3",
-      "q": "Why are Yjs CRDT operations designed as immutable value objects rather than mutable state changes?",
-      "a": "Immutability enables commutativity: applying operation A then B produces the same result as applying B then A. This property is required for convergence in distributed editing — offline peers can accumulate operations in any order and arrive at identical documents. If operations mutated shared state, the order of application would change the outcome, making convergence impossible."
+      "id": "MC03",
+      "type": "open",
+      "question": "What are tombstones in a Yjs document and why can't they be garbage collected immediately?",
+      "answer": "Tombstones are markers for deleted content. They must remain until every peer has acknowledged the deletion, because a peer that was offline might have concurrent operations referencing the deleted position. Early GC would corrupt their operation replay."
     },
     {
-      "id": "MC02-4",
-      "q": "What is a Yjs tombstone and why can it never be garbage-collected from an active document?",
-      "a": "A tombstone is the marker left when a character or node is deleted in Yjs. It must be retained because another peer may be offline and still hold an operation referencing the deleted item. If the tombstone were removed, the peer's operation would reference a non-existent position, making merge impossible. Tombstones are only periodically compacted in Yjs under controlled conditions via snapshot/state vector mechanisms."
+      "id": "MC04",
+      "type": "mcq",
+      "question": "Which Yjs provider is used for real-time WebSocket sync in Meridian?",
+      "options": {
+        "A": "y-webrtc",
+        "B": "y-indexeddb",
+        "C": "y-websocket",
+        "D": "y-dat"
+      },
+      "correct": "C",
+      "explanation": "y-websocket connects the Yjs document to a WebSocket server — appropriate for a server-mediated collaborative app like Meridian. y-webrtc is peer-to-peer (no server relay). y-indexeddb is for offline persistence. y-dat uses the Dat protocol."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "In Zustand, what is the correct way to update a nested object property in a slice?",
+      "options": {
+        "A": "Mutate the property directly: `state.user.name = newName`",
+        "B": "Use `set(state => ({ user: { ...state.user, name: newName } }))`",
+        "C": "Call `store.setState({ user: { name: newName } })`",
+        "D": "Use `produce` from immer without enabling the immer middleware"
+      },
+      "correct": "B",
+      "explanation": "Zustand requires returning a new state object (or using immer middleware). Spreading the nested object `{ ...state.user, name: newName }` creates a new reference without mutating the original. Direct mutation breaks React's change detection. Shallow setState without spreading would lose other user properties."
     }
   ]
 }

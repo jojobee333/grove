@@ -1,7 +1,7 @@
 {
   "version": "3.0",
   "slug": "python-scripting-best-practices",
-  "bundled": "2026-04-14T02:20:59.108Z",
+  "bundled": "2026-04-15T01:12:14.762Z",
   "course": {
     "topic": "Python Scripting Best Practices",
     "slug": "python-scripting-best-practices",
@@ -3498,174 +3498,366 @@
   },
   "modchecks": {
     "M01": {
+      "id": "modcheck-M01",
       "module": "M01",
-      "title": "The Python Quality Toolchain — Quick Check",
+      "title": "Module Check: Modern Python Toolchain",
+      "generated": "2026-04-14",
       "questions": [
         {
-          "id": "MC01-1",
-          "q": "What distinct problem does each tool in the ruff / mypy / pytest stack solve? Give one sentence per tool.",
-          "a": "ruff enforces style and catches simple bugs at lint time; mypy verifies type contracts statically before runtime; pytest validates behaviour by running automated tests."
+          "id": "MC01",
+          "type": "open",
+          "question": "State the distinct role of ruff, mypy, and pytest in the Python toolchain.",
+          "answer": "ruff: fast linter + formatter (style, imports, common errors — no type inference). mypy: static type checker (verifies type annotations, catches type mismatches). pytest: test runner (executes and reports test results). They are complementary, not alternatives."
         },
         {
-          "id": "MC01-2",
-          "q": "Why is automated enforcement more reliable than relying on code review for style and type safety?",
-          "a": "Reviewers miss things under time pressure and enforcement quality varies person-to-person; automated tools run consistently on every commit with zero cognitive overhead."
+          "id": "MC02",
+          "type": "open",
+          "question": "Why is pyproject.toml the preferred location for tool configuration in modern Python projects?",
+          "answer": "pyproject.toml serves two roles: (1) build system configuration (PEP 517/518) replacing setup.py. (2) Unified tool config replacing separate setup.cfg, .flake8, mypy.ini, pytest.ini. A single file reduces configuration sprawl and makes the project easier to onboard."
         },
         {
-          "id": "MC01-3",
-          "q": "What two roles does pyproject.toml serve in a Python project, and why does consolidating them in one file matter?",
-          "a": "It acts as the dev-tool configuration hub (ruff, mypy, pytest sections) and as the runtime config source via tomllib. One file reduces context switching and prevents config drift across separate ini/cfg files."
+          "id": "MC03",
+          "type": "open",
+          "question": "What is the difference between automated checks (ruff/mypy) and human code review, and which bugs does each catch?",
+          "answer": "Automated checks catch deterministic rule violations: undefined names, type mismatches, style inconsistencies, unused imports — fast and exhaustive within their rule set. Human review catches design flaws, unclear intent, missing business logic, inappropriate abstractions — things that require context and judgment."
         },
         {
-          "id": "MC01-4",
-          "q": "If a colleague adds a setup.cfg for pytest and a .mypy.ini for mypy alongside an existing pyproject.toml, what argument would you make to consolidate?",
-          "a": "Having three config files splits the source of truth, meaning changes must be made in multiple places and files can silently disagree. pyproject.toml supports all three tools natively, so there is no technical reason not to consolidate."
+          "id": "MC04",
+          "type": "mcq",
+          "question": "Which command checks types in a Python file using mypy?",
+          "options": {
+            "A": "mypy --check src/",
+            "B": "mypy src/",
+            "C": "python -m mypy --strict src/",
+            "D": "mypy --run src/"
+          },
+          "correct": "B",
+          "explanation": "The basic invocation is `mypy src/` or `mypy file.py`. `python -m mypy` also works. There is no `--check` flag. `--strict` enables stricter checks but is optional. `--run` is not a mypy flag."
+        },
+        {
+          "id": "MC05",
+          "type": "mcq",
+          "question": "What is the consolidation argument for using ruff instead of separate flake8 + isort + black?",
+          "options": {
+            "A": "ruff supports more rule sets than flake8",
+            "B": "ruff is 10–100x faster and replaces all three tools in one binary with unified config",
+            "C": "ruff enforces type annotations that flake8 ignores",
+            "D": "black and isort conflict on import formatting; ruff resolves this"
+          },
+          "correct": "B",
+          "explanation": "ruff is written in Rust and runs 10–100x faster than the Python tools. It implements flake8 rules, isort-compatible import sorting, and black-compatible formatting — configured in a single `[tool.ruff]` section in pyproject.toml. Fewer tools, less CI config, faster feedback."
         }
       ]
     },
     "M02": {
+      "id": "modcheck-M02",
       "module": "M02",
-      "title": "Script Structure and Observability — Quick Check",
+      "title": "Module Check: Script Structure and Logging",
+      "generated": "2026-04-14",
       "questions": [
         {
-          "id": "MC02-1",
-          "q": "List the four steps in the canonical main() execution sequence and explain why order matters.",
-          "a": "parse → log → validate → dispatch. Order matters because logging must be configured before any log call is made, and validation must run before dispatch so the script fails fast with a clear error rather than deep inside business logic."
+          "id": "MC01",
+          "type": "open",
+          "question": "State the canonical 4-step order of a well-structured `main()` function.",
+          "answer": "(1) Parse arguments (argparse). (2) Configure logging (level, format, handlers). (3) Validate inputs (paths exist, constraints met). (4) Execute business logic. This order ensures errors in setup surface before expensive work begins."
         },
         {
-          "id": "MC02-2",
-          "q": "What is the purpose of the `if __name__ == '__main__'` guard, and what capability does it unlock?",
-          "a": "It prevents top-level code from running when the file is imported as a module. This makes the script importable, which in turn makes it testable — pytest can import and call main() directly without spawning a subprocess."
+          "id": "MC02",
+          "type": "open",
+          "question": "Why is the `if __name__ == \"__main__\":` guard important when a script is also importable as a module?",
+          "answer": "Without the guard, importing the module (e.g., in tests) runs the script's top-level code immediately — argument parsing, side effects, and main logic. The guard ensures that code only executes when the file is the program entry point, making the module safely importable."
         },
         {
-          "id": "MC02-3",
-          "q": "Why should scripts use module-level loggers created with `logging.getLogger(__name__)` rather than the root logger?",
-          "a": "Module-level loggers carry the file's qualified name, making log messages self-identifying. They also integrate into the logging hierarchy, so callers can silence or redirect a specific module's output without affecting the whole application."
+          "id": "MC03",
+          "type": "open",
+          "question": "Why should loggers be created at module level (`logger = logging.getLogger(__name__)`) rather than inside functions?",
+          "answer": "Module-level loggers are created once and reused. `__name__` gives the full dotted module path, enabling fine-grained filtering in the logger hierarchy. Creating loggers inside functions creates a new logger object per call (minor overhead) and loses the module context."
         },
         {
-          "id": "MC02-4",
-          "q": "How would you expose log verbosity as a CLI argument, and what Python logging level would you map to `-v`?",
-          "a": "Add a `--log-level` or `-v` flag via argparse, then call `logging.basicConfig(level=getattr(logging, args.log_level.upper()))` in main(). A single `-v` conventionally maps to `logging.DEBUG`."
+          "id": "MC04",
+          "type": "mcq",
+          "question": "Which argparse flag sets the logging level to DEBUG for `-v` and INFO by default?",
+          "options": {
+            "A": "parser.add_argument(\"-v\", action=\"store_true\")",
+            "B": "parser.add_argument(\"-v\", action=\"count\", default=0)",
+            "C": "parser.add_argument(\"--log-level\", default=\"INFO\")",
+            "D": "parser.add_argument(\"-v\", nargs=\"?\")"
+          },
+          "correct": "B",
+          "explanation": "`action=\"count\"` increments an integer each time `-v` appears. In main(): `level = logging.DEBUG if args.v else logging.INFO`. This also naturally supports `-vv` for even more verbosity. `store_true` only gives a boolean; `--log-level` requires explicit strings; `nargs=\"?\"` gives Optional string."
+        },
+        {
+          "id": "MC05",
+          "type": "mcq",
+          "question": "What is the correct way to log an exception with full traceback in Python?",
+          "options": {
+            "A": "logger.error(str(e))",
+            "B": "logger.error(e)",
+            "C": "logger.exception(\"message\")",
+            "D": "logger.error(\"message\", exc_info=True)"
+          },
+          "correct": "C",
+          "explanation": "`logger.exception()` automatically captures the current exception and appends the full traceback to the log record. It is equivalent to `logger.error(..., exc_info=True)` but more concise. Both C and D are correct; C is idiomatic inside an except block."
         }
       ]
     },
     "M03": {
+      "id": "modcheck-M03",
       "module": "M03",
-      "title": "Documentation and the Type System — Quick Check",
+      "title": "Module Check: Type Annotations and Documentation",
+      "generated": "2026-04-14",
       "questions": [
         {
-          "id": "MC03-1",
-          "q": "What are the three sections of a Google-style docstring, and which is the only mandatory one?",
-          "a": "Summary line, Args, Returns (and optionally Raises). The one-line summary is the only mandatory section; Args/Returns are required whenever parameters or return values exist."
+          "id": "MC01",
+          "type": "open",
+          "question": "Name the three required sections of a Google-style docstring for a function.",
+          "answer": "Args (parameter names, types, descriptions), Returns (type and meaning of the return value), Raises (exception types and the conditions that trigger them). The one-line summary above these sections is also required."
         },
         {
-          "id": "MC03-2",
-          "q": "How do you express 'a string or None' in Python 3.10+ annotation syntax, and what did you write in Python 3.9?",
-          "a": "Python 3.10+: `str | None`. Python 3.9 and earlier: `Optional[str]` (imported from typing)."
+          "id": "MC02",
+          "type": "open",
+          "question": "What is the `str | None` syntax, and what does it replace?",
+          "answer": "`str | None` is the PEP 604 (Python 3.10+) union type syntax. It replaces `Optional[str]` from typing, which itself is shorthand for `Union[str, None]`. The new syntax is cleaner and works directly in annotations and isinstance() checks."
         },
         {
-          "id": "MC03-3",
-          "q": "What does `Protocol` let you express that a regular base class cannot?",
-          "a": "Protocol enables structural typing — a class satisfies the protocol if it has the right methods/attributes, without inheriting from it. This allows duck-typing contracts to be statically verified by mypy."
+          "id": "MC03",
+          "type": "open",
+          "question": "What is structural typing in Python and how does `Protocol` enable it?",
+          "answer": "Structural typing means a type is compatible if it has the required methods/attributes — regardless of inheritance. `Protocol` (PEP 544) lets you define an interface by its shape. Any class that implements the required methods satisfies the Protocol without inheriting it. This enables duck-typed code to be statically type-checked."
         },
         {
-          "id": "MC03-4",
-          "q": "Resolve the apparent conflict between PEP 484 ('annotations are never mandatory') and the Google Style Guide ('annotate all new public code').",
-          "a": "PEP 484 sets a language-level policy that the interpreter never requires annotations; it does not prohibit teams from requiring them. The Google Style Guide is a team-level convention that imposes a higher standard for predictability and tooling support."
+          "id": "MC04",
+          "type": "mcq",
+          "question": "When is `from __future__ import annotations` useful?",
+          "options": {
+            "A": "It enables runtime type checking without mypy",
+            "B": "It allows forward references in annotations without string quoting",
+            "C": "It backports Python 3.10 union syntax to Python 3.8+",
+            "D": "It makes all annotations evaluate lazily at import time"
+          },
+          "correct": "B",
+          "explanation": "`from __future__ import annotations` (PEP 563) makes all annotations lazy strings — enabling forward references (class referencing itself) and union syntax like `X | Y` in Python 3.8/3.9 without runtime errors. It does not add runtime type checking; mypy does that statically."
+        },
+        {
+          "id": "MC05",
+          "type": "mcq",
+          "question": "What is the key distinction between PEP 484 type hints and Google Style docstrings for argument documentation?",
+          "options": {
+            "A": "PEP 484 annotations are checked by mypy; Google Style docstrings are for human readers and tools like Sphinx",
+            "B": "Google Style docstrings support generic types; PEP 484 does not",
+            "C": "PEP 484 requires runtime imports; Google Style is import-free",
+            "D": "Google Style is preferred for public APIs; PEP 484 for internal code"
+          },
+          "correct": "A",
+          "explanation": "PEP 484 annotations live in the source code signature and are statically verified by mypy/pyright. Google Style docstrings are prose documentation parsed by tools like Sphinx — useful for generated docs but not type-checked. Modern Python projects use both: annotations for type safety, docstrings for narrative explanation."
         }
       ]
     },
     "M04": {
+      "id": "modcheck-M04",
       "module": "M04",
-      "title": "Resource Management and Configuration — Quick Check",
+      "title": "Module Check: File I/O, Config, and Secrets Management",
+      "generated": "2026-04-14",
       "questions": [
         {
-          "id": "MC04-1",
-          "q": "Name three concrete API improvements pathlib.Path offers over os.path.",
-          "a": "1. `/` operator for joining paths instead of os.path.join(). 2. `.read_text()` / `.write_text()` replacing open() boilerplate. 3. `.suffix`, `.stem`, `.parent` as attributes rather than function calls."
+          "id": "MC01",
+          "type": "open",
+          "question": "Name three improvements pathlib.Path offers over os.path string operations.",
+          "answer": "(1) Operator overloading: `base / \"subdir\" / \"file.txt\"` instead of `os.path.join(...)`. (2) Object methods: `.read_text()`, `.write_text()`, `.mkdir(parents=True)` — no separate imports. (3) `.suffix`, `.stem`, `.parent` attributes replace string manipulation. Paths are typed objects, not raw strings."
         },
         {
-          "id": "MC04-2",
-          "q": "Why are context managers mandatory for all resource lifecycles, not just file I/O?",
-          "a": "Context managers guarantee the `__exit__` / cleanup path runs even when exceptions occur, preventing resource leaks (file handles, DB connections, network sockets, temporary directories) regardless of how the code exits."
+          "id": "MC02",
+          "type": "open",
+          "question": "Why are context managers mandatory for file operations in production scripts?",
+          "answer": "Context managers (`with open(...) as f`) guarantee the file is closed even if an exception occurs. Without them, a crash leaves the file descriptor open — leading to resource leaks, data not being flushed, and `Too many open files` errors on long-running scripts or high throughput."
         },
         {
-          "id": "MC04-3",
-          "q": "What is the correct layered priority order for a CLI script's configuration, from highest to lowest?",
-          "a": "CLI flags > environment variables > config file > built-in defaults. This allows deployment overrides without code changes while keeping sensible defaults for local use."
+          "id": "MC03",
+          "type": "open",
+          "question": "State the config priority order for a Python script and explain why environment variables beat config files.",
+          "answer": "Priority (highest first): CLI arguments > environment variables > config file > defaults. Env vars beat config files because they can be injected at deployment time without touching files — critical for containers and CI/CD. They also cannot accidentally be committed to version control."
         },
         {
-          "id": "MC04-4",
-          "q": "Why should secrets never appear in a config file committed to source control, even in an encrypted form?",
-          "a": "Encrypted secrets still leak the encryption key problem; key rotation requires code changes; and git history preserves plaintext if the secret is accidentally committed even once. Environment variables or a dedicated secrets manager decouple secrets from the code lifecycle entirely."
+          "id": "MC04",
+          "type": "mcq",
+          "question": "Why must secrets never be stored in config files even if those files are in .gitignore?",
+          "options": {
+            "A": ".gitignore rules can be accidentally removed, committing the file",
+            "B": "Config files are world-readable by default on Linux",
+            "C": "Secrets in files persist in the working directory and may appear in logs, backups, or deployment artefacts",
+            "D": "All of the above"
+          },
+          "correct": "D",
+          "explanation": "All three risks are real: .gitignore can be bypassed (`git add -f`); file permissions are easy to misconfigure; and config files are copied into Docker images, log directories, and backups where they outlive the original deployment. Environment variables or secret managers are the secure alternative."
+        },
+        {
+          "id": "MC05",
+          "type": "mcq",
+          "question": "Which Python stdlib function reads an environment variable and returns a fallback if it is not set?",
+          "options": {
+            "A": "os.environ[\"VAR\"]",
+            "B": "os.getenv(\"VAR\", \"default\")",
+            "C": "os.environ.get(\"VAR\", default=\"default\")",
+            "D": "sys.env.get(\"VAR\", \"default\")"
+          },
+          "correct": "B",
+          "explanation": "`os.getenv(\"VAR\", \"default\")` returns the env var value or the fallback. `os.environ[\"VAR\"]` raises KeyError if missing. `os.environ.get()` also works but the signature is `.get(key, default)` without the keyword argument. `sys.env` does not exist."
         }
       ]
     },
     "M05": {
+      "id": "modcheck-M05",
       "module": "M05",
-      "title": "Data Serialization — Quick Check",
+      "title": "Module Check: Data Serialisation Formats",
+      "generated": "2026-04-14",
       "questions": [
         {
-          "id": "MC05-1",
-          "q": "What is the security risk of deserializing untrusted pickle data, and what is the correct policy?",
-          "a": "pickle.loads() executes arbitrary Python bytecode embedded in the data. An attacker who can supply the pickle payload can run any code with the process's privileges. The policy: only pickle data you generated yourself; never unpickle data from external sources, user input, or network responses."
+          "id": "MC01",
+          "type": "open",
+          "question": "Why is `pickle` a security risk when deserialising data from an untrusted source?",
+          "answer": "pickle's `__reduce__` protocol executes arbitrary Python code during unpickling. A malicious pickle payload can spawn subprocesses, read files, or establish network connections. Never unpickle data received over the network or from user input — use JSON or msgpack instead."
         },
         {
-          "id": "MC05-2",
-          "q": "Map each of these use cases to the correct format: external API response, developer tool config, internal cache of a trained model.",
-          "a": "External API response → JSON (human-readable, language-agnostic, safe to deserialize). Developer tool config → TOML (readable, typed, standard for pyproject.toml). Internal trusted cache → pickle (only acceptable because the data source is controlled and trusted)."
+          "id": "MC02",
+          "type": "open",
+          "question": "When would you choose CSV over JSON for data serialisation?",
+          "answer": "CSV for tabular data shared with non-technical stakeholders (Excel-compatible), when column names are fixed and data is homogeneous, or when row-by-row streaming is needed without loading the full structure. JSON for nested/hierarchical data, heterogeneous records, or when a schema must be self-describing."
         },
         {
-          "id": "MC05-3",
-          "q": "When is CSV preferred over JSON for external data, and what is its main limitation?",
-          "a": "CSV is preferred for tabular data (rows of uniform columns) sent to or from spreadsheet tools or data pipelines. Its limitation is no native type system — all values are strings, so numbers, booleans, and nulls need explicit parsing."
+          "id": "MC03",
+          "type": "open",
+          "question": "What does `csv.DictReader` return per row and what is its advantage over plain `csv.reader`?",
+          "answer": "`DictReader` returns each row as a dict keyed by column headers (from the first row). The advantage is that column access is by name (`row[\"email\"]`) rather than index (`row[2]`), making code readable and resilient to column reordering."
+        },
+        {
+          "id": "MC04",
+          "type": "mcq",
+          "question": "Which serialisation format is most appropriate for a configuration file that humans will read and edit frequently?",
+          "options": {
+            "A": "pickle",
+            "B": "JSON",
+            "C": "TOML",
+            "D": "msgpack"
+          },
+          "correct": "C",
+          "explanation": "TOML is designed for human-editable config: supports comments (unlike JSON), has a clean syntax, and maps naturally to Python dicts. JSON lacks comments, making config awkward. pickle and msgpack are binary formats — not human-readable."
+        },
+        {
+          "id": "MC05",
+          "type": "mcq",
+          "question": "What is the correct way to write a Python dict to a JSON file with readable indentation?",
+          "options": {
+            "A": "open(\"f.json\", \"w\").write(str(data))",
+            "B": "json.dump(data, f)",
+            "C": "json.dump(data, f, indent=2)",
+            "D": "json.dumps(data, indent=2)"
+          },
+          "correct": "C",
+          "explanation": "`json.dump(data, f, indent=2)` writes directly to a file object with pretty-printing. `json.dump` without indent produces a single line. `json.dumps` returns a string (not written to file). `str(data)` produces Python repr syntax, not valid JSON."
         }
       ]
     },
     "M06": {
+      "id": "modcheck-M06",
       "module": "M06",
-      "title": "Concurrency and Graceful Shutdown — Quick Check",
+      "title": "Module Check: Concurrency and Async Patterns",
+      "generated": "2026-04-14",
       "questions": [
         {
-          "id": "MC06-1",
-          "q": "Apply the concurrency decision matrix: your script must call 50 external REST APIs and then compress 8 large files. What model do you use for each task?",
-          "a": "REST calls are IO-bound: use asyncio (or ThreadPoolExecutor if the HTTP library is sync-only). File compression is CPU-bound: use ProcessPoolExecutor to bypass the GIL and parallelize across CPU cores."
+          "id": "MC01",
+          "type": "open",
+          "question": "Fill out the concurrency selection matrix: REST calls → ?, CPU compression → ?, mixed REST + compress → ?",
+          "answer": "REST calls (I/O-bound, low GIL contention) → asyncio. CPU compression (CPU-bound, GIL blocks threads) → multiprocessing. Mixed REST + compress → asyncio for I/O + asyncio.to_thread() for the CPU work (offloads to thread pool, releasing the event loop)."
         },
         {
-          "id": "MC06-2",
-          "q": "What does `asyncio.to_thread()` do, and when is it the right bridge?",
-          "a": "It runs a synchronous (blocking) function in a thread pool executor and returns an awaitable, allowing it to be awaited inside an async event loop without freezing it. Use it when you must call a sync library from async code."
+          "id": "MC02",
+          "type": "open",
+          "question": "What does `asyncio.to_thread()` do and when is it the right choice?",
+          "answer": "`asyncio.to_thread(fn, *args)` runs `fn` in a thread pool executor and returns an awaitable. Use it when you have a blocking CPU-bound or blocking-I/O function that cannot be made async, and you need to call it from async code without freezing the event loop."
         },
         {
-          "id": "MC06-3",
-          "q": "Describe the three components of a complete graceful shutdown pattern for a long-running async script.",
-          "a": "1. Register SIGTERM/SIGINT signal handlers that cancel the main task or set a stop event. 2. Catch CancelledError in task finally blocks to run cleanup (flush buffers, close connections). 3. Use executor context managers (with ThreadPoolExecutor(...) as ex:) so pending sync work drains before the process exits."
+          "id": "MC03",
+          "type": "open",
+          "question": "Name the three components that must be present for a graceful async shutdown.",
+          "answer": "(1) Signal handler (SIGINT/SIGTERM) that sets a stop event. (2) Task cancellation: cancel all running tasks and await their completion. (3) Cleanup: close connections, flush buffers, remove temp files. Missing any component leaves resources open or tasks abandoned mid-operation."
         },
         {
-          "id": "MC06-4",
-          "q": "What advantage does `asyncio.TaskGroup` (Python 3.11+) have over `asyncio.gather()` for error handling?",
-          "a": "TaskGroup cancels all sibling tasks immediately when any task raises an exception, providing structured concurrency with clean failure semantics. gather() by default continues running other tasks after a failure unless `return_exceptions=False` is set, making cleanup harder to reason about."
+          "id": "MC04",
+          "type": "mcq",
+          "question": "What is the key advantage of `asyncio.TaskGroup` over `asyncio.gather()` for running concurrent tasks?",
+          "options": {
+            "A": "TaskGroup is faster because it uses a thread pool",
+            "B": "TaskGroup cancels all remaining tasks if any task raises an exception",
+            "C": "gather() does not support exception handling",
+            "D": "TaskGroup supports CPU-bound tasks; gather() only supports I/O"
+          },
+          "correct": "B",
+          "explanation": "TaskGroup (Python 3.11+) implements structured concurrency: if one task raises, all sibling tasks are cancelled and the exception propagates to the caller. `gather()` with `return_exceptions=False` raises the first exception but may leave other tasks running. TaskGroup is safer for production code."
+        },
+        {
+          "id": "MC05",
+          "type": "mcq",
+          "question": "Which statement about the Python GIL is correct in the context of threading?",
+          "options": {
+            "A": "The GIL prevents threads from running Python bytecode concurrently",
+            "B": "The GIL only affects multiprocessing, not threading",
+            "C": "asyncio releases the GIL during await",
+            "D": "The GIL is released during I/O operations in threading"
+          },
+          "correct": "D",
+          "explanation": "CPython releases the GIL during blocking I/O system calls, allowing other threads to run Python. This is why threading works well for I/O-bound tasks. asyncio uses a single thread with cooperative scheduling — it does not \"release\" the GIL in the same sense. The GIL blocks concurrent CPU-bound threads."
         }
       ]
     },
     "M07": {
+      "id": "modcheck-M07",
       "module": "M07",
-      "title": "Teaching Complications and Honest Limits — Quick Check",
+      "title": "Module Check: Contested Practices and Open Research Gaps",
+      "generated": "2026-04-14",
       "questions": [
         {
-          "id": "MC07-1",
-          "q": "How do you present the PEP 484 vs Google Style Guide annotation debate to a team without dismissing either position?",
-          "a": "Frame them as operating at different levels: PEP 484 is a language specification that keeps Python flexible across all use cases; the Google Style Guide is a team-level engineering standard that trades flexibility for consistency and tooling reliability. Both are correct in their own context. Your team gets to choose where it sits on that spectrum."
+          "id": "MC01",
+          "type": "open",
+          "question": "How would you present the PEP 484 vs Google Style docstring debate to a junior developer who asks which one to use?",
+          "answer": "Use both: PEP 484 type annotations in the function signature for machine verification (mypy), plus Google Style docstrings for the narrative — why parameters exist, side effects, usage examples. They serve different audiences: type checkers vs. human readers. The debate is a false dichotomy."
         },
         {
-          "id": "MC07-2",
-          "q": "Name the three open research gaps from this course and what a learner should do to address each.",
-          "a": "1. dataclasses vs attrs/pydantic — read PEP 557 and the attrs/pydantic docs to compare. 2. Packaging scripts as installable tools — read the pyproject.toml [project.scripts] and pipx documentation. 3. pre-commit hooks for automated enforcement — read the pre-commit.com docs and the ruff pre-commit hook setup."
+          "id": "MC02",
+          "type": "open",
+          "question": "Name two open research gaps in Python scripting best practices and state what assumption each gap tests.",
+          "answer": "Examples: (1) At what script size does asyncio overhead outweigh its benefits for I/O-bound scripts? Assumes asyncio is always better for I/O — may not hold for scripts making fewer than ~5 concurrent calls. (2) Does ruff's auto-fix for all rules always produce semantically equivalent code? Assumes automated fixes are safe — some rule fixes may change behaviour."
         },
         {
-          "id": "MC07-3",
-          "q": "When teaching a contested best practice, what should you do when the evidence from your research runs out before a clear answer emerges?",
-          "a": "State the known evidence and its limits explicitly. Describe the tradeoffs as they currently stand, name what would change the answer (e.g. team size, codebase age, Python version), and direct learners to the primary sources. Do not fabricate a consensus that does not exist."
+          "id": "MC03",
+          "type": "open",
+          "question": "How should a learner approach a contested best practice (e.g., tabs vs spaces, type hints everywhere vs only on public APIs)?",
+          "answer": "Understand the arguments on both sides, note the context in which each recommendation was made (codebase size, team, language version), follow the dominant community convention (PEP 8: spaces, type hints on public interfaces), and document the decision rationale in the project's contributing guide so future contributors understand the choice."
+        },
+        {
+          "id": "MC04",
+          "type": "mcq",
+          "question": "What is the contested claim about type annotations on internal helper functions?",
+          "options": {
+            "A": "They slow down runtime performance",
+            "B": "They add maintenance cost without proportional benefit on functions never called externally",
+            "C": "mypy cannot check private functions",
+            "D": "They conflict with docstring-based documentation tools"
+          },
+          "correct": "B",
+          "explanation": "The debate is about ROI: internal helpers change frequently, and keeping their annotations in sync adds friction. The counter-argument is that annotations catch bugs even in private code. The balanced practice: annotate all public API functions always; annotate internal functions where the logic is complex or the types are non-obvious."
+        },
+        {
+          "id": "MC05",
+          "type": "mcq",
+          "question": "What does \"cargo culting\" mean in the context of adopting Python best practices?",
+          "options": {
+            "A": "Using pip to install packages without a virtual environment",
+            "B": "Adopting a tool or pattern without understanding why it was recommended or whether it fits your context",
+            "C": "Copying code from Stack Overflow without attribution",
+            "D": "Using multiprocessing when threading would suffice"
+          },
+          "correct": "B",
+          "explanation": "Cargo culting is copying a practice by imitation because it \"looks like the right thing\" without understanding its purpose or tradeoffs. Example: adding asyncio to a single-threaded data pipeline script because \"asyncio is modern\" — it adds complexity without benefit if there is no concurrent I/O."
         }
       ]
     }

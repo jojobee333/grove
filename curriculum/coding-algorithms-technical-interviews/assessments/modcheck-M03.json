@@ -6,28 +6,47 @@
   "questions": [
     {
       "id": "MC01",
-      "question": "What precondition must hold for converging two pointers (lo/hi) to be applicable to a pair-sum problem?",
-      "answer": "The array must be sorted"
+      "type": "open",
+      "question": "What precondition must hold for converging two pointers (lo/hi) to solve a pair-sum problem, and why is that precondition necessary?",
+      "answer": "The array must be sorted. Sortedness lets you infer direction: if arr[lo]+arr[hi] < target, moving lo right increases the sum; if > target, moving hi left decreases it. Without sorted order, there's no valid inference and you'd need O(n²) brute force."
     },
     {
       "id": "MC02",
-      "question": "What is the formula for computing range sum(l, r) using a prefix sum array?",
-      "answer": "prefix[r+1] - prefix[l]"
+      "type": "open",
+      "question": "State the prefix sum range query formula and explain why prefix[0] must be 0.",
+      "answer": "sum(l, r) = prefix[r+1] - prefix[l]. prefix[0] = 0 represents the empty prefix (sum of zero elements), which makes range queries starting at index 0 consistent: sum(0, r) = prefix[r+1] - prefix[0] = prefix[r+1]."
     },
     {
       "id": "MC03",
-      "question": "In a variable sliding window, when do you shrink the left pointer?",
-      "answer": "When the window violates the constraint (e.g. too many distinct characters, sum too large)"
+      "type": "open",
+      "question": "In a variable sliding window, what is the general trigger for shrinking the left pointer, and what invariant does shrinking maintain?",
+      "answer": "Shrink when the window violates the constraint (e.g. sum too large, too many distinct chars). Shrinking restores the invariant: the window always represents a valid state. The inner while loop shrinks until valid, then the answer is recorded at the current right boundary."
     },
     {
       "id": "MC04",
-      "question": "What value should `prefix[0]` be set to, and why?",
-      "answer": "0 — it represents the sum of an empty prefix, enabling range queries starting at index 0"
+      "type": "mcq",
+      "question": "What is the time and space complexity of the fixed-size sliding window maximum sum algorithm?",
+      "options": {
+        "A": "O(n²) time, O(k) space",
+        "B": "O(n log n) time, O(1) space",
+        "C": "O(n) time, O(k) space",
+        "D": "O(n) time, O(1) space"
+      },
+      "correct": "D",
+      "explanation": "A single pass (O(n)) adds the incoming element and subtracts the outgoing element to maintain the window sum — no extra storage needed beyond a few variables (O(1))."
     },
     {
       "id": "MC05",
-      "question": "What is the time and space complexity of the fixed sliding window maximum sum algorithm?",
-      "answer": "O(n) time, O(1) space"
+      "type": "mcq",
+      "question": "Which pattern is the correct recognition signal for using a prefix sum?",
+      "options": {
+        "A": "Find the maximum element in a subarray",
+        "B": "Answer multiple range sum queries on a static array",
+        "C": "Find a subarray with distinct elements",
+        "D": "Detect a cycle in a linked list"
+      },
+      "correct": "B",
+      "explanation": "Prefix sums give O(1) per range sum query after O(n) preprocessing — ideal for multiple queries on an unchanging array. Max element needs a segment tree; distinct elements uses a sliding window; cycle detection uses Floyd's algorithm."
     }
   ]
 }

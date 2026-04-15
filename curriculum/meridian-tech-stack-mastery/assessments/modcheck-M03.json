@@ -1,21 +1,52 @@
 {
+  "id": "modcheck-M03",
   "module": "M03",
-  "title": "Control vs Abstraction — Quick Check",
+  "title": "Module Check: Technology Selection Decisions",
+  "generated": "2026-04-14",
   "questions": [
     {
-      "id": "MC03-1",
-      "q": "What is the control-vs-abstraction diagnostic question, and when does it favour choosing the higher-abstraction tool?",
-      "a": "The question is: 'What mechanism does this tool expose directly, and what does the alternative hide?' The higher-abstraction tool is correct when the hidden mechanism is genuinely NOT needed — e.g. using a GraphQL client over raw fetch is fine when you don't need direct control over HTTP headers, caching policy, or request batching. The diagnostic prevents choosing abstraction by default and forces an explicit assessment of what is being traded away."
+      "id": "MC01",
+      "type": "open",
+      "question": "Describe the control-vs-abstraction diagnostic. When does higher abstraction win and when does lower control win?",
+      "answer": "Higher abstraction wins when the problem fits the tool's model well, the team velocity gain outweighs customisation cost, and the edge cases the tool handles (auth, subscriptions, caching) are real requirements. Lower control wins when you need non-standard query patterns, the ORM generates bad queries you can't fix, or you need predictable performance with zero overhead."
     },
     {
-      "id": "MC03-2",
-      "q": "Name the three specific technical requirements that make Prisma unsuitable for Meridian, and explain which Meridian feature drives each.",
-      "a": "1. SET LOCAL for RLS: Prisma's `$executeRaw` makes adding `SET LOCAL app.current_workspace_id` before every query cumbersome — Meridian's multi-tenant RLS requires this per-query setup. 2. pgvector native types: Prisma loses type information on `vector` columns — Meridian's RAG system requires typed vector operations. 3. Codegen requirement: Prisma requires `prisma generate` after every schema change before TypeScript knows the new types — Meridian's Drizzle approach is schema-first with immediate type inference."
+      "id": "MC02",
+      "type": "open",
+      "question": "Name three requirements that led Meridian to choose Drizzle over Prisma.",
+      "answer": "(1) SQL-first: Drizzle exposes raw SQL escape hatches without abandoning type safety. (2) Zero runtime overhead: Drizzle generates no runtime query builder — just tagged template SQL. (3) pgvector compatibility: custom vector operators (<=>, <->, <#>) work naturally with Drizzle's sql`` template, whereas Prisma's type system blocks them."
     },
     {
-      "id": "MC03-3",
-      "q": "Express benchmarks significantly slower than Fastify. Why is Express still the correct choice for Meridian?",
-      "a": "Meridian's per-request latency is dominated by PostgreSQL queries (5–50ms) and Anthropic API calls (100–5000ms). The Express vs Fastify throughput difference (~15k vs ~65k req/s) is irrelevant when the bottleneck is I/O, not HTTP processing. Choosing Fastify for its performance advantage would optimize the non-bottleneck while adding configuration complexity for no observed benefit."
+      "id": "MC03",
+      "type": "open",
+      "question": "What is the main architectural argument for Express over Fastify for the Meridian server?",
+      "answer": "Express has a vastly larger middleware ecosystem and more predictable behaviour for a team new to Node.js. Fastify's throughput advantage (~10–20% on benchmarks) is irrelevant at Meridian's current scale, and the productivity cost of learning Fastify's schema-validation model adds risk. Performance can be revisited when bottlenecks are measured."
+    },
+    {
+      "id": "MC04",
+      "type": "mcq",
+      "question": "Which Lexical concept makes it possible to replay editor history for undo/redo?",
+      "options": {
+        "A": "EditorNode serialisation",
+        "B": "Immutable EditorState snapshots",
+        "C": "LexicalEditor.registerCommand()",
+        "D": "ContentEditable DOM reconciliation"
+      },
+      "correct": "B",
+      "explanation": "Lexical stores the document as an immutable EditorState object. Each edit produces a new snapshot; the history plugin holds a stack of snapshots. Undo/redo pops or pushes these snapshots and reconciles them to the DOM. No special serialisation is needed — the state is already serialisable."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "What is the primary developer-experience advantage of Vite over Webpack for the Meridian client?",
+      "options": {
+        "A": "Vite produces smaller production bundles",
+        "B": "Vite supports more module formats",
+        "C": "Vite serves source files via native ESM during dev, making HMR near-instant",
+        "D": "Vite has built-in TypeScript type checking"
+      },
+      "correct": "C",
+      "explanation": "Vite skips bundling during development by serving each file as a native ES module. The browser loads only changed modules. Webpack must re-bundle on every change. This makes Vite HMR orders of magnitude faster. Neither Vite nor Webpack do full type checking — that's tsc."
     }
   ]
 }

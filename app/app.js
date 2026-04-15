@@ -612,20 +612,43 @@ function showModcheck(moduleId) {
 
   const main = document.getElementById('main');
   const done = !!progress.modchecks?.[moduleId]?.done;
+  const hasMCQ = mc.questions.some(q => q.type === 'mcq');
+  const subtitle = hasMCQ
+    ? `${mc.questions.length} questions · Multiple choice auto-scored; short-answer self-scored.`
+    : `${mc.questions.length} recall questions · Reveal each answer, then self-score honestly.`;
 
-  const rows = mc.questions.map((q, i) => `
+  const rows = mc.questions.map((q, i) => {
+    const qText   = q.question ?? q.q ?? '';
+    const qAnswer = q.answer ?? q.a ?? '';
+
+    if (q.type === 'mcq' && q.options) {
+      const opts = Object.entries(q.options).map(([k, v]) => `
+        <div class="option" id="mcopt-${moduleId}-${q.id}-${k}"
+          onclick="selectModcheckOption('${moduleId}','${q.id}','${k}','${q.correct}')">
+          <span class="option-key">${k}</span> ${v}
+        </div>`).join('');
+      return `
     <div class="modcheck-q" id="mcq-${moduleId}-${q.id}">
-      <div class="question-text">${i + 1}. ${q.question}</div>
+      <div class="question-text">${i + 1}. ${qText}</div>
+      <div class="option-list">${opts}</div>
+      <div class="explanation" id="mcexp-${moduleId}-${q.id}">${q.explanation || ''}</div>
+    </div>`;
+    }
+
+    // Open-ended (self-scored)
+    return `
+    <div class="modcheck-q" id="mcq-${moduleId}-${q.id}">
+      <div class="question-text">${i + 1}. ${qText}</div>
       <div class="modcheck-answer" id="mca-${moduleId}-${q.id}">
-        <strong>Answer:</strong> ${q.answer}
+        <strong>Answer:</strong> ${qAnswer}
       </div>
       <div class="modcheck-self-score">
         <button class="btn" style="font-size:12px;padding:5px 10px" onclick="toggleModcheckAnswer('${moduleId}','${q.id}')">Reveal answer</button>
         <button class="btn" style="font-size:12px;padding:5px 10px;border-color:var(--accent);color:var(--accent-text)" onclick="scoreModcheckQ('${moduleId}','${q.id}',true)">✓ Got it</button>
         <button class="btn" style="font-size:12px;padding:5px 10px;border-color:var(--danger);color:var(--danger)" onclick="scoreModcheckQ('${moduleId}','${q.id}',false)">✗ Missed</button>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  }).join('');
 
   main.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
@@ -633,7 +656,7 @@ function showModcheck(moduleId) {
       ${done ? '<span class="badge badge-green">Previously completed ✓</span>' : ''}
     </div>
     <h1>${mc.title}</h1>
-    <p class="text-muted">${mc.questions.length} recall questions · Reveal each answer, then self-score honestly.</p>
+    <p class="text-muted">${subtitle}</p>
     <div style="margin-top:1.5rem">${rows}</div>
     <div class="btn-row">
       <button class="btn btn-primary" id="mc-submit-btn" onclick="submitModcheck('${moduleId}')">Mark complete</button>
@@ -641,11 +664,41 @@ function showModcheck(moduleId) {
     <div id="mc-result-${moduleId}" style="margin-top:1rem;display:none"></div>
   `;
 
-  // Restore answers if already scored in this session
+  // Restore scores already saved in this session
   const saved = progress.modchecks?.[moduleId]?.scores || {};
   Object.entries(saved).forEach(([qId, correct]) => {
-    applyModcheckScore(moduleId, qId, correct, false);
+    const q = mc.questions.find(x => x.id === qId);
+    if (q?.type === 'mcq') {
+      // Re-apply MCQ highlight — we don't know which option was picked, just mark border
+      applyModcheckScore(moduleId, qId, correct, false);
+    } else {
+      applyModcheckScore(moduleId, qId, correct, false);
+    }
   });
+}
+
+function selectModcheckOption(moduleId, qId, selected, correct) {
+  const isCorrect = selected === correct;
+  scoreModcheckQ(moduleId, qId, isCorrect);
+
+  // Highlight all options: green for correct, red for wrong selection
+  const q = bundle?.modchecks?.[moduleId]?.questions.find(x => x.id === qId);
+  Object.keys(q?.options ?? {}).forEach(k => {
+    const el = document.getElementById(`mcopt-${moduleId}-${qId}-${k}`);
+    if (!el) return;
+    el.style.pointerEvents = 'none';
+    if (k === correct) {
+      el.style.borderColor = 'var(--accent)';
+      el.style.background  = 'var(--accent-light, #e8f5e9)';
+    } else if (k === selected) {
+      el.style.borderColor = 'var(--danger)';
+      el.style.background  = 'var(--danger-light, #fdecea)';
+    }
+  });
+
+  // Show explanation
+  const expEl = document.getElementById(`mcexp-${moduleId}-${qId}`);
+  if (expEl && q?.explanation) expEl.classList.add('show');
 }
 
 function toggleModcheckAnswer(moduleId, qId) {
@@ -1248,7 +1301,7 @@ function renderTestResults(results, challengeId) {
 Object.assign(window, {
   loadCourse, showView, showModule, toggleModule,
   showLesson, markDone, showModcheck, toggleModcheckAnswer,
-  scoreModcheckQ, submitModcheck, renderPlan, promptQuiz,
+  scoreModcheckQ, selectModcheckOption, submitModcheck, renderPlan, promptQuiz,
   submitQuiz, selectOption, renderCodeView, showChallenge,
   runChallengeTests, submitChallenge, renderCards, flipCard,
   rateCard, selectPath, loadCards, loadQuiz, loadLessonFile,

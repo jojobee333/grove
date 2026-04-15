@@ -1,26 +1,52 @@
 {
+  "id": "modcheck-M02",
   "module": "M02",
-  "title": "Script Structure and Observability — Quick Check",
+  "title": "Module Check: Script Structure and Logging",
+  "generated": "2026-04-14",
   "questions": [
     {
-      "id": "MC02-1",
-      "q": "List the four steps in the canonical main() execution sequence and explain why order matters.",
-      "a": "parse → log → validate → dispatch. Order matters because logging must be configured before any log call is made, and validation must run before dispatch so the script fails fast with a clear error rather than deep inside business logic."
+      "id": "MC01",
+      "type": "open",
+      "question": "State the canonical 4-step order of a well-structured `main()` function.",
+      "answer": "(1) Parse arguments (argparse). (2) Configure logging (level, format, handlers). (3) Validate inputs (paths exist, constraints met). (4) Execute business logic. This order ensures errors in setup surface before expensive work begins."
     },
     {
-      "id": "MC02-2",
-      "q": "What is the purpose of the `if __name__ == '__main__'` guard, and what capability does it unlock?",
-      "a": "It prevents top-level code from running when the file is imported as a module. This makes the script importable, which in turn makes it testable — pytest can import and call main() directly without spawning a subprocess."
+      "id": "MC02",
+      "type": "open",
+      "question": "Why is the `if __name__ == \"__main__\":` guard important when a script is also importable as a module?",
+      "answer": "Without the guard, importing the module (e.g., in tests) runs the script's top-level code immediately — argument parsing, side effects, and main logic. The guard ensures that code only executes when the file is the program entry point, making the module safely importable."
     },
     {
-      "id": "MC02-3",
-      "q": "Why should scripts use module-level loggers created with `logging.getLogger(__name__)` rather than the root logger?",
-      "a": "Module-level loggers carry the file's qualified name, making log messages self-identifying. They also integrate into the logging hierarchy, so callers can silence or redirect a specific module's output without affecting the whole application."
+      "id": "MC03",
+      "type": "open",
+      "question": "Why should loggers be created at module level (`logger = logging.getLogger(__name__)`) rather than inside functions?",
+      "answer": "Module-level loggers are created once and reused. `__name__` gives the full dotted module path, enabling fine-grained filtering in the logger hierarchy. Creating loggers inside functions creates a new logger object per call (minor overhead) and loses the module context."
     },
     {
-      "id": "MC02-4",
-      "q": "How would you expose log verbosity as a CLI argument, and what Python logging level would you map to `-v`?",
-      "a": "Add a `--log-level` or `-v` flag via argparse, then call `logging.basicConfig(level=getattr(logging, args.log_level.upper()))` in main(). A single `-v` conventionally maps to `logging.DEBUG`."
+      "id": "MC04",
+      "type": "mcq",
+      "question": "Which argparse flag sets the logging level to DEBUG for `-v` and INFO by default?",
+      "options": {
+        "A": "parser.add_argument(\"-v\", action=\"store_true\")",
+        "B": "parser.add_argument(\"-v\", action=\"count\", default=0)",
+        "C": "parser.add_argument(\"--log-level\", default=\"INFO\")",
+        "D": "parser.add_argument(\"-v\", nargs=\"?\")"
+      },
+      "correct": "B",
+      "explanation": "`action=\"count\"` increments an integer each time `-v` appears. In main(): `level = logging.DEBUG if args.v else logging.INFO`. This also naturally supports `-vv` for even more verbosity. `store_true` only gives a boolean; `--log-level` requires explicit strings; `nargs=\"?\"` gives Optional string."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "What is the correct way to log an exception with full traceback in Python?",
+      "options": {
+        "A": "logger.error(str(e))",
+        "B": "logger.error(e)",
+        "C": "logger.exception(\"message\")",
+        "D": "logger.error(\"message\", exc_info=True)"
+      },
+      "correct": "C",
+      "explanation": "`logger.exception()` automatically captures the current exception and appends the full traceback to the log record. It is equivalent to `logger.error(..., exc_info=True)` but more concise. Both C and D are correct; C is idiomatic inside an except block."
     }
   ]
 }

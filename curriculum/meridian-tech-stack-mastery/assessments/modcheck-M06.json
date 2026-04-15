@@ -1,26 +1,52 @@
 {
+  "id": "modcheck-M06",
   "module": "M06",
-  "title": "Collaborative Editing Architecture — Quick Check",
+  "title": "Module Check: Real-Time Collaboration with Yjs",
+  "generated": "2026-04-14",
   "questions": [
     {
-      "id": "MC06-1",
-      "q": "What is a CRDT and what two mathematical properties make it suitable for collaborative editing without a central conflict resolver?",
-      "a": "CRDT stands for Conflict-free Replicated Data Type. Its two required properties are: (1) commutativity — applying operations A then B produces the same result as B then A; (2) idempotency — applying the same operation twice produces the same result as applying it once. Together these mean peers can receive operations in any order, with duplicates, and always converge to the same document state without a server mediating conflicts."
+      "id": "MC01",
+      "type": "open",
+      "question": "Explain the three CRDT properties Yjs relies on: commutativity, associativity, and idempotency.",
+      "answer": "Commutativity: A⊕B = B⊕A — operations can arrive in any order. Associativity: (A⊕B)⊕C = A⊕(B⊕C) — grouping of operations doesn't matter. Idempotency: A⊕A = A — applying a duplicate operation is safe. Together they allow merge without a central coordinator."
     },
     {
-      "id": "MC06-2",
-      "q": "Describe the Yjs provider layer. What are the three common provider types and what does each one handle?",
-      "a": "The provider layer is Yjs's transport and persistence abstraction. Three types: (1) WebSocket provider (`y-websocket`) — synchronizes the Yjs document in real time over a WebSocket connection, broadcasting updates to all connected clients; (2) IndexedDB provider (`y-indexeddb`) — persists the document locally in the browser for offline access and fast initial load; (3) WebRTC provider (`y-webrtc`) — peer-to-peer document sync directly between browsers without a server. Providers can be stacked — Meridian uses WebSocket + IndexedDB simultaneously."
+      "id": "MC02",
+      "type": "open",
+      "question": "Name the three Yjs provider types and the use case for each.",
+      "answer": "y-websocket: server-relayed real-time sync (production collaborative app). y-webrtc: peer-to-peer sync without a server (demos, LAN). y-indexeddb: offline persistence in the browser (persist state between page reloads). Meridian uses y-websocket for live collaboration and y-indexeddb for offline draft saving."
     },
     {
-      "id": "MC06-3",
-      "q": "Why does the Lexical-Yjs binding require a `binding.mux` mechanism when applying remote operations?",
-      "a": "Without the mux, applying a remote Yjs update to the Lexical editor triggers an `editor.update()`, which generates a new Lexical operation, which is observed by the Yjs binding, which generates a new Yjs update — creating an infinite loop. The mux flag (`binding.mux = true`) marks updates as 'already from Yjs', causing the binding's Lexical observer to skip them and preventing the feedback loop."
+      "id": "MC03",
+      "type": "open",
+      "question": "What causes the `binding.mux infinite loop` bug in Lexical+Yjs integration and how do you prevent it?",
+      "answer": "The bug occurs when a Lexical change triggers a Yjs update, which triggers a Lexical change, creating an infinite loop. The fix is the mux (mutual exclusion) guard: set a flag before applying a Yjs-originated change to Lexical, check the flag in the Lexical onChange handler, and skip re-syncing to Yjs when the flag is set."
     },
     {
-      "id": "MC06-4",
-      "q": "What is the purpose of the awareness protocol in `y-protocols/awareness`, distinct from document synchronization?",
-      "a": "Awareness handles ephemeral per-user state that does NOT need to be part of the persistent document: cursor positions, user names, online/offline presence, and selection highlights. This data is broadcast to all peers with a short TTL (30 seconds by default) and is not stored in the Yjs document history. Without awareness, you could sync document content but wouldn't know where other users' cursors are or who is actively editing."
+      "id": "MC04",
+      "type": "mcq",
+      "question": "What does the Yjs awareness protocol track?",
+      "options": {
+        "A": "Document version vectors for conflict resolution",
+        "B": "Per-user ephemeral state such as cursor position and selection",
+        "C": "Connection health and latency between peers",
+        "D": "Access control lists for document permissions"
+      },
+      "correct": "B",
+      "explanation": "Awareness is a separate lightweight channel for ephemeral (non-document) state — cursor positions, user names, colours. It uses eventual consistency with TTL, not CRDT merging. Version vectors are part of the document sync protocol; ACLs are application-level."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "Why does Yjs prefer a client-server-client topology over pure peer-to-peer for production use?",
+      "options": {
+        "A": "P2P cannot handle binary data",
+        "B": "The server can enforce auth, persist history, and relay to clients behind NAT",
+        "C": "CRDTs only work when a central node assigns timestamps",
+        "D": "WebRTC is not supported in all browsers"
+      },
+      "correct": "B",
+      "explanation": "A server relay solves auth (unauthenticated peers cannot connect), persistence (server stores the document), and NAT traversal (peers behind firewalls can still sync). CRDTs are peer-agnostic and need no central clock. WebRTC is widely supported but lacks server-side auth hooks."
     }
   ]
 }

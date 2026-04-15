@@ -1,26 +1,52 @@
 {
+  "id": "modcheck-M03",
   "module": "M03",
-  "title": "Documentation and the Type System — Quick Check",
+  "title": "Module Check: Type Annotations and Documentation",
+  "generated": "2026-04-14",
   "questions": [
     {
-      "id": "MC03-1",
-      "q": "What are the three sections of a Google-style docstring, and which is the only mandatory one?",
-      "a": "Summary line, Args, Returns (and optionally Raises). The one-line summary is the only mandatory section; Args/Returns are required whenever parameters or return values exist."
+      "id": "MC01",
+      "type": "open",
+      "question": "Name the three required sections of a Google-style docstring for a function.",
+      "answer": "Args (parameter names, types, descriptions), Returns (type and meaning of the return value), Raises (exception types and the conditions that trigger them). The one-line summary above these sections is also required."
     },
     {
-      "id": "MC03-2",
-      "q": "How do you express 'a string or None' in Python 3.10+ annotation syntax, and what did you write in Python 3.9?",
-      "a": "Python 3.10+: `str | None`. Python 3.9 and earlier: `Optional[str]` (imported from typing)."
+      "id": "MC02",
+      "type": "open",
+      "question": "What is the `str | None` syntax, and what does it replace?",
+      "answer": "`str | None` is the PEP 604 (Python 3.10+) union type syntax. It replaces `Optional[str]` from typing, which itself is shorthand for `Union[str, None]`. The new syntax is cleaner and works directly in annotations and isinstance() checks."
     },
     {
-      "id": "MC03-3",
-      "q": "What does `Protocol` let you express that a regular base class cannot?",
-      "a": "Protocol enables structural typing — a class satisfies the protocol if it has the right methods/attributes, without inheriting from it. This allows duck-typing contracts to be statically verified by mypy."
+      "id": "MC03",
+      "type": "open",
+      "question": "What is structural typing in Python and how does `Protocol` enable it?",
+      "answer": "Structural typing means a type is compatible if it has the required methods/attributes — regardless of inheritance. `Protocol` (PEP 544) lets you define an interface by its shape. Any class that implements the required methods satisfies the Protocol without inheriting it. This enables duck-typed code to be statically type-checked."
     },
     {
-      "id": "MC03-4",
-      "q": "Resolve the apparent conflict between PEP 484 ('annotations are never mandatory') and the Google Style Guide ('annotate all new public code').",
-      "a": "PEP 484 sets a language-level policy that the interpreter never requires annotations; it does not prohibit teams from requiring them. The Google Style Guide is a team-level convention that imposes a higher standard for predictability and tooling support."
+      "id": "MC04",
+      "type": "mcq",
+      "question": "When is `from __future__ import annotations` useful?",
+      "options": {
+        "A": "It enables runtime type checking without mypy",
+        "B": "It allows forward references in annotations without string quoting",
+        "C": "It backports Python 3.10 union syntax to Python 3.8+",
+        "D": "It makes all annotations evaluate lazily at import time"
+      },
+      "correct": "B",
+      "explanation": "`from __future__ import annotations` (PEP 563) makes all annotations lazy strings — enabling forward references (class referencing itself) and union syntax like `X | Y` in Python 3.8/3.9 without runtime errors. It does not add runtime type checking; mypy does that statically."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "What is the key distinction between PEP 484 type hints and Google Style docstrings for argument documentation?",
+      "options": {
+        "A": "PEP 484 annotations are checked by mypy; Google Style docstrings are for human readers and tools like Sphinx",
+        "B": "Google Style docstrings support generic types; PEP 484 does not",
+        "C": "PEP 484 requires runtime imports; Google Style is import-free",
+        "D": "Google Style is preferred for public APIs; PEP 484 for internal code"
+      },
+      "correct": "A",
+      "explanation": "PEP 484 annotations live in the source code signature and are statically verified by mypy/pyright. Google Style docstrings are prose documentation parsed by tools like Sphinx — useful for generated docs but not type-checked. Modern Python projects use both: annotations for type safety, docstrings for narrative explanation."
     }
   ]
 }

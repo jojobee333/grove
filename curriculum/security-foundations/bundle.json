@@ -1,7 +1,7 @@
 {
   "version": "3.0",
   "slug": "security-foundations",
-  "bundled": "2026-04-14T03:33:08.686Z",
+  "bundled": "2026-04-15T01:12:15.571Z",
   "course": {
     "topic": "Security Foundations",
     "slug": "security-foundations",
@@ -3549,233 +3549,418 @@
   },
   "modchecks": {
     "M01": {
+      "id": "modcheck-M01",
       "module": "M01",
-      "title": "Retention Check: The Protocol Feature Mental Model",
-      "generated": "2026-04-13",
+      "title": "Module Check: Network Protocol Security Fundamentals",
+      "generated": "2026-04-14",
       "questions": [
         {
-          "id": "MC01-1",
-          "q": "State the protocol feature mental model in one sentence.",
-          "a": "Every protocol encodes a trust assumption required for it to function, and that same trusted input is the mechanism an attacker exploits."
+          "id": "MC01",
+          "type": "open",
+          "question": "Describe the mental model for evaluating a network protocol's attack surface based on its design features.",
+          "answer": "Ask: (1) Does the protocol authenticate peers, or trust by address? (2) Is data encrypted, or plaintext? (3) Is there a stateless trust mechanism an attacker can spoof? Each unanswered \"yes\" is a potential attack vector. ARP trusts by design (no auth); TCP trusts by sequence number (forgeable); TLS adds auth + encryption."
         },
         {
-          "id": "MC01-2",
-          "q": "What is the specific ARP design feature that enables ARP spoofing?",
-          "a": "ARP trusts that the last reply to a broadcast is authoritative, with no authentication. Any host on the LAN can send an unsolicited reply claiming ownership of any IP."
+          "id": "MC02",
+          "type": "open",
+          "question": "Explain the ARP spoofing mechanism. What condition enables it and what is its consequence?",
+          "answer": "ARP has no authentication. An attacker broadcasts a gratuitous ARP reply mapping their MAC to the victim's IP. LAN hosts cache this mapping and forward traffic to the attacker — enabling man-in-the-middle interception. Condition: attacker must be on the same broadcast domain."
         },
         {
-          "id": "MC01-3",
-          "q": "What TCP feature enables RST injection, and what is the outcome of a successful attack?",
-          "a": "TCP accepts RST segments without cryptographic verification; an attacker who guesses the approximate sequence number can terminate any established TCP connection."
+          "id": "MC03",
+          "type": "open",
+          "question": "How does TCP RST injection work and what does it allow an attacker to do?",
+          "answer": "An attacker forges a TCP RST packet with a valid sequence number from within the current window, addressed to one endpoint. The receiving host treats it as a legitimate connection termination and drops the session. This enables denial-of-service against long-lived connections (BGP, SSH) if the attacker can observe sequence numbers."
         },
         {
-          "id": "MC01-4",
-          "q": "Name two bash commands you would run to verify ARP cache integrity on a Linux host during an investigation.",
-          "a": "`arp -n` (show current ARP cache) and `ip neigh show` (netlink equivalent). Compare entries to DHCP logs or known MAC-to-IP mappings to identify duplicates or unexpected MAC addresses."
+          "id": "MC04",
+          "type": "mcq",
+          "question": "Which command verifies that an ARP entry was populated by a legitimate host (not a spoofed reply)?",
+          "options": {
+            "A": "ping -a <ip>",
+            "B": "arp -a && nmap --script broadcast-arp",
+            "C": "traceroute <ip>",
+            "D": "netstat -rn"
+          },
+          "correct": "B",
+          "explanation": "`arp -a` shows the local ARP cache. `nmap --script broadcast-arp` sends ARP probes and reports all hosts that respond, allowing comparison. If two different MACs claim the same IP, spoofing is occurring. ping, traceroute, and netstat do not expose ARP cache entries directly."
+        },
+        {
+          "id": "MC05",
+          "type": "mcq",
+          "question": "What is the primary security limitation of trusting IP addresses for access control?",
+          "options": {
+            "A": "IP addresses change too frequently to be reliable",
+            "B": "IP source addresses can be spoofed in packets, especially for protocols without handshake state",
+            "C": "IPv4 addresses are publicly enumerable",
+            "D": "NAT prevents accurate IP attribution"
+          },
+          "correct": "B",
+          "explanation": "IP source addresses are set by the sender and not verified by intermediate routers (BCP38 filtering helps but is not universal). Stateless protocols (UDP) are trivially spoofed. TCP's three-way handshake raises the bar but blind injection is still possible from the same network segment."
         }
       ]
     },
     "M02": {
+      "id": "modcheck-M02",
       "module": "M02",
-      "title": "Retention Check: DNS — Single Protocol, Every Domain",
-      "generated": "2026-04-13",
+      "title": "Module Check: DNS Security and Intelligence",
+      "generated": "2026-04-14",
       "questions": [
         {
-          "id": "MC02-1",
-          "q": "What two fields does DNS use to match responses to outgoing queries, and what makes both exploitable?",
-          "a": "16-bit transaction ID and UDP source port. Both are predictable or have limited entropy. Without source port randomisation, only the transaction ID needs to be guessed (65,536 possibilities). With randomisation, both must be guessed simultaneously."
+          "id": "MC01",
+          "type": "open",
+          "question": "What two DNS transaction properties made classic DNS susceptible to cache poisoning, and what did the Kaminsky attack exploit?",
+          "answer": "Predictable 16-bit transaction ID (65,536 possibilities) and source port reuse (effectively reducing entropy further). Kaminsky flooded a resolver with forged responses for a target domain before the legitimate answer arrived, racing to match both the transaction ID and source port. DNSSEC validation prevents this; source port randomisation raises the attack cost significantly."
         },
         {
-          "id": "MC02-2",
-          "q": "What DNS response pattern indicates a host may be using a Domain Generation Algorithm?",
-          "a": "High NXDOMAIN rate — hundreds of failed lookups per minute for algorithmically-named, high-consonant-density domains with no real-word structure. The host is cycling through DGA names looking for an active C2 domain."
+          "id": "MC02",
+          "type": "open",
+          "question": "What is a Domain Generation Algorithm (DGA) and what NXDOMAIN pattern reveals its activity?",
+          "answer": "A DGA programmatically generates many domain names (e.g., using a time-based seed). Malware queries these sequentially until one is registered by the C2 operator. The pattern: high volume of NXDOMAIN responses from a single host for algorithmically similar (pseudo-random) domains, often at regular intervals."
         },
         {
-          "id": "MC02-3",
-          "q": "Name the specific DNS record type that restricts which CAs can issue certificates for a domain.",
-          "a": "CAA (Certificate Authority Authorization) record."
+          "id": "MC03",
+          "type": "open",
+          "question": "How does a CAA (Certification Authority Authorisation) record improve certificate issuance security?",
+          "answer": "A CAA record specifies which CAs are permitted to issue certificates for a domain. Compliant CAs check for a CAA record before issuing. If an attacker tricks a rogue CA into issuing a fraudulent certificate, the certificate is policy-violating (detectable via Certificate Transparency logs). CAA does not prevent issuance by non-compliant CAs."
         },
         {
-          "id": "MC02-4",
-          "q": "What makes Sysmon Event 22 more actionable than standard DNS server logs for detecting C2?",
-          "a": "Event 22 records the process image path of the querying process alongside the DNS query string. Standard DNS logs record the query but only the client IP — not which process on that host initiated the query. Process-level attribution is required to determine whether the query is from a known application or unexpected malware."
+          "id": "MC04",
+          "type": "mcq",
+          "question": "Which Sysmon event ID logs DNS query and response activity?",
+          "options": {
+            "A": "Event 1 (Process Create)",
+            "B": "Event 3 (Network Connection)",
+            "C": "Event 22 (DNS Query)",
+            "D": "Event 10 (Process Access)"
+          },
+          "correct": "C",
+          "explanation": "Sysmon Event 22 captures DNS query events: the queried name, response type, and result. It is essential for detecting DGA activity and C2 beaconing. Event 3 captures TCP/UDP connections (IP + port, not DNS names). Events 1 and 10 are process-related."
         },
         {
-          "id": "MC02-5",
-          "q": "What single DNS server configuration change eliminates zone transfer exposure?",
-          "a": "Restrict AXFR to authorised secondary server IPs only. In BIND: `allow-transfer { <secondary-IP>; };`. Equivalent restriction in Windows DNS Server zone properties."
+          "id": "MC05",
+          "type": "mcq",
+          "question": "What is the correct DNS server configuration to prevent zone transfer to arbitrary hosts?",
+          "options": {
+            "A": "Set TTL to 0 on all zone records",
+            "B": "Restrict AXFR transfers to specific authorised secondary server IPs using ACLs",
+            "C": "Disable DNSSEC to avoid exposing zone walk data",
+            "D": "Enable NSEC3 with opt-out on the zone"
+          },
+          "correct": "B",
+          "explanation": "Zone transfers (AXFR) export the entire DNS zone — a goldmine for reconnaissance. The fix is an ACL that allows AXFR only from authorised secondary nameservers. DNSSEC does not prevent zone transfers and should not be disabled. NSEC3 mitigates zone enumeration via DNSSEC but is unrelated to AXFR."
         }
       ]
     },
     "M03": {
+      "id": "modcheck-M03",
       "module": "M03",
-      "title": "Retention Check: Symmetric Encryption — From CBC to AEAD",
-      "generated": "2026-04-13",
+      "title": "Module Check: TLS and Cryptographic Protocol Security",
+      "generated": "2026-04-14",
       "questions": [
         {
-          "id": "MC03-1",
-          "q": "Name three TLS attacks that all exploit the same CBC structural weak point.",
-          "a": "BEAST (2011), Lucky13 (2013), POODLE (2014). All three exploit the separation of encryption and authentication in CBC mode, creating a padding oracle that leaks plaintext byte-by-byte."
+          "id": "MC01",
+          "type": "open",
+          "question": "Name three attacks against CBC mode in TLS and state the underlying weakness each exploits.",
+          "answer": "BEAST: predictable IV (chained from previous ciphertext) enables chosen-plaintext attack against TLS 1.0. Lucky 13: timing side-channel in CBC-HMAC padding validation leaks plaintext. POODLE: SSL 3.0 CBC padding is ambiguous — attacker forces downgrade then exploits padding oracle. Root cause: CBC requires padding validation, which creates timing and oracle vulnerabilities."
         },
         {
-          "id": "MC03-2",
-          "q": "What does AEAD stand for, and what property does it provide atomically that CBC does not?",
-          "a": "Authenticated Encryption with Associated Data. Provides confidentiality AND integrity in a single indivisible operation. CBC encrypts first, authenticates second — the gap between these operations is the oracle. In AEAD, there is no valid decryption output without a correct authentication tag."
+          "id": "MC02",
+          "type": "open",
+          "question": "What is AEAD encryption and why does TLS 1.3 mandate it?",
+          "answer": "AEAD (Authenticated Encryption with Associated Data) provides confidentiality and integrity in one operation — the ciphertext includes an authentication tag. TLS 1.3 removed all non-AEAD cipher suites because they require separate MAC computation, which historically created side-channels (Lucky 13, BEAST). AEAD eliminates the padding oracle class entirely."
         },
         {
-          "id": "MC03-3",
-          "q": "List the three TLS 1.3 cipher suites.",
-          "a": "TLS_AES_128_GCM_SHA256, TLS_AES_256_GCM_SHA384, TLS_CHACHA20_POLY1305_SHA256."
+          "id": "MC03",
+          "type": "open",
+          "question": "What happens if the same AES-GCM nonce is reused with the same key, and why is this catastrophic?",
+          "answer": "AES-GCM computes a keystream as AES(key, nonce || counter). Reusing nonce+key produces the same keystream. XORing two ciphertexts encrypted with the same keystream cancels it out, revealing C1⊕C2 = P1⊕P2. With cribs, both plaintexts can be recovered. The auth tag also becomes forgeable. Nonce reuse completely breaks GCM."
         },
         {
-          "id": "MC03-4",
-          "q": "For AES-GCM specifically, what is the one requirement for correct usage that has catastrophic consequences if violated?",
-          "a": "Nonces must never be reused under the same key. Nonce reuse leaks the GCM authentication key (H value) and enables plaintext recovery and authentication tag forgery for both messages sharing the nonce."
+          "id": "MC04",
+          "type": "mcq",
+          "question": "Which cipher suites does TLS 1.3 support (all others are removed)?",
+          "options": {
+            "A": "AES-CBC and RC4",
+            "B": "AES-GCM and ChaCha20-Poly1305",
+            "C": "AES-GCM, ChaCha20-Poly1305, and AES-CCM",
+            "D": "AES-GCM only"
+          },
+          "correct": "C",
+          "explanation": "TLS 1.3 mandates AEAD-only suites. The three mandated are: AES-128-GCM-SHA256, AES-256-GCM-SHA384, and ChaCha20-Poly1305-SHA256. AES-CCM is also in the spec for constrained devices (RFC 8446). CBC and RC4 are removed entirely."
+        },
+        {
+          "id": "MC05",
+          "type": "mcq",
+          "question": "What does \"forward secrecy\" guarantee that static RSA key exchange does not?",
+          "options": {
+            "A": "The server certificate cannot be forged",
+            "B": "Session keys cannot be decrypted even if the server's long-term private key is later compromised",
+            "C": "The client is authenticated to the server",
+            "D": "Traffic is encrypted with 256-bit keys"
+          },
+          "correct": "B",
+          "explanation": "Forward secrecy (via ephemeral Diffie-Hellman) generates a fresh session key per session. The private key is discarded after the handshake. An attacker who later steals the server's long-term key cannot decrypt previously recorded sessions. Static RSA sends the session key encrypted with the server's long-term public key — steal the key, decrypt everything."
         }
       ]
     },
     "M04": {
+      "id": "modcheck-M04",
       "module": "M04",
-      "title": "Retention Check: Forward Secrecy, KDFs, and PKI",
-      "generated": "2026-04-13",
+      "title": "Module Check: Authentication and PKI",
+      "generated": "2026-04-14",
       "questions": [
         {
-          "id": "MC04-1",
-          "q": "What does forward secrecy protect that static RSA key exchange does not?",
-          "a": "Forward secrecy ensures that compromise of the server's long-term private key cannot decrypt previously recorded sessions. ECDHE generates independent per-session key material that is discarded after the session — no past session keys are derivable from the long-term key."
+          "id": "MC01",
+          "type": "open",
+          "question": "Explain forward secrecy. What ephemeral key exchange achieves it and what does it protect?",
+          "answer": "Forward secrecy uses Ephemeral Diffie-Hellman (ECDHE or DHE) to generate a fresh session key per connection. The private key is discarded after the handshake. If the server's long-term private key is later stolen, previously recorded sessions remain undecryptable — the session key never existed outside RAM."
         },
         {
-          "id": "MC04-2",
-          "q": "What is the OWASP minimum cost factor for bcrypt, and what does it mean operationally?",
-          "a": "Cost factor 12. This means bcrypt performs 2^12 = 4,096 iterations of its internal key derivation. At this cost factor, a single hash takes approximately 100–300ms on modern hardware, making offline brute force expensive regardless of GPU resources."
+          "id": "MC02",
+          "type": "open",
+          "question": "What bcrypt cost factor does OWASP recommend in 2024, and what is the reasoning?",
+          "answer": "OWASP recommends cost factor 12 (bcrypt) or higher. The reasoning: bcrypt cost factor is a work parameter — each increment doubles the computation. Factor 12 produces ~200–400ms hashing time on a modern CPU, making offline brute force slow (millions of hashes/second is infeasible at this cost). Lower factors (8, 10) were calibrated for older hardware."
         },
         {
-          "id": "MC04-3",
-          "q": "What are the three Argon2id minimum recommended parameters and what does each control?",
-          "a": "m=19456 (memory: 19 MB per computation, defeating GPU cracking by exhausting per-core memory), t=2 (time cost: 2 iterations over the memory block), p=1 (parallelism: 1 thread)."
+          "id": "MC03",
+          "type": "open",
+          "question": "What are the three parameters of Argon2id and what does each control?",
+          "answer": "Memory cost (m): kilobytes of RAM required per hash — resists GPU/ASIC parallelism. Time cost (t): number of iterations — resists fast CPUs. Parallelism (p): number of threads — tuned to server capability. Argon2id combines Argon2i (side-channel resistance) and Argon2d (GPU resistance)."
         },
         {
-          "id": "MC04-4",
-          "q": "Name the four checks RFC 5280 requires for certificate chain validation.",
-          "a": "1. Signature validation (each cert signed by the cert above). 2. Validity period (notBefore/notAfter current). 3. Revocation status (not on CRL/OCSP). 4. Path length constraint (pathLenConstraint limiting intermediate CA depth)."
+          "id": "MC04",
+          "type": "mcq",
+          "question": "How many certificate chain checks does RFC 5280 require for path validation?",
+          "options": {
+            "A": "2",
+            "B": "4",
+            "C": "6",
+            "D": "8"
+          },
+          "correct": "B",
+          "explanation": "RFC 5280 path validation performs 4 checks per certificate in the chain: (1) signature valid against issuer, (2) current time within validity period, (3) certificate not revoked (CRL/OCSP), (4) certificate usage matches intended purpose (key usage, extended key usage). All 4 must pass."
+        },
+        {
+          "id": "MC05",
+          "type": "mcq",
+          "question": "What attack does salting a password hash prevent?",
+          "options": {
+            "A": "Timing attacks on hash comparison",
+            "B": "Rainbow table lookups and precomputed hash database attacks",
+            "C": "Brute-force dictionary attacks",
+            "D": "Length-extension attacks"
+          },
+          "correct": "B",
+          "explanation": "A random salt, unique per user, ensures that two users with the same password have different hash values. This defeats precomputed rainbow tables and shared hash databases — an attacker must brute-force each hash individually. Salts do not prevent brute force (that's the work factor's job), timing attacks (constant-time comparison's job), or length extension (HMAC's job)."
         }
       ]
     },
     "M05": {
+      "id": "modcheck-M05",
       "module": "M05",
-      "title": "Retention Check: Linux Security — Permissions and Filesystem",
-      "generated": "2026-04-13",
+      "title": "Module Check: Linux Persistence and Privilege Escalation",
+      "generated": "2026-04-14",
       "questions": [
         {
-          "id": "MC05-1",
-          "q": "What does the SUID bit do when set on a root-owned executable?",
-          "a": "The process runs with root's effective UID regardless of who launches it. Any user who executes the binary gets root's privilege level for the duration of that process execution."
+          "id": "MC01",
+          "type": "open",
+          "question": "How does the SUID bit allow a low-privilege user to execute code as root?",
+          "answer": "The SUID bit on an executable sets the effective UID to the file owner (e.g., root) when executed, regardless of who runs it. The process inherits root privileges for its duration. If the binary allows code execution (e.g., a shell, vim, find with -exec), the attacker gains a root shell."
         },
         {
-          "id": "MC05-2",
-          "q": "Write the bash command to find all SUID binaries on a Linux system.",
-          "a": "`find / -perm -4000 -type f 2>/dev/null` — finds all files with the SUID bit set, suppressing permission errors from directories the current user cannot read."
+          "id": "MC02",
+          "type": "open",
+          "question": "Write the `find` command that lists all SUID-bit files on a Linux system.",
+          "answer": "`find / -perm -4000 -type f 2>/dev/null` — searches from root, matches files with the SUID permission bit set (4000 in octal), suppresses permission errors. Adding `-ls` gives ownership details."
         },
         {
-          "id": "MC05-3",
-          "q": "Name the four standard Linux persistence locations for cron and startup mechanisms.",
-          "a": "/etc/cron.d/ (system cron jobs), /var/spool/cron/crontabs/ (user crontabs), ~/.config/systemd/user/ (user systemd services), /etc/rc.local (legacy startup script)."
+          "id": "MC03",
+          "type": "open",
+          "question": "Name four locations an attacker uses to establish persistence on Linux.",
+          "answer": "(1) ~/.bashrc or ~/.profile — runs on user login. (2) /etc/cron.d/ or crontab — scheduled execution. (3) systemd unit file in /etc/systemd/system/ — survives reboot. (4) LD_PRELOAD in /etc/ld.so.preload — injects a shared library into every process. Also: SSH authorized_keys, /etc/rc.local."
         },
         {
-          "id": "MC05-4",
-          "q": "Why does the Filesystem Hierarchy Standard (FHS) aid detection even without specific monitoring rules?",
-          "a": "FHS defines canonical locations for each type of file and service. Legitimate services run from /usr/bin, /opt, /usr/local. Any persistent process running from /tmp, /dev/shm, or user home directories violates FHS norms and is immediately anomalous — the predictability of legitimate software is the detection signal."
+          "id": "MC04",
+          "type": "mcq",
+          "question": "What detection benefit does the Linux Filesystem Hierarchy Standard (FHS) provide for threat hunting?",
+          "options": {
+            "A": "FHS enforces file permission standards that block malware writes",
+            "B": "FHS defines expected locations — executables outside standard paths are anomalous and easier to detect",
+            "C": "FHS checksums system binaries at boot",
+            "D": "FHS prevents modification of /etc without root"
+          },
+          "correct": "B",
+          "explanation": "FHS defines conventions: binaries in /usr/bin, libraries in /usr/lib, config in /etc. An executable in /tmp, /var/www, or a home directory is an immediate anomaly. Threat hunters use this baseline to filter noise from true positives. FHS has no enforcement mechanism — it is a convention, not a control."
+        },
+        {
+          "id": "MC05",
+          "type": "mcq",
+          "question": "What is the difference between privilege escalation and lateral movement?",
+          "options": {
+            "A": "Privilege escalation moves between hosts; lateral movement elevates within one host",
+            "B": "Privilege escalation elevates access level on the current host; lateral movement moves to a different host",
+            "C": "Both terms describe the same technique at different stages of the kill chain",
+            "D": "Lateral movement is only possible after full privilege escalation"
+          },
+          "correct": "B",
+          "explanation": "Privilege escalation: low-priv user → root on the same machine. Lateral movement: compromised host → another host in the network. Both are post-exploitation techniques but target different attack dimensions. Lateral movement does not require root; credential theft often enables lateral movement at user level."
         }
       ]
     },
     "M06": {
+      "id": "modcheck-M06",
       "module": "M06",
-      "title": "Retention Check: Persistence — Abusing What the OS Trusts",
-      "generated": "2026-04-13",
+      "title": "Module Check: Windows Persistence Mechanisms",
+      "generated": "2026-04-14",
       "questions": [
         {
-          "id": "MC06-1",
-          "q": "Name the three components of a WMI subscription and the Sysmon event that detects each one's creation.",
-          "a": "Filter (Sysmon Event 19), Consumer (Sysmon Event 20), Binding (Sysmon Event 21). The binding links a filter to a consumer — without all three events, the subscription is incomplete."
+          "id": "MC01",
+          "type": "open",
+          "question": "Name the three components of a WMI event subscription used for persistence and the Sysmon events that reveal them.",
+          "answer": "__EventFilter: defines the trigger condition (e.g., every 60 seconds). __EventConsumer: the action to execute (CommandLineEventConsumer runs a command). __FilterToConsumerBinding: links filter to consumer. Sysmon Event 19 (WmiEventFilter), Event 20 (WmiEventConsumer), Event 21 (WmiEventConsumerToFilter) capture the creation of each."
         },
         {
-          "id": "MC06-2",
-          "q": "Name two Windows registry paths that host persistence mechanisms and the Sysmon event type that monitors them.",
-          "a": "HKLM/HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run (startup), HKLM\\SYSTEM\\CurrentControlSet\\Services (service installation). Monitored by Sysmon Event 12 (key created/deleted) and Event 13 (value set)."
+          "id": "MC02",
+          "type": "open",
+          "question": "Name two Windows Registry paths commonly abused for persistence.",
+          "answer": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run — executes on user login without admin. HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run — executes for all users on login (requires admin). Also: HKLM\\SYSTEM\\CurrentControlSet\\Services (service creation), HKCU\\...\\RunOnce (one-time execution)."
         },
         {
-          "id": "MC06-3",
-          "q": "Explain the exclusion-list pattern for Sysmon tuning in one paragraph.",
-          "a": "Enable a broad monitoring rule. Observe 5–7 days of operations and identify all known-good agents that trigger it (AV, backup tools, software updates). Add those agents as exclusions in the Sysmon configuration. Alert on everything remaining. The exclusion list represents institutional knowledge about the environment's baseline — it must be version-controlled and reviewed at least quarterly."
+          "id": "MC03",
+          "type": "open",
+          "question": "What is the exclusion-list pattern in malware persistence and why is it stealthy?",
+          "answer": "Malware adds its process, file path, or hash to Windows Defender's exclusion list before executing — preventing AV scanning of the payload. It is stealthy because the exclusion entry looks like a legitimate administrative action, and many EDRs do not alert on exclusion additions by default."
         },
         {
-          "id": "MC06-4",
-          "q": "Why do attackers prefer abusing legitimate OS mechanisms over installing custom rootkits for persistence?",
-          "a": "Legitimate mechanisms (cron, WMI, scheduled tasks, registry Run keys) blend with normal administrative operations and do not trigger kernel-level or AV detection rules. Detection requires environment-specific baselining rather than signature matching. Custom rootkits trigger kernel integrity checks, AV signature detection, and EDR anomaly detection."
+          "id": "MC04",
+          "type": "mcq",
+          "question": "Why are WMI subscriptions a preferred persistence mechanism over Registry Run keys for sophisticated actors?",
+          "options": {
+            "A": "WMI subscriptions survive registry cleanups and do not appear in autoruns",
+            "B": "WMI subscriptions execute faster than Registry Run keys",
+            "C": "WMI subscriptions are stored in a separate database and survive Autoruns-based detection",
+            "D": "WMI subscriptions do not require admin privileges"
+          },
+          "correct": "C",
+          "explanation": "WMI subscriptions are stored in the WMI repository (%SystemRoot%\\System32\\wbem\\Repository), not in the registry or filesystem. Tools like Autoruns and most registry viewers miss them. This makes WMI subscriptions harder to enumerate and clean. They also survive reboots and registry sanitisation."
+        },
+        {
+          "id": "MC05",
+          "type": "mcq",
+          "question": "Which Windows mechanism does the exclusion-list persistence technique abuse?",
+          "options": {
+            "A": "Windows Firewall inbound rule exceptions",
+            "B": "Windows Defender antivirus scan exclusions",
+            "C": "AppLocker allowed publisher rules",
+            "D": "UAC virtualisation registry redirection"
+          },
+          "correct": "B",
+          "explanation": "Adding a path or process to Windows Defender's exclusion list prevents it from being scanned. Malware writes its own path to `HKLM\\SOFTWARE\\Microsoft\\Windows Defender\\Exclusions\\Paths` before execution. Legitimate software (AV, backup agents) uses this API — making malicious additions blend in with normal admin activity."
         }
       ]
     },
     "M07": {
+      "id": "modcheck-M07",
       "module": "M07",
-      "title": "Retention Check: Windows Telemetry — Seeing the Full Picture",
-      "generated": "2026-04-13",
+      "title": "Module Check: Windows Event Log Analysis",
+      "generated": "2026-04-14",
       "questions": [
         {
-          "id": "MC07-1",
-          "q": "What does Event 4624's LogonType field indicate, and what are the values for interactive, network, and RDP logons?",
-          "a": "LogonType indicates the authentication method used. 2 = interactive (local console). 3 = network (SMB/WMI — lateral movement path). 10 = RemoteInteractive (RDP). Type 3 from an unexpected source IP is the primary lateral movement detection signature."
+          "id": "MC01",
+          "type": "open",
+          "question": "What do the LogonType values in Event 4624 indicate? List at least three.",
+          "answer": "LogonType 2: Interactive (local console). LogonType 3: Network (e.g., SMB, WMI). LogonType 10: RemoteInteractive (RDP). LogonType 5: Service logon. LogonType 7: Unlock. Type 3 is most common for lateral movement; Type 10 for RDP-based attacks."
         },
         {
-          "id": "MC07-2",
-          "q": "What does Sysmon Event 10 detect and what GrantedAccess value indicates LSASS credential dumping?",
-          "a": "Event 10 (ProcessAccess) fires when one process opens another's memory space. GrantedAccess=0x1010 or 0x1410 includes PROCESS_VM_READ, sufficient for credential dumping. TargetImage=lsass.exe with these access rights is the detection signature."
+          "id": "MC02",
+          "type": "open",
+          "question": "How does Sysmon Event 10 (ProcessAccess) detect LSASS memory dumping?",
+          "answer": "Event 10 fires when one process opens a handle to another process's memory. Credential dumpers (Mimikatz, procdump) open LSASS with PROCESS_VM_READ access. Filter for: TargetImage = lsass.exe, GrantedAccess = 0x1010 or 0x1410 (VM read permissions). This detects Mimikatz and most LSASS dump tools."
         },
         {
-          "id": "MC07-3",
-          "q": "What is the DCSync detection signature in AD events, and what distinguishes it from legitimate replication?",
-          "a": "Event 4662, Object=domainDNS, AccessMask=0x100 (DS-Replication-Get-Changes-All). Legitimate replication is performed by domain controller computer accounts (ending in $). DCSync is flagged when the requesting account is NOT a DC computer account."
+          "id": "MC03",
+          "type": "open",
+          "question": "What is the DCSync attack and which Windows events detect it?",
+          "answer": "DCSync abuses the MS-DRSR (Directory Replication Service Remote) protocol to request password hashes from a DC as if the attacker were another DC — without needing to run code on the DC. Detection: Event 4662 on the DC (DsGetNCChanges — object access with GUID 1131f6aa...) and Sysmon 3 (outbound replication port 135/3268 from non-DC)."
         },
         {
-          "id": "MC07-4",
-          "q": "Why is ProcessGUID preferred over PID for correlating Sysmon events?",
-          "a": "Windows PIDs are 16-bit values reused after process exit. In a high-activity environment, a PID may be reused within the correlation window, causing false attribution. ProcessGUID is unique for each process for the system's lifetime."
+          "id": "MC04",
+          "type": "mcq",
+          "question": "Why is ProcessGUID a better correlation field than PID in Sysmon logs?",
+          "options": {
+            "A": "PIDs are randomised by the OS to prevent tracking",
+            "B": "PIDs are reused after process termination; ProcessGUID is globally unique for the process lifetime",
+            "C": "ProcessGUID includes the parent process, making tree reconstruction easier",
+            "D": "PIDs are not logged in Sysmon"
+          },
+          "correct": "B",
+          "explanation": "Windows reuses PIDs shortly after a process exits. If a malicious process exits and a benign process gets the same PID, correlating events by PID would falsely link them. ProcessGUID is a UUID assigned at process creation and never reused — allowing reliable cross-event correlation throughout the process lifetime."
         },
         {
-          "id": "MC07-5",
-          "q": "Name the four-source Windows kill chain for detecting PsExec lateral movement.",
-          "a": "Sysmon Event 1 (process creation of psexec on source) → Sysmon Event 3 (network connection to destination, linked by ProcessGUID) → Windows Security Event 4624 (logon Type 3 on destination, linked by SessionGUID) → AD Event 4769 (Kerberos ticket issued if domain context used)."
+          "id": "MC05",
+          "type": "mcq",
+          "question": "In the PsExec attack kill chain, which four event sources provide detection coverage?",
+          "options": {
+            "A": "Event 4624, Event 7045, Sysmon 1, Sysmon 3",
+            "B": "Event 4662, Event 4768, Sysmon 10, Sysmon 22",
+            "C": "Event 4625, Event 4740, Sysmon 7, Sysmon 19",
+            "D": "Event 4648, Event 4771, Sysmon 11, Sysmon 17"
+          },
+          "correct": "A",
+          "explanation": "PsExec kill chain: Sysmon 3 (lateral SMB connection), Event 4624 LogonType 3 (network authentication), Event 7045 (PSEXESVC service installation), Sysmon 1 (cmd.exe/payload process spawned by PSEXESVC). These four events across two log sources cover the full chain."
         }
       ]
     },
     "M08": {
+      "id": "modcheck-M08",
       "module": "M08",
-      "title": "Retention Check: Authentication Weaknesses — NTLM to Kerberoasting",
-      "generated": "2026-04-13",
+      "title": "Module Check: Credential Attacks and Kerberos",
+      "generated": "2026-04-14",
       "questions": [
         {
-          "id": "MC08-1",
-          "q": "Why is an NTLM hash equivalent to a password for authentication purposes?",
-          "a": "NTLM authenticates by verifying that the client can produce a valid response to a server challenge using the hash. The hash itself is used to compute the response — possessing the hash is a sufficient credential. The server never verifies that the client knows the plaintext."
+          "id": "MC01",
+          "type": "open",
+          "question": "Why is the NTLM hash functionally equivalent to a plaintext password for authentication?",
+          "answer": "NTLM authentication uses challenge-response: the client proves identity by hashing a server challenge with the NT hash. An attacker with the NT hash can compute the correct response without knowing the original password. They never need to crack it — they authenticate directly. This is the pass-the-hash (PtH) attack."
         },
         {
-          "id": "MC08-2",
-          "q": "What is the Event 4624 field combination that is the primary pass-the-hash detection signature?",
-          "a": "LogonType=3 (network logon) + LmPackageName='NTLM V2' from a source IP that is unexpected for the target account. In a domain environment, admin authentications to key servers should use Kerberos — NTLM is suspicious unless specifically expected."
+          "id": "MC02",
+          "type": "open",
+          "question": "What Event 4624 signature distinguishes a pass-the-hash authentication from a normal network login?",
+          "answer": "PtH produces a Type 3 (Network) logon with AuthenticationPackageName = NTLM and LogonProcessName = NtLmSsp. The connecting IP is the attacker's machine. A normal Kerberos login uses AuthenticationPackageName = Kerberos. Alert on NTLM Type 3 logons from non-standard hosts, especially to high-value targets."
         },
         {
-          "id": "MC08-3",
-          "q": "What encrypted ticket type does Kerberoasting specifically request, and why is it crackable offline?",
-          "a": "RC4-encrypted tickets (EncryptionType=0x17, Kerberos RC4_HMAC). Service accounts encrypted with RC4 use the account's NTLM hash as the key, which can be cracked offline with hashcat/JtR against domain password policies. AES-encrypted tickets (0x12) are not practically crackable."
+          "id": "MC03",
+          "type": "open",
+          "question": "Why does Kerberoasting target service accounts specifically, and what makes RC4 the preferred encryption for the attack?",
+          "answer": "Service accounts have SPNs (Service Principal Names) — any domain user can request a Kerberos service ticket encrypted with the service account's password hash. The attacker takes the ticket offline and cracks it. RC4-HMAC (type 23) is preferred because it is faster to crack than AES-256 by several orders of magnitude. Forcing RC4 downgrade is part of the attack."
         },
         {
-          "id": "MC08-4",
-          "q": "Why is PowerShell Execution Policy not a security control, and what IS the paired detection for malicious PowerShell?",
-          "a": "Execution policy applies only to .ps1 files — bypassed trivially by the attacker typing script content interactively, using -ExecutionPolicy Bypass, or using -EncodedCommand. The effective detection is PowerShell Script Block Logging (Event 4104), which records actual executed code regardless of policy."
+          "id": "MC04",
+          "type": "mcq",
+          "question": "How does setting PowerShell execution policy to \"Restricted\" defend against script-based attacks?",
+          "options": {
+            "A": "It prevents all PowerShell execution, including LOL (living-off-the-land) attacks",
+            "B": "It is a meaningful security boundary that blocks unsigned scripts",
+            "C": "It is bypassable with `-ExecutionPolicy Bypass` or `powershell -enc` and provides no real security",
+            "D": "It prevents script injection only from remote sources"
+          },
+          "correct": "C",
+          "explanation": "Execution policy is not a security boundary — it is a convenience feature. Any local admin or the current user can bypass it with `powershell.exe -ExecutionPolicy Bypass script.ps1` or by encoding the script. AMSI (Antimalware Scan Interface) and AppLocker are the actual controls for restricting PowerShell script execution."
         },
         {
-          "id": "MC08-5",
-          "q": "State the paired-detection principle and apply it to one control from M08.",
-          "a": "Every preventative control has a documented bypass condition. For each control, define: (a) the bypass condition, (b) the detection signature that fires when the bypass is used. Example: MFA prevents credential-only auth. Bypass: SIM swap or session cookie theft. Detection: simultaneous impossible-travel alert on the account's MFA success events."
+          "id": "MC05",
+          "type": "mcq",
+          "question": "What is the \"paired-detection principle\" for credential attacks?",
+          "options": {
+            "A": "Always deploy two EDR agents to ensure coverage",
+            "B": "Pair each attack technique with two independent detection methods from different data sources",
+            "C": "Correlate authentication events from both the source and destination host",
+            "D": "Alert only when two separate threat intelligence feeds both flag a host"
+          },
+          "correct": "B",
+          "explanation": "The paired-detection principle: for each technique, implement at least two detections from independent data sources (e.g., Event 4624 and Sysmon 3 for lateral movement). If one detection is evaded or the log source is disabled, the second provides coverage. Single-source detection has a single point of failure."
         }
       ]
     }

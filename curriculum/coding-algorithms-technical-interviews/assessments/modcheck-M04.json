@@ -6,23 +6,47 @@
   "questions": [
     {
       "id": "MC01",
-      "question": "In DFS three-colour marking, what do white, gray, and black represent?",
-      "answer": "White: unvisited. Gray: on the current DFS call stack. Black: fully processed."
+      "type": "open",
+      "question": "In DFS three-colour marking, what do white, gray, and black mean, and how does encountering a gray node prove a cycle?",
+      "answer": "White = unvisited, gray = on the current call stack, black = fully processed. A gray node means we reached an ancestor still in the current DFS path — a back edge — which proves a directed cycle."
     },
     {
       "id": "MC02",
-      "question": "Why does BFS guarantee shortest path in an unweighted graph?",
-      "answer": "BFS explores all nodes at distance d before any at d+1 — the first reach is via the minimum number of edges"
+      "type": "open",
+      "question": "Why does BFS guarantee shortest path in an unweighted graph, and why does DFS not?",
+      "answer": "BFS explores all nodes at distance d before any at d+1, so the first time it reaches a node is via the minimum number of edges. DFS may reach a node via a longer path first, then never revisit it."
     },
     {
       "id": "MC03",
-      "question": "After Kahn's topological sort, `len(result) < n`. What does this mean?",
-      "answer": "The graph contains a directed cycle"
+      "type": "open",
+      "question": "After running Kahn's algorithm, len(result) < n. What does this reveal and why?",
+      "answer": "The graph contains a directed cycle. Nodes in a cycle never have their in-degree reach zero, so they are never enqueued. If result is shorter than the node count, the missing nodes are part of a cycle."
     },
     {
       "id": "MC04",
-      "question": "Which traversal processes children before the parent? Give one problem where this is required.",
-      "answer": "Post-order DFS. Example: maximum depth of tree, tree diameter, serialise/deserialise tree"
+      "type": "mcq",
+      "question": "Which traversal order processes all children before their parent node?",
+      "options": {
+        "A": "Pre-order DFS",
+        "B": "In-order DFS",
+        "C": "Post-order DFS",
+        "D": "BFS level-order"
+      },
+      "correct": "C",
+      "explanation": "Post-order visits left subtree → right subtree → root. This means children are fully processed before the parent is visited — required for problems like tree height, diameter, and serialisation."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "In an adjacency list representation, what is the time complexity of iterating all neighbours of every node across the full graph?",
+      "options": {
+        "A": "O(V)",
+        "B": "O(E)",
+        "C": "O(V + E)",
+        "D": "O(V × E)"
+      },
+      "correct": "C",
+      "explanation": "Visiting each node is O(V); iterating all edges (once per endpoint) is O(E). Together O(V+E) is the standard BFS/DFS complexity on an adjacency list. O(V²) would apply to an adjacency matrix."
     }
   ]
 }

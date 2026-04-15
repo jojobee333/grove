@@ -1,26 +1,52 @@
 {
+  "id": "modcheck-M01",
   "module": "M01",
-  "title": "TypeScript Strict Mode — Quick Check",
+  "title": "Module Check: TypeScript Strict Mode and Schema-First Design",
+  "generated": "2026-04-14",
   "questions": [
     {
-      "id": "MC01-1",
-      "q": "What does `strict: true` in tsconfig.json actually do under the hood?",
-      "a": "It is a shorthand that activates nine individual compiler flags simultaneously, including `noImplicitAny`, `strictNullChecks`, `strictFunctionTypes`, and `strictPropertyInitialization`. Enabling `strict: true` is equivalent to enabling all nine flags individually."
+      "id": "MC01",
+      "type": "open",
+      "question": "Name three categories of bugs that `strict: true` in tsconfig catches that a non-strict config would silently allow.",
+      "answer": "strictNullChecks (null/undefined access), noImplicitAny (untyped parameters), strictPropertyInitialization (class fields possibly undefined). Together they eliminate the most common runtime crashes from unchecked assumptions."
     },
     {
-      "id": "MC01-2",
-      "q": "What is the `schema = type` pattern and why does it matter at API boundaries?",
-      "a": "The schema = type pattern means the runtime validation schema (e.g. a Zod schema) is also the TypeScript type source via `z.infer<typeof schema>`. At API boundaries, this guarantees that the compile-time type and the runtime validation rule are provably identical — you cannot have a type that says a field is `string` but a validator that allows `null`, or vice versa."
+      "id": "MC02",
+      "type": "open",
+      "question": "Explain the schema=type pattern. What is the role of each layer and why does it prevent schema drift?",
+      "answer": "The database schema is the single source of truth. Drizzle infers TS types from it ($inferInsert/$inferSelect). Zod validation schemas are derived from those types. Each layer rebuilds from the one below — change the DB schema and the TS type and validator update automatically, preventing the three from diverging."
     },
     {
-      "id": "MC01-3",
-      "q": "Why does `isolatedModules: true` matter when using Vite?",
-      "a": "Vite uses esbuild for transpilation, and esbuild processes each file in isolation without cross-file type analysis. `isolatedModules: true` makes TypeScript flag patterns that esbuild cannot handle — such as re-exporting a type without the `type` keyword — as compile errors, preventing runtime failures that would only appear after `vite build`."
+      "id": "MC03",
+      "type": "open",
+      "question": "What does `isolatedModules: true` enforce and why does it matter for Vite?",
+      "answer": "It requires every file to be independently transpilable — no type-only re-exports without `export type`. Vite uses esbuild for single-file transpilation (no full type-check), so files that rely on cross-file type information would silently produce wrong JS without this flag."
     },
     {
-      "id": "MC01-4",
-      "q": "How does Drizzle ORM implement the `schema = type` pattern, and what does it mean for type safety on INSERT operations?",
-      "a": "Drizzle exposes `$inferSelect` (the shape of a SELECT result) and `$inferInsert` (the shape required for an INSERT) as TypeScript types inferred directly from the table definition. This means adding a non-nullable column to the Drizzle schema immediately surfaces a TypeScript error at every INSERT site that doesn't provide the new column — no separate interface maintenance needed."
+      "id": "MC04",
+      "type": "mcq",
+      "question": "Which Drizzle utility infers the TypeScript type for a table's INSERT payload?",
+      "options": {
+        "A": "$inferSelect",
+        "B": "$inferInsert",
+        "C": "InferModel<typeof table, \"insert\">",
+        "D": "z.infer<typeof tableSchema>"
+      },
+      "correct": "B",
+      "explanation": "$inferInsert infers the shape of data required to insert a row (omits generated/default fields as optional). $inferSelect infers what you get back from a SELECT. InferModel is the older Drizzle API; z.infer is Zod, not Drizzle."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "In Meridian's stack, what is the correct order of validation layers for an incoming API request?",
+      "options": {
+        "A": "DB query → Zod parse → Auth check → Route handler",
+        "B": "Auth check → Zod parse → Route handler → DB query",
+        "C": "Zod parse → Auth check → Route handler → DB query",
+        "D": "Route handler → Auth check → Zod parse → DB query"
+      },
+      "correct": "B",
+      "explanation": "Authentication must come first (reject unauthenticated requests before doing any work). Then Zod parses and validates the body. Then the route handler runs business logic. DB queries happen last, after all validation passes. Parsing before auth wastes CPU on bad requests."
     }
   ]
 }

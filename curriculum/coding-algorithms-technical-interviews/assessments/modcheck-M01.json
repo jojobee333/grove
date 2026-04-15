@@ -2,32 +2,51 @@
   "id": "modcheck-M01",
   "module": "M01",
   "title": "Module Check: The Interview Algorithm Landscape",
-  "generated": "2025-01-01",
+  "generated": "2026-04-14",
   "questions": [
     {
       "id": "MC01",
-      "question": "Name the 6 steps of the UMPIRE framework in order.",
-      "answer": "Understand, Match, Plan, Implement, Review, Evaluate"
+      "type": "open",
+      "question": "Name the 6 steps of the UMPIRE framework in order and state what happens at each step.",
+      "answer": "Understand (clarify the problem and constraints), Match (identify the pattern), Plan (outline the algorithm in pseudocode), Implement (write code), Review (trace through examples), Evaluate (state time/space complexity)."
     },
     {
       "id": "MC02",
-      "question": "According to the Pareto principle applied to interviews, approximately what percentage of problems can be solved with the top 20% of patterns?",
-      "answer": "~80% of problems"
+      "type": "open",
+      "question": "What property must an input have for binary search to be applicable, and why does that property matter?",
+      "answer": "The input must be sorted (or have a monotonic property). This allows each comparison to eliminate half the remaining search space, achieving O(log n) instead of O(n)."
     },
     {
       "id": "MC03",
-      "question": "In a 4-week study plan, which topic cluster belongs in week 3?",
-      "answer": "Binary search, two pointers, and sliding window"
+      "type": "open",
+      "question": "At which UMPIRE step should you write the first line of code, and what three steps must precede it?",
+      "answer": "I (Implement) — only after completing U (Understand), M (Match), and P (Plan). Writing code before planning leads to wasted effort on the wrong algorithm."
     },
     {
       "id": "MC04",
-      "question": "At which UMPIRE step should you write the first line of code?",
-      "answer": "I (Implement) — only after completing U, M, and P"
+      "type": "mcq",
+      "question": "According to the Pareto principle applied to algorithm interviews, approximately what share of problems can be solved with the top 20% of patterns?",
+      "options": {
+        "A": "~50% of problems",
+        "B": "~65% of problems",
+        "C": "~80% of problems",
+        "D": "~95% of problems"
+      },
+      "correct": "C",
+      "explanation": "The Pareto principle (80/20 rule) holds here: mastering hash maps, two pointers, BFS/DFS, binary search, and DP covers the large majority of interview problems. 50% and 65% understate the leverage; 95% overstates it."
     },
     {
       "id": "MC05",
-      "question": "What are the top 5 high-frequency algorithm patterns that cover the majority of interview problems?",
-      "answer": "Hash maps, two pointers/sliding window, BFS/DFS, binary search, dynamic programming"
+      "type": "mcq",
+      "question": "During the Review step of UMPIRE, what is the primary goal?",
+      "options": {
+        "A": "Refactor the code to use fewer lines",
+        "B": "Trace through the example inputs to verify correctness before the interviewer asks",
+        "C": "Look up standard library functions you may have missed",
+        "D": "Restate the problem to confirm you understood it"
+      },
+      "correct": "B",
+      "explanation": "Review means manually tracing your implementation against the given examples to catch off-by-one errors or missed edge cases. Refactoring and library lookup are secondary concerns; problem restatement belongs in the Understand step."
     }
   ]
 }

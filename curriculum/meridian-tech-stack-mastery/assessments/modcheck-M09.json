@@ -1,26 +1,52 @@
 {
+  "id": "modcheck-M09",
   "module": "M09",
-  "title": "Monorepo Tooling: Three Scopes — Quick Check",
+  "title": "Module Check: Monorepo and DevOps Patterns",
+  "generated": "2026-04-14",
   "questions": [
     {
-      "id": "MC09-1",
-      "q": "What are the three scopes managed by pnpm workspaces, Turborepo, and Docker Compose, and why are these scopes non-overlapping?",
-      "a": "pnpm workspaces manages the package registry scope: which packages exist, how they link to each other via workspace:*, and how their node_modules are deduplicated. Turborepo manages the task execution scope: which build/test/lint tasks exist across packages, their inter-package dependency order, and what outputs can be cached. Docker Compose manages the runtime service scope: which processes run (postgres, redis, server, client), their network topology, port mappings, health checks, and startup ordering. Non-overlapping: pnpm doesn't know about build caching; Turborepo doesn't know about runtime containers; Docker Compose doesn't know about package linking."
+      "id": "MC01",
+      "type": "open",
+      "question": "What do pnpm workspaces, Turborepo, and Docker Compose each scope in the Meridian monorepo?",
+      "answer": "pnpm workspaces: Node.js dependency installation and script execution across packages (client, server, db). Turborepo: task orchestration and caching — knows which packages changed and runs only affected tasks. Docker Compose: service definitions for local infrastructure (Postgres, Redis, the app containers) with network and volume management."
     },
     {
-      "id": "MC09-2",
-      "q": "What observable signal indicates Turborepo should be added to an existing pnpm monorepo?",
-      "a": "The signal is sequential build execution of packages that could build in parallel. Specifically: the CI or local build runs db first (correct, dependency), then builds client and server sequentially even though client has no dependency on server and could build in parallel with it after db completes. Turborepo's `dependsOn: ['^build']` pipeline configuration enables this parallelism with hash-based output caching. Adding Turborepo speculatively before this bottleneck appears is premature — it adds turbo.json configuration complexity with no measurable benefit."
+      "id": "MC02",
+      "type": "open",
+      "question": "What is the signal that Turborepo's caching is providing value, and what is the signal that it is not configured correctly?",
+      "answer": "Value: `cache HIT` on unchanged packages — the task output is restored from cache in milliseconds. Misconfigured: `cache MISS` on every run, or stale outputs being served when source files changed. The `inputs` and `outputs` configuration in turbo.json must accurately describe what each task reads and writes."
     },
     {
-      "id": "MC09-3",
-      "q": "Explain the node_modules volume exclusion pattern in Docker Compose bind mounts: what it is, what it prevents, and what Docker mechanism implements it.",
-      "a": "The pattern: when a bind mount maps the host directory into the container (e.g. `- .:/app`), it also maps the host's node_modules directory. Host node_modules contain OS-specific compiled binaries (e.g. native Node.js addons compiled for Windows or macOS). The container runs Linux — those binaries are incompatible. The exclusion `- /app/node_modules` adds a second volume mount at the node_modules path specifically, which Docker treats as an anonymous Docker-managed volume. Docker's volume mount priority means the anonymous volume (container-native node_modules) takes precedence over the bind mount at that subdirectory, preserving the container's correctly-compiled dependencies."
+      "id": "MC03",
+      "type": "open",
+      "question": "Why must the node_modules directory be excluded from the Docker volume mount in development?",
+      "answer": "The Docker container installs its own node_modules in the image build step (for the Linux architecture). Mounting the host's node_modules on top would overwrite them with macOS/Windows binaries, causing missing native module errors inside the container."
     },
     {
-      "id": "MC09-4",
-      "q": "What does a Docker Compose health check actually test, and why is `condition: service_healthy` necessary for dependent services?",
-      "a": "A health check runs a command inside the running container on a schedule (e.g. `pg_isready -U meridian`) and exits 0 if the service is ready, non-zero otherwise. Docker reports the container as 'healthy' only after consecutive successful health checks. `condition: service_healthy` in a dependent service's `depends_on` block means: don't start this container until the dependency's health check has passed. Without it, `depends_on` only waits for the container process to start (milliseconds), not for the service to be ready (PostgreSQL init can take 2–10 seconds). Server would start and immediately fail to connect to postgres without the health check gate."
+      "id": "MC04",
+      "type": "mcq",
+      "question": "Why is a Docker health check necessary for the database container in Meridian's Compose setup?",
+      "options": {
+        "A": "To expose the database port to the host machine",
+        "B": "To restart the container if Postgres crashes",
+        "C": "To ensure dependent services wait until Postgres is accepting connections, not just started",
+        "D": "To enable pgvector extension installation"
+      },
+      "correct": "C",
+      "explanation": "Docker `depends_on` with `condition: service_healthy` waits until the health check passes — meaning Postgres is fully ready to accept connections. Without it, the app container starts while Postgres is still initialising and the first DB connection attempt fails."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "In a pnpm monorepo, what does the `workspace:*` version specifier in a package.json dependency mean?",
+      "options": {
+        "A": "Use the latest published NPM version of the package",
+        "B": "Use any version of the package that satisfies peer constraints",
+        "C": "Link to the package from the local workspace, using its current source",
+        "D": "Pin to the exact version currently in pnpm-lock.yaml"
+      },
+      "correct": "C",
+      "explanation": "`workspace:*` tells pnpm to resolve the dependency from a sibling package in the same monorepo — the local source, not a published registry version. This ensures changes to shared packages are immediately reflected without publishing. On `pnpm publish`, the specifier is replaced with the actual version number."
     }
   ]
 }

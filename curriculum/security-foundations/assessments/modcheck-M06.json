@@ -1,27 +1,52 @@
 {
+  "id": "modcheck-M06",
   "module": "M06",
-  "title": "Retention Check: Persistence — Abusing What the OS Trusts",
-  "generated": "2026-04-13",
+  "title": "Module Check: Windows Persistence Mechanisms",
+  "generated": "2026-04-14",
   "questions": [
     {
-      "id": "MC06-1",
-      "q": "Name the three components of a WMI subscription and the Sysmon event that detects each one's creation.",
-      "a": "Filter (Sysmon Event 19), Consumer (Sysmon Event 20), Binding (Sysmon Event 21). The binding links a filter to a consumer — without all three events, the subscription is incomplete."
+      "id": "MC01",
+      "type": "open",
+      "question": "Name the three components of a WMI event subscription used for persistence and the Sysmon events that reveal them.",
+      "answer": "__EventFilter: defines the trigger condition (e.g., every 60 seconds). __EventConsumer: the action to execute (CommandLineEventConsumer runs a command). __FilterToConsumerBinding: links filter to consumer. Sysmon Event 19 (WmiEventFilter), Event 20 (WmiEventConsumer), Event 21 (WmiEventConsumerToFilter) capture the creation of each."
     },
     {
-      "id": "MC06-2",
-      "q": "Name two Windows registry paths that host persistence mechanisms and the Sysmon event type that monitors them.",
-      "a": "HKLM/HKCU\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run (startup), HKLM\\SYSTEM\\CurrentControlSet\\Services (service installation). Monitored by Sysmon Event 12 (key created/deleted) and Event 13 (value set)."
+      "id": "MC02",
+      "type": "open",
+      "question": "Name two Windows Registry paths commonly abused for persistence.",
+      "answer": "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run — executes on user login without admin. HKLM\\Software\\Microsoft\\Windows\\CurrentVersion\\Run — executes for all users on login (requires admin). Also: HKLM\\SYSTEM\\CurrentControlSet\\Services (service creation), HKCU\\...\\RunOnce (one-time execution)."
     },
     {
-      "id": "MC06-3",
-      "q": "Explain the exclusion-list pattern for Sysmon tuning in one paragraph.",
-      "a": "Enable a broad monitoring rule. Observe 5–7 days of operations and identify all known-good agents that trigger it (AV, backup tools, software updates). Add those agents as exclusions in the Sysmon configuration. Alert on everything remaining. The exclusion list represents institutional knowledge about the environment's baseline — it must be version-controlled and reviewed at least quarterly."
+      "id": "MC03",
+      "type": "open",
+      "question": "What is the exclusion-list pattern in malware persistence and why is it stealthy?",
+      "answer": "Malware adds its process, file path, or hash to Windows Defender's exclusion list before executing — preventing AV scanning of the payload. It is stealthy because the exclusion entry looks like a legitimate administrative action, and many EDRs do not alert on exclusion additions by default."
     },
     {
-      "id": "MC06-4",
-      "q": "Why do attackers prefer abusing legitimate OS mechanisms over installing custom rootkits for persistence?",
-      "a": "Legitimate mechanisms (cron, WMI, scheduled tasks, registry Run keys) blend with normal administrative operations and do not trigger kernel-level or AV detection rules. Detection requires environment-specific baselining rather than signature matching. Custom rootkits trigger kernel integrity checks, AV signature detection, and EDR anomaly detection."
+      "id": "MC04",
+      "type": "mcq",
+      "question": "Why are WMI subscriptions a preferred persistence mechanism over Registry Run keys for sophisticated actors?",
+      "options": {
+        "A": "WMI subscriptions survive registry cleanups and do not appear in autoruns",
+        "B": "WMI subscriptions execute faster than Registry Run keys",
+        "C": "WMI subscriptions are stored in a separate database and survive Autoruns-based detection",
+        "D": "WMI subscriptions do not require admin privileges"
+      },
+      "correct": "C",
+      "explanation": "WMI subscriptions are stored in the WMI repository (%SystemRoot%\\System32\\wbem\\Repository), not in the registry or filesystem. Tools like Autoruns and most registry viewers miss them. This makes WMI subscriptions harder to enumerate and clean. They also survive reboots and registry sanitisation."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "Which Windows mechanism does the exclusion-list persistence technique abuse?",
+      "options": {
+        "A": "Windows Firewall inbound rule exceptions",
+        "B": "Windows Defender antivirus scan exclusions",
+        "C": "AppLocker allowed publisher rules",
+        "D": "UAC virtualisation registry redirection"
+      },
+      "correct": "B",
+      "explanation": "Adding a path or process to Windows Defender's exclusion list prevents it from being scanned. Malware writes its own path to `HKLM\\SOFTWARE\\Microsoft\\Windows Defender\\Exclusions\\Paths` before execution. Legitimate software (AV, backup agents) uses this API — making malicious additions blend in with normal admin activity."
     }
   ]
 }

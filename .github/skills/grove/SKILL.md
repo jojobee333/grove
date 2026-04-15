@@ -96,27 +96,44 @@ Produces `curriculum/[topic-slug]/assessments/` with one quiz per module.
 After generating quizzes, create a short retention check for every module.
 Write one file per module: `curriculum/[topic-slug]/assessments/modcheck-[MID].json`.
 
-Each file must follow this schema:
+Each file must follow this schema — questions may be **open-ended** (self-scored) or **MCQ** (auto-scored):
 
 ```json
 {
+  "id": "modcheck-M01",
   "module": "M01",
   "title": "[Module Title] — Quick Check",
+  "generated": "YYYY-MM-DD",
   "questions": [
-    { "id": "MC01-1", "q": "...", "a": "..." },
-    { "id": "MC01-2", "q": "...", "a": "..." },
-    { "id": "MC01-3", "q": "...", "a": "..." }
+    {
+      "id": "MC01-1",
+      "type": "open",
+      "question": "...",
+      "answer": "1–3 sentence answer."
+    },
+    {
+      "id": "MC01-2",
+      "type": "mcq",
+      "question": "...",
+      "options": { "A": "...", "B": "...", "C": "...", "D": "..." },
+      "correct": "B",
+      "explanation": "One sentence explaining why B is correct and why the distractors are wrong."
+    }
   ]
 }
 ```
 
 Rules:
-- 3–5 questions per module — no more, no less
-- Questions must be recall-level (not recognition): no multiple-choice, just open-ended prompts
-- Answers should be 1–3 sentences — concise, no padding
+- **5 questions per module** — no more, no less
+- **Mix types**: aim for 3 open-ended + 2 MCQ per module (always at least 1 of each)
+- Open-ended: recall-level prompt, answer 1–3 sentences, concise, no padding
+- MCQ: 4 options (A–D), exactly 1 correct, include `explanation` field
 - IDs use the pattern `MC[module-num]-[question-num]`, e.g. `MC01-2`
-- Questions should target the module’s stated learning objectives from `course.json`
-- Do NOT duplicate questions already present in the module’s `quiz-*.json`
+- Questions target the module's stated learning objectives from `course.json`
+- Do NOT duplicate questions already in the module's `quiz-*.json`
+- Do NOT write questions that test arbitrary schedule details, study-plan ordering, or
+  rote enumeration of a numbered list — test reasoning, not output memorization
+- MCQ distractors must be plausible common misconceptions, not obviously wrong filler
 
 ## Step 7 — Build the bundle
 

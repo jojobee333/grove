@@ -2,27 +2,51 @@
   "id": "modcheck-M06",
   "module": "M06",
   "title": "Module Check: Complexity Analysis",
-  "generated": "2025-01-01",
+  "generated": "2026-04-14",
   "questions": [
     {
       "id": "MC01",
+      "type": "open",
       "question": "What is the formal definition of f(n) = O(g(n))?",
-      "answer": "∃ constants c > 0 and n₀ ≥ 1 such that for all n ≥ n₀, f(n) ≤ c·g(n)"
+      "answer": "There exist constants c > 0 and n0 >= 1 such that for all n >= n0, f(n) <= c*g(n). This means g(n) is an upper bound on f(n) beyond some threshold."
     },
     {
       "id": "MC02",
-      "question": "Apply the Master Theorem to T(n) = 2T(n/2) + O(n). What is the result?",
-      "answer": "Θ(n log n) — Case 2 (f(n) = Θ(n^log_b(a)))"
+      "type": "open",
+      "question": "What is amortised analysis and how does it differ from worst-case analysis?",
+      "answer": "Amortised measures the average cost per operation over a sequence of n operations -- a guarantee, not a probability. Worst-case measures a single operation worst possible cost. Dynamic array append is O(n) worst-case but O(1) amortised because resizes are rare."
     },
     {
       "id": "MC03",
-      "question": "What is amortised analysis and how does it differ from worst-case analysis?",
-      "answer": "Amortised measures average cost per operation over a sequence; worst-case measures a single operation's worst possible cost. Amortised is a guarantee over n operations, not a probability."
+      "type": "open",
+      "question": "Apply the Master Theorem to T(n) = 2T(n/2) + O(n). Show which case applies and state the result.",
+      "answer": "a=2, b=2, f(n)=n. n^log_b(a) = n^1 = n. Since f(n) = Theta(n^log_b(a)), Case 2 applies, giving T(n) = Theta(n log n)."
     },
     {
       "id": "MC04",
-      "question": "If n ≤ 10⁵, which is the slowest algorithm that will still pass in 1 second?",
-      "answer": "O(n log n) — approximately 1.7×10⁶ operations, well within 10⁸"
+      "type": "mcq",
+      "question": "If n <= 10^5, which is the slowest algorithm complexity that still passes within 1 second?",
+      "options": {
+        "A": "O(n^2)",
+        "B": "O(n log n)",
+        "C": "O(n*sqrt(n))",
+        "D": "O(2^n)"
+      },
+      "correct": "B",
+      "explanation": "O(n log n) produces ~1.7x10^6 operations for n=10^5, well within the ~10^8 budget. O(n^2) gives 10^10 -- TLE."
+    },
+    {
+      "id": "MC05",
+      "type": "mcq",
+      "question": "Which statement about Theta notation is correct?",
+      "options": {
+        "A": "f(n)=Theta(g(n)) means f is only an upper bound of g",
+        "B": "f(n)=Theta(g(n)) means f grows both no faster and no slower than g",
+        "C": "f(n)=Theta(g(n)) implies f(n)=g(n) exactly",
+        "D": "Theta notation is equivalent to O notation"
+      },
+      "correct": "B",
+      "explanation": "Theta is a tight bound: f=Theta(g) means f=O(g) AND f=Omega(g). It characterises the exact growth rate."
     }
   ]
 }
