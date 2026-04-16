@@ -1,0 +1,42 @@
+{
+  "id": "modcheck-M07",
+  "module": "M07",
+  "title": "Surface Strategy and Open Limits - Quick Check",
+  "generated": "2026-04-15",
+  "questions": [
+    {
+      "id": "MC07-1",
+      "type": "open",
+      "question": "What documented strength does the course associate most with GitHub?",
+      "answer": "Governance and repository-centric controls such as review responsibility, hooks, branch constraints, and access management."
+    },
+    {
+      "id": "MC07-2",
+      "type": "open",
+      "question": "What documented strength does the course associate most with Claude?",
+      "answer": "Local context and autonomy mechanics such as memory loading, permission modes, context-window handling, and subagent isolation."
+    },
+    {
+      "id": "MC07-3",
+      "type": "open",
+      "question": "How should a team act when documentation leaves a workflow question unresolved?",
+      "answer": "Name the uncertainty, make conservative assumptions, validate behavior directly, and prefer reversible decisions until better evidence exists."
+    },
+    {
+      "id": "MC07-4",
+      "type": "mcq",
+      "question": "Which open gap is explicitly named in the research?",
+      "options": { "A": "No docs for MCP", "B": "No GitHub cloud-agent numeric context budget comparable to Claude's detail", "C": "No docs for skills", "D": "No docs for prompts" },
+      "correct": "B",
+      "explanation": "The gaps register specifically calls out the absence of a detailed GitHub cloud-agent token or compaction budget document."
+    },
+    {
+      "id": "MC07-5",
+      "type": "mcq",
+      "question": "What would best settle a frontier question in this course?",
+      "options": { "A": "Workflow folklore", "B": "A first-party compatibility matrix or published context mechanics", "C": "A longer prompt", "D": "More flashcards" },
+      "correct": "B",
+      "explanation": "Frontier questions are resolved by stronger evidence, not by confident improvisation."
+    }
+  ]
+}

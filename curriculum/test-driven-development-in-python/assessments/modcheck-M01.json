@@ -1,0 +1,42 @@
+{
+  "id": "modcheck-M01",
+  "module": "M01",
+  "title": "Drive Design with Red-Green-Refactor - Quick Check",
+  "generated": "2026-04-15",
+  "questions": [
+    {
+      "id": "MC01-1",
+      "type": "open",
+      "question": "What makes canonical TDD different from simply adding tests before coding?",
+      "answer": "Canonical TDD uses each test to expose the next behavior and steer design incrementally, not just to satisfy a timing rule about when tests are written."
+    },
+    {
+      "id": "MC01-2",
+      "type": "open",
+      "question": "What is the best clue that your next TDD step is too large?",
+      "answer": "If writing the test forces you to invent several future abstractions or imagine half the system first, the step is too large."
+    },
+    {
+      "id": "MC01-3",
+      "type": "open",
+      "question": "When does refactoring become necessary after a green test?",
+      "answer": "When the current code is readable enough to pass but is already making the next likely behavior harder to add or reason about."
+    },
+    {
+      "id": "MC01-4",
+      "type": "mcq",
+      "question": "Which phrase best captures the course's view of TDD?",
+      "options": { "A": "Coverage-first workflow", "B": "Behavior-design loop", "C": "Mock-driven architecture", "D": "Post-hoc verification" },
+      "correct": "B",
+      "explanation": "The course consistently frames TDD as a behavior-design loop."
+    },
+    {
+      "id": "MC01-5",
+      "type": "mcq",
+      "question": "What should usually drive refactor timing?",
+      "options": { "A": "Calendar time", "B": "Whether design pressure makes the next step harder", "C": "Line count", "D": "Coverage percentage" },
+      "correct": "B",
+      "explanation": "Refactor when the latest green step creates enough friction that the next step becomes riskier or less clear."
+    }
+  ]
+}

@@ -1,8 +1,8 @@
 {
   "id": "modcheck-M10",
   "module": "M10",
-  "title": "Module Check: Backtracking, Union-Find, Debates, and Gaps",
-  "generated": "2026-04-14",
+  "title": "Module Check: Backtracking, Union-Find, and Remaining Interview Patterns",
+  "generated": "2026-04-15",
   "questions": [
     {
       "id": "MC01",
@@ -13,40 +13,40 @@
     {
       "id": "MC02",
       "type": "open",
-      "question": "What do the three steps of the backtracking template (choose, explore, unchoose) accomplish?",
-      "answer": "Choose: make a decision and update state (e.g., append element, mark visited). Explore: recurse into the next level. Unchoose: undo the decision so sibling branches start from the identical state (e.g., pop element, unmark visited)."
+      "question": "Name the two optimisations that give Union-Find O(α(n)) amortised complexity and briefly describe each.",
+      "answer": "Path compression flattens the parent chain during find by repointing nodes toward the root. Union by rank attaches the smaller-rank tree under the larger-rank root so the structure does not grow tall unnecessarily. Together they make repeated connectivity operations effectively constant for interview-scale input sizes."
     },
     {
       "id": "MC03",
       "type": "open",
-      "question": "Name the two optimisations that give Union-Find O(α(n)) amortised complexity and briefly describe each.",
-      "answer": "Path compression (during find): make every node on the path point directly to the root, flattening the tree. Union by rank (during union): always attach the smaller-rank tree under the larger-rank root, preventing tall trees."
+      "question": "Why does this course usually place DP after the highest-frequency patterns for general prep, and when would you move it earlier?",
+      "answer": "Because the strongest interview-prep sequences prioritise the higher-frequency patterns first for short sprints, while DP is more costly to learn. You would move DP earlier if your target company or interview track is more DP-heavy, such as Google-style or more advanced algorithmic interviews."
     },
     {
       "id": "MC04",
       "type": "mcq",
-      "question": "What does it mean when DSU `union(u, v)` returns False?",
+      "question": "Which linked-list technique is the best default when a problem may modify the true head node?",
       "options": {
-        "A": "u or v does not exist in the set",
-        "B": "u and v are already in the same connected component",
-        "C": "The DSU has exceeded its size limit",
-        "D": "Path compression failed to converge"
+        "A": "Dummy-head or sentinel-node handling",
+        "B": "Monotonic queue maintenance",
+        "C": "Heapify-down cost analysis",
+        "D": "Binary lifting on trees"
       },
-      "correct": "B",
-      "explanation": "find(u) == find(v) before the union means they share the same root — already connected. The edge is redundant and adding it would create a cycle. This is the cycle detection signal in Kruskal's MST algorithm."
+      "correct": "A",
+      "explanation": "A dummy or sentinel node removes head-specific branching and makes pointer rewiring uniform. The other options are unrelated topics."
     },
     {
       "id": "MC05",
       "type": "mcq",
-      "question": "What minimum validation step is required before trusting a greedy algorithm over DP?",
+      "question": "What is the most accurate description of this course's trie coverage?",
       "options": {
-        "A": "Run both algorithms and compare outputs",
-        "B": "Prove the problem has no overlapping subproblems",
-        "C": "Attempt an exchange argument showing swapping any two adjacent decisions cannot improve the result",
-        "D": "Show the greedy choice produces the correct output on 10+ test cases"
+        "A": "Trie is fully taught as a first-wave core pattern that should be studied before trees",
+        "B": "Trie is taught as a source-backed second-wave pattern with O(m) operations and prefix recognition cues",
+        "C": "Trie is excluded from interview prep because it never appears in common problem sets",
+        "D": "Trie belongs only to competitive programming, not technical interviews"
       },
-      "correct": "C",
-      "explanation": "An exchange argument is the standard proof technique for greedy correctness: if swapping any two adjacent choices never improves the solution, the greedy order is optimal. Passing test cases is insufficient — a counterexample might exist that you haven't tested."
+      "correct": "B",
+      "explanation": "The lesson now teaches the trie template directly, but the study-sequence evidence still places tries behind the first-wave array/tree/graph patterns rather than ahead of them."
     }
   ]
 }

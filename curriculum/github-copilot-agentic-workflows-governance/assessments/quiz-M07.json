@@ -1,0 +1,88 @@
+{
+  "id": "quiz-M07",
+  "type": "module",
+  "module": "M07",
+  "title": "Assessment: Surface Strategy and Open Limits",
+  "generated": "2026-04-15",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "Which pairing best matches the course's documented surface strengths?",
+      "options": {
+        "A": "GitHub for local compaction mechanics, Claude for repository branch governance",
+        "B": "GitHub for governance and repo-centric controls, Claude for local context and autonomy mechanics",
+        "C": "GitHub for lesson authoring, Claude for MCP transport only",
+        "D": "GitHub and Claude are documented as identical in strengths"
+      },
+      "correct": "B",
+      "explanation": "The course synthesizes the evidence by treating GitHub as stronger on governance and repository-centric execution, and Claude as stronger on local context-window and permission-mode mechanics.",
+      "lesson_ref": "L13",
+      "claim_ref": "C7",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Which open gap is explicitly named in the research?",
+      "options": {
+        "A": "No public docs exist for GitHub hooks",
+        "B": "No documentation exists for Claude permission modes",
+        "C": "No explicit GitHub cloud-agent token or compaction budget equivalent to Claude's published detail",
+        "D": "No public source mentions skills at all"
+      },
+      "correct": "C",
+      "explanation": "The gaps register explicitly names the absence of a GitHub cloud-agent token or context-budget document comparable to Claude's context-window guidance.",
+      "lesson_ref": "L14",
+      "claim_ref": "C7",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "What is the safest workflow response to an unresolved documentation gap?",
+      "options": {
+        "A": "Assume the most convenient behavior until a bug appears",
+        "B": "Treat folklore as equivalent to first-party evidence",
+        "C": "Use conservative assumptions, validate behavior directly, and prefer reversible decisions",
+        "D": "Avoid cross-tool workflows entirely"
+      },
+      "correct": "C",
+      "explanation": "The frontier lesson recommends explicit fallbacks, direct validation, and reversible choices rather than pretending incomplete documentation settles the issue.",
+      "lesson_ref": "L14",
+      "claim_ref": "C9",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "short_answer",
+      "question": "Pick one of the open gaps from the course and state what additional evidence would settle it.",
+      "answer_key": {
+        "required_points": [
+          "Names a real gap from the course such as token budget, compatibility matrix, or subagent semantics",
+          "States a plausible first-party evidence source that would settle it, such as published docs or an authoritative matrix"
+        ],
+        "full_credit": "Names a correct gap and an evidence source that directly resolves the uncertainty",
+        "partial_credit": "Names a gap correctly but gives a vague settlement criterion"
+      },
+      "lesson_ref": "L14",
+      "claim_ref": "C7/C9",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "essay",
+      "prompt": "You need a workflow that is both governance-heavy and context-heavy. Explain how you would choose surfaces, controls, and validation steps using the course's cross-tool strategy and its treatment of open evidence gaps.",
+      "guidance": "Strong answers pair GitHub-style governance controls with Claude-style context reasoning where appropriate, then explain how unresolved documentation gaps change the validation plan.",
+      "rubric": {
+        "A": "Uses the surface-strategy model well and explicitly adjusts for evidence gaps with conservative validation steps",
+        "B": "Applies the surface strategy but treats open gaps too casually",
+        "C": "Makes a platform preference argument without using the course frameworks"
+      },
+      "lesson_ref": "L13-L14",
+      "claim_ref": "C7/C9",
+      "difficulty": "analysis"
+    }
+  ]
+}

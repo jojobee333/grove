@@ -1,0 +1,323 @@
+{
+  "topic": "Test-Driven Development in Python",
+  "slug": "test-driven-development-in-python",
+  "strata_source": "vault/research/test-driven-development-in-python/",
+  "generated": "2026-04-15",
+  "learner": {
+    "goal": "apply_practically",
+    "background": "some_exposure",
+    "session_time_min": 60,
+    "session_time_mode": "flexible"
+  },
+  "summary": "Learn to practice Python TDD as a design discipline by mastering the canonical loop, choosing between pytest and unittest, designing seams that reduce brittleness, using mocks and fakes intentionally, and handling advanced concerns such as async code, persistence, and empirical limits on TDD outcome claims.",
+  "modules": [
+    {
+      "id": "M01",
+      "title": "Drive Design with Red-Green-Refactor",
+      "strata_theme": "Theme 1 - TDD is a behavior-first, incremental workflow rather than a generic write-tests-first slogan",
+      "description": "Establish the canonical Python TDD loop as a design method built around behavior selection, failing tests, minimal implementation, and ongoing cleanup.",
+      "objectives": [
+        "Differentiate canonical TDD from generic test-first coding",
+        "Sequence a small Python feature through red, green, and refactor without collapsing the steps"
+      ],
+      "lessons": [
+        {
+          "id": "L01",
+          "title": "Canonical TDD in Python: Behavior Before Implementation",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 12,
+          "description": "Define TDD as a behavior-design loop and contrast it with shallow test-first habits that skip sequencing or refactoring discipline.",
+          "prerequisites": [],
+          "teaches_concepts": ["red-green-refactor", "test-list", "behavior-first-design"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.8,
+          "difficulty": 2,
+          "unlock_rule": "always",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L02",
+          "title": "Refactor Timing and Small-Step Control",
+          "strata_claim": "C1",
+          "type": "applied",
+          "estimated_minutes": 14,
+          "description": "Practice deciding when code is good enough for the next test and when refactoring is necessary to protect future changeability.",
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["micro-cycle-judgment"],
+          "reinforces_concepts": ["red-green-refactor", "test-list"],
+          "mastery_threshold": 0.8,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M02",
+      "title": "Control State, Isolation, and Cleanup",
+      "strata_theme": "Theme 2 - In Python, trustworthy TDD depends heavily on explicit isolation and teardown discipline",
+      "description": "Treat fixture scope, cleanup strategy, async loop handling, and database rollback patterns as central parts of reliable Python TDD.",
+      "objectives": [
+        "Choose fixture and teardown patterns that preserve isolation in Python tests",
+        "Apply lifecycle controls for async and persistence-heavy tests without relying on brittle shortcuts"
+      ],
+      "lessons": [
+        {
+          "id": "L03",
+          "title": "Isolation by Default: Fixtures, Scope, and Cleanup",
+          "strata_claim": "C2",
+          "type": "core",
+          "estimated_minutes": 13,
+          "description": "Use fixture structure, scope choices, and deterministic teardown to keep Python tests independent and readable.",
+          "prerequisites": ["L02"],
+          "teaches_concepts": ["fixture-scope", "deterministic-cleanup", "test-isolation"],
+          "reinforces_concepts": ["micro-cycle-judgment"],
+          "mastery_threshold": 0.8,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L04",
+          "title": "Async Loops and Transaction Rollbacks in Real Test Suites",
+          "strata_claim": "C2, C7",
+          "type": "advanced",
+          "estimated_minutes": 15,
+          "description": "Extend the isolation model to asyncio and database-backed code by controlling event-loop scope and wrapping persistence in rollback-safe test boundaries.",
+          "prerequisites": ["L03"],
+          "teaches_concepts": ["async-loop-scope", "transactional-test-isolation"],
+          "reinforces_concepts": ["test-isolation", "deterministic-cleanup"],
+          "mastery_threshold": 0.8,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M03",
+      "title": "Choose the Right Python Testing Surface",
+      "strata_theme": "Theme 3 - pytest is the ergonomic center of modern Python TDD, while unittest remains the compatibility baseline",
+      "description": "Learn when pytest should be the default, what unittest still contributes, and how to navigate mixed or migrating codebases without losing TDD discipline.",
+      "objectives": [
+        "Compare pytest and unittest by ergonomics, feature model, and migration value",
+        "Select a framework strategy that fits a Python codebase’s age, constraints, and TDD goals"
+      ],
+      "lessons": [
+        {
+          "id": "L05",
+          "title": "pytest as the Daily Driver",
+          "strata_claim": "C3",
+          "type": "core",
+          "estimated_minutes": 12,
+          "description": "Use pytest’s configuration, fixtures, and parametrization model as the default surface for modern Python TDD.",
+          "prerequisites": ["L03"],
+          "teaches_concepts": ["pytest-default", "parametrization", "test-layout"],
+          "reinforces_concepts": ["fixture-scope", "test-isolation"],
+          "mastery_threshold": 0.8,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L06",
+          "title": "unittest Fluency and Incremental Migration",
+          "strata_claim": "C3",
+          "type": "applied",
+          "estimated_minutes": 13,
+          "description": "Retain standard-library fluency and migrate older suites pragmatically without pretending pytest features map perfectly into TestCase-based code.",
+          "prerequisites": ["L05"],
+          "teaches_concepts": ["unittest-baseline", "migration-strategy"],
+          "reinforces_concepts": ["pytest-default", "test-layout"],
+          "mastery_threshold": 0.8,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M04",
+      "title": "Design Seams the Tests Can Trust",
+      "strata_theme": "Theme 4 - Python test design improves when external boundaries are hidden behind owned seams",
+      "description": "Make TDD easier by shaping the code around adapters, dependency injection, and boundary-focused abstractions instead of direct dependence on external APIs.",
+      "objectives": [
+        "Design owned seams that reduce coupling to third-party systems",
+        "Choose adapter and injection patterns that improve both code clarity and testability"
+      ],
+      "lessons": [
+        {
+          "id": "L07",
+          "title": "Adapters, Injection, and Owned Interfaces",
+          "strata_claim": "C4",
+          "type": "core",
+          "estimated_minutes": 14,
+          "description": "Use seam design to keep business logic testable, readable, and less dependent on third-party call shapes or transport details.",
+          "prerequisites": ["L06"],
+          "teaches_concepts": ["owned-seams", "adapter-pattern", "dependency-injection"],
+          "reinforces_concepts": ["pytest-default", "migration-strategy"],
+          "mastery_threshold": 0.8,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L08",
+          "title": "Boundary Decisions for APIs, Services, and Persistence",
+          "strata_claim": "C4, C7",
+          "type": "applied",
+          "estimated_minutes": 15,
+          "description": "Map seam design decisions onto external APIs, service messages, and persistence layers so tests target behavior instead of incidental wiring.",
+          "prerequisites": ["L07"],
+          "teaches_concepts": ["boundary-targeting", "service-adapter", "persistence-boundary"],
+          "reinforces_concepts": ["owned-seams", "adapter-pattern", "transactional-test-isolation"],
+          "mastery_threshold": 0.8,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M05",
+      "title": "Use Mocks, Fakes, and Contracts Intentionally",
+      "strata_theme": "Theme 5 - Mocks are still useful, but they need to be narrow, strict, and complemented by higher-fidelity checks",
+      "description": "Separate narrow collaborator mocking from brittle infrastructure simulation, then choose when verified fakes, integration tests, or contract-style checks are the better move.",
+      "objectives": [
+        "Apply strict mocks only where they isolate owned collaborators cleanly",
+        "Choose between mocks, verified fakes, integration tests, and contract-style checks based on fidelity needs"
+      ],
+      "lessons": [
+        {
+          "id": "L09",
+          "title": "Strict Mocks Without False Confidence",
+          "strata_claim": "C5",
+          "type": "core",
+          "estimated_minutes": 14,
+          "description": "Use autospec, correct patch locations, and narrow collaborator focus so mocks stay precise instead of becoming fragile stand-ins for systems.",
+          "prerequisites": ["L07"],
+          "teaches_concepts": ["strict-mocks", "patch-location", "autospec"],
+          "reinforces_concepts": ["owned-seams", "boundary-targeting"],
+          "mastery_threshold": 0.8,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L10",
+          "title": "When to Prefer Verified Fakes or Contract Checks",
+          "strata_claim": "C6",
+          "type": "debate",
+          "estimated_minutes": 16,
+          "description": "Compare higher-fidelity alternatives to deep mocking, including verified fakes and service contract checks, while making the contract-testing terminology explicit.",
+          "prerequisites": ["L09"],
+          "teaches_concepts": ["verified-fakes", "consumer-provider-contracts", "contract-ambiguity"],
+          "reinforces_concepts": ["strict-mocks", "service-adapter", "persistence-boundary"],
+          "mastery_threshold": 0.75,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M06",
+      "title": "Broaden Specification Beyond Single Examples",
+      "strata_theme": "Theme 6 - SME-level Python TDD extends beyond single examples into broader specification techniques and boundary-aware testing",
+      "description": "Advance from small example tests into parametrization, property-based testing, async strategy, and realistic persistence and service-boundary verification.",
+      "objectives": [
+        "Expand a Python TDD suite with broader specification techniques that improve confidence",
+        "Match advanced test techniques to the behavior or boundary they are best suited to cover"
+      ],
+      "lessons": [
+        {
+          "id": "L11",
+          "title": "Parametrization and Property-Based Testing",
+          "strata_claim": "C7",
+          "type": "advanced",
+          "estimated_minutes": 15,
+          "description": "Use parametrized and generated examples to move beyond one-case-at-a-time testing without sacrificing clarity about intended behavior.",
+          "prerequisites": ["L05", "L09"],
+          "teaches_concepts": ["broad-specification", "property-based-testing", "falsifying-example"],
+          "reinforces_concepts": ["parametrization", "strict-mocks"],
+          "mastery_threshold": 0.8,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L12",
+          "title": "Advanced Boundary Coverage in Practice",
+          "strata_claim": "C7",
+          "type": "synthesis",
+          "estimated_minutes": 17,
+          "description": "Combine async strategy, persistence realism, and boundary verification into a practical decision model for non-trivial Python systems.",
+          "prerequisites": ["L04", "L08", "L10", "L11"],
+          "teaches_concepts": ["boundary-coverage-strategy"],
+          "reinforces_concepts": ["async-loop-scope", "transactional-test-isolation", "consumer-provider-contracts", "property-based-testing"],
+          "mastery_threshold": 0.8,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M07",
+      "title": "Adopt TDD Without Overclaiming It",
+      "strata_theme": "Theme 7 - Empirical evidence on TDD outcomes is mixed and highly context-sensitive",
+      "description": "Close the course by calibrating what the evidence does and does not support about TDD outcomes, then translate that caution into practical adoption decisions.",
+      "objectives": [
+        "Evaluate TDD outcome claims against the actual limits of the empirical evidence",
+        "Plan a Python TDD adoption approach that reflects mixed evidence, open gaps, and real system constraints"
+      ],
+      "lessons": [
+        {
+          "id": "L13",
+          "title": "What the Empirical Evidence Actually Supports",
+          "strata_claim": "C8",
+          "type": "debate",
+          "estimated_minutes": 14,
+          "description": "Interpret the mixed TDD outcome evidence without collapsing into either blind advocacy or blanket rejection.",
+          "prerequisites": ["L12"],
+          "teaches_concepts": ["evidence-calibration", "context-sensitive-outcomes"],
+          "reinforces_concepts": ["boundary-coverage-strategy", "behavior-first-design"],
+          "mastery_threshold": 0.75,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [3, 7, 14]
+        },
+        {
+          "id": "L14",
+          "title": "Open Limits: Large Systems, Contract Ambiguity, and Next Evidence",
+          "strata_claim": "C6, C8",
+          "type": "gap",
+          "estimated_minutes": 13,
+          "description": "Turn the remaining gaps into explicit operating constraints so learners know where the current evidence thins out and what to validate inside their own environment.",
+          "prerequisites": ["L13"],
+          "teaches_concepts": ["large-system-limit", "evidence-gap-planning"],
+          "reinforces_concepts": ["contract-ambiguity", "context-sensitive-outcomes", "boundary-coverage-strategy"],
+          "mastery_threshold": 0.75,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    }
+  ],
+  "total_lessons": 14,
+  "total_estimated_hours": 3.2,
+  "learning_plan": {
+    "sessions_to_complete": 4,
+    "suggested_schedule": "2-4 lessons per session, paced around active Python practice; most learners can complete the map in 2-3 weeks while coding alongside it.",
+    "milestone_lessons": ["L02", "L04", "L06", "L08", "L10", "L12", "L14"]
+  }
+}

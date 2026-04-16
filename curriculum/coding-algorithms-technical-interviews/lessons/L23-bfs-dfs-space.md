@@ -2,7 +2,7 @@
 
 **Module**: M07 · Space Complexity and Recursion Depth
 **Type**: applied
-**Estimated time**: 30 minutes
+**Estimated time**: 12 minutes
 **Claim**: C5 from Strata synthesis
 
 ---

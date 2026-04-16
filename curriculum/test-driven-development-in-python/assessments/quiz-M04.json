@@ -1,0 +1,89 @@
+{
+  "id": "quiz-M04",
+  "type": "module",
+  "module": "M04",
+  "title": "Assessment: Design Seams the Tests Can Trust",
+  "generated": "2026-04-15",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What is the main purpose of an owned seam?",
+      "options": {
+        "A": "To increase class count regardless of need",
+        "B": "To let domain logic depend on application-owned concepts instead of foreign API detail",
+        "C": "To eliminate all integration tests",
+        "D": "To make patching impossible"
+      },
+      "correct": "B",
+      "explanation": "The course frames seams as a way to keep domain behavior expressed in your own language rather than a vendor's surface.",
+      "lesson_ref": "L07",
+      "claim_ref": "C4",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Why does dependency injection usually help business tests?",
+      "options": {
+        "A": "It removes the need for adapters",
+        "B": "It gives tests direct control over collaborators instead of forcing deep patching",
+        "C": "It guarantees vendor stability",
+        "D": "It makes persistence realism unnecessary"
+      },
+      "correct": "B",
+      "explanation": "Injection lets the code receive collaborators explicitly, which makes tests focus on behavior rather than on construction details.",
+      "lesson_ref": "L07",
+      "claim_ref": "C4",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "What still needs testing after you introduce a seam around an external service?",
+      "options": {
+        "A": "Only the domain unit test",
+        "B": "Nothing, because the seam has solved the integration problem",
+        "C": "The translation layer or adapter, using a higher-fidelity check where needed",
+        "D": "Only a style check"
+      },
+      "correct": "C",
+      "explanation": "A seam improves unit clarity, but the boundary translation still needs verification.",
+      "lesson_ref": "L08",
+      "claim_ref": "C4",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "short_answer",
+      "question": "Explain why a seam should often be placed where foreign detail becomes domain intent.",
+      "answer_key": {
+        "required_points": [
+          "That is where raw transport or vendor detail turns into a business action the application owns",
+          "It keeps domain tests focused on business meaning",
+          "It limits the amount of third-party structure that leaks into many tests"
+        ],
+        "full_credit": "Connects seam placement to meaning, readability, and reduced coupling",
+        "partial_credit": "Mentions abstraction or decoupling without the boundary-of-meaning idea"
+      },
+      "lesson_ref": "L08",
+      "claim_ref": "C4",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "essay",
+      "prompt": "A service currently builds HTTP payloads, writes ORM entities, and emits messages inside one method. Use Module 4 to redesign the boundaries so domain tests stay readable while external correctness is still verifiable.",
+      "guidance": "Strong answers introduce owned seams, explain where adapters belong, and reserve higher-fidelity tests for the actual translation boundaries.",
+      "rubric": {
+        "A": "Creates clear owned boundaries and a believable split between domain tests and boundary verification",
+        "B": "Adds some abstraction but leaves unclear where realism checks happen",
+        "C": "Mostly renames methods without changing the underlying coupling problem"
+      },
+      "lesson_ref": "L07-L08",
+      "claim_ref": "C4/C7",
+      "difficulty": "analysis"
+    }
+  ]
+}

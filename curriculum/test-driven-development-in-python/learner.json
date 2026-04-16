@@ -1,0 +1,15 @@
+{
+  "goal": "apply_practically",
+  "background": "some_exposure",
+  "session_time_min": 60,
+  "session_time_mode": "flexible",
+  "calibration_notes": {
+    "lesson_max_words": 1400,
+    "lessons_per_module_max": 2,
+    "objective_verb_style": "apply, compare, design, diagnose, choose",
+    "skip_basics": false,
+    "emphasize_code_examples": true,
+    "flashcard_density": "high",
+    "focus": "real Python implementation choices, boundary testing decisions, and practical tradeoffs"
+  }
+}

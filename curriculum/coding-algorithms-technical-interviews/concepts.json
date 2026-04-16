@@ -1,6 +1,6 @@
 {
   "slug": "coding-algorithms-technical-interviews",
-  "generated": "2025-01-01",
+  "generated": "2026-04-15",
   "concepts": [
     {
       "id": "pattern-frequency",
@@ -388,6 +388,33 @@
       "difficulty": 3,
       "module": "M10",
       "tags": ["algorithm", "core"]
+    },
+    {
+      "id": "linked-list-patterns",
+      "label": "Linked-List Pointer Patterns",
+      "description": "The compact interview toolkit for linked lists: dummy/sentinel handling, in-place reversal, merge routines, and slow/fast traversal for middle and cycle problems.",
+      "taught_in": "L34",
+      "difficulty": 3,
+      "module": "M10",
+      "tags": ["data-structure", "pattern"]
+    },
+    {
+      "id": "trie",
+      "label": "Trie (Prefix Tree)",
+      "description": "Prefix tree supporting insert, search, and starts-with queries in O(m), where m is the query length.",
+      "taught_in": "L35",
+      "difficulty": 3,
+      "module": "M10",
+      "tags": ["data-structure", "string"]
+    },
+    {
+      "id": "greedy",
+      "label": "Greedy Algorithms",
+      "description": "Algorithms that make locally optimal choices under a proof obligation such as greedy-choice property plus exchange argument or a related invariant.",
+      "taught_in": "L36",
+      "difficulty": 3,
+      "module": "M10",
+      "tags": ["algorithm", "design-principle"]
     }
   ]
 }

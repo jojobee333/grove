@@ -1,0 +1,129 @@
+{
+  "id": "quiz-final",
+  "type": "final",
+  "module": "all",
+  "title": "Final Assessment: Test-Driven Development in Python",
+  "generated": "2026-04-15",
+  "passing_score": 75,
+  "questions": [
+    {
+      "id": "F01",
+      "type": "mcq",
+      "question": "Which statement best matches the course's view of canonical TDD?",
+      "options": {
+        "A": "It is mainly a requirement to write tests before implementation exists",
+        "B": "It is a behavior-design loop that uses small failing tests and refactoring to shape code incrementally",
+        "C": "It is mostly a coverage-management technique",
+        "D": "It is only useful when every dependency is mocked"
+      },
+      "correct": "B",
+      "lesson_ref": "L01",
+      "module_ref": "M01",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "F02",
+      "type": "mcq",
+      "question": "What is the strongest default posture for reliable Python test isolation?",
+      "options": {
+        "A": "Broad shared fixtures first, then narrow them later",
+        "B": "Strong default isolation with explicit cleanup and narrowly justified sharing",
+        "C": "One event loop and one database reused across the full suite",
+        "D": "Mock all stateful code to avoid lifecycle design"
+      },
+      "correct": "B",
+      "lesson_ref": "L03",
+      "module_ref": "M02",
+      "difficulty": "application"
+    },
+    {
+      "id": "F03",
+      "type": "mcq",
+      "question": "Why does the course recommend pytest as the modern default without rejecting unittest entirely?",
+      "options": {
+        "A": "Because pytest is newer and therefore always superior",
+        "B": "Because pytest reduces friction in practice, while unittest fluency still matters for inherited codebases and migration paths",
+        "C": "Because unittest cannot run on Python 3",
+        "D": "Because pytest removes the need to think about framework tradeoffs"
+      },
+      "correct": "B",
+      "lesson_ref": "L06",
+      "module_ref": "M03",
+      "difficulty": "application"
+    },
+    {
+      "id": "F04",
+      "type": "mcq",
+      "question": "What is the best reason to hide an external API behind an owned seam?",
+      "options": {
+        "A": "To avoid ever testing the boundary again",
+        "B": "To keep business logic expressed in application-owned concepts instead of foreign transport detail",
+        "C": "To increase file count for maintainability metrics",
+        "D": "To guarantee the vendor can never change"
+      },
+      "correct": "B",
+      "lesson_ref": "L07",
+      "module_ref": "M04",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "F05",
+      "type": "mcq",
+      "question": "Which testing choice best reflects the course's treatment of external boundaries?",
+      "options": {
+        "A": "Deep mocks are always preferable because they are fastest",
+        "B": "Strict mocks belong mainly at owned collaborators, while external boundaries often need verified fakes, contract checks, or integration tests",
+        "C": "Only end-to-end tests matter for third-party systems",
+        "D": "Contract testing and deep mocking are interchangeable terms"
+      },
+      "correct": "B",
+      "lesson_ref": "L10",
+      "module_ref": "M05",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "F06",
+      "type": "mcq",
+      "question": "What principle organizes advanced coverage in a non-trivial Python system?",
+      "options": {
+        "A": "Use every available testing tool once the system gets larger",
+        "B": "Choose test layers by the distinct truth each one needs to provide",
+        "C": "Replace examples with properties everywhere",
+        "D": "Put all verification inside the database layer"
+      },
+      "correct": "B",
+      "lesson_ref": "L12",
+      "module_ref": "M06",
+      "difficulty": "application"
+    },
+    {
+      "id": "F07",
+      "type": "short_answer",
+      "question": "Explain how the course would tell a team to combine disciplined TDD practice with honest evidence calibration.",
+      "answer_key": {
+        "required_points": [
+          "Use behavior-first, isolation-aware, boundary-conscious testing practices",
+          "Avoid universal claims about guaranteed outcomes",
+          "Measure effects locally and keep open limits explicit"
+        ],
+        "full_credit": "Connects the technical practice model with the course's context-sensitive evidence stance",
+        "partial_credit": "Mentions practice or evidence caution but does not integrate them"
+      },
+      "module_ref": "all",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "F08",
+      "type": "essay",
+      "prompt": "Design a TDD strategy for a Python service that includes domain logic, async execution, database writes, and an external API. Your answer should explain the red-green-refactor loop, isolation model, framework choices, seam design, mock/fake/contract judgment, broader specification techniques, and how you would communicate expected outcomes honestly to stakeholders.",
+      "guidance": "Strong answers integrate the course end to end: disciplined design loops, explicit lifecycle control, owned boundaries, truth-preserving test choice, and evidence-calibrated adoption language.",
+      "rubric": {
+        "A": "Integrates the course's major ideas into one coherent, credible workflow and treats outcome claims with appropriate discipline",
+        "B": "Covers several major ideas correctly but leaves one important boundary or evidence issue underdeveloped",
+        "C": "Describes TDD generically without applying the course's framework for boundaries, realism, and evidence"
+      },
+      "module_ref": "all",
+      "difficulty": "analysis"
+    }
+  ]
+}

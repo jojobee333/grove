@@ -2,7 +2,7 @@
 
 **Module**: M06 · Complexity Analysis — Big-O, Master Theorem, Amortised
 **Type**: core
-**Estimated time**: 35 minutes
+**Estimated time**: 20 minutes
 **Claim**: C7 from Strata synthesis
 
 ---

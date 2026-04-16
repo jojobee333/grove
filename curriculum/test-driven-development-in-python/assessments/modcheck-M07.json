@@ -1,0 +1,42 @@
+{
+  "id": "modcheck-M07",
+  "module": "M07",
+  "title": "Adopt TDD Without Overclaiming It - Quick Check",
+  "generated": "2026-04-15",
+  "questions": [
+    {
+      "id": "MC07-1",
+      "type": "open",
+      "question": "What is the safest summary of the empirical TDD evidence in this course?",
+      "answer": "The evidence is mixed and context-sensitive, so teams should validate outcomes locally rather than treating TDD as universally proven or useless."
+    },
+    {
+      "id": "MC07-2",
+      "type": "open",
+      "question": "Why is mixed evidence not a reason to dismiss TDD outright?",
+      "answer": "Because mixed findings still allow meaningful benefits in some contexts; they just do not justify universal promises."
+    },
+    {
+      "id": "MC07-3",
+      "type": "open",
+      "question": "What should a team do with open limits like ambiguous contract terminology or large-system uncertainty?",
+      "answer": "Turn them into explicit operating constraints and validation tasks instead of hiding them behind confident language."
+    },
+    {
+      "id": "MC07-4",
+      "type": "mcq",
+      "question": "Which move best reflects the course's evidence stance?",
+      "options": { "A": "Promise TDD will improve everything", "B": "Reject TDD because studies are mixed", "C": "Adopt carefully and measure local results", "D": "Ignore research and trust anecdotes only" },
+      "correct": "C",
+      "explanation": "The course closes by recommending local validation instead of sweeping claims."
+    },
+    {
+      "id": "MC07-5",
+      "type": "mcq",
+      "question": "What should happen before a team says it is doing contract testing?",
+      "options": { "A": "Nothing, the term is self-explanatory", "B": "The team should define the exact mechanism it means", "C": "It should delete all mocks", "D": "It should ignore integration boundaries" },
+      "correct": "B",
+      "explanation": "The course treats precise mechanism naming as part of honest technical practice."
+    }
+  ]
+}

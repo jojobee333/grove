@@ -1,0 +1,42 @@
+{
+  "id": "modcheck-M02",
+  "module": "M02",
+  "title": "Control State, Isolation, and Cleanup - Quick Check",
+  "generated": "2026-04-15",
+  "questions": [
+    {
+      "id": "MC02-1",
+      "type": "open",
+      "question": "Why does weak isolation damage TDD twice over?",
+      "answer": "It damages both the reliability of test feedback and the developer's design judgment, because passing and failing signals no longer clearly reflect the code under test."
+    },
+    {
+      "id": "MC02-2",
+      "type": "open",
+      "question": "What fixture scope is the safest default for strong independence?",
+      "answer": "Function scope, because each test gets its own fresh environment unless there is a good reason to broaden sharing."
+    },
+    {
+      "id": "MC02-3",
+      "type": "open",
+      "question": "What does an outer transaction buy you in a database-backed test?",
+      "answer": "It allows realistic persistence behavior, including commits, while still giving you a reliable rollback boundary after the test finishes."
+    },
+    {
+      "id": "MC02-4",
+      "type": "mcq",
+      "question": "Why do async tests typically still run sequentially in the course's model?",
+      "options": { "A": "Because async syntax is discouraged", "B": "Because reliability and isolation matter more than hidden runner concurrency", "C": "Because pytest cannot run async tests", "D": "Because transactions require it" },
+      "correct": "B",
+      "explanation": "Sequential reliability is preferred over surprising loop interactions."
+    },
+    {
+      "id": "MC02-5",
+      "type": "mcq",
+      "question": "What is the better advanced testing rule?",
+      "options": { "A": "Mock every boundary", "B": "Use realistic boundaries but control lifecycle aggressively", "C": "Reuse one global event loop always", "D": "Share one database forever" },
+      "correct": "B",
+      "explanation": "The course favors realism where it teaches you something and strong lifecycle control around it."
+    }
+  ]
+}

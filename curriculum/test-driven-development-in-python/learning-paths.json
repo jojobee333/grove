@@ -1,0 +1,34 @@
+{
+  "slug": "test-driven-development-in-python",
+  "generated": "2026-04-15",
+  "paths": [
+    {
+      "id": "default-path",
+      "title": "Complete Course",
+      "description": "All 14 lessons in the recommended order, from canonical red-green-refactor through empirical limits and open gaps.",
+      "entry_condition": {},
+      "sequence": ["L01", "L02", "L03", "L04", "L05", "L06", "L07", "L08", "L09", "L10", "L11", "L12", "L13", "L14"]
+    },
+    {
+      "id": "practical-builder",
+      "title": "Practical Builder Path",
+      "description": "Focus on the daily engineering decisions that make Python TDD usable in real codebases with persistence and external boundaries.",
+      "entry_condition": { "goal": "apply_practically" },
+      "sequence": ["L01", "L02", "L03", "L05", "L06", "L07", "L08", "L09", "L10", "L12", "L13", "L14"]
+    },
+    {
+      "id": "integration-heavy",
+      "title": "Integration and Boundary Path",
+      "description": "Prioritize isolation, boundary realism, seams, mocks, fakes, contracts, and broader coverage for service-heavy Python systems.",
+      "entry_condition": { "interest": "integration" },
+      "sequence": ["L03", "L04", "L07", "L08", "L09", "L10", "L11", "L12", "L14"]
+    },
+    {
+      "id": "evidence-aware",
+      "title": "Evidence-Aware Adoption Path",
+      "description": "Move from the canonical loop to adoption strategy with explicit attention to what the literature supports and where it remains thin.",
+      "entry_condition": { "interest": "adoption" },
+      "sequence": ["L01", "L02", "L05", "L07", "L10", "L12", "L13", "L14"]
+    }
+  ]
+}

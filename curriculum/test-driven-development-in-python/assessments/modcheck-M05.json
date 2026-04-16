@@ -1,0 +1,42 @@
+{
+  "id": "modcheck-M05",
+  "module": "M05",
+  "title": "Use Mocks, Fakes, and Contracts Intentionally - Quick Check",
+  "generated": "2026-04-15",
+  "questions": [
+    {
+      "id": "MC05-1",
+      "type": "open",
+      "question": "What makes a mock helpful instead of misleading in this course?",
+      "answer": "It should be narrow, aimed at an owned collaborator, and constrained enough to resemble the real interface rather than accepting anything."
+    },
+    {
+      "id": "MC05-2",
+      "type": "open",
+      "question": "What is the rule for patch location?",
+      "answer": "Patch where the code under test looks the object up, not merely where that object was originally defined."
+    },
+    {
+      "id": "MC05-3",
+      "type": "open",
+      "question": "Why might a verified fake beat a deep mock for an external API?",
+      "answer": "Because it stays fast while preserving more truth about the service behavior your application actually depends on."
+    },
+    {
+      "id": "MC05-4",
+      "type": "mcq",
+      "question": "What is the course's best selection heuristic?",
+      "options": { "A": "Always prefer mocks", "B": "Pick the cheapest test that still tells the truth about the boundary", "C": "Always prefer end-to-end tests", "D": "Prefer whichever tool has fewer lines" },
+      "correct": "B",
+      "explanation": "The course chooses between test forms by truthfulness and cost, not slogans."
+    },
+    {
+      "id": "MC05-5",
+      "type": "mcq",
+      "question": "When are contract-style checks most useful?",
+      "options": { "A": "When independently evolving services need explicit interaction verification", "B": "Only for pure functions", "C": "Only in frontend unit tests", "D": "Never if mocks exist" },
+      "correct": "A",
+      "explanation": "Contract-style checks are most useful where consumer and provider expectations need explicit protection."
+    }
+  ]
+}

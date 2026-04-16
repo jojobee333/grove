@@ -1,0 +1,89 @@
+{
+  "id": "quiz-M07",
+  "type": "module",
+  "module": "M07",
+  "title": "Assessment: Adopt TDD Without Overclaiming It",
+  "generated": "2026-04-15",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What is the course's best summary of the empirical TDD evidence?",
+      "options": {
+        "A": "It proves TDD always improves both speed and quality",
+        "B": "It is mixed and context-sensitive rather than universally decisive",
+        "C": "It shows TDD has no value",
+        "D": "It only matters in Java codebases"
+      },
+      "correct": "B",
+      "explanation": "The course's final synthesis is that TDD outcome evidence is mixed and highly sensitive to context and execution quality.",
+      "lesson_ref": "L13",
+      "claim_ref": "C8",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Why is mixed evidence not the same as evidence of no value?",
+      "options": {
+        "A": "Because mixed evidence still allows conditional benefits in some settings",
+        "B": "Because every mixed study secretly supports TDD strongly",
+        "C": "Because evidence quality does not matter for practice decisions",
+        "D": "Because only anecdotes count"
+      },
+      "correct": "A",
+      "explanation": "Mixed evidence means outcomes vary by context; it does not erase the possibility of meaningful benefit.",
+      "lesson_ref": "L13",
+      "claim_ref": "C8",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "What should a team do before claiming it uses 'contract tests' as part of its TDD strategy?",
+      "options": {
+        "A": "Assume everyone shares the same definition",
+        "B": "Define the exact mechanism because the term is used ambiguously across sources",
+        "C": "Replace all integration tests with the label",
+        "D": "Treat the term as equivalent to any unit mock"
+      },
+      "correct": "B",
+      "explanation": "The course closes by making terminology precision part of honest practice.",
+      "lesson_ref": "L14",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "short_answer",
+      "question": "Explain why the course treats open limits and research gaps as operating constraints rather than a weakness to hide.",
+      "answer_key": {
+        "required_points": [
+          "Large-system transfer and contract terminology remain uncertain",
+          "Teams should make these limits explicit instead of overstating confidence",
+          "The right response is local validation and bounded claims"
+        ],
+        "full_credit": "Shows how honest uncertainty improves practice decisions and protects against overclaiming",
+        "partial_credit": "Mentions gaps but not how they change operating behavior"
+      },
+      "lesson_ref": "L14",
+      "claim_ref": "C8",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "essay",
+      "prompt": "A manager wants to roll out TDD company-wide with promised quality and productivity gains. Use Module 7 to rewrite that plan into an evidence-calibrated adoption strategy that is ambitious but honest.",
+      "guidance": "Strong answers reject universal promises, define local measures, name open limits, and still preserve a practical path for trying TDD well.",
+      "rubric": {
+        "A": "Produces a disciplined adoption strategy grounded in mixed evidence and explicit local validation",
+        "B": "Adds caution but leaves the measurement or limits vague",
+        "C": "Mostly repeats either pro-TDD slogans or skeptical dismissal"
+      },
+      "lesson_ref": "L13-L14",
+      "claim_ref": "C6/C8",
+      "difficulty": "analysis"
+    }
+  ]
+}

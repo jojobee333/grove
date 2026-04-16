@@ -2,8 +2,8 @@
   "id": "quiz-M10",
   "type": "module",
   "module": "M10",
-  "title": "Assessment: Backtracking, Union-Find, Debates, and Gaps",
-  "generated": "2025-01-01",
+  "title": "Assessment: Backtracking, Union-Find, and Remaining Interview Patterns",
+  "generated": "2026-04-15",
   "passing_score": 70,
   "questions": [
     {
@@ -73,15 +73,15 @@
     {
       "id": "Q05",
       "type": "mcq",
-      "question": "In an interview, you are presented with an optimisation problem where making the locally optimal choice at each step feels obvious. What is the minimum verification required before committing to a greedy approach instead of DP?",
+      "question": "For a general interview-prep sprint with limited time, where should dynamic programming usually sit in your study order?",
       "options": {
-        "A": "No verification needed — greedy is always correct for optimisation problems",
-        "B": "Test 2-3 small counterexamples; if none disprove it, also verify an exchange argument",
-        "C": "Run both greedy and DP, compare outputs, replace DP with greedy only if they match",
-        "D": "Greedy is only valid for scheduling problems — always use DP otherwise"
+        "A": "Before hash maps, traversal, and binary search, because DP is the most transferable pattern",
+        "B": "After the higher-frequency core patterns are solid, unless company-specific signals justify moving it earlier",
+        "C": "Only after advanced graph algorithms and bit manipulation",
+        "D": "It should be skipped entirely for general SWE interviews"
       },
       "correct": "B",
-      "explanation": "Greedy requires proof, not just intuition. The practical interview test: (1) try to construct a counterexample (small cases, edge cases, non-standard coin sets). (2) Attempt an exchange argument: show swapping any greedy choice for a non-greedy choice doesn't improve the result. If both checks pass, greedy is likely correct.",
+      "explanation": "The evidence supports the DP learning pipeline strongly, but it also says DP is usually sequenced after higher-frequency interview patterns for short prep windows. Google-style or more advanced targets are the main reason to move it earlier.",
       "lesson_ref": "L33",
       "claim_ref": "L33",
       "difficulty": "application"
@@ -89,15 +89,15 @@
     {
       "id": "Q06",
       "type": "mcq",
-      "question": "The course explicitly does not cover Dijkstra's shortest path algorithm. If your target company frequently asks graph distance problems, what should you do?",
+      "question": "What is the best default linked-list technique when an insertion, deletion, or merge might change the head node?",
       "options": {
-        "A": "This course provides enough; Dijkstra's is not needed for standard SWE interviews",
-        "B": "Extend your preparation with Dijkstra's (min-heap + distance array) as a targeted gap fill",
-        "C": "Use BFS instead of Dijkstra's — they are equivalent for all graph types",
-        "D": "Only study Dijkstra's if the job description explicitly mentions graph algorithms"
+        "A": "Dummy-head or sentinel-node handling",
+        "B": "Monotonic stack for next-greater-element problems",
+        "C": "Union by rank in DSU",
+        "D": "Prefix sums for subarray counting"
       },
-      "correct": "B",
-      "explanation": "This course covers BFS (shortest path in unweighted graphs). For weighted graphs, Dijkstra's is the standard algorithm. If the company asks weighted shortest path (a common FAANG question), you need it. The meta-lesson: know your coverage gaps and fill based on company-specific signals.",
+      "correct": "A",
+      "explanation": "A dummy or sentinel node removes special-case handling at the true head. That makes insertion, deletion, and merge routines cleaner because every pointer attachment has the same shape.",
       "lesson_ref": "L34",
       "claim_ref": "L34",
       "difficulty": "application"
@@ -105,17 +105,17 @@
     {
       "id": "Q07",
       "type": "mcq",
-      "question": "Coin change: coins=[1,5,6,9], amount=11. Greedy proposes 9+1+1=3 coins. What does DP find, and what does this illustrate?",
+      "question": "Where do the current study-sequence signals place tries?",
       "options": {
-        "A": "DP also finds 3 coins, confirming greedy is optimal here",
-        "B": "DP finds 6+5=2 coins, showing greedy is incorrect for non-canonical coin sets",
-        "C": "DP finds 11 coins (all 1s), showing DP doesn't optimise correctly without sorting",
-        "D": "DP finds 9+2=11 but 2 is not a valid coin, causing an error"
+        "A": "Before trees, because tries are the simpler prerequisite",
+        "B": "Alongside hash maps as a first-wave must-learn topic",
+        "C": "After trees as a later, mid-priority follow-up topic",
+        "D": "Outside the interview-prep sequence entirely"
       },
-      "correct": "B",
-      "explanation": "dp[11]: dp[5]+1=dp[6]+1=... dp[6]=dp[0]+1=1, dp[11]=dp[5]+1=dp[1]+1+1=3... wait: dp[6]=1, dp[11]=dp[5]+1=2? 5+6=11. Yes, 6+5=2 coins. Greedy took 9 first, leaving 2=1+1 for 3 total. DP explores 6+5=2. This is another counterexample for greedy on non-standard coin sets.",
-      "lesson_ref": "L33",
-      "claim_ref": "L33",
+      "correct": "C",
+      "explanation": "NeetCode places tries after trees, and the other prioritisation material treats them as a later follow-up rather than a first-wave pattern. They matter, but they do not displace the highest-ROI core topics.",
+      "lesson_ref": "L35",
+      "claim_ref": "L35",
       "difficulty": "analysis"
     },
     {
@@ -138,32 +138,31 @@
     {
       "id": "Q09",
       "type": "short_answer",
-      "question": "Describe the choose–explore–unchoose template for backtracking and explain what condition should be checked at the start of each recursive call to prune the search tree.",
+      "question": "State the two structural conditions that usually justify a greedy solution, and explain in 2–3 sentences what an exchange argument is.",
       "answer_key": {
         "required_points": [
-          "Choose: make a selection from available choices (add to path, mark visited)",
-          "Explore: recurse with the updated state",
-          "Unchoose: undo the selection (remove from path, unmark visited) so the next sibling starts clean",
-          "Pruning check at start: base case (goal reached → record result) or constraint violation (too large, exceeds limit → return early without exploring)"
+          "Greedy-choice property",
+          "Optimal substructure",
+          "Exchange argument: start from an optimal solution, find the first place it differs from the greedy choice, swap in the greedy choice without making the solution worse, then continue inductively"
         ],
-        "acceptable_variations": "May express as if-base-case then for-choice in choose-explore-unchoose structure",
-        "full_credit": "All three steps described, pruning condition explained with a concrete example",
-        "partial_credit": "All three steps described without pruning"
+        "acceptable_variations": "Equivalent wording is fine if it clearly names both structural conditions and explains the swap-based proof idea",
+        "full_credit": "Names both conditions and explains exchange argument as a proof that the greedy choice can replace the corresponding choice in an optimal solution without reducing quality",
+        "partial_credit": "Names one condition correctly or gives a partially correct description of the exchange proof idea"
       },
-      "lesson_ref": "L31",
+      "lesson_ref": "L36",
       "difficulty": "comprehension"
     },
     {
       "id": "Q10",
       "type": "essay",
-      "prompt": "You are at the end of this curriculum. Identify the three most significant gaps (topics not covered) that you believe are most likely to arise in a FAANG-level technical interview. For each gap, describe: the topic, why it is important, and a specific LeetCode problem you would use to fill that gap.",
-      "guidance": "Strong answer draws from L34's coverage gap analysis. Expected gaps: Dijkstra's/weighted shortest path (Network Delay Time #743), Trie data structure (Implement Trie #208, Word Search II), Bit manipulation (Single Number #136, Count Bits). Strong answers also note segment trees, suffix arrays, or advanced DP (bitmask DP) as less common but real FAANG topics.",
+      "prompt": "You have finished the rebuilt course and want one focused second-wave study block. Rank linked lists, tries, and greedy for your next sprint, assuming general FAANG-style prep rather than a specialised competitive-programming track. Explain the ranking using frequency, study-sequence evidence, and the type of skill each topic develops.",
+      "guidance": "Strong answers recognise linked lists as the highest-priority of the three because they recur more often and stress pointer execution under pressure, with tries and greedy treated as real but lower-priority follow-up categories. Strong answers distinguish ranking by interview ROI from whether a topic is intellectually important.",
       "rubric": {
-        "A": "Three specific and accurate gaps identified, reasoning for importance given, specific LeetCode problems cited for each",
-        "B": "Three gaps identified but reasoning or problems are vague",
-        "C": "Fewer than three gaps, or gaps are trivial (e.g. 'more DP practice') without specificity"
+        "A": "Presents a defensible ranking, uses the roadmap and priority evidence, and distinguishes topic importance from study order",
+        "B": "Ranking is plausible but the explanation does not clearly connect to the research signals",
+        "C": "Ranking is unsupported, or ignores the sequencing evidence and the distinct skill each topic trains"
       },
-      "lesson_ref": "L34",
+      "lesson_ref": "L36",
       "difficulty": "analysis"
     }
   ]

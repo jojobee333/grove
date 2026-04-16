@@ -1,0 +1,89 @@
+{
+  "id": "quiz-M03",
+  "type": "module",
+  "module": "M03",
+  "title": "Assessment: Governance Is a Control Plane",
+  "generated": "2026-04-15",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What is the main governance distinction emphasized by this module?",
+      "options": {
+        "A": "Prompts are stricter than permission systems",
+        "B": "Behavior guidance and enforcement are different layers",
+        "C": "Hooks replace review responsibility",
+        "D": "Instructions are more portable than skills"
+      },
+      "correct": "B",
+      "explanation": "The module's core point is that prompts and instructions influence behavior, while actual enforcement comes from controls such as permissions, hooks, protected paths, and review systems.",
+      "lesson_ref": "L05",
+      "claim_ref": "C4",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Which GitHub-oriented control is most closely associated with gating risky repository actions in the source set?",
+      "options": {
+        "A": "Hooks and review flow",
+        "B": "Compaction reinjection",
+        "C": "Prompt files",
+        "D": "Learning paths"
+      },
+      "correct": "A",
+      "explanation": "The GitHub sources emphasize hooks, review responsibility, branch and repo constraints, and access management as real governance controls for risky actions.",
+      "lesson_ref": "L06",
+      "claim_ref": "C4",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "Why is a policy weak if it lives only in a prompt?",
+      "options": {
+        "A": "Because prompts cannot be reused",
+        "B": "Because prompts are not readable by humans",
+        "C": "Because the policy depends on compliance instead of a constraining control boundary",
+        "D": "Because prompts cannot mention file paths"
+      },
+      "correct": "C",
+      "explanation": "A prompt can express the rule, but it does not create a real block, approval gate, or audit artifact by itself. That makes the workflow rely on compliance rather than enforceable constraint.",
+      "lesson_ref": "L05",
+      "claim_ref": "C4",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "short_answer",
+      "question": "Explain 'define policy once, implement enforcement per host' in your own words.",
+      "answer_key": {
+        "required_points": [
+          "Policy intent may be shared across tools",
+          "Enforcement primitives differ by host surface",
+          "A responsible workflow maps the same policy goal onto different product-native controls"
+        ],
+        "full_credit": "Clearly distinguishes shared policy intent from host-specific enforcement implementation",
+        "partial_credit": "Mentions different tools but does not explain why enforcement must vary"
+      },
+      "lesson_ref": "L06",
+      "claim_ref": "C4",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "essay",
+      "prompt": "Design a layered governance model for an agent workflow that edits infrastructure files. Explain what belongs in prompts or instructions and what must be enforced by product-native controls.",
+      "guidance": "Strong responses separate behavior guidance from permission, approval, hook, or protected-path enforcement and explain why the layers are independent.",
+      "rubric": {
+        "A": "Separates guidance from enforcement clearly and names realistic controls for risky actions",
+        "B": "Gets the general distinction right but leaves enforcement vague",
+        "C": "Treats prompts as the primary governance mechanism"
+      },
+      "lesson_ref": "L05-L06",
+      "claim_ref": "C4",
+      "difficulty": "analysis"
+    }
+  ]
+}

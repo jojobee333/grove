@@ -1,0 +1,42 @@
+{
+  "id": "modcheck-M02",
+  "module": "M02",
+  "title": "Context Economics and Token Pressure - Quick Check",
+  "generated": "2026-04-15",
+  "questions": [
+    {
+      "id": "MC02-1",
+      "type": "open",
+      "question": "What does progressive disclosure try to keep small?",
+      "answer": "Always-on context. It loads heavier resources only when the task actually needs them."
+    },
+    {
+      "id": "MC02-2",
+      "type": "open",
+      "question": "After compaction, what kind of information should usually remain in the parent thread?",
+      "answer": "Durable decisions, accepted constraints, critical risks, and compact summaries of evidence. Raw logs and noisy exploration usually should not remain."
+    },
+    {
+      "id": "MC02-3",
+      "type": "open",
+      "question": "Why can a subagent improve the quality of a later planning step?",
+      "answer": "It isolates broad exploration and returns a higher-signal summary, so the parent session plans from distilled evidence instead of carrying noisy intermediate output."
+    },
+    {
+      "id": "MC02-4",
+      "type": "mcq",
+      "question": "Which pattern best matches the course's context model?",
+      "options": { "A": "One master prompt for all phases", "B": "Phase-specific loading with isolated workers for noisy tasks", "C": "No reuse of skills or instructions", "D": "Always keep every raw search result" },
+      "correct": "B",
+      "explanation": "The course favors progressive disclosure and isolated side work over monolithic prompts."
+    },
+    {
+      "id": "MC02-5",
+      "type": "mcq",
+      "question": "What question should replace 'what do I want the model to know?' under context pressure?",
+      "options": { "A": "Which model is newest?", "B": "How many files can I open at once?", "C": "What must this session continue carrying?", "D": "How do I avoid all instructions?" },
+      "correct": "C",
+      "explanation": "The course reframes context management around what the session actually needs to keep."
+    }
+  ]
+}

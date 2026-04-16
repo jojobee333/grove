@@ -1,0 +1,42 @@
+{
+  "id": "modcheck-M05",
+  "module": "M05",
+  "title": "Portability Has Sharp Edges - Quick Check",
+  "generated": "2026-04-15",
+  "questions": [
+    {
+      "id": "MC05-1",
+      "type": "open",
+      "question": "Why do skills port better than many agent definitions?",
+      "answer": "They have a clearer specification and a narrower job. That makes them more reusable across hosts than artifacts whose runtime behavior depends heavily on platform-specific semantics."
+    },
+    {
+      "id": "MC05-2",
+      "type": "open",
+      "question": "What is structural portability in one sentence?",
+      "answer": "It means an artifact can be reused because its format or convention carries across tools well enough to load or adapt."
+    },
+    {
+      "id": "MC05-3",
+      "type": "open",
+      "question": "Why does structural portability not remove the need for host validation?",
+      "answer": "Because an artifact can reuse cleanly while still being interpreted differently at runtime. Behavior may drift even when the file format is shared."
+    },
+    {
+      "id": "MC05-4",
+      "type": "mcq",
+      "question": "What does MCP improve most directly?",
+      "options": { "A": "Runtime semantic equality for all artifacts", "B": "Interoperability for tools and context access", "C": "Universal prompt enforcement", "D": "Automatic review approval" },
+      "correct": "B",
+      "explanation": "MCP helps the tool and context layer interoperate, not the entire semantic layer of every artifact."
+    },
+    {
+      "id": "MC05-5",
+      "type": "mcq",
+      "question": "Which phrase best captures the course's portability stance?",
+      "options": { "A": "Portable means identical", "B": "Portable enough to reuse, not safe to trust untested", "C": "Portability is impossible", "D": "Filenames decide behavior" },
+      "correct": "B",
+      "explanation": "The course supports reuse with validation, not blind trust in shared artifacts."
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "modcheck-M03",
+  "module": "M03",
+  "title": "Governance Is a Control Plane - Quick Check",
+  "generated": "2026-04-15",
+  "questions": [
+    {
+      "id": "MC03-1",
+      "type": "open",
+      "question": "What is the difference between behavior guidance and enforcement?",
+      "answer": "Behavior guidance influences what the agent tries to do; enforcement creates a real boundary that can block, gate, or log actions. Prompts and instructions are guidance, while permissions and hooks are enforcement."
+    },
+    {
+      "id": "MC03-2",
+      "type": "open",
+      "question": "Why is a policy incomplete if it only appears in a prompt?",
+      "answer": "Because it depends on the model obeying text rather than on a real control boundary. Without product-native controls, there is no hard constraint or reliable audit signal."
+    },
+    {
+      "id": "MC03-3",
+      "type": "open",
+      "question": "What does 'implement enforcement per host' mean?",
+      "answer": "It means the policy goal can stay the same across tools, but the actual enforcement mechanism must use the control primitives each host exposes."
+    },
+    {
+      "id": "MC03-4",
+      "type": "mcq",
+      "question": "Which item is most clearly an enforcement control rather than guidance?",
+      "options": { "A": "Prompt file", "B": "Instruction note", "C": "Protected path or approval gate", "D": "Lesson navigation link" },
+      "correct": "C",
+      "explanation": "Protected paths and approval gates can constrain actions directly; prompts and instructions cannot do that on their own."
+    },
+    {
+      "id": "MC03-5",
+      "type": "mcq",
+      "question": "Which surface is emphasized most for repository governance in the source set?",
+      "options": { "A": "GitHub", "B": "Claude", "C": "A lesson file", "D": "A flashcard deck" },
+      "correct": "A",
+      "explanation": "GitHub is documented most strongly around repository-centric governance, review, and traceability controls."
+    }
+  ]
+}

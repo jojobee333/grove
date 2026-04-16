@@ -2,7 +2,7 @@
 
 **Module**: M01 · The Interview Algorithm Landscape
 **Type**: applied
-**Estimated time**: 35 minutes
+**Estimated time**: 15 minutes
 **Claim**: C10 from Strata synthesis
 
 ---

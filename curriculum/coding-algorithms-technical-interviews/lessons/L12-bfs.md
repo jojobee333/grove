@@ -2,7 +2,7 @@
 
 **Module**: M04 · Tree and Graph Traversal — BFS/DFS Duality
 **Type**: core
-**Estimated time**: 40 minutes
+**Estimated time**: 18 minutes
 **Claim**: C12 from Strata synthesis
 
 ---
@@ -35,6 +35,37 @@ def bfs(graph: dict[int, list[int]], source: int) -> dict[int, int]:
 **Why `deque`, not `list`**: `list.pop(0)` is O(n) — it shifts all remaining elements left. `deque.popleft()` is O(1) — it removes from a doubly-linked structure whose front is efficiently accessible. Using `list.pop(0)` in BFS makes the algorithm O(V + E·V) = O(V²) instead of O(V + E). This is a critical hidden-cost trap ([S025](../../research/coding-algorithms-technical-interviews/01-sources/web/S025-stack-monotonic-pattern-tih.md)).
 
 **Visited tracking**: The `dist` dictionary doubles as the visited set — any node in `dist` has been queued. Adding a node to `dist` before it is processed (immediately when it is discovered) is critical. If you only mark it visited when you process it, the same node can be queued multiple times, causing duplicate work.
+
+## Path reconstruction
+
+If the interview asks for the actual shortest path rather than just the distance, store a `parent` pointer when you first discover each node.
+
+```python
+def bfs_path(graph: dict[int, list[int]], source: int, target: int) -> list[int]:
+    queue = deque([source])
+    parent = {source: None}
+
+    while queue:
+        node = queue.popleft()
+        if node == target:
+            break
+        for neighbor in graph[node]:
+            if neighbor not in parent:
+                parent[neighbor] = node
+                queue.append(neighbor)
+
+    if target not in parent:
+        return []
+
+    path = []
+    curr = target
+    while curr is not None:
+        path.append(curr)
+        curr = parent[curr]
+    return path[::-1]
+```
+
+The correctness is the same as ordinary BFS: the first time you discover a node, you have reached it by a shortest path. The parent map just preserves one such path.
 
 ## Connected Components
 
@@ -161,6 +192,7 @@ Per [S019](../../research/coding-algorithms-technical-interviews/01-sources/web/
 - BFS guarantees shortest path in unweighted graphs — the first time it reaches a node is the shortest path distance.
 - Always use `deque.popleft()` not `list.pop(0)` — the latter is O(n) and makes BFS O(V²).
 - Mark nodes as visited *when they are discovered* (added to queue), not when they are processed — prevents duplicate queuing.
+- Store `parent[child] = node` on discovery if you need to reconstruct an actual shortest path, not just its length.
 - 2D matrix BFS uses the direction-tuple idiom: `DIRS = [(0,1),(0,-1),(1,0),(-1,0)]` for 4-directional adjacency.
 - Multi-source BFS starts with all sources pre-loaded in the queue — finds distance from the nearest of N sources in a single O(V+E) pass.
 

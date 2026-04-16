@@ -1,0 +1,89 @@
+{
+  "id": "quiz-M05",
+  "type": "module",
+  "module": "M05",
+  "title": "Assessment: Portability Has Sharp Edges",
+  "generated": "2026-04-15",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "Why do skills have the strongest portability story in the course?",
+      "options": {
+        "A": "Because they are always-on across every tool",
+        "B": "Because they are backed by a clearer specification and narrower responsibility",
+        "C": "Because they never depend on host behavior",
+        "D": "Because they replace MCP"
+      },
+      "correct": "B",
+      "explanation": "Skills are more portable because they are narrower in scope and supported by an open specification. That makes reuse more reliable than for host-specific agent behavior.",
+      "lesson_ref": "L09",
+      "claim_ref": "C5",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Which statement best captures structural portability?",
+      "options": {
+        "A": "The artifact behaves identically everywhere",
+        "B": "The artifact can be reused because its format or convention carries across tools",
+        "C": "The artifact can enforce host-native permissions",
+        "D": "The artifact does not need validation"
+      },
+      "correct": "B",
+      "explanation": "Structural portability is about reusable format or file shape. It does not guarantee the same runtime semantics in every host.",
+      "lesson_ref": "L10",
+      "claim_ref": "C5",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "What does MCP most directly improve?",
+      "options": {
+        "A": "Cross-tool interoperability for tools and context access",
+        "B": "A universal instruction precedence model",
+        "C": "Guaranteed semantic equality for agents",
+        "D": "Automatic governance enforcement"
+      },
+      "correct": "A",
+      "explanation": "MCP provides an open protocol for tools and context access. It helps interoperability, but it does not make every high-level artifact behave identically across hosts.",
+      "lesson_ref": "L09",
+      "claim_ref": "C5",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "short_answer",
+      "question": "Explain the difference between structural portability and behavioral portability, and say why the distinction matters in practice.",
+      "answer_key": {
+        "required_points": [
+          "Structural portability means the artifact can be reused or loaded across tools",
+          "Behavioral portability means the host interprets and executes it the same way",
+          "The distinction matters because reusable artifacts can still behave differently at runtime and therefore need validation"
+        ],
+        "full_credit": "Defines both terms correctly and explains the practical risk of skipping host-specific validation",
+        "partial_credit": "Defines one term correctly or misses the practical consequence"
+      },
+      "lesson_ref": "L10",
+      "claim_ref": "C5/C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "essay",
+      "prompt": "A team wants one shared artifact library for GitHub Copilot, VS Code, and Claude. Propose a portability strategy that uses standards-backed artifacts where possible and explains how you would validate behavior where semantics may drift.",
+      "guidance": "Strong answers prefer skills and MCP-backed patterns for reuse, distinguish structural from behavioral portability, and require per-host validation for agent or instruction semantics.",
+      "rubric": {
+        "A": "Builds a layered reuse strategy and clearly separates reusable structure from host-specific behavior validation",
+        "B": "Supports reuse but leaves validation steps vague",
+        "C": "Assumes shared files imply identical behavior"
+      },
+      "lesson_ref": "L09-L10",
+      "claim_ref": "C5/C6",
+      "difficulty": "analysis"
+    }
+  ]
+}

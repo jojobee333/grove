@@ -2,7 +2,7 @@
 
 **Module**: M08 · Dynamic Programming — The Three-Stage Pipeline
 **Type**: applied
-**Estimated time**: 35 minutes
+**Estimated time**: 16 minutes
 **Claim**: C9 from Strata synthesis
 
 ---

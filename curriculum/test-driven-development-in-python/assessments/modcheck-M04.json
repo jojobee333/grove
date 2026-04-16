@@ -1,0 +1,42 @@
+{
+  "id": "modcheck-M04",
+  "module": "M04",
+  "title": "Design Seams the Tests Can Trust - Quick Check",
+  "generated": "2026-04-15",
+  "questions": [
+    {
+      "id": "MC04-1",
+      "type": "open",
+      "question": "What problem does an owned seam solve?",
+      "answer": "It stops business logic and tests from depending directly on volatile third-party detail by giving the application its own collaborator interface."
+    },
+    {
+      "id": "MC04-2",
+      "type": "open",
+      "question": "Why is dependency injection useful at a boundary?",
+      "answer": "It lets the code receive a collaborator cleanly so tests can control it without deep patching or construction tricks."
+    },
+    {
+      "id": "MC04-3",
+      "type": "open",
+      "question": "What still needs verification after adding a seam?",
+      "answer": "The adapter or translation layer still needs a realistic check to prove it speaks correctly to the real boundary."
+    },
+    {
+      "id": "MC04-4",
+      "type": "mcq",
+      "question": "Where is a seam often best placed?",
+      "options": { "A": "At random so more classes exist", "B": "Where foreign detail becomes domain intent", "C": "Only at the UI layer", "D": "Nowhere if mocks exist" },
+      "correct": "B",
+      "explanation": "The course emphasizes seams at the boundary where business meaning emerges from external detail."
+    },
+    {
+      "id": "MC04-5",
+      "type": "mcq",
+      "question": "Which statement best matches the course?",
+      "options": { "A": "Seams remove the need for integration coverage", "B": "Seams improve unit clarity but do not erase boundary verification needs", "C": "Seams matter only in Java-like languages", "D": "Seams are just another name for mocks" },
+      "correct": "B",
+      "explanation": "The course separates domain clarity from adapter realism rather than pretending one replaces the other."
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "id": "modcheck-M03",
+  "module": "M03",
+  "title": "Choose the Right Python Testing Surface - Quick Check",
+  "generated": "2026-04-15",
+  "questions": [
+    {
+      "id": "MC03-1",
+      "type": "open",
+      "question": "Why is pytest the default tool recommendation in this course?",
+      "answer": "Because it reduces friction in the TDD loop with lightweight test syntax, fixtures, parametrization, and clearer failure output."
+    },
+    {
+      "id": "MC03-2",
+      "type": "open",
+      "question": "What does pytest often improve before a codebase is structurally migrated?",
+      "answer": "Execution ergonomics such as selection, tracebacks, and output clarity, even when older unittest tests still remain in place."
+    },
+    {
+      "id": "MC03-3",
+      "type": "open",
+      "question": "What does 'migrate by pressure' mean?",
+      "answer": "Rewrite toward pytest-native style where it materially reduces testing friction, not because the team wants a broad rewrite for its own sake."
+    },
+    {
+      "id": "MC03-4",
+      "type": "mcq",
+      "question": "Which feature does not come automatically inside `unittest.TestCase` methods just because pytest runs them?",
+      "options": { "A": "Fixture argument injection", "B": "Tracebacks", "C": "Test selection", "D": "Collection" },
+      "correct": "A",
+      "explanation": "Architectural differences still block full pytest fixture arguments inside `TestCase` methods."
+    },
+    {
+      "id": "MC03-5",
+      "type": "mcq",
+      "question": "What is the best first question when choosing a test surface?",
+      "options": { "A": "Which tool is trendiest?", "B": "Which surface makes the next useful test easiest to express?", "C": "Which tool uses the fewest imports?", "D": "Which framework has existed longest?" },
+      "correct": "B",
+      "explanation": "The course evaluates tools by how they support practical short-cycle testing work."
+    }
+  ]
+}

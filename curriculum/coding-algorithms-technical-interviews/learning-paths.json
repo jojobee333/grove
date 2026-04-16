@@ -1,13 +1,13 @@
 {
   "slug": "coding-algorithms-technical-interviews",
-  "generated": "2025-01-01",
+  "generated": "2026-04-15",
   "paths": [
     {
       "id": "default",
       "name": "Full Curriculum — All 10 Modules",
       "description": "The complete dependency-ordered sequence from interview meta-strategy through algorithms, complexity, and language traps.",
       "modules": ["M01", "M02", "M03", "M04", "M05", "M06", "M07", "M08", "M09", "M10"],
-      "estimated_hours": 19.3,
+      "estimated_hours": 9.3,
       "target_learner": "some-exposure",
       "prerequisites": []
     },
@@ -16,7 +16,7 @@
       "name": "Fast Track — Core Patterns Only",
       "description": "Concentrates on the highest ROI pattern modules. Recommended for a 4-week sprint before an upcoming interview.",
       "modules": ["M01", "M02", "M03", "M04", "M05"],
-      "estimated_hours": 10.2,
+      "estimated_hours": 4.4,
       "target_learner": "some-exposure",
       "prerequisites": []
     },
@@ -25,7 +25,7 @@
       "name": "Complexity Deep Dive",
       "description": "The three complexity analysis modules for candidates who need to strengthen their theoretical vocabulary.",
       "modules": ["M06", "M07", "M08"],
-      "estimated_hours": 6.7,
+      "estimated_hours": 2.7,
       "target_learner": "some-exposure",
       "prerequisites": ["fast-track-patterns"]
     },
@@ -34,7 +34,7 @@
       "name": "Language Hardening Sprint",
       "description": "Focus on hidden-cost traps in Python, Java, and JavaScript. Suitable as a standalone review for experienced engineers.",
       "modules": ["M09"],
-      "estimated_hours": 1.5,
+      "estimated_hours": 0.7,
       "target_learner": "some-exposure",
       "prerequisites": []
     },
@@ -43,7 +43,7 @@
       "name": "Advanced Patterns — DP, Backtracking, DSU",
       "description": "The three hardest algorithmic categories. Requires completion of fast-track-patterns and complexity-deep-dive first.",
       "modules": ["M08", "M10"],
-      "estimated_hours": 4.5,
+      "estimated_hours": 2.6,
       "target_learner": "some-exposure",
       "prerequisites": ["fast-track-patterns", "complexity-deep-dive"]
     }

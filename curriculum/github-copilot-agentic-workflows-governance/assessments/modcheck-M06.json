@@ -1,0 +1,42 @@
+{
+  "id": "modcheck-M06",
+  "module": "M06",
+  "title": "Shared Names, Different Meanings - Quick Check",
+  "generated": "2026-04-15",
+  "questions": [
+    {
+      "id": "MC06-1",
+      "type": "open",
+      "question": "Why is `AGENTS.md` used as the signature example in this module?",
+      "answer": "Because it shows that a shared filename can still hide different host semantics. The name looks portable, but the documented behavior is not identical across tools."
+    },
+    {
+      "id": "MC06-2",
+      "type": "open",
+      "question": "What is one reason convention drift can fail quietly?",
+      "answer": "The artifact may still load and appear to work while scope, precedence, or behavior changes in subtle ways that nobody notices immediately."
+    },
+    {
+      "id": "MC06-3",
+      "type": "open",
+      "question": "What is the first thing you should record before writing a compatibility note?",
+      "answer": "The artifact's intended responsibility. Without that, you cannot meaningfully compare how different hosts interpret it."
+    },
+    {
+      "id": "MC06-4",
+      "type": "mcq",
+      "question": "What should a compatibility note include?",
+      "options": { "A": "Only the filename", "B": "Only the author name", "C": "Responsibility, host loading behavior, and scope or precedence", "D": "Only the date created" },
+      "correct": "C",
+      "explanation": "A useful note explains both what the artifact is for and how each host interprets it."
+    },
+    {
+      "id": "MC06-5",
+      "type": "mcq",
+      "question": "What is the safest attitude toward shared filenames?",
+      "options": { "A": "Assume identical semantics", "B": "Treat them as conventions to validate", "C": "Never use them", "D": "Assume only one host will read them" },
+      "correct": "B",
+      "explanation": "The course does not reject shared names; it rejects unvalidated assumptions about what they mean."
+    }
+  ]
+}

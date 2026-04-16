@@ -1,0 +1,89 @@
+{
+  "id": "quiz-M02",
+  "type": "module",
+  "module": "M02",
+  "title": "Assessment: Context Economics and Token Pressure",
+  "generated": "2026-04-15",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What is the main idea of progressive disclosure in this course?",
+      "options": {
+        "A": "Hide most instructions permanently so the model never sees them",
+        "B": "Load lightweight metadata broadly and heavier resources only when relevant",
+        "C": "Give every session the same full prompt so behavior is consistent",
+        "D": "Replace skills with longer instructions"
+      },
+      "correct": "B",
+      "explanation": "Progressive disclosure keeps always-on context small and loads more detailed material only when the task needs it. That is the shared pattern across skills and context-management guidance.",
+      "lesson_ref": "L03",
+      "claim_ref": "C2",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Which kind of material usually belongs in the parent session after compaction?",
+      "options": {
+        "A": "Raw search logs and duplicate outputs",
+        "B": "Every intermediate exploration step",
+        "C": "Durable decisions, constraints, and compact evidence summaries",
+        "D": "Only the initial task prompt"
+      },
+      "correct": "C",
+      "explanation": "The parent session should preserve durable conclusions and constraints, not every noisy intermediate artifact. That keeps context stable and reusable across phases.",
+      "lesson_ref": "L04",
+      "claim_ref": "C2",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "Why is a subagent useful during broad exploration of a large codebase?",
+      "options": {
+        "A": "It makes the parent session remember more details",
+        "B": "It guarantees the final implementation is correct",
+        "C": "It isolates noisy search work and returns a higher-signal summary",
+        "D": "It turns instructions into enforcement controls"
+      },
+      "correct": "C",
+      "explanation": "Subagent isolation keeps broad exploration from flooding the parent context. The parent session receives a focused result instead of carrying all the exploratory noise.",
+      "lesson_ref": "L04",
+      "claim_ref": "C8",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "short_answer",
+      "question": "Redesign a monolithic prompt into a more token-efficient workflow using one on-demand artifact and one isolated worker.",
+      "answer_key": {
+        "required_points": [
+          "Move phase-specific heavy material into an on-demand artifact such as a skill",
+          "Use an isolated worker such as a subagent for noisy exploration or broad search",
+          "Keep the parent thread focused on durable decisions and constraints"
+        ],
+        "full_credit": "Shows a concrete before/after workflow and explains why the redesign reduces context pressure",
+        "partial_credit": "Mentions skills or subagents without showing how the workflow changes"
+      },
+      "lesson_ref": "L03-L04",
+      "claim_ref": "C2",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "essay",
+      "prompt": "A team insists on keeping one giant 'master prompt' for planning, implementation, and review because it feels safer. Evaluate that decision using the course's context-budget model and propose a staged alternative.",
+      "guidance": "Strong answers explain why always-on context competes for attention, how progressive disclosure reduces token waste, and why isolated workers improve signal quality.",
+      "rubric": {
+        "A": "Explains token-budget tradeoffs clearly and proposes a staged design with durable parent context plus on-demand loading",
+        "B": "Correctly criticizes the giant prompt but the alternative remains vague",
+        "C": "General argument against long prompts without applying the course model"
+      },
+      "lesson_ref": "L03-L04",
+      "claim_ref": "C2/C8",
+      "difficulty": "analysis"
+    }
+  ]
+}

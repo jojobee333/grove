@@ -41,10 +41,34 @@
       "title": "Coding Algorithms for Technical Interview Mastery",
       "description": "A systematic, template-first course covering the 15–20 algorithm patterns, complexity analysis, and language-specific traps required for consistent FAANG-level ",
       "total_modules": 10,
-      "total_lessons": 34,
-      "total_cards": 64,
+      "total_lessons": 36,
+      "total_cards": 68,
       "total_questions": 100,
-      "generated": "2026-04-13",
+      "generated": "2026-04-15",
+      "adaptive": true,
+      "bundle_version": "3.0"
+    },
+    {
+      "slug": "github-copilot-agentic-workflows-governance",
+      "title": "GitHub Copilot Agentic Workflows and Governance",
+      "description": "Build governed, token-efficient agentic workflows across GitHub Copilot, VS Code, and Claude Code by learning how prompts, instructions, skills, agents, and sub",
+      "total_modules": 7,
+      "total_lessons": 14,
+      "total_cards": 42,
+      "total_questions": 43,
+      "generated": "2026-04-15",
+      "adaptive": true,
+      "bundle_version": "3.0"
+    },
+    {
+      "slug": "test-driven-development-in-python",
+      "title": "Test-Driven Development in Python",
+      "description": "Learn to practice Python TDD as a design discipline by mastering the canonical loop, choosing between pytest and unittest, designing seams that reduce brittlene",
+      "total_modules": 7,
+      "total_lessons": 14,
+      "total_cards": 42,
+      "total_questions": 43,
+      "generated": "2026-04-15",
       "adaptive": true,
       "bundle_version": "3.0"
     }

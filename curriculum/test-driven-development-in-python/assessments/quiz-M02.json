@@ -1,0 +1,89 @@
+{
+  "id": "quiz-M02",
+  "type": "module",
+  "module": "M02",
+  "title": "Assessment: Control State, Isolation, and Cleanup",
+  "generated": "2026-04-15",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "Why does the course treat isolation as a first-order TDD concern?",
+      "options": {
+        "A": "Because pytest requires every test to use the same fixture scope",
+        "B": "Because passing tests are only trustworthy when each test controls its own environment",
+        "C": "Because integration tests should never touch state",
+        "D": "Because cleanup only matters in unittest"
+      },
+      "correct": "B",
+      "explanation": "The course argues that leaking state corrupts the signal that red-green-refactor depends on.",
+      "lesson_ref": "L03",
+      "claim_ref": "C2",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "What is usually the safest default fixture scope when strong isolation matters most?",
+      "options": {
+        "A": "Session scope",
+        "B": "Module scope",
+        "C": "Function scope",
+        "D": "Package scope"
+      },
+      "correct": "C",
+      "explanation": "Function scope minimizes hidden sharing and gives the strongest default independence.",
+      "lesson_ref": "L03",
+      "claim_ref": "C2",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "What is the main value of wrapping a database test in an outer transaction that gets rolled back?",
+      "options": {
+        "A": "It makes commits impossible inside application code",
+        "B": "It preserves realistic persistence behavior while still resetting state afterward",
+        "C": "It replaces the need for all unit tests",
+        "D": "It lets async tests run concurrently"
+      },
+      "correct": "B",
+      "explanation": "The pattern keeps real session behavior while guaranteeing cleanup for the next test.",
+      "lesson_ref": "L04",
+      "claim_ref": "C2",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "short_answer",
+      "question": "Explain why async loop scope and teardown policy affect TDD quality rather than just framework mechanics.",
+      "answer_key": {
+        "required_points": [
+          "Loop scope changes whether async tests leak hidden state or lifecycle assumptions",
+          "Teardown policy affects whether tests remain deterministic",
+          "The red-green-refactor loop depends on believable, isolated feedback"
+        ],
+        "full_credit": "Connects runtime lifecycle control directly to trustworthy design feedback",
+        "partial_credit": "Mentions async complexity but not its effect on feedback quality"
+      },
+      "lesson_ref": "L04",
+      "claim_ref": "C2",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "essay",
+      "prompt": "Design a testing strategy for a small async service that stores records in a database. Use Module 2 to explain how you would control fixture scope, event-loop lifecycle, and database cleanup without turning the suite into either mock theater or persistent-state chaos.",
+      "guidance": "Strong answers combine narrow default sharing, explicit loop judgment, and transactional cleanup or equivalent lifecycle control.",
+      "rubric": {
+        "A": "Builds a coherent isolation strategy across async runtime and persistence with clear tradeoff reasoning",
+        "B": "Handles one boundary well but leaves another under-specified",
+        "C": "Relies mostly on vague advice about writing more tests or using mocks"
+      },
+      "lesson_ref": "L03-L04",
+      "claim_ref": "C2/C7",
+      "difficulty": "analysis"
+    }
+  ]
+}

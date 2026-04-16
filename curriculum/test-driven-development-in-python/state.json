@@ -1,0 +1,20 @@
+{
+  "slug": "test-driven-development-in-python",
+  "phase": "complete",
+  "created": "2026-04-15",
+  "updated": "2026-04-16",
+  "steps_completed": ["validate", "learner", "course-map", "lessons", "cards", "assessments", "v3-artifacts"],
+  "course_map": {
+    "modules": 7,
+    "lessons": 14,
+    "estimated_hours": 3.2
+  },
+  "lessons_completed": ["L01", "L02", "L03", "L04", "L05", "L06", "L07", "L08", "L09", "L10", "L11", "L12", "L13", "L14"],
+  "cards_generated": true,
+  "cards_total": 42,
+  "assessments_generated": true,
+  "module_quizzes": 7,
+  "module_checks": 7,
+  "v3_artifacts": ["concepts.json", "learning-paths.json", "adaptive-rules.json"],
+  "bundle_built": true
+}

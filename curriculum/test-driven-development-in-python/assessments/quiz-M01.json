@@ -1,0 +1,89 @@
+{
+  "id": "quiz-M01",
+  "type": "module",
+  "module": "M01",
+  "title": "Assessment: Drive Design with Red-Green-Refactor",
+  "generated": "2026-04-15",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "Which description best matches canonical TDD in this course?",
+      "options": {
+        "A": "Write all tests for the feature, then implement the system in one pass",
+        "B": "Write one failing behavior check, make it pass with a small change, then refactor as needed",
+        "C": "Implement the design first, then add enough tests to reach coverage goals",
+        "D": "Focus on mocks first so refactoring is rarely necessary"
+      },
+      "correct": "B",
+      "explanation": "The course defines canonical TDD as a small-step behavior-design loop rather than as batch test writing or post-hoc verification.",
+      "lesson_ref": "L01",
+      "claim_ref": "C1",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "What is the strongest sign that the next TDD step is too large?",
+      "options": {
+        "A": "The test requires several future abstractions to be imagined before it can be written",
+        "B": "The function name is still short",
+        "C": "The code under test has not imported pytest yet",
+        "D": "The last test passed on the first run"
+      },
+      "correct": "A",
+      "explanation": "When the next test forces you to invent multiple future abstractions, the step is probably too large to give good design feedback.",
+      "lesson_ref": "L01",
+      "claim_ref": "C1",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "After a test goes green, when should you refactor immediately?",
+      "options": {
+        "A": "Always, because every green step requires visible restructuring",
+        "B": "Only when the code now makes the next likely behavior harder to express or extend cleanly",
+        "C": "Never, because refactoring breaks TDD flow",
+        "D": "Only at the end of the whole feature"
+      },
+      "correct": "B",
+      "explanation": "The course resolves the refactoring tension by asking whether the latest change increases design pressure for the next step.",
+      "lesson_ref": "L02",
+      "claim_ref": "C1",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "short_answer",
+      "question": "Explain why the course treats TDD as a design discipline rather than just a testing habit.",
+      "answer_key": {
+        "required_points": [
+          "Tests expose the next needed behavior before implementation grows",
+          "The loop shapes interface and structure incrementally",
+          "Refactoring keeps the design easy to extend instead of merely checking finished code"
+        ],
+        "full_credit": "Explains how behavior-first tests and refactoring guide design rather than only verify code after the fact",
+        "partial_credit": "Mentions test-first or refactoring but not how they shape design"
+      },
+      "lesson_ref": "L01",
+      "claim_ref": "C1",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "essay",
+      "prompt": "A teammate writes most of a feature, then backfills tests and calls the workflow TDD. Use Module 1 to explain what they are missing and how you would restructure the work into smaller red-green-refactor cycles.",
+      "guidance": "Strong answers explain behavior-first sequencing, small-step control, and refactoring triggered by design pressure rather than ritual.",
+      "rubric": {
+        "A": "Clearly distinguishes backfilled testing from TDD and proposes a credible small-step redesign workflow",
+        "B": "Identifies some TDD concepts but leaves the redesign plan vague",
+        "C": "Mostly restates that tests should come first without explaining the design implications"
+      },
+      "lesson_ref": "L01-L02",
+      "claim_ref": "C1",
+      "difficulty": "analysis"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "id": "quiz-M01",
+  "type": "module",
+  "module": "M01",
+  "title": "Assessment: The Agentic Stack",
+  "generated": "2026-04-15",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "Which artifact is the best fit for a short reusable command that starts a common workflow?",
+      "options": {
+        "A": "Always-on instruction file",
+        "B": "Prompt file",
+        "C": "Protected path policy",
+        "D": "Audit log"
+      },
+      "correct": "B",
+      "explanation": "Prompt files are the lightweight reusable entry points in the documented model. They are meant to start tasks quickly, not carry always-on standards or enforcement logic.",
+      "lesson_ref": "L01",
+      "claim_ref": "C1",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "A team wants project-wide coding standards to apply on every task. Which artifact should own that responsibility?",
+      "options": {
+        "A": "Prompt file, because it can be invoked manually when needed",
+        "B": "Skill, because skills are always loaded",
+        "C": "Instructions, because they provide durable baseline guidance",
+        "D": "Subagent, because subagents have isolated context"
+      },
+      "correct": "C",
+      "explanation": "Instructions are the documented home for durable standards and conventions. A skill is task-specific and on-demand; a prompt file is too manual for baseline guidance.",
+      "lesson_ref": "L02",
+      "claim_ref": "C1",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "When is a subagent more appropriate than a skill?",
+      "options": {
+        "A": "When you need baseline policy to apply across every task",
+        "B": "When you need isolated side work in a separate context",
+        "C": "When you need an artifact format with strong portability",
+        "D": "When you need a slash command visible to users"
+      },
+      "correct": "B",
+      "explanation": "A subagent is for focused side work with isolated context. Skills package reusable workflows and resources rather than performing isolated exploratory execution.",
+      "lesson_ref": "L02",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "short_answer",
+      "question": "Explain the 'lightest artifact that still matches the responsibility' heuristic and give one concrete example.",
+      "answer_key": {
+        "required_points": [
+          "Choose the smallest control surface that can own the job cleanly",
+          "This reduces unnecessary context and maintenance overhead",
+          "Concrete example such as using instructions for baseline standards instead of embedding them in an agent, or using a prompt file instead of a full agent for a simple task entry point"
+        ],
+        "full_credit": "Defines the heuristic accurately and gives one example that matches the documented artifact roles",
+        "partial_credit": "Defines the heuristic but gives a vague or mismatched example"
+      },
+      "lesson_ref": "L02",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "essay",
+      "prompt": "Design a repeatable 'plan then implement' workflow for a software feature. Assign responsibilities across prompt file, instructions, skill, agent, and subagent, and justify why each artifact owns its specific job.",
+      "guidance": "Strong answers separate entry point, durable standards, reusable workflow steps, specialist role, and isolated side work instead of collapsing them into one artifact.",
+      "rubric": {
+        "A": "All five artifacts assigned correctly with clear responsibility boundaries and defensible justification",
+        "B": "Most artifacts assigned correctly but one boundary is blurred",
+        "C": "General description without clear artifact separation"
+      },
+      "lesson_ref": "L01-L02",
+      "claim_ref": "C1/C3",
+      "difficulty": "analysis"
+    }
+  ]
+}

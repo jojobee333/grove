@@ -1,0 +1,34 @@
+{
+  "slug": "github-copilot-agentic-workflows-governance",
+  "generated": "2026-04-15",
+  "paths": [
+    {
+      "id": "default-path",
+      "title": "Complete Course",
+      "description": "All 14 lessons in the recommended order from artifact foundations through surface strategy and open limits.",
+      "entry_condition": {},
+      "sequence": ["L01", "L02", "L03", "L04", "L05", "L06", "L07", "L08", "L09", "L10", "L11", "L12", "L13", "L14"]
+    },
+    {
+      "id": "workflow-builder",
+      "title": "Workflow Builder Path",
+      "description": "Focus on designing practical staged workflows with clear artifact boundaries and context discipline.",
+      "entry_condition": { "goal": "apply_practically" },
+      "sequence": ["L01", "L02", "L03", "L04", "L07", "L08", "L09", "L12", "L13", "L14"]
+    },
+    {
+      "id": "governance-first",
+      "title": "Governance-First Path",
+      "description": "Prioritize policy, approval, audit, and cross-host control design before deeper portability work.",
+      "entry_condition": { "interest": "governance" },
+      "sequence": ["L01", "L05", "L06", "L07", "L08", "L11", "L12", "L13", "L14"]
+    },
+    {
+      "id": "cross-tool-portability",
+      "title": "Cross-Tool Portability Path",
+      "description": "Focus on what can be reused safely across GitHub Copilot, VS Code, and Claude, and where semantic drift must be managed.",
+      "entry_condition": { "interest": "portability" },
+      "sequence": ["L01", "L02", "L09", "L10", "L11", "L12", "L13", "L14"]
+    }
+  ]
+}

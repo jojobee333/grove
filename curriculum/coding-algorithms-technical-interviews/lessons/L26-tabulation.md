@@ -2,7 +2,7 @@
 
 **Module**: M08 · Dynamic Processing — The Three-Stage Pipeline
 **Type**: applied
-**Estimated time**: 40 minutes
+**Estimated time**: 18 minutes
 **Claim**: C9 from Strata synthesis
 
 ---

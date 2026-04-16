@@ -2,7 +2,7 @@
 
 **Module**: M05 · Binary Search, Heaps, and Monotonic Stacks
 **Type**: core
-**Estimated time**: 35 minutes
+**Estimated time**: 15 minutes
 **Claim**: C3 from Strata synthesis
 
 ---

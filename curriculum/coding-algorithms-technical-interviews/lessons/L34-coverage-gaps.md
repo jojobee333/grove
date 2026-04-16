@@ -1,172 +1,123 @@
-# Coverage Gaps — What This Course Does Not Cover
+# Linked List Pointer Patterns — Reversal, Dummy Head, and Slow/Fast
 
-**Module**: M10 · Backtracking, Union-Find, Debates, and Gaps
-**Type**: gap
-**Estimated time**: 20 minutes
-**Claim**: null (meta-lesson)
-
----
-
-## Purpose of this lesson
-
-No curriculum can cover everything. This lesson maps what the Strata research explicitly identified as gaps — areas that the source material covered weakly or not at all — and gives you a directed reading list for the highest-priority gaps. Read this lesson as a scouting report: these are the areas where this course's coverage runs out and where you should invest additional study time proportional to your role and target company.
-
-## High-Priority Gaps
-
-### Gap 1: Advanced Graph Algorithms
-
-**Not covered**: Dijkstra's algorithm, Bellman-Ford, Floyd-Warshall, Prim's MST.
-
-Dijkstra's is the most commonly tested graph algorithm not in this course. It finds shortest paths in weighted graphs with non-negative edge weights using a min-heap in O((V + E) log V). Most FAANG and FAANG-adjacent interviews will expect you to implement it from memory.
-
-**Recommended resources**:
-- Dijkstra's: CP-Algorithms (shortest paths), NeetCode network delay time (LeetCode 743)
-- Bellman-Ford: for negative edge weights
-- Floyd-Warshall: all-pairs shortest paths O(V³)
-
-**Quick Dijkstra template**:
-```python
-import heapq
-
-def dijkstra(graph: dict, source: int, n: int) -> list[int]:
-    dist = [float('inf')] * n
-    dist[source] = 0
-    heap = [(0, source)]    # (distance, node)
-    
-    while heap:
-        d, u = heapq.heappop(heap)
-        if d > dist[u]:
-            continue        # stale entry
-        for v, weight in graph[u]:
-            if dist[u] + weight < dist[v]:
-                dist[v] = dist[u] + weight
-                heapq.heappush(heap, (dist[v], v))
-    
-    return dist
-```
-
-### Gap 2: Trie (Prefix Tree)
-
-**Not covered**: Trie data structure, prefix search, word search with wildcards.
-
-Tries appear in autocomplete, word dictionaries, and IP routing problems. The implementation is a linked structure of character nodes — similar to a tree but with up to 26 children per node.
-
-**Template (basic)**:
-```python
-class TrieNode:
-    def __init__(self):
-        self.children = {}
-        self.is_end = False
-
-class Trie:
-    def __init__(self):
-        self.root = TrieNode()
-    
-    def insert(self, word: str) -> None:
-        node = self.root
-        for char in word:
-            if char not in node.children:
-                node.children[char] = TrieNode()
-            node = node.children[char]
-        node.is_end = True
-    
-    def search(self, word: str) -> bool:
-        node = self.root
-        for char in word:
-            if char not in node.children:
-                return False
-            node = node.children[char]
-        return node.is_end
-```
-
-### Gap 3: Segment Trees and Fenwick Trees
-
-**Not covered**: Range queries, point updates, prefix sum with updates.
-
-These are medium-hard data structures for range minimum/maximum/sum queries with O(log n) updates:
-- **Fenwick tree (BIT)**: range sum queries with O(log n) update. Elegant two-line update/query.
-- **Segment tree**: arbitrary range queries (min, max, sum) with O(log n) update/query.
-
-Relevant for: "range sum query mutable" (LeetCode 307), interval problems where prefix sum has poor update cost.
-
-### Gap 4: Bit Manipulation
-
-**Not covered**: XOR tricks, bitmask DP, popcount.
-
-Bit manipulation enables O(1) operations on integers interpreted as sets of flags:
-- `x ^ x = 0`, `0 ^ x = x` — XOR to find the single non-duplicate element
-- `x & (x-1) = 0` — checks if x is a power of 2
-- Bitmask for subset enumeration: iterate over all 2^n subsets with `for mask in range(1 << n)`
-
-Companies like Google frequently test bit manipulation knowledge.
-
-### Gap 5: Advanced DP Patterns
-
-**Not covered**: Interval DP (Matrix Chain Multiplication, Burst Balloons), digit DP, tree DP.
-
-This course covers classical 1D/2D DP weel but omits:
-- **Interval DP**: `dp[i][j]` = optimal cost for subproblem from i to j; computed by span length
-- **Digit DP**: count numbers in range [0, n] with a given property — uses a "tight constraint" flag
-- **Tree DP**: DP computed by post-order DFS on a tree (e.g., maximum independent set on tree)
-
-### Gap 6: String Algorithms
-
-**Not covered**: KMP pattern matching, Rabin-Karp, Z-algorithm, Manacher's palindrome algorithm.
-
-KMP finds all occurrences of a pattern in a string in O(n + m) using a failure function. Rabin-Karp uses rolling hash. These appear in hard string matching problems but are rarely required unless you're targeting companies that ask graph/string hardball questions (Jane Street, Two Sigma, Jane Street).
-
-## Lower-Priority Gaps
-
-### Gap 7: Flow Networks (MaxFlow / MinCut)
-
-Ford-Fulkerson, Edmonds-Karp — required for matching problems, bipartite graph assignments. Rarely tested in standard FAANG interviews; frequently tested in competitive programming.
-
-### Gap 8: Geometry Algorithms
-
-Convex hull, line intersection, point-in-polygon — appear in specialised roles (computational geometry, graphics engineering) but not in general software engineer interviews.
-
-### Gap 9: Number Theory
-
-Sieve of Eratosthenes (prime generation), modular exponentiation, GCD/LCM — occasionally tested in competitive programming and quantitative finance roles. Not typical for standard FAANG SWE roles.
-
-## Prioritising Additional Study
-
-Rank your additional study by target role and company:
-
-| Topic | FAANG SWE | Competitive Programming | Quant / Systems |
-|---|---|---|---|
-| Dijkstra / shortest paths | ★★★★★ | ★★★★★ | ★★★ |
-| Trie | ★★★★ | ★★★ | ★★ |
-| Bit manipulation | ★★★★ | ★★★★★ | ★★★ |
-| Segment tree / Fenwick | ★★ | ★★★★★ | ★★ |
-| Interval DP | ★★ | ★★★★ | ★★ |
-| MaxFlow | ★ | ★★★★ | ★ |
-| String algorithms (KMP) | ★★ | ★★★★ | ★ |
-
-**If preparing for FAANG**: Dijkstra's + Trie + Bit manipulation cover 90% of what this course misses.
-
-## What This Course Covers Well
-
-This course thoroughly covers the Pareto-dominant patterns — the topics that:
-1. Appear in the majority of interview problems
-2. Are prerequisites for understanding harder topics
-
-If you've completed all 34 lessons:
-- ✅ Hash maps (the universal speed-up)
-- ✅ Two pointers, sliding window, prefix sum
-- ✅ BFS/DFS, topological sort, cycle detection
-- ✅ Binary search (all variants including answer-space)
-- ✅ Heap / top-K pattern
-- ✅ Monotonic stack
-- ✅ Big-O, Master Theorem, amortised analysis
-- ✅ Space complexity and Python recursion traps
-- ✅ DP (recognition, memoisation, tabulation, state design)
-- ✅ Language-specific complexity traps
-- ✅ Backtracking
-- ✅ Union-Find / DSU
-
-The gaps listed in this lesson are the logical next layer — build this foundation first, then extend.
+**Module**: M10 · Backtracking, Union-Find, and Remaining Interview Patterns
+**Type**: core
+**Estimated time**: 14 minutes
+**Claim**: C15 from Strata synthesis
 
 ---
 
-*← [Previous lesson](./L33-dp-priority-debate.md)* · *Course complete — return to [course outline](../course.json)*
+## The core idea
+
+Linked-list questions are rarely about fancy asymptotics. They are about pointer hygiene under pressure. The good news is that the interview surface is compact: most linked-list problems reduce to four routines you can internalise and reuse.
+
+1. Use a **dummy / sentinel node** when an operation might touch the head.
+2. Reverse a list in place with the `prev / curr / nxt` pattern.
+3. Use **slow / fast pointers** for middle, cycle, and kth-from-end style tasks.
+4. Merge two sorted lists by walking two cursors and attaching the smaller node each step.
+
+That is why linked lists sit in the second wave of study: they recur often enough to matter, but they do not require a huge template library once the core routines are automatic ([S034](../../research/coding-algorithms-technical-interviews/01-sources/web/S034-linked-list-cheatsheet-tih.md), [S021](../../research/coding-algorithms-technical-interviews/01-sources/web/S021-blind75-grind75-tech-interview-handbook.md), [S023](../../research/coding-algorithms-technical-interviews/01-sources/web/S023-algorithm-priority-tech-interview-handbook.md)).
+
+## Routine 1: Dummy node for head-edge cases
+
+Whenever insertion, deletion, or merging might change the head, a dummy node removes special cases.
+
+```python
+def merge_two_lists(l1: ListNode | None, l2: ListNode | None) -> ListNode | None:
+	dummy = ListNode(0)
+	tail = dummy
+
+	while l1 and l2:
+		if l1.val <= l2.val:
+			tail.next = l1
+			l1 = l1.next
+		else:
+			tail.next = l2
+			l2 = l2.next
+		tail = tail.next
+
+	tail.next = l1 if l1 else l2
+	return dummy.next
+```
+
+**Why it matters**: without the dummy, you constantly branch on “am I updating the true head?” With the dummy, every attach operation has the same shape.
+
+## Routine 2: In-place reversal
+
+```python
+def reverse_list(head: ListNode | None) -> ListNode | None:
+	prev = None
+	curr = head
+
+	while curr:
+		nxt = curr.next
+		curr.next = prev
+		prev = curr
+		curr = nxt
+
+	return prev
+```
+
+**Invariant**: `prev` is the already-reversed prefix, `curr` is the next node to process, and `nxt` preserves the remainder before the pointer flip.
+
+This routine powers full reversal, partial reversal, reorder-list style tasks, and several palindrome-on-linked-list variants.
+
+## Routine 3: Slow / fast traversal
+
+```python
+def middle_node(head: ListNode | None) -> ListNode | None:
+	slow = head
+	fast = head
+
+	while fast and fast.next:
+		slow = slow.next
+		fast = fast.next.next
+
+	return slow
+```
+
+This same shape solves:
+
+- middle of linked list,
+- cycle detection,
+- kth node from the end when one pointer starts ahead, and
+- several split-the-list problems.
+
+**Recognition cue**: if the prompt asks for “middle”, “cycle”, or “relative distance between two positions in one list”, think slow / fast before you think hash set.
+
+## Routine 4: Merge as a pointer-attachment problem
+
+Many linked-list prompts are really “attach the next correct node and advance that pointer.” Merge Two Sorted Lists is the cleanest example, but the same mindset appears in partitioning and stable re-linking problems.
+
+The key habit is to think in terms of **next-pointer rewiring**, not array-style overwriting.
+
+## Common mistakes
+
+- Forgetting to save `curr.next` before reversing a node.
+- Solving head-touching problems without a dummy node and drowning in special cases.
+- Marking linked lists as “easy” because the asymptotics are simple, then dropping points on pointer order.
+- Reaching for a hash set first on middle / kth-from-end tasks where slow / fast gives O(1) extra space.
+
+## Decision rules
+
+- If the head may change: start with a dummy node.
+- If you need the middle, a cycle check, or a distance offset: start with slow / fast.
+- If the prompt says reverse, reorder, or splice: sketch the pointer states before coding.
+- If the input is already two sorted linked lists: think merge routine, not array conversion.
+
+## Key points
+
+- Linked-list interview performance comes from four compact routines: dummy node, reversal, slow / fast, and merge.
+- Dummy nodes remove head-edge special cases and often produce the cleanest code.
+- Reversal depends on preserving `next` before changing `curr.next`.
+- Slow / fast pointers are the default tool for middle, cycle, and offset-traversal problems.
+
+## Go deeper
+
+- [S034](../../research/coding-algorithms-technical-interviews/01-sources/web/S034-linked-list-cheatsheet-tih.md) — linked-list routines, complexity table, and dummy-node guidance
+- [S023](../../research/coding-algorithms-technical-interviews/01-sources/web/S023-algorithm-priority-tech-interview-handbook.md) — linked lists as a mid-priority interview topic
+- [S021](../../research/coding-algorithms-technical-interviews/01-sources/web/S021-blind75-grind75-tech-interview-handbook.md) — linked-list presence in the common interview-problem set
+
+---
+
+*← [Previous lesson](./L33-dp-priority-debate.md)* · *[Next lesson: Trie Basics — Prefix Matching and StartsWith](./L35-trie-basics.md) →*

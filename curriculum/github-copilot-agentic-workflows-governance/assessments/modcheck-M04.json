@@ -1,0 +1,42 @@
+{
+  "id": "modcheck-M04",
+  "module": "M04",
+  "title": "Stage Work, Then Delegate - Quick Check",
+  "generated": "2026-04-15",
+  "questions": [
+    {
+      "id": "MC04-1",
+      "type": "open",
+      "question": "List the five broad workflow phases emphasized in Module 4.",
+      "answer": "Plan, explore, implement, review, and hand off. The order matters because each phase serves a different reasoning goal."
+    },
+    {
+      "id": "MC04-2",
+      "type": "open",
+      "question": "What is the coordinator supposed to keep coherent?",
+      "answer": "Sequence, task framing, and synthesis. The coordinator holds the main thread together while workers handle narrower subtasks."
+    },
+    {
+      "id": "MC04-3",
+      "type": "open",
+      "question": "When is separate review especially valuable?",
+      "answer": "When independence matters because the task is risky, ambiguous, or governance-sensitive. Separate review reduces inherited framing from earlier work."
+    },
+    {
+      "id": "MC04-4",
+      "type": "mcq",
+      "question": "What should review optimize for?",
+      "options": { "A": "Speed only", "B": "Agreement with implementation", "C": "Surfacing risk or missing evidence", "D": "Replacing the plan" },
+      "correct": "C",
+      "explanation": "The course frames review as a risk-finding phase, not a rubber stamp."
+    },
+    {
+      "id": "MC04-5",
+      "type": "mcq",
+      "question": "Which statement best reflects the course's view on parallel review?",
+      "options": { "A": "Always use it", "B": "Never use it", "C": "Use it when independence matters", "D": "Use it only for lesson generation" },
+      "correct": "C",
+      "explanation": "The course argues for independence where it has real value, not as a universal default."
+    }
+  ]
+}

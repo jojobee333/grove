@@ -2,7 +2,7 @@
 
 **Module**: M02 · Hash Maps — The Universal Speed-Up
 **Type**: applied
-**Estimated time**: 30 minutes
+**Estimated time**: 14 minutes
 **Claim**: C4, C6 from Strata synthesis
 
 ---

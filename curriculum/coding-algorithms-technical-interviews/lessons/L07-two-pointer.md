@@ -2,7 +2,7 @@
 
 **Module**: M03 · Linear Traversal Patterns — Arrays, Pointers, and Windows
 **Type**: core
-**Estimated time**: 40 minutes
+**Estimated time**: 18 minutes
 **Claim**: C3 from Strata synthesis
 
 ---

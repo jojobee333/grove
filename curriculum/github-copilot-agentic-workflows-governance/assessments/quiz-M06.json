@@ -1,0 +1,89 @@
+{
+  "id": "quiz-M06",
+  "type": "module",
+  "module": "M06",
+  "title": "Assessment: Shared Names, Different Meanings",
+  "generated": "2026-04-15",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What is the main lesson of the `AGENTS.md` contradiction?",
+      "options": {
+        "A": "The filename is invalid and should never be used",
+        "B": "A shared filename does not guarantee one cross-tool semantic contract",
+        "C": "GitHub and VS Code document exactly the same meaning",
+        "D": "Claude loads `AGENTS.md` natively in the same way everywhere"
+      },
+      "correct": "B",
+      "explanation": "The contradiction shows that a common filename can still have different precedence, loading, or semantic behavior across hosts. Shared naming is not proof of identical meaning.",
+      "lesson_ref": "L11",
+      "claim_ref": "C6",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Why can convention drift be dangerous even when an artifact still loads successfully?",
+      "options": {
+        "A": "Because the artifact becomes unreadable to humans",
+        "B": "Because quiet semantic drift can change governance or context behavior without obvious failure",
+        "C": "Because file size always increases",
+        "D": "Because portability forces the tool offline"
+      },
+      "correct": "B",
+      "explanation": "The risky case is often silent drift: the artifact still appears to work, but precedence, scope, or role behavior changes in ways the team did not intend.",
+      "lesson_ref": "L12",
+      "claim_ref": "C7",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "What should a compatibility note include for a shared artifact?",
+      "options": {
+        "A": "Only the artifact's filename",
+        "B": "Only a list of authors",
+        "C": "Its intended responsibility, host loading behavior, scope or precedence, and any ignored semantics",
+        "D": "A full copy of all source documents"
+      },
+      "correct": "C",
+      "explanation": "A good compatibility note records what the artifact controls and how each host interprets it, including any missing or ignored behavior.",
+      "lesson_ref": "L12",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "short_answer",
+      "question": "List the first three steps of the course's repair checklist for cross-tool convention drift.",
+      "answer_key": {
+        "required_points": [
+          "Identify the artifact's intended responsibility",
+          "Record which host loads it natively versus partially",
+          "Record precedence and scope rules for each host"
+        ],
+        "full_credit": "Lists the first three steps accurately and in a way that shows why they matter",
+        "partial_credit": "Lists only one or two steps or gives them in overly vague terms"
+      },
+      "lesson_ref": "L12",
+      "claim_ref": "C6/C7",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "essay",
+      "prompt": "Your team wants to standardize one shared instruction-artifact convention across GitHub, VS Code, and Claude. Explain how you would do that without pretending the platforms interpret the same filename identically.",
+      "guidance": "Strong answers use host-specific compatibility notes, validation steps, and explicit documentation of load order or precedence rather than assuming the filename is enough.",
+      "rubric": {
+        "A": "Provides a realistic standardization process that acknowledges semantic drift and includes validation per host",
+        "B": "Advocates standardization but leaves host-specific checks incomplete",
+        "C": "Assumes one filename is sufficient proof of compatibility"
+      },
+      "lesson_ref": "L11-L12",
+      "claim_ref": "C6/C7",
+      "difficulty": "analysis"
+    }
+  ]
+}

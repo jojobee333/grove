@@ -2,7 +2,7 @@
 
 **Module**: M08 · Dynamic Programming — The Three-Stage Pipeline
 **Type**: core
-**Estimated time**: 40 minutes
+**Estimated time**: 16 minutes
 **Claim**: C9 from Strata synthesis
 
 ---
@@ -16,7 +16,7 @@ Dynamic programming solves problems by combining answers to **smaller subproblem
 
 If both hold, DP can reduce exponential naive recursion to polynomial time by memoising (or tabuliating) subproblem answers.
 
-Recognising that a problem has these properties — before writing any DP code — is the most valuable interview skill this module teaches ([S011](../../research/coding-algorithms-technical-interviews/01-sources/web/S011-dynamic-programming-fundamentals.md)).
+Recognising that a problem has these properties — before writing any DP code — is the most valuable interview skill this module teaches ([S033](../../research/coding-algorithms-technical-interviews/01-sources/web/S033-dp-intro-cp-algorithms.md), [S006](../../research/coding-algorithms-technical-interviews/01-sources/web/S006-dp-is-simple-safronov.md)).
 
 ## Optimal Substructure
 
@@ -63,6 +63,18 @@ Before writing code, ask:
    - YES: overlapping subproblems → use DP
 
 If all three answer YES, DP is applicable.
+
+## DP vs. greedy vs. divide-and-conquer
+
+When you are unsure whether a problem is DP, compare the subproblem structure directly:
+
+| Pattern | Subproblems overlap? | Local greedy choice safe? | Typical signal |
+|---|---|---|---|
+| DP | Yes | Not necessarily | same state reappears; need best value over many choices |
+| Greedy | Often irrelevant | Yes, and you can justify it | sort-and-scan, earliest finish, local choice provably safe |
+| Divide-and-conquer | No | No single local choice | split into independent halves and combine |
+
+This table prevents a common interview mistake: seeing recursion and assuming the answer must be DP. Recursive structure alone is not enough.
 
 **Common DP patterns by subproblem structure**:
 
@@ -134,7 +146,8 @@ Both met → 2D DP, O(n × m) time and space.
 
 ## Go deeper
 
-- [S011](../../research/coding-algorithms-technical-interviews/01-sources/web/S011-dynamic-programming-fundamentals.md) — DP fundamentals: optimal substructure, overlapping subproblems, and the three-stage pipeline
+- [S033](../../research/coding-algorithms-technical-interviews/01-sources/web/S033-dp-intro-cp-algorithms.md) — optimal substructure, overlapping subproblems, and DP state design
+- [S006](../../research/coding-algorithms-technical-interviews/01-sources/web/S006-dp-is-simple-safronov.md) — the practical brute-force → memoisation → tabulation pipeline
 
 ---
 

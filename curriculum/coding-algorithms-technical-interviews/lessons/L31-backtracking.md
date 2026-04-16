@@ -1,8 +1,8 @@
 # Backtracking — Template, Pruning, and When It Applies
 
-**Module**: M10 · Backtracking, Union-Find, Debates, and Gaps
+**Module**: M10 · Backtracking, Union-Find, and Remaining Interview Patterns
 **Type**: core
-**Estimated time**: 40 minutes
+**Estimated time**: 18 minutes
 **Claim**: C3 from Strata synthesis
 
 ---

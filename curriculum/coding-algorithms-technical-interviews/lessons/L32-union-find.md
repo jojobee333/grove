@@ -1,8 +1,8 @@
 # Union-Find — DSU Template for Connectivity Problems
 
-**Module**: M10 · Backtracking, Union-Find, Debates, and Gaps
+**Module**: M10 · Backtracking, Union-Find, and Remaining Interview Patterns
 **Type**: core
-**Estimated time**: 35 minutes
+**Estimated time**: 17 minutes
 **Claim**: C7 from Strata synthesis
 
 ---
@@ -163,4 +163,4 @@ DSU makes the "are these already connected?" check O(α(n)) — the dominant cos
 
 ---
 
-*← [Previous lesson](./L31-backtracking.md)* · *[Next lesson: The DP-First vs Greedy-First Debate](./L33-dp-priority-debate.md) →*
+*← [Previous lesson](./L31-backtracking.md)* · *[Next lesson: The DP Priority Debate — General Prep vs. Google Track](./L33-dp-priority-debate.md) →*

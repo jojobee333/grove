@@ -1,0 +1,3741 @@
+{
+  "version": "3.0",
+  "slug": "github-copilot-agentic-workflows-governance",
+  "bundled": "2026-04-16T01:45:52.113Z",
+  "course": {
+    "topic": "GitHub Copilot Agentic Workflows and Governance",
+    "slug": "github-copilot-agentic-workflows-governance",
+    "strata_source": "vault/research/github-copilot-agentic-workflows-governance/",
+    "generated": "2026-04-15",
+    "learner": {
+      "goal": "apply_practically",
+      "background": "intermediate",
+      "session_time_min": 60
+    },
+    "summary": "Build governed, token-efficient agentic workflows across GitHub Copilot, VS Code, and Claude Code by learning how prompts, instructions, skills, agents, and subagents divide responsibility, how context pressure shapes orchestration, and how policy must live outside the prompt.",
+    "modules": [
+      {
+        "id": "M01",
+        "title": "The Agentic Stack: Five Layers, Five Jobs",
+        "strata_theme": "Theme 1 - Prompts, instructions, skills, agents, and subagents are distinct layers, not interchangeable abstractions",
+        "description": "Establish the operating model for agentic systems by separating reusable entry points, always-on guidance, packaged capabilities, role definitions, and isolated side workers.",
+        "objectives": [
+          "Differentiate prompts, instructions, skills, agents, and subagents by persistence, scope, and control surface",
+          "Select the correct artifact type for a workflow requirement such as role definition, reusable capability, or isolated exploration"
+        ],
+        "lessons": [
+          {
+            "id": "L01",
+            "title": "Five Layers, Five Jobs",
+            "strata_claim": "C1",
+            "type": "core",
+            "estimated_minutes": 25,
+            "description": "Define the five recurring workflow layers, the problem each one solves, and the failure modes created when teams collapse them into one artifact.",
+            "prerequisites": [],
+            "teaches_concepts": [
+              "prompt-layer",
+              "instruction-layer",
+              "skill-layer",
+              "agent-layer",
+              "subagent-layer"
+            ],
+            "reinforces_concepts": [],
+            "mastery_threshold": 0.8,
+            "difficulty": 2,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
+          },
+          {
+            "id": "L02",
+            "title": "Artifact Selection in Real Workflow Design",
+            "strata_claim": "C1, C3",
+            "type": "applied",
+            "estimated_minutes": 25,
+            "description": "Apply the layer model to concrete workflow decisions such as where to place governance rules, reusable recipes, role policies, and exploratory subtasks.",
+            "prerequisites": [
+              "L01"
+            ],
+            "teaches_concepts": [
+              "artifact-selection"
+            ],
+            "reinforces_concepts": [
+              "prompt-layer",
+              "instruction-layer",
+              "skill-layer",
+              "agent-layer",
+              "subagent-layer"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
+          }
+        ],
+        "has_assessment": true
+      },
+      {
+        "id": "M02",
+        "title": "Context Economics and Token Pressure",
+        "strata_theme": "Theme 2 - Context pressure is a primary workflow constraint, and the best-documented mitigations are progressive loading, compaction, and delegation",
+        "description": "Treat context as a budget to allocate deliberately rather than a hidden implementation detail, then design workflows that keep the main session lean and stable.",
+        "objectives": [
+          "Decompose a workflow so heavy context loads only when it is needed",
+          "Apply progressive disclosure, compaction, and delegated side work to protect the main session from context sprawl"
+        ],
+        "lessons": [
+          {
+            "id": "L03",
+            "title": "Progressive Disclosure Beats Monolithic Prompts",
+            "strata_claim": "C2",
+            "type": "core",
+            "estimated_minutes": 25,
+            "description": "Use metadata-first loading, targeted activation, and bounded context assembly instead of growing one ever-larger prompt or instruction file.",
+            "prerequisites": [
+              "L02"
+            ],
+            "teaches_concepts": [
+              "progressive-disclosure",
+              "context-budget"
+            ],
+            "reinforces_concepts": [
+              "artifact-selection",
+              "skill-layer"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
+          },
+          {
+            "id": "L04",
+            "title": "Compaction, Reinjection, and Subagent Isolation",
+            "strata_claim": "C2, C8",
+            "type": "applied",
+            "estimated_minutes": 30,
+            "description": "Translate context mechanics into workflow structure by isolating exploratory work, constraining reinjected context, and deciding what the parent session should retain.",
+            "prerequisites": [
+              "L03"
+            ],
+            "teaches_concepts": [
+              "context-compaction",
+              "context-isolation"
+            ],
+            "reinforces_concepts": [
+              "subagent-layer",
+              "context-budget"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
+          }
+        ],
+        "has_assessment": true
+      },
+      {
+        "id": "M03",
+        "title": "Governance Is a Control Plane",
+        "strata_theme": "Theme 3 - Governance is a product-native control layer, not just a matter of prompt discipline",
+        "description": "Separate behavior-shaping guidance from enforcement by designing permissions, hooks, approval gates, and audit trails as first-class workflow components.",
+        "objectives": [
+          "Design layered enforcement using permissions, hooks, admin policy, and audit trails",
+          "Separate behavioral guidance from enforceable controls when securing an agent workflow"
+        ],
+        "lessons": [
+          {
+            "id": "L05",
+            "title": "Why Prompts Cannot Enforce Policy",
+            "strata_claim": "C4",
+            "type": "core",
+            "estimated_minutes": 25,
+            "description": "Establish why instructions improve behavior but cannot replace access control, protected paths, managed settings, or review requirements.",
+            "prerequisites": [
+              "L02"
+            ],
+            "teaches_concepts": [
+              "behavior-vs-enforcement",
+              "governance-layering"
+            ],
+            "reinforces_concepts": [
+              "instruction-layer",
+              "agent-layer"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
+          },
+          {
+            "id": "L06",
+            "title": "Hooks, Permissions, and Audit Trails by Surface",
+            "strata_claim": "C4",
+            "type": "applied",
+            "estimated_minutes": 30,
+            "description": "Compare how GitHub, VS Code, and Claude expose approval hooks, admin controls, permission modes, and traceability so policy lives outside the prompt body.",
+            "prerequisites": [
+              "L05"
+            ],
+            "teaches_concepts": [
+              "approval-hooks",
+              "auditability"
+            ],
+            "reinforces_concepts": [
+              "governance-layering",
+              "behavior-vs-enforcement"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 4,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
+          }
+        ],
+        "has_assessment": true
+      },
+      {
+        "id": "M04",
+        "title": "Stage Work, Then Delegate",
+        "strata_theme": "Theme 4 - Recommended workflows are staged and delegated rather than monolithic",
+        "description": "Build workflows around explicit phases and independent workers so planning, implementation, and review remain specialized instead of collapsing into one role.",
+        "objectives": [
+          "Sequence plan, explore, implement, review, and handoff as distinct workflow phases",
+          "Decide when independence requires parallel workers instead of one continuous agent run"
+        ],
+        "lessons": [
+          {
+            "id": "L07",
+            "title": "Coordinator-Worker Workflows and Phase Boundaries",
+            "strata_claim": "C3",
+            "type": "core",
+            "estimated_minutes": 25,
+            "description": "Use a coordinator to control sequence, artifacts, and synthesis while workers handle bounded subtasks with narrower context and tool scope.",
+            "prerequisites": [
+              "L04",
+              "L06"
+            ],
+            "teaches_concepts": [
+              "coordinator-worker",
+              "workflow-phases"
+            ],
+            "reinforces_concepts": [
+              "subagent-layer",
+              "governance-layering"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
+          },
+          {
+            "id": "L08",
+            "title": "Parallel Review Without Role Contamination",
+            "strata_claim": "C8, C9",
+            "type": "debate",
+            "estimated_minutes": 30,
+            "description": "Preserve independent judgment by separating roles, isolating perspectives, and preventing later stages from inheriting the framing of earlier ones.",
+            "prerequisites": [
+              "L07"
+            ],
+            "teaches_concepts": [
+              "parallel-independence",
+              "role-contamination"
+            ],
+            "reinforces_concepts": [
+              "coordinator-worker",
+              "context-isolation"
+            ],
+            "mastery_threshold": 0.75,
+            "difficulty": 4,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              3,
+              7,
+              14
+            ]
+          }
+        ],
+        "has_assessment": true
+      },
+      {
+        "id": "M05",
+        "title": "Portability Has Sharp Edges",
+        "strata_theme": "Theme 5 - Portability exists mainly at the artifact and convention layer, while behavior remains partially implementation-specific",
+        "description": "Learn where shared standards such as skills and MCP genuinely reduce duplication and where runtime semantics still require host-specific validation.",
+        "objectives": [
+          "Reuse skills and MCP-backed artifacts without assuming identical runtime behavior",
+          "Validate portability at the artifact and semantic layers before standardizing a workflow"
+        ],
+        "lessons": [
+          {
+            "id": "L09",
+            "title": "Why Skills Travel Better Than Agents",
+            "strata_claim": "C5",
+            "type": "core",
+            "estimated_minutes": 25,
+            "description": "Explain why standards-backed skills are the clearest portability story while custom agents and instruction files still inherit host-specific behavior.",
+            "prerequisites": [
+              "L02",
+              "L07"
+            ],
+            "teaches_concepts": [
+              "artifact-portability",
+              "skill-portability",
+              "mcp"
+            ],
+            "reinforces_concepts": [
+              "skill-layer",
+              "workflow-phases"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
+          },
+          {
+            "id": "L10",
+            "title": "Structural Portability vs Behavioral Portability",
+            "strata_claim": "C5, C6",
+            "type": "debate",
+            "estimated_minutes": 25,
+            "description": "Distinguish reusable file structure from runtime meaning so teams do not mistake a portable artifact format for identical execution semantics.",
+            "prerequisites": [
+              "L09"
+            ],
+            "teaches_concepts": [
+              "behavioral-portability"
+            ],
+            "reinforces_concepts": [
+              "artifact-portability",
+              "agent-layer",
+              "instruction-layer"
+            ],
+            "mastery_threshold": 0.75,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              3,
+              7,
+              14
+            ]
+          }
+        ],
+        "has_assessment": true
+      },
+      {
+        "id": "M06",
+        "title": "Shared Names, Different Meanings",
+        "strata_theme": "Theme 6 - Shared filenames do not imply shared semantics across tools",
+        "description": "Handle cross-tool convention drift by auditing what identically named artifacts mean on each host before reusing them in a shared workflow.",
+        "objectives": [
+          "Diagnose cross-tool semantic mismatches from the same artifact name",
+          "Refactor a workflow convention so shared filenames do not hide tool-specific behavior"
+        ],
+        "lessons": [
+          {
+            "id": "L11",
+            "title": "AGENTS.md Is Not One Thing Everywhere",
+            "strata_claim": "C6",
+            "type": "debate",
+            "estimated_minutes": 25,
+            "description": "Trace how AGENTS.md and related files are loaded differently across GitHub, VS Code, and Claude so naming conventions do not create false confidence.",
+            "prerequisites": [
+              "L10"
+            ],
+            "teaches_concepts": [
+              "agents-md-semantics"
+            ],
+            "reinforces_concepts": [
+              "behavioral-portability"
+            ],
+            "mastery_threshold": 0.75,
+            "difficulty": 3,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              3,
+              7,
+              14
+            ]
+          },
+          {
+            "id": "L12",
+            "title": "Repairing Cross-Tool Convention Drift",
+            "strata_claim": "C6, C7",
+            "type": "applied",
+            "estimated_minutes": 30,
+            "description": "Create a validation checklist and compatibility notes that make shared artifacts usable without pretending the platforms interpret them the same way.",
+            "prerequisites": [
+              "L11"
+            ],
+            "teaches_concepts": [
+              "convention-audit"
+            ],
+            "reinforces_concepts": [
+              "artifact-portability",
+              "governance-layering",
+              "agents-md-semantics"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 4,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
+          }
+        ],
+        "has_assessment": true
+      },
+      {
+        "id": "M07",
+        "title": "Surface Strategy and Open Limits",
+        "strata_theme": "Theme 7 - GitHub and Claude emphasize different parts of the agentic problem",
+        "description": "Close the course by choosing the right host for the problem at hand and by planning around the evidence limits that still remain in the public documentation.",
+        "objectives": [
+          "Choose the right host surface for governance-heavy versus context-heavy work",
+          "Plan mitigations for unresolved documentation gaps around token budgets and subagent semantics"
+        ],
+        "lessons": [
+          {
+            "id": "L13",
+            "title": "GitHub for Governance, Claude for Context Mechanics",
+            "strata_claim": "C7",
+            "type": "applied",
+            "estimated_minutes": 30,
+            "description": "Use vendor strengths deliberately by matching governance-heavy collaboration to GitHub-centric controls and context-heavy local orchestration to Claude-style mechanics.",
+            "prerequisites": [
+              "L06",
+              "L10"
+            ],
+            "teaches_concepts": [
+              "surface-selection"
+            ],
+            "reinforces_concepts": [
+              "auditability",
+              "context-compaction",
+              "mcp"
+            ],
+            "mastery_threshold": 0.8,
+            "difficulty": 4,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              1,
+              3,
+              7,
+              14
+            ]
+          },
+          {
+            "id": "L14",
+            "title": "Working Safely Through Documentation Gaps",
+            "strata_claim": "C7, C9",
+            "type": "frontier",
+            "estimated_minutes": 25,
+            "description": "Build fallback validation plans for unclear token ceilings, incomplete compatibility matrices, and partial subagent semantics so workflow decisions stay evidence-bound.",
+            "prerequisites": [
+              "L12",
+              "L13"
+            ],
+            "teaches_concepts": [
+              "evidence-limits",
+              "workflow-risk-management"
+            ],
+            "reinforces_concepts": [
+              "surface-selection",
+              "parallel-independence",
+              "governance-layering"
+            ],
+            "mastery_threshold": 0.75,
+            "difficulty": 4,
+            "unlock_rule": "all_prerequisites_mastered",
+            "review_after_days": [
+              3,
+              7,
+              14
+            ]
+          }
+        ],
+        "has_assessment": true
+      }
+    ],
+    "total_lessons": 14,
+    "total_estimated_hours": 6.3,
+    "learning_plan": {
+      "sessions_to_complete": 7,
+      "suggested_schedule": "2 lessons per session, 2-3 sessions per week (about 3 weeks to complete)",
+      "milestone_lessons": [
+        "L02",
+        "L04",
+        "L06",
+        "L08",
+        "L10",
+        "L12",
+        "L14"
+      ]
+    }
+  },
+  "learner": {
+    "goal": "apply_practically",
+    "background": "intermediate",
+    "session_time_min": 60,
+    "calibration_notes": {
+      "lesson_max_words": 1400,
+      "lessons_per_module_max": 2,
+      "objective_verb_style": "design, apply, audit, validate, compare",
+      "skip_basics": true,
+      "emphasize_code_examples": true,
+      "flashcard_density": "high"
+    }
+  },
+  "lessons": {
+    "L01": "# Five Layers, Five Jobs\r\n\r\n**Module**: M01 · The Agentic Stack: Five Layers, Five Jobs\r\n**Type**: core\r\n**Estimated time**: 25 minutes\r\n**Claim**: C1 - Effective agentic workflow design depends on treating prompts, instructions, skills, agents, and subagents as separate layers with different responsibilities\r\n\r\n---\r\n\r\n## The core idea\r\n\r\nThe public documentation across VS Code, GitHub Copilot, and Claude Code does not describe one generic \"agent feature.\" It describes several layers that solve different problems. Prompt files are short reusable entry points for a task. Instructions are always-on or path-scoped guidance. Skills package reusable workflows and resources that load when relevant. Agents define a role, tool policy, and sometimes handoff behavior. Subagents isolate focused side work in a separate context window. That separation is the stable pattern in the source set, not an implementation detail. Source trail: `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S001-vscode-custom-agents.md`, `S002-vscode-prompt-files.md`, `S003-vscode-agent-skills.md`, `S005-vscode-custom-instructions.md`, `S020-claude-custom-subagents.md`.\r\n\r\nThe practical mistake is to treat these as interchangeable labels. If you put governance policy, workflow instructions, and role definition into one artifact, the result becomes hard to reuse, hard to audit, and expensive to carry in context. The research theme and claim set argue for a cleaner rule: each artifact should do one job well. `claims.md` ties this directly to workflow quality, not just neatness.\r\n\r\n## Why it matters\r\n\r\nAn intermediate builder usually does not fail because they lack features. They fail because they put the wrong responsibility in the wrong place. A reusable slash command becomes an always-on instruction dump. A skill becomes a pseudo-agent. A role definition becomes a pile of project standards. Once that happens, the workflow gets brittle: context grows, portability drops, and later edits become risky because nobody can tell what is policy versus procedure.\r\n\r\nIf your goal is to apply this practically, the highest-leverage habit is to ask one question before creating any artifact: *what persistent responsibility should this object own?* If the answer is \"start a task quickly,\" that is prompt territory. If the answer is \"shape default behavior across many tasks,\" that belongs in instructions. If the answer is \"teach the system how to do a repeatable workflow on demand,\" that is a skill. If the answer is \"define a specialist worker with a narrow operating model,\" that is an agent or subagent.\r\n\r\n## A concrete example\r\n\r\nSuppose a team wants a workflow for reviewing pull requests against a security rubric.\r\n\r\nBad packaging:\r\n\r\n- Put the security rubric in an always-on instruction file\r\n- Add review steps to a custom agent definition\r\n- Add project-specific exceptions inside the same artifact\r\n- Tell the main agent to also do dependency scanning and architectural review in one pass\r\n\r\nThat design mixes three concerns:\r\n\r\n- baseline behavior\r\n- reusable workflow steps\r\n- specialized execution roles\r\n\r\nBetter packaging:\r\n\r\n- Instructions: hold the durable rule that security findings must include severity and exploit path\r\n- Prompt file: give the user a short command like `/review-security`\r\n- Skill: package the review checklist, rubric, and any supporting references\r\n- Agent: define the reviewer persona and tool boundaries\r\n- Subagent: run a separate focused pass for dependency or auth review when independent judgment matters\r\n\r\nThis maps directly to the documented product model: prompt files for reusable entry points, instructions for persistent guidance, skills for task-specific capabilities, and subagents for isolated work. Source trail: `S002-vscode-prompt-files.md`, `S003-vscode-agent-skills.md`, `S004-vscode-subagents.md`, `S021-claude-common-workflows.md`.\r\n\r\n## Key points\r\n\r\n- Prompts, instructions, skills, agents, and subagents are separate workflow layers, not stylistic synonyms\r\n- The right artifact is determined by responsibility: entry point, guidance, capability, role, or isolated side work\r\n- Mixing those responsibilities increases context cost and makes governance harder to inspect\r\n\r\n## Go deeper\r\n\r\n- `vault/research/github-copilot-agentic-workflows-governance/03-synthesis/claims.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S001-vscode-custom-agents.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S003-vscode-agent-skills.md`\r\n\r\n---\r\n\r\n*[Next lesson: Artifact Selection in Real Workflow Design ->](./L02-artifact-selection-in-real-workflow-design.md)*",
+    "L02": "# Artifact Selection in Real Workflow Design\r\n\r\n**Module**: M01 · The Agentic Stack: Five Layers, Five Jobs\r\n**Type**: applied\r\n**Estimated time**: 25 minutes\r\n**Claim**: C1, C3 - Effective workflow design depends on assigning prompts, instructions, skills, agents, and subagents to different jobs and then staging work through them deliberately\r\n\r\n---\r\n\r\n## The core idea\r\n\r\nKnowing the definitions is not enough. The practical skill is choosing the right artifact under delivery pressure. The research supports a consistent pattern: use the lightest artifact that still matches the responsibility. That keeps context smaller and reuse cleaner. When teams choose a heavier artifact than necessary, they usually hide accidental complexity inside it. Source trail: `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S001-vscode-custom-agents.md`, `S002-vscode-prompt-files.md`, `S003-vscode-agent-skills.md`, `S021-claude-common-workflows.md`.\r\n\r\n## Why it matters\r\n\r\nArtifact selection controls both maintenance cost and orchestration quality. If you encode workflow steps inside an agent persona, every role change risks breaking the procedure. If you encode long-lived project policy inside a prompt file, users must remember to invoke it manually. If you use a subagent where a skill would work, you pay unnecessary coordination overhead. Good workflow design is therefore partly a decomposition problem: the better you separate responsibility, the less often one change ripples through every artifact.\r\n\r\n## A concrete example\r\n\r\nImagine you want a repeatable workflow for \"plan a feature, research code impact, then implement with tests.\"\r\n\r\nUse this decision table:\r\n\r\n| Need | Best artifact | Why |\r\n|---|---|---|\r\n| Quick reusable entry point | Prompt file | The user can invoke it directly without carrying long instructions all the time |\r\n| Team coding standards | Instructions | Standards should apply broadly and persist across tasks |\r\n| Multi-step planning recipe | Skill | A skill can package steps, references, and resources and load when relevant |\r\n| Specialist implementation role | Agent | The role can own tool access, model choice, and handoff policy |\r\n| Independent code search or second opinion | Subagent | Separate context protects the parent session from noisy exploration |\r\n\r\nNow apply it to one concrete workflow:\r\n\r\n1. A prompt file starts the feature-planning command.\r\n2. Instructions ensure all code changes must preserve tests and strict typing.\r\n3. A skill provides the planning rubric, checklist, and required output format.\r\n4. An implementation agent owns coding tools and edits.\r\n5. A subagent performs a focused impact scan before code changes begin.\r\n\r\nThat sequence matches the staged patterns in the research: plan first, delegate focused work, then hand off to the next phase. Source trail: `S004-vscode-subagents.md`, `S006-vscode-agents-overview.md`, `S007-github-copilot-cloud-agent.md`, `S021-claude-common-workflows.md`.\r\n\r\nOne useful test is this: *if I removed this artifact, what responsibility would disappear?* If the answer is unclear, the artifact probably owns too many jobs.\r\n\r\n## Key points\r\n\r\n- Choose the lightest artifact that still matches the responsibility\r\n- Skills usually own repeatable workflows; agents own specialist roles; subagents own isolated side work\r\n- Clear artifact boundaries make staged orchestration easier to audit and evolve\r\n\r\n## Go deeper\r\n\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S002-vscode-prompt-files.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S004-vscode-subagents.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S021-claude-common-workflows.md`\r\n\r\n---\r\n\r\n*[<- Previous: Five Layers, Five Jobs](./L01-five-layers-five-jobs.md)* · *[Next lesson: Progressive Disclosure Beats Monolithic Prompts ->](./L03-progressive-disclosure-beats-monolithic-prompts.md)*",
+    "L03": "# Progressive Disclosure Beats Monolithic Prompts\r\n\r\n**Module**: M02 · Context Economics and Token Pressure\r\n**Type**: core\r\n**Estimated time**: 25 minutes\r\n**Claim**: C2 - Token-efficient workflows are built through progressive disclosure, context compaction, and delegated side work rather than ever-larger monolithic prompts\r\n\r\n---\r\n\r\n## The core idea\r\n\r\nThe strongest shared design rule in the research is simple: context is scarce, so do not keep everything loaded all the time. Skills, context management docs, and Claude's context-window guidance all point toward the same pattern: discover lightweight metadata first, load detailed instructions only when the task needs them, and avoid carrying heavy reference material in every session. Source trail: `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S003-vscode-agent-skills.md`, `S013-claude-memory.md`, `S015-claude-context-window.md`, `S019-agentskills-specification.md`, `S022-vscode-manage-context.md`.\r\n\r\nProgressive disclosure is therefore a workflow design principle, not just a UI idea. You expose a little context broadly, then reveal more as relevance increases. That lets a system stay responsive without losing specialized capability.\r\n\r\n## Why it matters\r\n\r\nLarge prompts often feel safer because they appear comprehensive. In practice they create three problems:\r\n\r\n- the model spends tokens rereading material that is irrelevant to the current step\r\n- important instructions compete with background detail for attention\r\n- later edits become harder because one prompt now tries to act as memory, workflow, policy, and reference library\r\n\r\nIntermediate builders should treat context like budget allocation. If you can move rarely used detail into a skill resource or a focused subtask, do it. If a workflow requires a long checklist every time, consider whether the checklist belongs in a reusable skill instead of the parent session.\r\n\r\n## A concrete example\r\n\r\nCompare two ways to run the same workflow.\r\n\r\nMonolithic design:\r\n\r\n- one master prompt includes role definition, coding standards, repo history, security policy, style guide, build commands, test strategy, and troubleshooting notes\r\n- the same prompt is reused for planning, implementation, and review\r\n\r\nProgressive design:\r\n\r\n- instructions hold only durable rules\r\n- the active task description stays short\r\n- a skill loads a planning rubric only when planning is requested\r\n- a subagent performs broad code search and returns a summary instead of dumping raw findings into the parent context\r\n\r\nThe second design matches the documented loading model for skills and the context-isolation model for subagents. It also reduces prompt drift because fewer artifacts are pretending to be universal. Source trail: `S003-vscode-agent-skills.md`, `S004-vscode-subagents.md`, `S015-claude-context-window.md`.\r\n\r\nAn easy heuristic is: if a block of instructions is only useful for one phase, it should probably load only in that phase.\r\n\r\n## Key points\r\n\r\n- Progressive disclosure keeps always-on context small and phase-specific context targeted\r\n- Context should be treated as a workflow budget, not an invisible implementation detail\r\n- Heavy instructions, checklists, and references belong in on-demand artifacts whenever possible\r\n\r\n## Go deeper\r\n\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S015-claude-context-window.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S019-agentskills-specification.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S022-vscode-manage-context.md`\r\n\r\n---\r\n\r\n*[<- Previous: Artifact Selection in Real Workflow Design](./L02-artifact-selection-in-real-workflow-design.md)* · *[Next lesson: Compaction, Reinjection, and Subagent Isolation ->](./L04-compaction-reinjection-and-subagent-isolation.md)*",
+    "L04": "# Compaction, Reinjection, and Subagent Isolation\r\n\r\n**Module**: M02 · Context Economics and Token Pressure\r\n**Type**: applied\r\n**Estimated time**: 30 minutes\r\n**Claim**: C2, C8 - Context mechanics become practical workflow structure when you isolate noisy work and control what returns to the parent session\r\n\r\n---\r\n\r\n## The core idea\r\n\r\nOnce context pressure becomes real, the workflow question changes from \"what do I want the model to know?\" to \"what must this session continue carrying?\" The sources on context windows, memory loading, and subagents all imply the same answer: not much. Keep the parent session focused on direction and decisions. Push exploratory or high-volume work into isolated workers that return only the result that matters. Source trail: `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S004-vscode-subagents.md`, `S013-claude-memory.md`, `S015-claude-context-window.md`, `S020-claude-custom-subagents.md`, `S022-vscode-manage-context.md`.\r\n\r\n## Why it matters\r\n\r\nCompaction is not magic. It is a tradeoff. When a session is compacted, some earlier detail is dropped or summarized. Reinjection brings back selected context, not everything. That means workflow design must decide ahead of time what deserves to survive compaction. Durable decisions, constraints, and accepted outputs usually belong in the parent thread. Raw exploration, dead ends, and exhaustive search results usually do not.\r\n\r\n## A concrete example\r\n\r\nSuppose you are designing a new multi-agent workflow.\r\n\r\nBad pattern:\r\n\r\n- the parent session performs broad repo search\r\n- it reads every matching file directly\r\n- it pastes large output blocks into the same thread\r\n- it then tries to plan and review in that now-polluted context\r\n\r\nBetter pattern:\r\n\r\n1. Parent session defines the question: \"What files and architectural seams matter for this feature?\"\r\n2. A subagent performs the broad search in isolation.\r\n3. The subagent returns a short summary: key files, probable touch points, and open unknowns.\r\n4. The parent session uses that summary to plan.\r\n5. If another perspective is needed, launch a separate review-oriented worker instead of reusing the same exploratory context.\r\n\r\nThis workflow protects the parent from low-signal detail while preserving the high-signal output. It also reduces contamination between exploration and later judgment, which supports the research claim about separation of concerns. Source trail: `S004-vscode-subagents.md`, `S020-claude-custom-subagents.md`, `S021-claude-common-workflows.md`.\r\n\r\nWhen deciding what to reinject, keep only:\r\n\r\n- final decisions\r\n- accepted constraints\r\n- critical risks\r\n- compact summaries of evidence\r\n\r\nLeave behind:\r\n\r\n- long raw logs\r\n- duplicate search results\r\n- abandoned branches of reasoning\r\n\r\n## Key points\r\n\r\n- Subagent isolation is a practical way to prevent context flooding in the parent session\r\n- Compaction and reinjection force you to separate durable decisions from disposable exploration\r\n- Parent threads should carry conclusions and constraints, not every intermediate artifact\r\n\r\n## Go deeper\r\n\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S004-vscode-subagents.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S015-claude-context-window.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S020-claude-custom-subagents.md`\r\n\r\n---\r\n\r\n*[<- Previous: Progressive Disclosure Beats Monolithic Prompts](./L03-progressive-disclosure-beats-monolithic-prompts.md)* · *[Next lesson: Why Prompts Cannot Enforce Policy ->](./L05-why-prompts-cannot-enforce-policy.md)*",
+    "L05": "# Why Prompts Cannot Enforce Policy\r\n\r\n**Module**: M03 · Governance Is a Control Plane\r\n**Type**: core\r\n**Estimated time**: 25 minutes\r\n**Claim**: C4 - Governance must be designed as a layered enforcement system, because prompts and instructions influence behavior but do not replace permissions, hooks, admin policy, or auditability\r\n\r\n---\r\n\r\n## The core idea\r\n\r\nPrompts and instructions shape behavior. They do not enforce it. This distinction is one of the clearest governance findings in the research. GitHub docs emphasize review responsibility, scanning, branch constraints, and access management. Claude docs distinguish behavior guidance from permission modes and managed settings. VS Code surfaces permission levels and session visibility. Across all three, the control plane lives outside the prose you give the model. Source trail: `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S006-vscode-agents-overview.md`, `S011-github-responsible-use-cloud-agent.md`, `S013-claude-memory.md`, `S014-claude-permission-modes.md`, `S018-github-cloud-agent-access-management.md`.\r\n\r\n## Why it matters\r\n\r\nIf a team relies on prompts alone for safety, they are depending on compliance instead of constraint. That is fragile. A well-written instruction can reduce mistakes, but it cannot block a tool, protect a path, require approval, or create a durable audit trail by itself. Governance therefore has to be layered: guidance in text, enforcement in product controls.\r\n\r\nThis is especially important in workflows that edit code, handle credentials, or run across repositories. The more consequential the action, the less acceptable it is to treat prompt wording as the only guardrail.\r\n\r\n## A concrete example\r\n\r\nConsider the policy: \"Never modify production deployment files without approval.\"\r\n\r\nWeak implementation:\r\n\r\n- write the rule in instructions\r\n- hope the agent remembers and obeys it\r\n\r\nLayered implementation:\r\n\r\n- instructions explain the rule and why it exists\r\n- protected paths or permission modes restrict direct edits\r\n- hooks or review gates require approval before the action proceeds\r\n- session logs or PR records preserve traceability afterward\r\n\r\nThe second design matches the product-native controls documented in the source set. It also makes failure visible: if the guardrail triggers, you can inspect the event. If the rule existed only in a prompt, the failure often looks like silent noncompliance.\r\n\r\nOne operational rule follows from this: write prompts for clarity, but design governance as if the prompt will eventually be ignored.\r\n\r\n## Key points\r\n\r\n- Prompts and instructions influence behavior; they do not create enforceable control boundaries on their own\r\n- Governance should combine textual guidance with permissions, approvals, hooks, and audit mechanisms\r\n- High-risk workflows should be designed around constraint, not hopeful compliance\r\n\r\n## Go deeper\r\n\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S011-github-responsible-use-cloud-agent.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S014-claude-permission-modes.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S018-github-cloud-agent-access-management.md`\r\n\r\n---\r\n\r\n*[<- Previous: Compaction, Reinjection, and Subagent Isolation](./L04-compaction-reinjection-and-subagent-isolation.md)* · *[Next lesson: Hooks, Permissions, and Audit Trails by Surface ->](./L06-hooks-permissions-and-audit-trails-by-surface.md)*",
+    "L06": "# Hooks, Permissions, and Audit Trails by Surface\r\n\r\n**Module**: M03 · Governance Is a Control Plane\r\n**Type**: applied\r\n**Estimated time**: 30 minutes\r\n**Claim**: C4 - Governance should be implemented with product-native controls, and those controls differ by host surface\r\n\r\n---\r\n\r\n## The core idea\r\n\r\nThe workflow question is not only \"what policies do we want?\" It is also \"where can this platform enforce them?\" The source set shows that GitHub, VS Code, and Claude each expose different control surfaces. GitHub is strongest on repository governance, traceability, hooks, and admin enablement. Claude is strongest on permission modes and protected paths. VS Code exposes session-level permissions and debugging visibility. Practical governance means mapping your risk to the surface that can actually constrain it. Source trail: `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S006-vscode-agents-overview.md`, `S011-github-responsible-use-cloud-agent.md`, `S014-claude-permission-modes.md`, `S017-github-hooks.md`, `S018-github-cloud-agent-access-management.md`.\r\n\r\n## Why it matters\r\n\r\nTeams often standardize policy language first and only later discover that the platforms do not expose the same enforcement levers. That creates false symmetry. A rule that is easy to enforce in one host may only be advisory in another. If you know the surfaces up front, you can design the workflow realistically instead of pretending every environment can do the same thing.\r\n\r\n## A concrete example\r\n\r\nUse this comparison when planning a governed build or review workflow:\r\n\r\n| Need | GitHub-oriented control | VS Code-oriented control | Claude-oriented control |\r\n|---|---|---|---|\r\n| Restrict who can use agent features | Admin access management | Workspace or product permissions | Managed settings and permission modes |\r\n| Gate risky actions | Hooks, PR review, branch rules | Permission prompts, human review in session | Permission mode approval and protected paths |\r\n| Preserve auditability | PRs, session history, repository artifacts | Session logs and IDE visibility | Session logs and explicit permission prompts |\r\n| Keep behavior aligned | Repo instructions, custom agents, skills | Instructions, prompts, agents, skills | CLAUDE.md, subagents, local settings |\r\n\r\nNow imagine a workflow that changes infrastructure files.\r\n\r\nOn GitHub, the safest route is branch-bound execution plus review and hooks. In a local assistant, the safer route is permission prompts and protected paths. The policy may read the same in both places, but the enforcement mechanism changes. Source trail: `S017-github-hooks.md`, `S018-github-cloud-agent-access-management.md`, `S014-claude-permission-modes.md`.\r\n\r\nThe operational takeaway is straightforward: define policy once, but implement it per host.\r\n\r\n## Key points\r\n\r\n- Governance controls differ materially by surface even when the policy goal is the same\r\n- GitHub emphasizes repository-level governance and traceability; Claude emphasizes local action control; VS Code exposes session-level permissions and visibility\r\n- Cross-tool workflows should share policy intent, not assume identical enforcement primitives\r\n\r\n## Go deeper\r\n\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S017-github-hooks.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S018-github-cloud-agent-access-management.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S006-vscode-agents-overview.md`\r\n\r\n---\r\n\r\n*[<- Previous: Why Prompts Cannot Enforce Policy](./L05-why-prompts-cannot-enforce-policy.md)* · *[Next lesson: Coordinator-Worker Workflows and Phase Boundaries ->](./L07-coordinator-worker-workflows-and-phase-boundaries.md)*",
+    "L07": "# Coordinator-Worker Workflows and Phase Boundaries\r\n\r\n**Module**: M04 · Stage Work, Then Delegate\r\n**Type**: core\r\n**Estimated time**: 25 minutes\r\n**Claim**: C3 - The recommended workflow shape across GitHub Copilot, VS Code, and Claude Code is staged and delegated: plan, explore, implement, review, and hand off in controlled phases\r\n\r\n---\r\n\r\n## The core idea\r\n\r\nThe research does not support the workflow pattern \"write one giant request and let the model improvise.\" It supports staged execution. Plan first. Delegate focused exploration. Implement in a bounded phase. Review from a distinct perspective. Then hand off or finalize. The coordinator-worker model makes that sequence explicit: one actor keeps the overall thread coherent while other actors do narrower jobs. Source trail: `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S004-vscode-subagents.md`, `S006-vscode-agents-overview.md`, `S007-github-copilot-cloud-agent.md`, `S021-claude-common-workflows.md`.\r\n\r\n## Why it matters\r\n\r\nPhase boundaries protect quality. Planning needs breadth. Implementation needs precision. Review needs distance from the implementation assumptions. When those modes collapse into one uninterrupted run, the workflow loses both specialization and auditability. A staged design makes it easier to see where decisions were made, what evidence supported them, and which phase owns the next action.\r\n\r\n## A concrete example\r\n\r\nUse this simple five-phase template for a nontrivial build task:\r\n\r\n1. **Plan**: define the task, constraints, success criteria, and likely files.\r\n2. **Explore**: launch a focused worker to inspect code, dependencies, or docs.\r\n3. **Implement**: edit only after the likely impact area is understood.\r\n4. **Review**: run a separate pass to look for regression, security, or testing gaps.\r\n5. **Hand off**: summarize what changed, what remains uncertain, and what evidence supports the result.\r\n\r\nNotice what this avoids: the same actor does not search broadly, code impulsively, and certify its own work without a boundary. That is why staged workflows are more defensible than monolithic ones. Source trail: `S004-vscode-subagents.md`, `S007-github-copilot-cloud-agent.md`, `S021-claude-common-workflows.md`.\r\n\r\nOne useful design rule is that each phase should have a different definition of success. Planning succeeds when the task is decomposed. Exploration succeeds when uncertainty is reduced. Implementation succeeds when behavior changes correctly. Review succeeds when risk is surfaced, not when it agrees.\r\n\r\n## Key points\r\n\r\n- Staged workflows are recommended across the source set because different phases need different kinds of reasoning and control\r\n- Coordinator-worker structure keeps sequence and synthesis centralized while allowing focused side work\r\n- Clear handoff boundaries improve both quality and auditability\r\n\r\n## Go deeper\r\n\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S007-github-copilot-cloud-agent.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S021-claude-common-workflows.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/03-synthesis/narrative.md`\r\n\r\n---\r\n\r\n*[<- Previous: Hooks, Permissions, and Audit Trails by Surface](./L06-hooks-permissions-and-audit-trails-by-surface.md)* · *[Next lesson: Parallel Review Without Role Contamination ->](./L08-parallel-review-without-role-contamination.md)*",
+    "L08": "# Parallel Review Without Role Contamination\r\n\r\n**Module**: M04 · Stage Work, Then Delegate\r\n**Type**: debate\r\n**Estimated time**: 30 minutes\r\n**Claim**: C8, C9 - Separation of concerns and independent workers reduce role contamination and premature convergence, even though vendors do not always name this risk explicitly\r\n\r\n---\r\n\r\n## The core idea\r\n\r\nThe sources strongly recommend isolated workers, independent review passes, and human validation. They do not consistently use the label \"role contamination,\" but the pattern is visible: when one context explores, decides, implements, and reviews without separation, later judgments inherit the framing of earlier ones. The research treats this as a practical orchestration risk rather than a fully formalized product concept. Source trail: `vault/research/github-copilot-agentic-workflows-governance/03-synthesis/claims.md`, `01-sources/web/S004-vscode-subagents.md`, `S011-github-responsible-use-cloud-agent.md`, `S020-claude-custom-subagents.md`, `S021-claude-common-workflows.md`.\r\n\r\n## Why it matters\r\n\r\nThis matters because many workflow failures are not obvious tool failures. They are judgment failures. A builder searches broadly, forms a hypothesis too early, writes code around it, then reviews the result using the same assumptions. Nothing crashes. But the workflow has lost independence.\r\n\r\nFor an intermediate practitioner, the key lesson is not that sequential work is always wrong. It is that some judgments need fresh context or at least a fresh role. Security review, regression review, and architectural criticism are common examples.\r\n\r\n## A concrete example\r\n\r\nThere are two defensible views here.\r\n\r\n**View 1: One well-instructed agent can do the whole job**\r\n\r\n- fewer handoffs\r\n- less coordination overhead\r\n- better continuity of local detail\r\n\r\nThis can work for low-risk tasks where speed matters more than independent judgment.\r\n\r\n**View 2: Parallel or separate reviewers are worth the extra coordination**\r\n\r\n- independent perspective catches anchoring and blind spots\r\n- specialized workers can stay narrower and sharper\r\n- review output becomes easier to audit because the reviewer did not author the implementation context\r\n\r\nThis is the view most strongly supported by the workflow sources when the task has risk, ambiguity, or governance implications.\r\n\r\nThe safest interpretation of the evidence is not \"always parallelize.\" It is \"separate roles when independence matters.\" That keeps the course aligned with the research, because the sources recommend independent passes but stop short of claiming a universal rule. Source trail: `S004-vscode-subagents.md`, `S021-claude-common-workflows.md`, `S011-github-responsible-use-cloud-agent.md`.\r\n\r\n## Key points\r\n\r\n- The product docs imply a real risk of role contamination even when they do not name it directly\r\n- Separate review is most valuable when the task is risky, ambiguous, or governance-sensitive\r\n- Independence should be used intentionally, not as a reflex for every tiny task\r\n\r\n## Go deeper\r\n\r\n- `vault/research/github-copilot-agentic-workflows-governance/02-analysis/themes.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S020-claude-custom-subagents.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S011-github-responsible-use-cloud-agent.md`\r\n\r\n---\r\n\r\n*[<- Previous: Coordinator-Worker Workflows and Phase Boundaries](./L07-coordinator-worker-workflows-and-phase-boundaries.md)* · *[Next lesson: Why Skills Travel Better Than Agents ->](./L09-why-skills-travel-better-than-agents.md)*",
+    "L09": "# Why Skills Travel Better Than Agents\r\n\r\n**Module**: M05 · Portability Has Sharp Edges\r\n**Type**: core\r\n**Estimated time**: 25 minutes\r\n**Claim**: C5 - Skills are the strongest portability mechanism in the current ecosystem because they are backed by an open specification, while custom agents and instruction files are only partially portable across hosts\r\n\r\n---\r\n\r\n## The core idea\r\n\r\nIf you want reusable workflow artifacts across GitHub Copilot, VS Code, and related tooling, skills are the cleanest story in the evidence. They have an explicit specification, a progressive loading model, and a clearer contract around what the artifact is supposed to contain. Agents and instruction files can sometimes be reused too, but their runtime meaning depends more heavily on the host product. Source trail: `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S003-vscode-agent-skills.md`, `S009-github-agent-skills.md`, `S016-mcp-introduction.md`, `S019-agentskills-specification.md`, `S008-github-custom-agents.md`.\r\n\r\n## Why it matters\r\n\r\nPortability reduces duplicated maintenance, but only if the artifact is stable enough to carry across environments. Skills are well-suited to that because they package workflow capability, references, and structured instructions without pretending to define the whole runtime environment. That narrower job is exactly why they port better.\r\n\r\n## A concrete example\r\n\r\nCompare these three artifact types:\r\n\r\n| Artifact | What ports well | What tends to drift |\r\n|---|---|---|\r\n| Skill | Instructions, resources, phased workflow logic | Invocation rules, host-specific tooling integration |\r\n| Custom agent | Role idea and some metadata | Tool policy, model behavior, property support |\r\n| Instruction file | High-level conventions | Precedence, scope, load order, file semantics |\r\n\r\nThis is the practical lesson: the narrower and more spec-backed the artifact, the safer it is to share.\r\n\r\nMCP belongs in the same conversation. It is not the same thing as a skill, but it supports portability through an open protocol for tools and context access. The research supports treating skills plus MCP as the strongest common denominator across surfaces. Source trail: `S016-mcp-introduction.md`, `S019-agentskills-specification.md`.\r\n\r\nThat does not mean \"portable\" equals \"identical.\" It means the artifact is worth sharing first and validating second.\r\n\r\n## Key points\r\n\r\n- Skills port better than agents because they are narrower in responsibility and stronger in specification\r\n- MCP improves cross-tool interoperability at the tool and context layer, not by making all artifacts semantically identical\r\n- Shared artifacts still need host-specific validation before teams rely on them in production workflows\r\n\r\n## Go deeper\r\n\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S009-github-agent-skills.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S016-mcp-introduction.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S019-agentskills-specification.md`\r\n\r\n---\r\n\r\n*[<- Previous: Parallel Review Without Role Contamination](./L08-parallel-review-without-role-contamination.md)* · *[Next lesson: Structural Portability vs Behavioral Portability ->](./L10-structural-portability-vs-behavioral-portability.md)*",
+    "L10": "# Structural Portability vs Behavioral Portability\r\n\r\n**Module**: M05 · Portability Has Sharp Edges\r\n**Type**: debate\r\n**Estimated time**: 25 minutes\r\n**Claim**: C5, C6 - Portability is real at the artifact level, but runtime behavior still varies by host surface\r\n\r\n---\r\n\r\n## The core idea\r\n\r\nThe research resolves a major contradiction by splitting portability into two kinds. Structural portability means a file or artifact can be reused across tools because the format is recognized or close enough to adapt. Behavioral portability means the host interprets that artifact the same way at runtime. The evidence supports the first much more strongly than the second. Source trail: `vault/research/github-copilot-agentic-workflows-governance/02-analysis/contradictions.md`, `01-sources/web/S003-vscode-agent-skills.md`, `S008-github-custom-agents.md`, `S010-github-repository-custom-instructions.md`, `S013-claude-memory.md`.\r\n\r\n## Why it matters\r\n\r\nThis distinction prevents a subtle but expensive mistake: a team sees one file work in two tools and assumes the behavior is now standardized. That assumption is often wrong. The file may load, but precedence, permission interaction, and scope rules can still differ.\r\n\r\n## A concrete example\r\n\r\nThere are again two views worth hearing fairly.\r\n\r\n**Optimistic view**\r\n\r\n- shared standards reduce duplication\r\n- skills and some agent artifacts can be reused across products\r\n- common filenames encourage a more unified workflow ecosystem\r\n\r\n**Cautious view**\r\n\r\n- host semantics still differ materially\r\n- some agent properties may be ignored or handled differently\r\n- instruction precedence and file loading can drift even when names match\r\n\r\nThe evidence supports a synthesis: share artifacts when standards justify it, but validate behavior per host. That is what the contradiction analysis actually resolves. Source trail: `S008-github-custom-agents.md`, `S010-github-repository-custom-instructions.md`, `S013-claude-memory.md`.\r\n\r\nSo the right operational sentence is not \"this artifact is portable.\" It is \"this artifact is portable enough to reuse, but not safe to trust untested across hosts.\"\r\n\r\n## Key points\r\n\r\n- Structural portability means the artifact can be shared; behavioral portability means the host treats it the same way\r\n- The research supports structural portability more strongly than behavioral portability\r\n- Cross-tool standardization should include validation, not just file reuse\r\n\r\n## Go deeper\r\n\r\n- `vault/research/github-copilot-agentic-workflows-governance/02-analysis/contradictions.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S008-github-custom-agents.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S013-claude-memory.md`\r\n\r\n---\r\n\r\n*[<- Previous: Why Skills Travel Better Than Agents](./L09-why-skills-travel-better-than-agents.md)* · *[Next lesson: AGENTS.md Is Not One Thing Everywhere ->](./L11-agents-md-is-not-one-thing-everywhere.md)*",
+    "L11": "# AGENTS.md Is Not One Thing Everywhere\r\n\r\n**Module**: M06 · Shared Names, Different Meanings\r\n**Type**: debate\r\n**Estimated time**: 25 minutes\r\n**Claim**: C6 - Shared artifact names such as AGENTS.md do not provide reliable cross-tool semantic portability, so teams must validate how each host interprets the same file\r\n\r\n---\r\n\r\n## The core idea\r\n\r\nOne of the most important findings in the research is also one of the easiest to miss: shared filenames do not guarantee shared meaning. `AGENTS.md` is the clearest example. The source set shows overlapping conventions across VS Code, GitHub, and Claude, but not one canonical semantic model. That is why the contradiction remains unresolved at the filename level even though the broader portability question can be partially resolved. Source trail: `vault/research/github-copilot-agentic-workflows-governance/02-analysis/contradictions.md`, `01-sources/web/S005-vscode-custom-instructions.md`, `S010-github-repository-custom-instructions.md`, `S013-claude-memory.md`.\r\n\r\n## Why it matters\r\n\r\nFilename reuse creates false confidence because it feels standardized. A team may assume that because multiple tools recognize or mention a file called `AGENTS.md`, they can rely on one meaning. The research says otherwise. The same filename can participate in different precedence rules, different loading scopes, and different native behaviors.\r\n\r\n## A concrete example\r\n\r\nThe simplified picture looks like this:\r\n\r\n| Surface | What the file does in the documented model |\r\n|---|---|\r\n| VS Code | Can act as always-on instruction input depending on workspace structure and scope |\r\n| GitHub | Participates in repository custom instruction behavior with nearest-file precedence |\r\n| Claude Code | `CLAUDE.md` is the native instruction file; `AGENTS.md` is not equivalent unless explicitly imported |\r\n\r\nThat is enough to prove a workflow risk. Even if the text inside the file is identical, the host may read it at different times or with different priority. Source trail: `S005-vscode-custom-instructions.md`, `S010-github-repository-custom-instructions.md`, `S013-claude-memory.md`.\r\n\r\nThe right response is not to ban shared filenames. It is to stop assuming shared semantics.\r\n\r\n## Key points\r\n\r\n- `AGENTS.md` is a shared convention, not a shared semantic contract\r\n- Host-specific precedence and loading behavior can change what the same file actually means in practice\r\n- Teams should document interpretation per host before treating a filename as standardized\r\n\r\n## Go deeper\r\n\r\n- `vault/research/github-copilot-agentic-workflows-governance/02-analysis/contradictions.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S005-vscode-custom-instructions.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S010-github-repository-custom-instructions.md`\r\n\r\n---\r\n\r\n*[<- Previous: Structural Portability vs Behavioral Portability](./L10-structural-portability-vs-behavioral-portability.md)* · *[Next lesson: Repairing Cross-Tool Convention Drift ->](./L12-repairing-cross-tool-convention-drift.md)*",
+    "L12": "# Repairing Cross-Tool Convention Drift\r\n\r\n**Module**: M06 · Shared Names, Different Meanings\r\n**Type**: applied\r\n**Estimated time**: 30 minutes\r\n**Claim**: C6, C7 - Shared artifacts are still usable, but teams need explicit compatibility notes and host-specific validation instead of assuming one unified interpretation\r\n\r\n---\r\n\r\n## The core idea\r\n\r\nOnce you accept that shared artifacts can drift semantically, the next task is operational: how do you still work productively across tools? The research answer is not to abandon reuse. It is to pair reuse with explicit validation. In practice that means maintaining compatibility notes, checking precedence rules, and testing how each host handles the artifact before treating it as production-ready. Source trail: `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S008-github-custom-agents.md`, `S010-github-repository-custom-instructions.md`, `S013-claude-memory.md`, `S016-mcp-introduction.md`.\r\n\r\n## Why it matters\r\n\r\nConvention drift is expensive because it usually fails quietly. An artifact does not have to crash to be dangerous. It only has to be interpreted differently enough that governance, context loading, or role behavior changes without the team noticing.\r\n\r\n## A concrete example\r\n\r\nUse this repair checklist when sharing artifacts across hosts:\r\n\r\n1. Identify the artifact's intended responsibility.\r\n2. Record which host loads it natively and which host only partially supports it.\r\n3. Record precedence and scope rules for each host.\r\n4. Validate whether any fields or semantics are ignored.\r\n5. Add a short compatibility note next to the artifact or in adjacent docs.\r\n\r\nFor example, if a shared instruction file is used by both GitHub and VS Code, the note should say:\r\n\r\n- what the file is meant to control\r\n- where it is always-on versus opt-in\r\n- what the fallback file is in Claude if the semantics differ\r\n\r\nThis turns portability from hopeful reuse into governed reuse. Source trail: `S010-github-repository-custom-instructions.md`, `S013-claude-memory.md`, `S016-mcp-introduction.md`.\r\n\r\nThe deeper lesson is that cross-tool workflows need a thin layer of operational documentation, even when the artifacts themselves are shared.\r\n\r\n## Key points\r\n\r\n- Convention drift is best repaired with explicit compatibility notes and validation steps\r\n- Shared artifacts remain valuable, but they should be treated as reusable inputs, not proof of identical behavior\r\n- A small amount of host-specific documentation prevents subtle governance and context bugs later\r\n\r\n## Go deeper\r\n\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S016-mcp-introduction.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S013-claude-memory.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/02-analysis/gaps.md`\r\n\r\n---\r\n\r\n*[<- Previous: AGENTS.md Is Not One Thing Everywhere](./L11-agents-md-is-not-one-thing-everywhere.md)* · *[Next lesson: GitHub for Governance, Claude for Context Mechanics ->](./L13-github-for-governance-claude-for-context-mechanics.md)*",
+    "L13": "# GitHub for Governance, Claude for Context Mechanics\r\n\r\n**Module**: M07 · Surface Strategy and Open Limits\r\n**Type**: applied\r\n**Estimated time**: 30 minutes\r\n**Claim**: C7 - GitHub Copilot and Claude Code emphasize different parts of the agentic workflow problem, so a cross-tool operating model should not assume one vendor's strongest documentation generalizes cleanly to the other\r\n\r\n---\r\n\r\n## The core idea\r\n\r\nThe source set suggests a useful operating split. GitHub documentation is stronger on cloud execution boundaries, review responsibility, repository governance, traceability, and admin policy. Claude documentation is stronger on local execution mechanics, memory loading, context pressure, autonomy modes, and subagent isolation. This does not mean either platform can only do one kind of work. It means their clearest documented strengths are different. Source trail: `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S007-github-copilot-cloud-agent.md`, `S011-github-responsible-use-cloud-agent.md`, `S013-claude-memory.md`, `S014-claude-permission-modes.md`, `S015-claude-context-window.md`, `S020-claude-custom-subagents.md`.\r\n\r\n## Why it matters\r\n\r\nCross-tool workflow design gets easier when you stop asking \"which platform is better?\" and start asking \"which platform documents the control I need most clearly?\" If you are solving a governance-heavy problem, GitHub's model may be the better anchor. If you are solving a context-heavy local orchestration problem, Claude's documentation gives you more direct mechanics to reason from.\r\n\r\n## A concrete example\r\n\r\nSuppose you need to build a workflow that both edits code safely and stays efficient under context pressure.\r\n\r\nUse GitHub-oriented strengths for:\r\n\r\n- admin access and enablement\r\n- repository and branch constraints\r\n- PR-centric review and traceability\r\n- hooks and governance visibility\r\n\r\nUse Claude-oriented strengths for:\r\n\r\n- deciding what belongs in always-on memory versus task-local context\r\n- choosing permission modes for local autonomy\r\n- isolating noisy work into subagents\r\n- reasoning about compaction and context-window pressure\r\n\r\nThis is a strategic synthesis, not a product limit. The research supports using each vendor's strongest documentation to reason about the part of the workflow it explains best. Source trail: `S011-github-responsible-use-cloud-agent.md`, `S014-claude-permission-modes.md`, `S015-claude-context-window.md`.\r\n\r\n## Key points\r\n\r\n- GitHub's documented strength is governance and repository-centric execution; Claude's documented strength is local context and autonomy mechanics\r\n- A cross-tool operating model should borrow the strongest reasoning surface for each problem, not force one platform's documentation onto all cases\r\n- Surface selection is a workflow design decision, not a vendor loyalty choice\r\n\r\n## Go deeper\r\n\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S007-github-copilot-cloud-agent.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S015-claude-context-window.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/03-synthesis/narrative.md`\r\n\r\n---\r\n\r\n*[<- Previous: Repairing Cross-Tool Convention Drift](./L12-repairing-cross-tool-convention-drift.md)* · *[Next lesson: Working Safely Through Documentation Gaps ->](./L14-working-safely-through-documentation-gaps.md)*",
+    "L14": "# Working Safely Through Documentation Gaps\r\n\r\n**Module**: M07 · Surface Strategy and Open Limits\r\n**Type**: frontier\r\n**Estimated time**: 25 minutes\r\n**Claim**: C7, C9 - Some workflow decisions remain evidence-limited, so teams should design explicit fallbacks rather than pretending missing documentation does not matter\r\n\r\n---\r\n\r\n## The core idea\r\n\r\nThis lesson begins with uncertainty because the research does. Some important workflow questions remain only partially answered by the public documentation. The clearest open gaps are: no explicit GitHub cloud-agent token or context budget equivalent to Claude's context-window detail, no single compatibility matrix for shared artifacts across hosts, and thinner GitHub-native documentation for subagent semantics outside the VS Code surface. Source trail: `vault/research/github-copilot-agentic-workflows-governance/02-analysis/gaps.md`, `01-sources/web/S007-github-copilot-cloud-agent.md`, `S015-claude-context-window.md`, `S018-github-cloud-agent-access-management.md`, `S020-claude-custom-subagents.md`.\r\n\r\n## Why it matters\r\n\r\nEvidence limits are not a reason to stop building workflows. They are a reason to build with explicit fallback assumptions. A weak workflow hides its uncertainty and overstates confidence. A stronger workflow says, \"Here is what we know, here is what we do not know, and here is how we will operate safely until better evidence appears.\"\r\n\r\n## A concrete example\r\n\r\nHere is a good frontier-style response to the open gaps.\r\n\r\n**What we know**\r\n\r\n- GitHub documents repository, branch, and task-scope constraints for cloud agent\r\n- Claude documents more explicit context and memory mechanics\r\n- Skills and MCP provide real but incomplete portability support\r\n\r\n**What we do not know fully**\r\n\r\n- the hard numeric context ceilings for GitHub cloud agent\r\n- a field-by-field compatibility matrix for shared artifacts across all surfaces\r\n- whether GitHub will expose a richer subagent model outside current local surfaces\r\n\r\n**What would settle it**\r\n\r\n- first-party GitHub documentation publishing token or compaction behavior\r\n- an authoritative compatibility matrix across GitHub.com, VS Code, CLI, and Claude\r\n- stronger GitHub-native subagent documentation at the cloud-agent level\r\n\r\n**Safe operating response**\r\n\r\n- validate artifact behavior per host instead of assuming equivalence\r\n- design for small always-on context even where numeric budgets are unknown\r\n- isolate risky exploratory work and rely on explicit governance controls rather than undocumented assumptions\r\n\r\nThat last point is the frontier lesson in one sentence: when documentation is incomplete, design for reversibility and validation.\r\n\r\n## Key points\r\n\r\n- Open documentation gaps should be named explicitly, not hand-waved away\r\n- Safe workflow design under uncertainty depends on validation, conservative assumptions, and reversible decisions\r\n- Frontier lessons are about what would settle the uncertainty, not about pretending the uncertainty is already resolved\r\n\r\n## Go deeper\r\n\r\n- `vault/research/github-copilot-agentic-workflows-governance/02-analysis/gaps.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S007-github-copilot-cloud-agent.md`\r\n- `vault/research/github-copilot-agentic-workflows-governance/01-sources/web/S020-claude-custom-subagents.md`\r\n\r\n---\r\n\r\n*[<- Previous: GitHub for Governance, Claude for Context Mechanics](./L13-github-for-governance-claude-for-context-mechanics.md)*"
+  },
+  "cards": [
+    {
+      "id": "CARD-001",
+      "type": "definition",
+      "module": "M01",
+      "lesson": "L01",
+      "front": "What distinct responsibility does a prompt file usually own in an agentic workflow?",
+      "back": "A prompt file is a lightweight reusable entry point for a task. It starts work quickly, but it is not the right place for always-on standards or long workflow references.",
+      "source_ref": "S002",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M01",
+        "claim-C1",
+        "type-definition"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "prompt-layer",
+        "instruction-layer",
+        "skill-layer",
+        "agent-layer",
+        "subagent-layer"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-002",
+      "type": "distinction",
+      "module": "M01",
+      "lesson": "L01",
+      "front": "How do instructions differ from skills in the research model?",
+      "back": "Instructions shape baseline behavior across tasks or paths. Skills package reusable task-specific workflows and resources that load when relevant rather than staying always on.",
+      "source_ref": "S003",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M01",
+        "claim-C1",
+        "type-distinction"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "prompt-layer",
+        "instruction-layer",
+        "skill-layer",
+        "agent-layer",
+        "subagent-layer"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-003",
+      "type": "application",
+      "module": "M01",
+      "lesson": "L01",
+      "front": "Why does mixing policy, workflow steps, and role definition into one artifact usually hurt quality?",
+      "back": "It blurs responsibility. The artifact becomes harder to reuse, harder to audit, and more expensive to carry in context because one object is trying to act as guidance, procedure, and persona at the same time.",
+      "source_ref": "S001",
+      "confidence_required": "high",
+      "tags": [
+        "module-M01",
+        "claim-C1",
+        "type-application"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "prompt-layer",
+        "instruction-layer",
+        "skill-layer",
+        "agent-layer",
+        "subagent-layer"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-004",
+      "type": "application",
+      "module": "M01",
+      "lesson": "L02",
+      "front": "Which artifact should own durable coding standards that must apply across many tasks?",
+      "back": "Instructions. Standards are baseline guidance, so they belong in always-on or path-scoped instruction material rather than in a prompt file or specialist agent workflow.",
+      "source_ref": "S005",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M01",
+        "claim-C1",
+        "claim-C3",
+        "type-application"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "artifact-selection"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-005",
+      "type": "application",
+      "module": "M01",
+      "lesson": "L02",
+      "front": "When is a subagent a better fit than a skill?",
+      "back": "When you need isolated exploratory or review work in a separate context window. A skill packages repeatable capability; a subagent performs bounded side work without polluting the parent session.",
+      "source_ref": "S004",
+      "confidence_required": "high",
+      "tags": [
+        "module-M01",
+        "claim-C3",
+        "type-application"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "artifact-selection"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-006",
+      "type": "claim",
+      "module": "M01",
+      "lesson": "L02",
+      "front": "What is the 'lightest artifact that still matches the responsibility' heuristic?",
+      "back": "Choose the smallest control surface that can own the job cleanly. This keeps context lean and prevents heavier artifacts like agents from absorbing workflow or standards they should not carry.",
+      "source_ref": "S021",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M01",
+        "claim-C3",
+        "type-claim"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "artifact-selection"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-007",
+      "type": "definition",
+      "module": "M02",
+      "lesson": "L03",
+      "front": "What does progressive disclosure mean in the agent-skills and context-management model?",
+      "back": "Start with lightweight metadata and load heavier instructions or resources only when the task actually needs them. The goal is to keep always-on context small and targeted.",
+      "source_ref": "S019",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M02",
+        "claim-C2",
+        "type-definition"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "progressive-disclosure",
+        "context-budget"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-008",
+      "type": "application",
+      "module": "M02",
+      "lesson": "L03",
+      "front": "Why do monolithic prompts usually perform worse than staged context loading?",
+      "back": "They waste tokens rereading irrelevant detail, force important instructions to compete with background material, and make one prompt act as memory, workflow, and policy all at once.",
+      "source_ref": "S015",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M02",
+        "claim-C2",
+        "type-application"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "progressive-disclosure",
+        "context-budget"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-009",
+      "type": "application",
+      "module": "M02",
+      "lesson": "L03",
+      "front": "If a checklist is useful only during planning, where should it usually live?",
+      "back": "In an on-demand artifact such as a skill resource or phase-specific workflow input. It should not sit in always-on context if it is irrelevant outside planning.",
+      "source_ref": "S003",
+      "confidence_required": "high",
+      "tags": [
+        "module-M02",
+        "claim-C2",
+        "type-application"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "progressive-disclosure",
+        "context-budget"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-010",
+      "type": "distinction",
+      "module": "M02",
+      "lesson": "L04",
+      "front": "What should the parent session usually preserve after compaction?",
+      "back": "Durable decisions, accepted constraints, critical risks, and compact evidence summaries. Raw search logs, duplicate findings, and abandoned exploration usually do not belong in the parent thread.",
+      "source_ref": "S015",
+      "confidence_required": "high",
+      "tags": [
+        "module-M02",
+        "claim-C2",
+        "claim-C8",
+        "type-distinction"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "context-compaction",
+        "context-isolation"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-011",
+      "type": "application",
+      "module": "M02",
+      "lesson": "L04",
+      "front": "Why is subagent isolation useful during broad code exploration?",
+      "back": "It keeps noisy search output and dead ends out of the parent context. The parent receives a higher-signal summary instead of carrying every intermediate detail.",
+      "source_ref": "S020",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M02",
+        "claim-C2",
+        "type-application"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "context-compaction",
+        "context-isolation"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-012",
+      "type": "claim",
+      "module": "M02",
+      "lesson": "L04",
+      "front": "What workflow question replaces 'what do I want the model to know?' once context pressure becomes real?",
+      "back": "'What must this session continue carrying?' That shift helps you separate durable conclusions from disposable exploration.",
+      "source_ref": "S022",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M02",
+        "claim-C8",
+        "type-claim"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "context-compaction",
+        "context-isolation"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-013",
+      "type": "definition",
+      "module": "M03",
+      "lesson": "L05",
+      "front": "What is the core governance distinction taught in this module?",
+      "back": "Behavioral guidance is not the same as enforcement. Prompts and instructions can influence actions, but permissions, hooks, protected paths, admin policy, and audit systems are what enforce boundaries.",
+      "source_ref": "S014",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M03",
+        "claim-C4",
+        "type-definition"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "behavior-vs-enforcement",
+        "governance-layering"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-014",
+      "type": "application",
+      "module": "M03",
+      "lesson": "L05",
+      "front": "Why is 'never edit deployment files without approval' weak if it exists only in a prompt?",
+      "back": "Because the prompt expresses intent but does not create a hard constraint. Without protected paths, permission gates, or review controls, the workflow is still relying on compliance rather than enforced policy.",
+      "source_ref": "S011",
+      "confidence_required": "high",
+      "tags": [
+        "module-M03",
+        "claim-C4",
+        "type-application"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "behavior-vs-enforcement",
+        "governance-layering"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-015",
+      "type": "distinction",
+      "module": "M03",
+      "lesson": "L05",
+      "front": "What changes when governance is designed for constraint instead of hopeful compliance?",
+      "back": "The workflow is built around product-native controls that can block, gate, or log actions. Failure becomes inspectable instead of disappearing inside a prompt that was ignored.",
+      "source_ref": "S018",
+      "confidence_required": "high",
+      "tags": [
+        "module-M03",
+        "claim-C4",
+        "type-distinction"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "behavior-vs-enforcement",
+        "governance-layering"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-016",
+      "type": "application",
+      "module": "M03",
+      "lesson": "L06",
+      "front": "Which surface is documented most strongly for repository governance and PR-centric traceability?",
+      "back": "GitHub. The research highlights its documentation around repository constraints, hooks, review responsibility, and administrative access control for cloud-agent workflows.",
+      "source_ref": "S007",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M03",
+        "claim-C4",
+        "type-application"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "approval-hooks",
+        "auditability"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-017",
+      "type": "application",
+      "module": "M03",
+      "lesson": "L06",
+      "front": "Which surface is documented most strongly for local permission modes and protected-path style control?",
+      "back": "Claude. Its docs are more explicit about permission modes, protected paths, and the distinction between behavior guidance and managed settings.",
+      "source_ref": "S014",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M03",
+        "claim-C4",
+        "type-application"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "approval-hooks",
+        "auditability"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-018",
+      "type": "claim",
+      "module": "M03",
+      "lesson": "L06",
+      "front": "What is the practical rule for cross-tool governance design?",
+      "back": "Define policy intent once, but implement enforcement per host. The platforms expose different control primitives even when the policy goal is the same.",
+      "source_ref": "S017",
+      "confidence_required": "high",
+      "tags": [
+        "module-M03",
+        "claim-C4",
+        "type-claim"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "approval-hooks",
+        "auditability"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-019",
+      "type": "definition",
+      "module": "M04",
+      "lesson": "L07",
+      "front": "What is the coordinator-worker pattern in this course?",
+      "back": "A coordinator keeps sequence, task framing, and synthesis coherent while narrower workers handle bounded subtasks such as search, review, or implementation support.",
+      "source_ref": "S004",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M04",
+        "claim-C3",
+        "type-definition"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "coordinator-worker",
+        "workflow-phases"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-020",
+      "type": "application",
+      "module": "M04",
+      "lesson": "L07",
+      "front": "Why are phase boundaries valuable even when one tool could do the whole job?",
+      "back": "Because planning, exploration, implementation, and review each need different success criteria. Boundaries preserve specialization and make it easier to inspect what happened and why.",
+      "source_ref": "S021",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M04",
+        "claim-C3",
+        "type-application"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "coordinator-worker",
+        "workflow-phases"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-021",
+      "type": "application",
+      "module": "M04",
+      "lesson": "L07",
+      "front": "What is a good definition of success for the review phase?",
+      "back": "Review succeeds when it surfaces meaningful risk or missing evidence, not when it merely agrees with implementation. That distance is why review should not be treated as a rubber stamp.",
+      "source_ref": "S007",
+      "confidence_required": "high",
+      "tags": [
+        "module-M04",
+        "claim-C3",
+        "type-application"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "coordinator-worker",
+        "workflow-phases"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-022",
+      "type": "definition",
+      "module": "M04",
+      "lesson": "L08",
+      "front": "What does 'role contamination' mean in the course's workflow language?",
+      "back": "It means later judgments inherit the framing and assumptions of earlier stages because the same role and context handled exploration, implementation, and review without meaningful separation.",
+      "source_ref": "S020",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M04",
+        "claim-C8",
+        "claim-C9",
+        "type-definition"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "parallel-independence",
+        "role-contamination"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-023",
+      "type": "distinction",
+      "module": "M04",
+      "lesson": "L08",
+      "front": "When is separate or parallel review worth the overhead?",
+      "back": "When independence matters, especially in risky, ambiguous, or governance-sensitive work. For tiny low-risk tasks, the coordination cost may outweigh the benefit.",
+      "source_ref": "S011",
+      "confidence_required": "high",
+      "tags": [
+        "module-M04",
+        "claim-C8",
+        "claim-C9",
+        "type-distinction"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "parallel-independence",
+        "role-contamination"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-024",
+      "type": "claim",
+      "module": "M04",
+      "lesson": "L08",
+      "front": "What is the safest interpretation of the evidence on independent review?",
+      "back": "Not 'always parallelize,' but 'separate roles when independence matters.' The docs support isolated workers and review distance, but not a universal rule for every task.",
+      "source_ref": "S021",
+      "confidence_required": "high",
+      "tags": [
+        "module-M04",
+        "claim-C9",
+        "type-claim"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "parallel-independence",
+        "role-contamination"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-025",
+      "type": "definition",
+      "module": "M05",
+      "lesson": "L09",
+      "front": "Why do skills port better than agents in the current ecosystem?",
+      "back": "Skills are narrower in responsibility and backed by a clearer open specification. Agents often depend more heavily on host-specific behavior such as tool policy, model behavior, and property handling.",
+      "source_ref": "S019",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M05",
+        "claim-C5",
+        "type-definition"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "artifact-portability",
+        "skill-portability",
+        "mcp"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-026",
+      "type": "distinction",
+      "module": "M05",
+      "lesson": "L09",
+      "front": "What is MCP's role in portability, and what does it not solve by itself?",
+      "back": "MCP improves interoperability for tools and context access through an open protocol. It does not make all higher-level artifacts semantically identical across hosts.",
+      "source_ref": "S016",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M05",
+        "claim-C5",
+        "type-distinction"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "artifact-portability",
+        "skill-portability",
+        "mcp"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-027",
+      "type": "application",
+      "module": "M05",
+      "lesson": "L09",
+      "front": "What should a team do after deciding a skill is worth sharing across tools?",
+      "back": "Validate host behavior before depending on it. Reuse is valuable, but portability does not remove the need to test how each environment actually interprets and invokes the artifact.",
+      "source_ref": "S009",
+      "confidence_required": "high",
+      "tags": [
+        "module-M05",
+        "claim-C5",
+        "type-application"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "artifact-portability",
+        "skill-portability",
+        "mcp"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-028",
+      "type": "definition",
+      "module": "M05",
+      "lesson": "L10",
+      "front": "What is structural portability?",
+      "back": "Structural portability means an artifact can be reused because the format, file shape, or convention carries across tools well enough to load or adapt.",
+      "source_ref": "S003",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M05",
+        "claim-C5",
+        "claim-C6",
+        "type-definition"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "behavioral-portability"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-029",
+      "type": "definition",
+      "module": "M05",
+      "lesson": "L10",
+      "front": "What is behavioral portability?",
+      "back": "Behavioral portability means the host product interprets and executes the artifact the same way at runtime. The research supports this less strongly than structural portability.",
+      "source_ref": "S013",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M05",
+        "claim-C6",
+        "type-definition"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "behavioral-portability"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-030",
+      "type": "application",
+      "module": "M05",
+      "lesson": "L10",
+      "front": "Why is it dangerous to say 'this artifact is portable' without qualification?",
+      "back": "Because the file may reuse cleanly while still behaving differently per host. Precedence, scope, and ignored fields can drift even when the artifact name and structure stay the same.",
+      "source_ref": "S008",
+      "confidence_required": "high",
+      "tags": [
+        "module-M05",
+        "claim-C6",
+        "type-application"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "behavioral-portability"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-031",
+      "type": "contradiction",
+      "module": "M06",
+      "lesson": "L11",
+      "front": "What contradiction makes `AGENTS.md` a workflow risk across tools?",
+      "back": "The filename is shared, but the hosts do not document one canonical meaning for it. VS Code, GitHub, and Claude load related instruction artifacts differently, so the same file name can imply different runtime semantics.",
+      "source_ref": "S010",
+      "confidence_required": "high",
+      "tags": [
+        "module-M06",
+        "claim-C6",
+        "type-contradiction"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "agents-md-semantics"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-032",
+      "type": "distinction",
+      "module": "M06",
+      "lesson": "L11",
+      "front": "Why is a shared filename not the same thing as a shared semantic contract?",
+      "back": "Because the file can be discovered by more than one tool while still following different precedence, scope, or native-loading rules in each environment.",
+      "source_ref": "S005",
+      "confidence_required": "high",
+      "tags": [
+        "module-M06",
+        "claim-C6",
+        "type-distinction"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "agents-md-semantics"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-033",
+      "type": "application",
+      "module": "M06",
+      "lesson": "L11",
+      "front": "What should a team do before standardizing on `AGENTS.md` across multiple hosts?",
+      "back": "Document how each host interprets it and validate the behavior in practice. Treat the filename as a convention to verify, not proof of cross-tool equivalence.",
+      "source_ref": "S013",
+      "confidence_required": "high",
+      "tags": [
+        "module-M06",
+        "claim-C6",
+        "type-application"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "agents-md-semantics"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-034",
+      "type": "application",
+      "module": "M06",
+      "lesson": "L12",
+      "front": "What is the first step in repairing cross-tool convention drift?",
+      "back": "Identify the artifact's intended responsibility. You cannot write meaningful compatibility notes until you know what job the artifact is supposed to own.",
+      "source_ref": "S008",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M06",
+        "claim-C6",
+        "claim-C7",
+        "type-application"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "convention-audit"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-035",
+      "type": "application",
+      "module": "M06",
+      "lesson": "L12",
+      "front": "What should a compatibility note record for a shared artifact?",
+      "back": "At minimum: what the artifact controls, which host loads it natively, how precedence or scope works per host, and whether any fields or semantics are ignored.",
+      "source_ref": "S010",
+      "confidence_required": "high",
+      "tags": [
+        "module-M06",
+        "claim-C6",
+        "type-application"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "convention-audit"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-036",
+      "type": "claim",
+      "module": "M06",
+      "lesson": "L12",
+      "front": "Why is convention drift described as expensive even when nothing crashes?",
+      "back": "Because behavior can change quietly. A shared artifact may still load, but governance, context behavior, or role semantics can drift without the team noticing until much later.",
+      "source_ref": "S016",
+      "confidence_required": "high",
+      "tags": [
+        "module-M06",
+        "claim-C7",
+        "type-claim"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "convention-audit"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-037",
+      "type": "distinction",
+      "module": "M07",
+      "lesson": "L13",
+      "front": "What documented strength is most associated with GitHub in this course?",
+      "back": "Governance and repository-centric execution: review responsibility, branch and repo constraints, hooks, traceability, and access management are all clearer in the GitHub-oriented sources.",
+      "source_ref": "S011",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M07",
+        "claim-C7",
+        "type-distinction"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "surface-selection"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-038",
+      "type": "distinction",
+      "module": "M07",
+      "lesson": "L13",
+      "front": "What documented strength is most associated with Claude in this course?",
+      "back": "Local context and autonomy mechanics: memory loading, permission modes, context-window behavior, and subagent isolation are described more explicitly in the Claude-oriented sources.",
+      "source_ref": "S015",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M07",
+        "claim-C7",
+        "type-distinction"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "surface-selection"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-039",
+      "type": "application",
+      "module": "M07",
+      "lesson": "L13",
+      "front": "How should a builder choose between GitHub-anchored and Claude-anchored reasoning for a workflow decision?",
+      "back": "Match the host to the problem you need to reason about most clearly. Use GitHub-heavy evidence for governance and collaboration controls, and Claude-heavy evidence for local context and autonomy mechanics.",
+      "source_ref": "S007",
+      "confidence_required": "high",
+      "tags": [
+        "module-M07",
+        "claim-C7",
+        "type-application"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "surface-selection"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-040",
+      "type": "definition",
+      "module": "M07",
+      "lesson": "L14",
+      "front": "What are the three major open gaps named in the research?",
+      "back": "No explicit GitHub cloud-agent token or compaction budget comparable to Claude's detail, no single compatibility matrix across all surfaces, and weaker GitHub-native first-class subagent documentation outside local IDE surfaces.",
+      "source_ref": "S007",
+      "confidence_required": "medium",
+      "tags": [
+        "module-M07",
+        "claim-C7",
+        "claim-C9",
+        "type-definition"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "evidence-limits",
+        "workflow-risk-management"
+      ],
+      "cognitive_level": "recall",
+      "weight": 0.5,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-041",
+      "type": "application",
+      "module": "M07",
+      "lesson": "L14",
+      "front": "What is the safe response when documentation leaves a workflow question unresolved?",
+      "back": "Name the uncertainty, make conservative assumptions, validate behavior directly, and prefer reversible decisions. Do not pretend the missing evidence is already settled.",
+      "source_ref": "S020",
+      "confidence_required": "high",
+      "tags": [
+        "module-M07",
+        "claim-C9",
+        "type-application"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "evidence-limits",
+        "workflow-risk-management"
+      ],
+      "cognitive_level": "application",
+      "weight": 1,
+      "reviewable": true
+    },
+    {
+      "id": "CARD-042",
+      "type": "claim",
+      "module": "M07",
+      "lesson": "L14",
+      "front": "What would settle a frontier question in this course more reliably than workflow folklore?",
+      "back": "Clearer first-party evidence such as published context mechanics, a compatibility matrix, or richer host-native subagent documentation. Frontier reasoning is about what evidence would resolve uncertainty, not about improvising certainty.",
+      "source_ref": "S015",
+      "confidence_required": "high",
+      "tags": [
+        "module-M07",
+        "claim-C9",
+        "type-claim"
+      ],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "2026-04-16",
+        "lapses": 0
+      },
+      "concepts": [
+        "evidence-limits",
+        "workflow-risk-management"
+      ],
+      "cognitive_level": "comprehension",
+      "weight": 0.75,
+      "reviewable": true
+    }
+  ],
+  "quizzes": {
+    "final": {
+      "id": "quiz-final",
+      "type": "final",
+      "module": "all",
+      "title": "Final Assessment: GitHub Copilot Agentic Workflows and Governance",
+      "generated": "2026-04-15",
+      "passing_score": 75,
+      "questions": [
+        {
+          "id": "F01",
+          "type": "mcq",
+          "question": "Which pairing of responsibility and artifact is most consistent with the course?",
+          "options": {
+            "A": "Baseline standards -> prompt file; reusable task entry point -> instructions",
+            "B": "Reusable workflow capability -> skill; isolated exploratory side work -> subagent",
+            "C": "Protected path enforcement -> prompt file; repository governance -> lesson",
+            "D": "Context compaction -> instruction file; audit trail -> card deck"
+          },
+          "correct": "B",
+          "lesson_ref": "L01",
+          "module_ref": "M01",
+          "difficulty": "comprehension",
+          "concepts": [
+            "prompt-layer",
+            "instruction-layer",
+            "skill-layer",
+            "agent-layer",
+            "subagent-layer"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L01"
+          ]
+        },
+        {
+          "id": "F02",
+          "type": "mcq",
+          "question": "What is the strongest reason the course rejects monolithic prompts as a default workflow design?",
+          "options": {
+            "A": "They prevent any use of subagents",
+            "B": "They are incompatible with MCP",
+            "C": "They waste context budget, blur responsibilities, and make important instructions compete with irrelevant detail",
+            "D": "They cannot mention tools by name"
+          },
+          "correct": "C",
+          "lesson_ref": "L03",
+          "module_ref": "M02",
+          "difficulty": "application",
+          "concepts": [
+            "progressive-disclosure",
+            "context-budget"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L03"
+          ]
+        },
+        {
+          "id": "F03",
+          "type": "mcq",
+          "question": "Why does the course insist that governance lives outside prompt wording?",
+          "options": {
+            "A": "Because prompts are never portable",
+            "B": "Because behavior guidance does not create enforceable control boundaries",
+            "C": "Because hooks can replace all instruction files",
+            "D": "Because audit logs are stored in course.json"
+          },
+          "correct": "B",
+          "lesson_ref": "L05",
+          "module_ref": "M03",
+          "difficulty": "comprehension",
+          "concepts": [
+            "behavior-vs-enforcement",
+            "governance-layering"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L05"
+          ]
+        },
+        {
+          "id": "F04",
+          "type": "mcq",
+          "question": "What is the best reason to keep review as a distinct phase from implementation?",
+          "options": {
+            "A": "To guarantee slower workflows",
+            "B": "To preserve independent judgment and reduce inherited framing from earlier steps",
+            "C": "To make prompts longer",
+            "D": "To avoid using any reusable artifacts"
+          },
+          "correct": "B",
+          "lesson_ref": "L08",
+          "module_ref": "M04",
+          "difficulty": "application",
+          "concepts": [
+            "parallel-independence",
+            "role-contamination"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L08"
+          ]
+        },
+        {
+          "id": "F05",
+          "type": "mcq",
+          "question": "Which statement best captures the course's view of portability?",
+          "options": {
+            "A": "If an artifact is portable structurally, it is safe to assume identical runtime behavior",
+            "B": "Portability is mostly an illusion and should never be attempted",
+            "C": "Standards-backed artifacts are worth sharing, but behavior still needs per-host validation",
+            "D": "Only filenames matter for compatibility"
+          },
+          "correct": "C",
+          "lesson_ref": "L10",
+          "module_ref": "M05",
+          "difficulty": "analysis",
+          "concepts": [
+            "behavioral-portability"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L10"
+          ]
+        },
+        {
+          "id": "F06",
+          "type": "mcq",
+          "question": "What does the `AGENTS.md` contradiction teach most directly?",
+          "options": {
+            "A": "One filename has one universal meaning across all tools",
+            "B": "A shared convention can still hide different host semantics",
+            "C": "Claude and GitHub use the same instruction precedence model",
+            "D": "Compatibility notes are unnecessary if the file is named consistently"
+          },
+          "correct": "B",
+          "lesson_ref": "L11",
+          "module_ref": "M06",
+          "difficulty": "application",
+          "concepts": [
+            "agents-md-semantics"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L11"
+          ]
+        },
+        {
+          "id": "F07",
+          "type": "short_answer",
+          "question": "Explain how the course would tell you to combine shared artifacts with host-specific governance and validation in a real workflow.",
+          "answer_key": {
+            "required_points": [
+              "Reuse standards-backed artifacts such as skills where they add value",
+              "Treat policy intent as shareable but implement enforcement with host-native controls",
+              "Validate runtime behavior per host rather than assuming portable structure means portable semantics"
+            ],
+            "full_credit": "Connects artifact reuse, governance layering, and per-host validation into one coherent workflow strategy",
+            "partial_credit": "Mentions reuse or validation but not both"
+          },
+          "module_ref": "all",
+          "difficulty": "analysis"
+        },
+        {
+          "id": "F08",
+          "type": "essay",
+          "prompt": "Design a governed, token-efficient cross-tool workflow for a nontrivial software task. Your answer should assign responsibilities across artifacts, explain where phase boundaries belong, justify how governance is enforced, and show how you would operate safely where documentation remains incomplete.",
+          "guidance": "Strong answers integrate the whole course: artifact layering, progressive disclosure, staged workflow, role independence, portability limits, host-specific controls, and explicit fallback plans for open gaps.",
+          "rubric": {
+            "A": "Integrates the course's major frameworks into one coherent workflow and handles uncertainty with explicit validation and conservative assumptions",
+            "B": "Applies several frameworks correctly but leaves one major area underdeveloped",
+            "C": "Describes a workflow without using the course's governing ideas"
+          },
+          "module_ref": "all",
+          "difficulty": "analysis"
+        }
+      ]
+    },
+    "M01": {
+      "id": "quiz-M01",
+      "type": "module",
+      "module": "M01",
+      "title": "Assessment: The Agentic Stack",
+      "generated": "2026-04-15",
+      "passing_score": 70,
+      "questions": [
+        {
+          "id": "Q01",
+          "type": "mcq",
+          "question": "Which artifact is the best fit for a short reusable command that starts a common workflow?",
+          "options": {
+            "A": "Always-on instruction file",
+            "B": "Prompt file",
+            "C": "Protected path policy",
+            "D": "Audit log"
+          },
+          "correct": "B",
+          "explanation": "Prompt files are the lightweight reusable entry points in the documented model. They are meant to start tasks quickly, not carry always-on standards or enforcement logic.",
+          "lesson_ref": "L01",
+          "claim_ref": "C1",
+          "difficulty": "recall",
+          "concepts": [
+            "prompt-layer",
+            "instruction-layer",
+            "skill-layer",
+            "agent-layer",
+            "subagent-layer"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L01"
+          ]
+        },
+        {
+          "id": "Q02",
+          "type": "mcq",
+          "question": "A team wants project-wide coding standards to apply on every task. Which artifact should own that responsibility?",
+          "options": {
+            "A": "Prompt file, because it can be invoked manually when needed",
+            "B": "Skill, because skills are always loaded",
+            "C": "Instructions, because they provide durable baseline guidance",
+            "D": "Subagent, because subagents have isolated context"
+          },
+          "correct": "C",
+          "explanation": "Instructions are the documented home for durable standards and conventions. A skill is task-specific and on-demand; a prompt file is too manual for baseline guidance.",
+          "lesson_ref": "L02",
+          "claim_ref": "C1",
+          "difficulty": "comprehension",
+          "concepts": [
+            "artifact-selection"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L02"
+          ]
+        },
+        {
+          "id": "Q03",
+          "type": "mcq",
+          "question": "When is a subagent more appropriate than a skill?",
+          "options": {
+            "A": "When you need baseline policy to apply across every task",
+            "B": "When you need isolated side work in a separate context",
+            "C": "When you need an artifact format with strong portability",
+            "D": "When you need a slash command visible to users"
+          },
+          "correct": "B",
+          "explanation": "A subagent is for focused side work with isolated context. Skills package reusable workflows and resources rather than performing isolated exploratory execution.",
+          "lesson_ref": "L02",
+          "claim_ref": "C3",
+          "difficulty": "application",
+          "concepts": [
+            "artifact-selection"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L02"
+          ]
+        },
+        {
+          "id": "Q04",
+          "type": "short_answer",
+          "question": "Explain the 'lightest artifact that still matches the responsibility' heuristic and give one concrete example.",
+          "answer_key": {
+            "required_points": [
+              "Choose the smallest control surface that can own the job cleanly",
+              "This reduces unnecessary context and maintenance overhead",
+              "Concrete example such as using instructions for baseline standards instead of embedding them in an agent, or using a prompt file instead of a full agent for a simple task entry point"
+            ],
+            "full_credit": "Defines the heuristic accurately and gives one example that matches the documented artifact roles",
+            "partial_credit": "Defines the heuristic but gives a vague or mismatched example"
+          },
+          "lesson_ref": "L02",
+          "claim_ref": "C3",
+          "difficulty": "application",
+          "concepts": [
+            "artifact-selection"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L02"
+          ]
+        },
+        {
+          "id": "Q05",
+          "type": "essay",
+          "prompt": "Design a repeatable 'plan then implement' workflow for a software feature. Assign responsibilities across prompt file, instructions, skill, agent, and subagent, and justify why each artifact owns its specific job.",
+          "guidance": "Strong answers separate entry point, durable standards, reusable workflow steps, specialist role, and isolated side work instead of collapsing them into one artifact.",
+          "rubric": {
+            "A": "All five artifacts assigned correctly with clear responsibility boundaries and defensible justification",
+            "B": "Most artifacts assigned correctly but one boundary is blurred",
+            "C": "General description without clear artifact separation"
+          },
+          "lesson_ref": "L01-L02",
+          "claim_ref": "C1/C3",
+          "difficulty": "analysis",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L01-L02"
+          ]
+        }
+      ]
+    },
+    "M02": {
+      "id": "quiz-M02",
+      "type": "module",
+      "module": "M02",
+      "title": "Assessment: Context Economics and Token Pressure",
+      "generated": "2026-04-15",
+      "passing_score": 70,
+      "questions": [
+        {
+          "id": "Q01",
+          "type": "mcq",
+          "question": "What is the main idea of progressive disclosure in this course?",
+          "options": {
+            "A": "Hide most instructions permanently so the model never sees them",
+            "B": "Load lightweight metadata broadly and heavier resources only when relevant",
+            "C": "Give every session the same full prompt so behavior is consistent",
+            "D": "Replace skills with longer instructions"
+          },
+          "correct": "B",
+          "explanation": "Progressive disclosure keeps always-on context small and loads more detailed material only when the task needs it. That is the shared pattern across skills and context-management guidance.",
+          "lesson_ref": "L03",
+          "claim_ref": "C2",
+          "difficulty": "recall",
+          "concepts": [
+            "progressive-disclosure",
+            "context-budget"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L03"
+          ]
+        },
+        {
+          "id": "Q02",
+          "type": "mcq",
+          "question": "Which kind of material usually belongs in the parent session after compaction?",
+          "options": {
+            "A": "Raw search logs and duplicate outputs",
+            "B": "Every intermediate exploration step",
+            "C": "Durable decisions, constraints, and compact evidence summaries",
+            "D": "Only the initial task prompt"
+          },
+          "correct": "C",
+          "explanation": "The parent session should preserve durable conclusions and constraints, not every noisy intermediate artifact. That keeps context stable and reusable across phases.",
+          "lesson_ref": "L04",
+          "claim_ref": "C2",
+          "difficulty": "comprehension",
+          "concepts": [
+            "context-compaction",
+            "context-isolation"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L04"
+          ]
+        },
+        {
+          "id": "Q03",
+          "type": "mcq",
+          "question": "Why is a subagent useful during broad exploration of a large codebase?",
+          "options": {
+            "A": "It makes the parent session remember more details",
+            "B": "It guarantees the final implementation is correct",
+            "C": "It isolates noisy search work and returns a higher-signal summary",
+            "D": "It turns instructions into enforcement controls"
+          },
+          "correct": "C",
+          "explanation": "Subagent isolation keeps broad exploration from flooding the parent context. The parent session receives a focused result instead of carrying all the exploratory noise.",
+          "lesson_ref": "L04",
+          "claim_ref": "C8",
+          "difficulty": "application",
+          "concepts": [
+            "context-compaction",
+            "context-isolation"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L04"
+          ]
+        },
+        {
+          "id": "Q04",
+          "type": "short_answer",
+          "question": "Redesign a monolithic prompt into a more token-efficient workflow using one on-demand artifact and one isolated worker.",
+          "answer_key": {
+            "required_points": [
+              "Move phase-specific heavy material into an on-demand artifact such as a skill",
+              "Use an isolated worker such as a subagent for noisy exploration or broad search",
+              "Keep the parent thread focused on durable decisions and constraints"
+            ],
+            "full_credit": "Shows a concrete before/after workflow and explains why the redesign reduces context pressure",
+            "partial_credit": "Mentions skills or subagents without showing how the workflow changes"
+          },
+          "lesson_ref": "L03-L04",
+          "claim_ref": "C2",
+          "difficulty": "application",
+          "concepts": [],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L03-L04"
+          ]
+        },
+        {
+          "id": "Q05",
+          "type": "essay",
+          "prompt": "A team insists on keeping one giant 'master prompt' for planning, implementation, and review because it feels safer. Evaluate that decision using the course's context-budget model and propose a staged alternative.",
+          "guidance": "Strong answers explain why always-on context competes for attention, how progressive disclosure reduces token waste, and why isolated workers improve signal quality.",
+          "rubric": {
+            "A": "Explains token-budget tradeoffs clearly and proposes a staged design with durable parent context plus on-demand loading",
+            "B": "Correctly criticizes the giant prompt but the alternative remains vague",
+            "C": "General argument against long prompts without applying the course model"
+          },
+          "lesson_ref": "L03-L04",
+          "claim_ref": "C2/C8",
+          "difficulty": "analysis",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L03-L04"
+          ]
+        }
+      ]
+    },
+    "M03": {
+      "id": "quiz-M03",
+      "type": "module",
+      "module": "M03",
+      "title": "Assessment: Governance Is a Control Plane",
+      "generated": "2026-04-15",
+      "passing_score": 70,
+      "questions": [
+        {
+          "id": "Q01",
+          "type": "mcq",
+          "question": "What is the main governance distinction emphasized by this module?",
+          "options": {
+            "A": "Prompts are stricter than permission systems",
+            "B": "Behavior guidance and enforcement are different layers",
+            "C": "Hooks replace review responsibility",
+            "D": "Instructions are more portable than skills"
+          },
+          "correct": "B",
+          "explanation": "The module's core point is that prompts and instructions influence behavior, while actual enforcement comes from controls such as permissions, hooks, protected paths, and review systems.",
+          "lesson_ref": "L05",
+          "claim_ref": "C4",
+          "difficulty": "recall",
+          "concepts": [
+            "behavior-vs-enforcement",
+            "governance-layering"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L05"
+          ]
+        },
+        {
+          "id": "Q02",
+          "type": "mcq",
+          "question": "Which GitHub-oriented control is most closely associated with gating risky repository actions in the source set?",
+          "options": {
+            "A": "Hooks and review flow",
+            "B": "Compaction reinjection",
+            "C": "Prompt files",
+            "D": "Learning paths"
+          },
+          "correct": "A",
+          "explanation": "The GitHub sources emphasize hooks, review responsibility, branch and repo constraints, and access management as real governance controls for risky actions.",
+          "lesson_ref": "L06",
+          "claim_ref": "C4",
+          "difficulty": "comprehension",
+          "concepts": [
+            "approval-hooks",
+            "auditability"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L06"
+          ]
+        },
+        {
+          "id": "Q03",
+          "type": "mcq",
+          "question": "Why is a policy weak if it lives only in a prompt?",
+          "options": {
+            "A": "Because prompts cannot be reused",
+            "B": "Because prompts are not readable by humans",
+            "C": "Because the policy depends on compliance instead of a constraining control boundary",
+            "D": "Because prompts cannot mention file paths"
+          },
+          "correct": "C",
+          "explanation": "A prompt can express the rule, but it does not create a real block, approval gate, or audit artifact by itself. That makes the workflow rely on compliance rather than enforceable constraint.",
+          "lesson_ref": "L05",
+          "claim_ref": "C4",
+          "difficulty": "application",
+          "concepts": [
+            "behavior-vs-enforcement",
+            "governance-layering"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L05"
+          ]
+        },
+        {
+          "id": "Q04",
+          "type": "short_answer",
+          "question": "Explain 'define policy once, implement enforcement per host' in your own words.",
+          "answer_key": {
+            "required_points": [
+              "Policy intent may be shared across tools",
+              "Enforcement primitives differ by host surface",
+              "A responsible workflow maps the same policy goal onto different product-native controls"
+            ],
+            "full_credit": "Clearly distinguishes shared policy intent from host-specific enforcement implementation",
+            "partial_credit": "Mentions different tools but does not explain why enforcement must vary"
+          },
+          "lesson_ref": "L06",
+          "claim_ref": "C4",
+          "difficulty": "application",
+          "concepts": [
+            "approval-hooks",
+            "auditability"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L06"
+          ]
+        },
+        {
+          "id": "Q05",
+          "type": "essay",
+          "prompt": "Design a layered governance model for an agent workflow that edits infrastructure files. Explain what belongs in prompts or instructions and what must be enforced by product-native controls.",
+          "guidance": "Strong responses separate behavior guidance from permission, approval, hook, or protected-path enforcement and explain why the layers are independent.",
+          "rubric": {
+            "A": "Separates guidance from enforcement clearly and names realistic controls for risky actions",
+            "B": "Gets the general distinction right but leaves enforcement vague",
+            "C": "Treats prompts as the primary governance mechanism"
+          },
+          "lesson_ref": "L05-L06",
+          "claim_ref": "C4",
+          "difficulty": "analysis",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L05-L06"
+          ]
+        }
+      ]
+    },
+    "M04": {
+      "id": "quiz-M04",
+      "type": "module",
+      "module": "M04",
+      "title": "Assessment: Stage Work, Then Delegate",
+      "generated": "2026-04-15",
+      "passing_score": 70,
+      "questions": [
+        {
+          "id": "Q01",
+          "type": "mcq",
+          "question": "Which sequence best matches the staged workflow pattern supported by the research?",
+          "options": {
+            "A": "Implement, explore, plan, review, hand off",
+            "B": "Plan, explore, implement, review, hand off",
+            "C": "Explore, implement, plan, hand off, review",
+            "D": "Review, plan, implement, explore, hand off"
+          },
+          "correct": "B",
+          "explanation": "The consistent pattern across the sources is to plan first, explore to reduce uncertainty, implement after the likely impact area is understood, then review and hand off.",
+          "lesson_ref": "L07",
+          "claim_ref": "C3",
+          "difficulty": "recall",
+          "concepts": [
+            "coordinator-worker",
+            "workflow-phases"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L07"
+          ]
+        },
+        {
+          "id": "Q02",
+          "type": "mcq",
+          "question": "What is the coordinator's main job in a coordinator-worker workflow?",
+          "options": {
+            "A": "Perform every specialized subtask directly",
+            "B": "Keep sequence, task framing, and synthesis coherent",
+            "C": "Replace all review passes with a single summary",
+            "D": "Eliminate the need for phase boundaries"
+          },
+          "correct": "B",
+          "explanation": "The coordinator manages the overall thread and handoffs. Narrower workers handle specific subtasks without taking over overall sequence or synthesis.",
+          "lesson_ref": "L07",
+          "claim_ref": "C3",
+          "difficulty": "comprehension",
+          "concepts": [
+            "coordinator-worker",
+            "workflow-phases"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L07"
+          ]
+        },
+        {
+          "id": "Q03",
+          "type": "mcq",
+          "question": "When is independent review most justified according to the course?",
+          "options": {
+            "A": "For every trivial file rename",
+            "B": "Only when a tool specifically requires two agents",
+            "C": "When independence matters because the task is risky, ambiguous, or governance-sensitive",
+            "D": "Never, because coordination cost always outweighs the benefit"
+          },
+          "correct": "C",
+          "explanation": "The course argues for separation when independent judgment matters, not as a universal rule for every small task.",
+          "lesson_ref": "L08",
+          "claim_ref": "C8",
+          "difficulty": "application",
+          "concepts": [
+            "parallel-independence",
+            "role-contamination"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L08"
+          ]
+        },
+        {
+          "id": "Q04",
+          "type": "short_answer",
+          "question": "Give one good success criterion for planning and one for review, and explain why they should differ.",
+          "answer_key": {
+            "required_points": [
+              "Planning success should focus on decomposition or reduced uncertainty",
+              "Review success should focus on surfacing risk or missing evidence",
+              "They differ because the phases serve different reasoning goals"
+            ],
+            "full_credit": "Provides phase-appropriate criteria and explains why one should not be reused for the other",
+            "partial_credit": "Provides criteria without explaining the reason for the difference"
+          },
+          "lesson_ref": "L07",
+          "claim_ref": "C3",
+          "difficulty": "application",
+          "concepts": [
+            "coordinator-worker",
+            "workflow-phases"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L07"
+          ]
+        },
+        {
+          "id": "Q05",
+          "type": "essay",
+          "prompt": "A team says parallel review is wasteful overhead. Evaluate that claim using the course's ideas about role contamination and independence, and explain when the extra coordination is worth paying for.",
+          "guidance": "Strong answers explain the risk of inherited framing, acknowledge that not every task needs separate review, and identify cases where independence materially improves quality.",
+          "rubric": {
+            "A": "Balanced answer that explains both cost and value, and identifies risk conditions that justify independent review",
+            "B": "Correctly favors or disfavors separate review but without a nuanced decision rule",
+            "C": "Treats parallel review as always good or always bad"
+          },
+          "lesson_ref": "L08",
+          "claim_ref": "C8/C9",
+          "difficulty": "analysis",
+          "concepts": [
+            "parallel-independence",
+            "role-contamination"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L08"
+          ]
+        }
+      ]
+    },
+    "M05": {
+      "id": "quiz-M05",
+      "type": "module",
+      "module": "M05",
+      "title": "Assessment: Portability Has Sharp Edges",
+      "generated": "2026-04-15",
+      "passing_score": 70,
+      "questions": [
+        {
+          "id": "Q01",
+          "type": "mcq",
+          "question": "Why do skills have the strongest portability story in the course?",
+          "options": {
+            "A": "Because they are always-on across every tool",
+            "B": "Because they are backed by a clearer specification and narrower responsibility",
+            "C": "Because they never depend on host behavior",
+            "D": "Because they replace MCP"
+          },
+          "correct": "B",
+          "explanation": "Skills are more portable because they are narrower in scope and supported by an open specification. That makes reuse more reliable than for host-specific agent behavior.",
+          "lesson_ref": "L09",
+          "claim_ref": "C5",
+          "difficulty": "recall",
+          "concepts": [
+            "artifact-portability",
+            "skill-portability",
+            "mcp"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L09"
+          ]
+        },
+        {
+          "id": "Q02",
+          "type": "mcq",
+          "question": "Which statement best captures structural portability?",
+          "options": {
+            "A": "The artifact behaves identically everywhere",
+            "B": "The artifact can be reused because its format or convention carries across tools",
+            "C": "The artifact can enforce host-native permissions",
+            "D": "The artifact does not need validation"
+          },
+          "correct": "B",
+          "explanation": "Structural portability is about reusable format or file shape. It does not guarantee the same runtime semantics in every host.",
+          "lesson_ref": "L10",
+          "claim_ref": "C5",
+          "difficulty": "comprehension",
+          "concepts": [
+            "behavioral-portability"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L10"
+          ]
+        },
+        {
+          "id": "Q03",
+          "type": "mcq",
+          "question": "What does MCP most directly improve?",
+          "options": {
+            "A": "Cross-tool interoperability for tools and context access",
+            "B": "A universal instruction precedence model",
+            "C": "Guaranteed semantic equality for agents",
+            "D": "Automatic governance enforcement"
+          },
+          "correct": "A",
+          "explanation": "MCP provides an open protocol for tools and context access. It helps interoperability, but it does not make every high-level artifact behave identically across hosts.",
+          "lesson_ref": "L09",
+          "claim_ref": "C5",
+          "difficulty": "application",
+          "concepts": [
+            "artifact-portability",
+            "skill-portability",
+            "mcp"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L09"
+          ]
+        },
+        {
+          "id": "Q04",
+          "type": "short_answer",
+          "question": "Explain the difference between structural portability and behavioral portability, and say why the distinction matters in practice.",
+          "answer_key": {
+            "required_points": [
+              "Structural portability means the artifact can be reused or loaded across tools",
+              "Behavioral portability means the host interprets and executes it the same way",
+              "The distinction matters because reusable artifacts can still behave differently at runtime and therefore need validation"
+            ],
+            "full_credit": "Defines both terms correctly and explains the practical risk of skipping host-specific validation",
+            "partial_credit": "Defines one term correctly or misses the practical consequence"
+          },
+          "lesson_ref": "L10",
+          "claim_ref": "C5/C6",
+          "difficulty": "application",
+          "concepts": [
+            "behavioral-portability"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L10"
+          ]
+        },
+        {
+          "id": "Q05",
+          "type": "essay",
+          "prompt": "A team wants one shared artifact library for GitHub Copilot, VS Code, and Claude. Propose a portability strategy that uses standards-backed artifacts where possible and explains how you would validate behavior where semantics may drift.",
+          "guidance": "Strong answers prefer skills and MCP-backed patterns for reuse, distinguish structural from behavioral portability, and require per-host validation for agent or instruction semantics.",
+          "rubric": {
+            "A": "Builds a layered reuse strategy and clearly separates reusable structure from host-specific behavior validation",
+            "B": "Supports reuse but leaves validation steps vague",
+            "C": "Assumes shared files imply identical behavior"
+          },
+          "lesson_ref": "L09-L10",
+          "claim_ref": "C5/C6",
+          "difficulty": "analysis",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L09-L10"
+          ]
+        }
+      ]
+    },
+    "M06": {
+      "id": "quiz-M06",
+      "type": "module",
+      "module": "M06",
+      "title": "Assessment: Shared Names, Different Meanings",
+      "generated": "2026-04-15",
+      "passing_score": 70,
+      "questions": [
+        {
+          "id": "Q01",
+          "type": "mcq",
+          "question": "What is the main lesson of the `AGENTS.md` contradiction?",
+          "options": {
+            "A": "The filename is invalid and should never be used",
+            "B": "A shared filename does not guarantee one cross-tool semantic contract",
+            "C": "GitHub and VS Code document exactly the same meaning",
+            "D": "Claude loads `AGENTS.md` natively in the same way everywhere"
+          },
+          "correct": "B",
+          "explanation": "The contradiction shows that a common filename can still have different precedence, loading, or semantic behavior across hosts. Shared naming is not proof of identical meaning.",
+          "lesson_ref": "L11",
+          "claim_ref": "C6",
+          "difficulty": "recall",
+          "concepts": [
+            "agents-md-semantics"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L11"
+          ]
+        },
+        {
+          "id": "Q02",
+          "type": "mcq",
+          "question": "Why can convention drift be dangerous even when an artifact still loads successfully?",
+          "options": {
+            "A": "Because the artifact becomes unreadable to humans",
+            "B": "Because quiet semantic drift can change governance or context behavior without obvious failure",
+            "C": "Because file size always increases",
+            "D": "Because portability forces the tool offline"
+          },
+          "correct": "B",
+          "explanation": "The risky case is often silent drift: the artifact still appears to work, but precedence, scope, or role behavior changes in ways the team did not intend.",
+          "lesson_ref": "L12",
+          "claim_ref": "C7",
+          "difficulty": "comprehension",
+          "concepts": [
+            "convention-audit"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L12"
+          ]
+        },
+        {
+          "id": "Q03",
+          "type": "mcq",
+          "question": "What should a compatibility note include for a shared artifact?",
+          "options": {
+            "A": "Only the artifact's filename",
+            "B": "Only a list of authors",
+            "C": "Its intended responsibility, host loading behavior, scope or precedence, and any ignored semantics",
+            "D": "A full copy of all source documents"
+          },
+          "correct": "C",
+          "explanation": "A good compatibility note records what the artifact controls and how each host interprets it, including any missing or ignored behavior.",
+          "lesson_ref": "L12",
+          "claim_ref": "C6",
+          "difficulty": "application",
+          "concepts": [
+            "convention-audit"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L12"
+          ]
+        },
+        {
+          "id": "Q04",
+          "type": "short_answer",
+          "question": "List the first three steps of the course's repair checklist for cross-tool convention drift.",
+          "answer_key": {
+            "required_points": [
+              "Identify the artifact's intended responsibility",
+              "Record which host loads it natively versus partially",
+              "Record precedence and scope rules for each host"
+            ],
+            "full_credit": "Lists the first three steps accurately and in a way that shows why they matter",
+            "partial_credit": "Lists only one or two steps or gives them in overly vague terms"
+          },
+          "lesson_ref": "L12",
+          "claim_ref": "C6/C7",
+          "difficulty": "application",
+          "concepts": [
+            "convention-audit"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L12"
+          ]
+        },
+        {
+          "id": "Q05",
+          "type": "essay",
+          "prompt": "Your team wants to standardize one shared instruction-artifact convention across GitHub, VS Code, and Claude. Explain how you would do that without pretending the platforms interpret the same filename identically.",
+          "guidance": "Strong answers use host-specific compatibility notes, validation steps, and explicit documentation of load order or precedence rather than assuming the filename is enough.",
+          "rubric": {
+            "A": "Provides a realistic standardization process that acknowledges semantic drift and includes validation per host",
+            "B": "Advocates standardization but leaves host-specific checks incomplete",
+            "C": "Assumes one filename is sufficient proof of compatibility"
+          },
+          "lesson_ref": "L11-L12",
+          "claim_ref": "C6/C7",
+          "difficulty": "analysis",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L11-L12"
+          ]
+        }
+      ]
+    },
+    "M07": {
+      "id": "quiz-M07",
+      "type": "module",
+      "module": "M07",
+      "title": "Assessment: Surface Strategy and Open Limits",
+      "generated": "2026-04-15",
+      "passing_score": 70,
+      "questions": [
+        {
+          "id": "Q01",
+          "type": "mcq",
+          "question": "Which pairing best matches the course's documented surface strengths?",
+          "options": {
+            "A": "GitHub for local compaction mechanics, Claude for repository branch governance",
+            "B": "GitHub for governance and repo-centric controls, Claude for local context and autonomy mechanics",
+            "C": "GitHub for lesson authoring, Claude for MCP transport only",
+            "D": "GitHub and Claude are documented as identical in strengths"
+          },
+          "correct": "B",
+          "explanation": "The course synthesizes the evidence by treating GitHub as stronger on governance and repository-centric execution, and Claude as stronger on local context-window and permission-mode mechanics.",
+          "lesson_ref": "L13",
+          "claim_ref": "C7",
+          "difficulty": "recall",
+          "concepts": [
+            "surface-selection"
+          ],
+          "cognitive_level": "recall",
+          "weight": 0.5,
+          "remediation_lesson_ids": [
+            "L13"
+          ]
+        },
+        {
+          "id": "Q02",
+          "type": "mcq",
+          "question": "Which open gap is explicitly named in the research?",
+          "options": {
+            "A": "No public docs exist for GitHub hooks",
+            "B": "No documentation exists for Claude permission modes",
+            "C": "No explicit GitHub cloud-agent token or compaction budget equivalent to Claude's published detail",
+            "D": "No public source mentions skills at all"
+          },
+          "correct": "C",
+          "explanation": "The gaps register explicitly names the absence of a GitHub cloud-agent token or context-budget document comparable to Claude's context-window guidance.",
+          "lesson_ref": "L14",
+          "claim_ref": "C7",
+          "difficulty": "comprehension",
+          "concepts": [
+            "evidence-limits",
+            "workflow-risk-management"
+          ],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L14"
+          ]
+        },
+        {
+          "id": "Q03",
+          "type": "mcq",
+          "question": "What is the safest workflow response to an unresolved documentation gap?",
+          "options": {
+            "A": "Assume the most convenient behavior until a bug appears",
+            "B": "Treat folklore as equivalent to first-party evidence",
+            "C": "Use conservative assumptions, validate behavior directly, and prefer reversible decisions",
+            "D": "Avoid cross-tool workflows entirely"
+          },
+          "correct": "C",
+          "explanation": "The frontier lesson recommends explicit fallbacks, direct validation, and reversible choices rather than pretending incomplete documentation settles the issue.",
+          "lesson_ref": "L14",
+          "claim_ref": "C9",
+          "difficulty": "application",
+          "concepts": [
+            "evidence-limits",
+            "workflow-risk-management"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L14"
+          ]
+        },
+        {
+          "id": "Q04",
+          "type": "short_answer",
+          "question": "Pick one of the open gaps from the course and state what additional evidence would settle it.",
+          "answer_key": {
+            "required_points": [
+              "Names a real gap from the course such as token budget, compatibility matrix, or subagent semantics",
+              "States a plausible first-party evidence source that would settle it, such as published docs or an authoritative matrix"
+            ],
+            "full_credit": "Names a correct gap and an evidence source that directly resolves the uncertainty",
+            "partial_credit": "Names a gap correctly but gives a vague settlement criterion"
+          },
+          "lesson_ref": "L14",
+          "claim_ref": "C7/C9",
+          "difficulty": "application",
+          "concepts": [
+            "evidence-limits",
+            "workflow-risk-management"
+          ],
+          "cognitive_level": "application",
+          "weight": 1,
+          "remediation_lesson_ids": [
+            "L14"
+          ]
+        },
+        {
+          "id": "Q05",
+          "type": "essay",
+          "prompt": "You need a workflow that is both governance-heavy and context-heavy. Explain how you would choose surfaces, controls, and validation steps using the course's cross-tool strategy and its treatment of open evidence gaps.",
+          "guidance": "Strong answers pair GitHub-style governance controls with Claude-style context reasoning where appropriate, then explain how unresolved documentation gaps change the validation plan.",
+          "rubric": {
+            "A": "Uses the surface-strategy model well and explicitly adjusts for evidence gaps with conservative validation steps",
+            "B": "Applies the surface strategy but treats open gaps too casually",
+            "C": "Makes a platform preference argument without using the course frameworks"
+          },
+          "lesson_ref": "L13-L14",
+          "claim_ref": "C7/C9",
+          "difficulty": "analysis",
+          "concepts": [],
+          "cognitive_level": "comprehension",
+          "weight": 0.75,
+          "remediation_lesson_ids": [
+            "L13-L14"
+          ]
+        }
+      ]
+    }
+  },
+  "modchecks": {
+    "M01": {
+      "id": "modcheck-M01",
+      "module": "M01",
+      "title": "The Agentic Stack: Five Layers, Five Jobs - Quick Check",
+      "generated": "2026-04-15",
+      "questions": [
+        {
+          "id": "MC01-1",
+          "type": "open",
+          "question": "Name the five workflow layers taught in Module 1.",
+          "answer": "Prompt files, instructions, skills, agents, and subagents. The course treats them as different layers with different responsibilities rather than interchangeable labels."
+        },
+        {
+          "id": "MC01-2",
+          "type": "open",
+          "question": "What job should instructions own that prompt files should not?",
+          "answer": "Instructions should own durable baseline guidance such as standards or conventions. Prompt files are reusable entry points, not always-on policy containers."
+        },
+        {
+          "id": "MC01-3",
+          "type": "open",
+          "question": "Why is a subagent not just a renamed skill?",
+          "answer": "A subagent performs isolated side work in a separate context. A skill packages reusable workflow instructions and resources but does not itself exist as an isolated worker."
+        },
+        {
+          "id": "MC01-4",
+          "type": "mcq",
+          "question": "Which artifact is the best home for a reusable multi-step workflow recipe?",
+          "options": {
+            "A": "Skill",
+            "B": "Audit log",
+            "C": "Protected path",
+            "D": "Bundle"
+          },
+          "correct": "A",
+          "explanation": "Skills package reusable workflow capability and supporting resources."
+        },
+        {
+          "id": "MC01-5",
+          "type": "mcq",
+          "question": "What is the safest heuristic when choosing among artifacts?",
+          "options": {
+            "A": "Use the heaviest artifact available",
+            "B": "Use the lightest artifact that still matches the responsibility",
+            "C": "Default every task to a specialist agent",
+            "D": "Put everything in one instruction file"
+          },
+          "correct": "B",
+          "explanation": "The course emphasizes picking the smallest control surface that cleanly owns the job."
+        }
+      ]
+    },
+    "M02": {
+      "id": "modcheck-M02",
+      "module": "M02",
+      "title": "Context Economics and Token Pressure - Quick Check",
+      "generated": "2026-04-15",
+      "questions": [
+        {
+          "id": "MC02-1",
+          "type": "open",
+          "question": "What does progressive disclosure try to keep small?",
+          "answer": "Always-on context. It loads heavier resources only when the task actually needs them."
+        },
+        {
+          "id": "MC02-2",
+          "type": "open",
+          "question": "After compaction, what kind of information should usually remain in the parent thread?",
+          "answer": "Durable decisions, accepted constraints, critical risks, and compact summaries of evidence. Raw logs and noisy exploration usually should not remain."
+        },
+        {
+          "id": "MC02-3",
+          "type": "open",
+          "question": "Why can a subagent improve the quality of a later planning step?",
+          "answer": "It isolates broad exploration and returns a higher-signal summary, so the parent session plans from distilled evidence instead of carrying noisy intermediate output."
+        },
+        {
+          "id": "MC02-4",
+          "type": "mcq",
+          "question": "Which pattern best matches the course's context model?",
+          "options": {
+            "A": "One master prompt for all phases",
+            "B": "Phase-specific loading with isolated workers for noisy tasks",
+            "C": "No reuse of skills or instructions",
+            "D": "Always keep every raw search result"
+          },
+          "correct": "B",
+          "explanation": "The course favors progressive disclosure and isolated side work over monolithic prompts."
+        },
+        {
+          "id": "MC02-5",
+          "type": "mcq",
+          "question": "What question should replace 'what do I want the model to know?' under context pressure?",
+          "options": {
+            "A": "Which model is newest?",
+            "B": "How many files can I open at once?",
+            "C": "What must this session continue carrying?",
+            "D": "How do I avoid all instructions?"
+          },
+          "correct": "C",
+          "explanation": "The course reframes context management around what the session actually needs to keep."
+        }
+      ]
+    },
+    "M03": {
+      "id": "modcheck-M03",
+      "module": "M03",
+      "title": "Governance Is a Control Plane - Quick Check",
+      "generated": "2026-04-15",
+      "questions": [
+        {
+          "id": "MC03-1",
+          "type": "open",
+          "question": "What is the difference between behavior guidance and enforcement?",
+          "answer": "Behavior guidance influences what the agent tries to do; enforcement creates a real boundary that can block, gate, or log actions. Prompts and instructions are guidance, while permissions and hooks are enforcement."
+        },
+        {
+          "id": "MC03-2",
+          "type": "open",
+          "question": "Why is a policy incomplete if it only appears in a prompt?",
+          "answer": "Because it depends on the model obeying text rather than on a real control boundary. Without product-native controls, there is no hard constraint or reliable audit signal."
+        },
+        {
+          "id": "MC03-3",
+          "type": "open",
+          "question": "What does 'implement enforcement per host' mean?",
+          "answer": "It means the policy goal can stay the same across tools, but the actual enforcement mechanism must use the control primitives each host exposes."
+        },
+        {
+          "id": "MC03-4",
+          "type": "mcq",
+          "question": "Which item is most clearly an enforcement control rather than guidance?",
+          "options": {
+            "A": "Prompt file",
+            "B": "Instruction note",
+            "C": "Protected path or approval gate",
+            "D": "Lesson navigation link"
+          },
+          "correct": "C",
+          "explanation": "Protected paths and approval gates can constrain actions directly; prompts and instructions cannot do that on their own."
+        },
+        {
+          "id": "MC03-5",
+          "type": "mcq",
+          "question": "Which surface is emphasized most for repository governance in the source set?",
+          "options": {
+            "A": "GitHub",
+            "B": "Claude",
+            "C": "A lesson file",
+            "D": "A flashcard deck"
+          },
+          "correct": "A",
+          "explanation": "GitHub is documented most strongly around repository-centric governance, review, and traceability controls."
+        }
+      ]
+    },
+    "M04": {
+      "id": "modcheck-M04",
+      "module": "M04",
+      "title": "Stage Work, Then Delegate - Quick Check",
+      "generated": "2026-04-15",
+      "questions": [
+        {
+          "id": "MC04-1",
+          "type": "open",
+          "question": "List the five broad workflow phases emphasized in Module 4.",
+          "answer": "Plan, explore, implement, review, and hand off. The order matters because each phase serves a different reasoning goal."
+        },
+        {
+          "id": "MC04-2",
+          "type": "open",
+          "question": "What is the coordinator supposed to keep coherent?",
+          "answer": "Sequence, task framing, and synthesis. The coordinator holds the main thread together while workers handle narrower subtasks."
+        },
+        {
+          "id": "MC04-3",
+          "type": "open",
+          "question": "When is separate review especially valuable?",
+          "answer": "When independence matters because the task is risky, ambiguous, or governance-sensitive. Separate review reduces inherited framing from earlier work."
+        },
+        {
+          "id": "MC04-4",
+          "type": "mcq",
+          "question": "What should review optimize for?",
+          "options": {
+            "A": "Speed only",
+            "B": "Agreement with implementation",
+            "C": "Surfacing risk or missing evidence",
+            "D": "Replacing the plan"
+          },
+          "correct": "C",
+          "explanation": "The course frames review as a risk-finding phase, not a rubber stamp."
+        },
+        {
+          "id": "MC04-5",
+          "type": "mcq",
+          "question": "Which statement best reflects the course's view on parallel review?",
+          "options": {
+            "A": "Always use it",
+            "B": "Never use it",
+            "C": "Use it when independence matters",
+            "D": "Use it only for lesson generation"
+          },
+          "correct": "C",
+          "explanation": "The course argues for independence where it has real value, not as a universal default."
+        }
+      ]
+    },
+    "M05": {
+      "id": "modcheck-M05",
+      "module": "M05",
+      "title": "Portability Has Sharp Edges - Quick Check",
+      "generated": "2026-04-15",
+      "questions": [
+        {
+          "id": "MC05-1",
+          "type": "open",
+          "question": "Why do skills port better than many agent definitions?",
+          "answer": "They have a clearer specification and a narrower job. That makes them more reusable across hosts than artifacts whose runtime behavior depends heavily on platform-specific semantics."
+        },
+        {
+          "id": "MC05-2",
+          "type": "open",
+          "question": "What is structural portability in one sentence?",
+          "answer": "It means an artifact can be reused because its format or convention carries across tools well enough to load or adapt."
+        },
+        {
+          "id": "MC05-3",
+          "type": "open",
+          "question": "Why does structural portability not remove the need for host validation?",
+          "answer": "Because an artifact can reuse cleanly while still being interpreted differently at runtime. Behavior may drift even when the file format is shared."
+        },
+        {
+          "id": "MC05-4",
+          "type": "mcq",
+          "question": "What does MCP improve most directly?",
+          "options": {
+            "A": "Runtime semantic equality for all artifacts",
+            "B": "Interoperability for tools and context access",
+            "C": "Universal prompt enforcement",
+            "D": "Automatic review approval"
+          },
+          "correct": "B",
+          "explanation": "MCP helps the tool and context layer interoperate, not the entire semantic layer of every artifact."
+        },
+        {
+          "id": "MC05-5",
+          "type": "mcq",
+          "question": "Which phrase best captures the course's portability stance?",
+          "options": {
+            "A": "Portable means identical",
+            "B": "Portable enough to reuse, not safe to trust untested",
+            "C": "Portability is impossible",
+            "D": "Filenames decide behavior"
+          },
+          "correct": "B",
+          "explanation": "The course supports reuse with validation, not blind trust in shared artifacts."
+        }
+      ]
+    },
+    "M06": {
+      "id": "modcheck-M06",
+      "module": "M06",
+      "title": "Shared Names, Different Meanings - Quick Check",
+      "generated": "2026-04-15",
+      "questions": [
+        {
+          "id": "MC06-1",
+          "type": "open",
+          "question": "Why is `AGENTS.md` used as the signature example in this module?",
+          "answer": "Because it shows that a shared filename can still hide different host semantics. The name looks portable, but the documented behavior is not identical across tools."
+        },
+        {
+          "id": "MC06-2",
+          "type": "open",
+          "question": "What is one reason convention drift can fail quietly?",
+          "answer": "The artifact may still load and appear to work while scope, precedence, or behavior changes in subtle ways that nobody notices immediately."
+        },
+        {
+          "id": "MC06-3",
+          "type": "open",
+          "question": "What is the first thing you should record before writing a compatibility note?",
+          "answer": "The artifact's intended responsibility. Without that, you cannot meaningfully compare how different hosts interpret it."
+        },
+        {
+          "id": "MC06-4",
+          "type": "mcq",
+          "question": "What should a compatibility note include?",
+          "options": {
+            "A": "Only the filename",
+            "B": "Only the author name",
+            "C": "Responsibility, host loading behavior, and scope or precedence",
+            "D": "Only the date created"
+          },
+          "correct": "C",
+          "explanation": "A useful note explains both what the artifact is for and how each host interprets it."
+        },
+        {
+          "id": "MC06-5",
+          "type": "mcq",
+          "question": "What is the safest attitude toward shared filenames?",
+          "options": {
+            "A": "Assume identical semantics",
+            "B": "Treat them as conventions to validate",
+            "C": "Never use them",
+            "D": "Assume only one host will read them"
+          },
+          "correct": "B",
+          "explanation": "The course does not reject shared names; it rejects unvalidated assumptions about what they mean."
+        }
+      ]
+    },
+    "M07": {
+      "id": "modcheck-M07",
+      "module": "M07",
+      "title": "Surface Strategy and Open Limits - Quick Check",
+      "generated": "2026-04-15",
+      "questions": [
+        {
+          "id": "MC07-1",
+          "type": "open",
+          "question": "What documented strength does the course associate most with GitHub?",
+          "answer": "Governance and repository-centric controls such as review responsibility, hooks, branch constraints, and access management."
+        },
+        {
+          "id": "MC07-2",
+          "type": "open",
+          "question": "What documented strength does the course associate most with Claude?",
+          "answer": "Local context and autonomy mechanics such as memory loading, permission modes, context-window handling, and subagent isolation."
+        },
+        {
+          "id": "MC07-3",
+          "type": "open",
+          "question": "How should a team act when documentation leaves a workflow question unresolved?",
+          "answer": "Name the uncertainty, make conservative assumptions, validate behavior directly, and prefer reversible decisions until better evidence exists."
+        },
+        {
+          "id": "MC07-4",
+          "type": "mcq",
+          "question": "Which open gap is explicitly named in the research?",
+          "options": {
+            "A": "No docs for MCP",
+            "B": "No GitHub cloud-agent numeric context budget comparable to Claude's detail",
+            "C": "No docs for skills",
+            "D": "No docs for prompts"
+          },
+          "correct": "B",
+          "explanation": "The gaps register specifically calls out the absence of a detailed GitHub cloud-agent token or compaction budget document."
+        },
+        {
+          "id": "MC07-5",
+          "type": "mcq",
+          "question": "What would best settle a frontier question in this course?",
+          "options": {
+            "A": "Workflow folklore",
+            "B": "A first-party compatibility matrix or published context mechanics",
+            "C": "A longer prompt",
+            "D": "More flashcards"
+          },
+          "correct": "B",
+          "explanation": "Frontier questions are resolved by stronger evidence, not by confident improvisation."
+        }
+      ]
+    }
+  },
+  "codeChallenges": {},
+  "concepts": {
+    "slug": "github-copilot-agentic-workflows-governance",
+    "generated": "2026-04-15",
+    "concepts": [
+      {
+        "id": "prompt-layer",
+        "title": "Prompt Files as Task Entry Points",
+        "depends_on": [],
+        "introduced_in": [
+          "L01"
+        ],
+        "reinforced_in": [
+          "L02"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "instruction-layer",
+        "title": "Instructions as Durable Guidance",
+        "depends_on": [],
+        "introduced_in": [
+          "L01"
+        ],
+        "reinforced_in": [
+          "L02",
+          "L05",
+          "L10"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "skill-layer",
+        "title": "Skills as Reusable Capabilities",
+        "depends_on": [],
+        "introduced_in": [
+          "L01"
+        ],
+        "reinforced_in": [
+          "L02",
+          "L03",
+          "L09"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "agent-layer",
+        "title": "Agents as Specialist Roles",
+        "depends_on": [],
+        "introduced_in": [
+          "L01"
+        ],
+        "reinforced_in": [
+          "L02",
+          "L05",
+          "L10"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "subagent-layer",
+        "title": "Subagents as Isolated Side Workers",
+        "depends_on": [
+          "agent-layer"
+        ],
+        "introduced_in": [
+          "L01"
+        ],
+        "reinforced_in": [
+          "L02",
+          "L04",
+          "L07"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "artifact-selection",
+        "title": "Artifact Selection by Responsibility",
+        "depends_on": [
+          "prompt-layer",
+          "instruction-layer",
+          "skill-layer",
+          "agent-layer",
+          "subagent-layer"
+        ],
+        "introduced_in": [
+          "L02"
+        ],
+        "reinforced_in": [
+          "L03"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "progressive-disclosure",
+        "title": "Progressive Disclosure",
+        "depends_on": [
+          "artifact-selection",
+          "skill-layer"
+        ],
+        "introduced_in": [
+          "L03"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "context-budget",
+        "title": "Context as a Budget",
+        "depends_on": [
+          "progressive-disclosure"
+        ],
+        "introduced_in": [
+          "L03"
+        ],
+        "reinforced_in": [
+          "L04",
+          "L13"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "context-compaction",
+        "title": "Compaction and Reinjection",
+        "depends_on": [
+          "context-budget"
+        ],
+        "introduced_in": [
+          "L04"
+        ],
+        "reinforced_in": [
+          "L14"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "context-isolation",
+        "title": "Context Isolation",
+        "depends_on": [
+          "subagent-layer",
+          "context-budget"
+        ],
+        "introduced_in": [
+          "L04"
+        ],
+        "reinforced_in": [
+          "L08"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "behavior-vs-enforcement",
+        "title": "Behavior Guidance vs Enforcement",
+        "depends_on": [
+          "instruction-layer",
+          "agent-layer"
+        ],
+        "introduced_in": [
+          "L05"
+        ],
+        "reinforced_in": [
+          "L06"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "governance-layering",
+        "title": "Governance Layering",
+        "depends_on": [
+          "behavior-vs-enforcement"
+        ],
+        "introduced_in": [
+          "L05"
+        ],
+        "reinforced_in": [
+          "L06",
+          "L07",
+          "L13",
+          "L14"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "approval-hooks",
+        "title": "Approval Hooks and Gating",
+        "depends_on": [
+          "governance-layering"
+        ],
+        "introduced_in": [
+          "L06"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "auditability",
+        "title": "Auditability and Traceability",
+        "depends_on": [
+          "governance-layering"
+        ],
+        "introduced_in": [
+          "L06"
+        ],
+        "reinforced_in": [
+          "L13"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "coordinator-worker",
+        "title": "Coordinator-Worker Workflow",
+        "depends_on": [
+          "subagent-layer",
+          "governance-layering"
+        ],
+        "introduced_in": [
+          "L07"
+        ],
+        "reinforced_in": [
+          "L08"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "workflow-phases",
+        "title": "Workflow Phase Boundaries",
+        "depends_on": [
+          "artifact-selection"
+        ],
+        "introduced_in": [
+          "L07"
+        ],
+        "reinforced_in": [
+          "L09"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "parallel-independence",
+        "title": "Independent Parallel Review",
+        "depends_on": [
+          "coordinator-worker"
+        ],
+        "introduced_in": [
+          "L08"
+        ],
+        "reinforced_in": [
+          "L14"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "role-contamination",
+        "title": "Role Contamination Risk",
+        "depends_on": [
+          "parallel-independence",
+          "context-isolation"
+        ],
+        "introduced_in": [
+          "L08"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "artifact-portability",
+        "title": "Artifact Portability",
+        "depends_on": [
+          "skill-layer"
+        ],
+        "introduced_in": [
+          "L09"
+        ],
+        "reinforced_in": [
+          "L10",
+          "L12"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "skill-portability",
+        "title": "Skill Portability",
+        "depends_on": [
+          "artifact-portability"
+        ],
+        "introduced_in": [
+          "L09"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "mcp",
+        "title": "Model Context Protocol",
+        "depends_on": [
+          "artifact-portability"
+        ],
+        "introduced_in": [
+          "L09"
+        ],
+        "reinforced_in": [
+          "L13"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "behavioral-portability",
+        "title": "Behavioral Portability",
+        "depends_on": [
+          "artifact-portability"
+        ],
+        "introduced_in": [
+          "L10"
+        ],
+        "reinforced_in": [
+          "L11"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "agents-md-semantics",
+        "title": "AGENTS.md Cross-Tool Semantics",
+        "depends_on": [
+          "behavioral-portability"
+        ],
+        "introduced_in": [
+          "L11"
+        ],
+        "reinforced_in": [
+          "L12"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "convention-audit",
+        "title": "Convention Audit and Repair",
+        "depends_on": [
+          "agents-md-semantics",
+          "behavioral-portability"
+        ],
+        "introduced_in": [
+          "L12"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "surface-selection",
+        "title": "Surface Selection Strategy",
+        "depends_on": [
+          "governance-layering",
+          "context-budget",
+          "artifact-portability"
+        ],
+        "introduced_in": [
+          "L13"
+        ],
+        "reinforced_in": [
+          "L14"
+        ],
+        "assessment_sources": []
+      },
+      {
+        "id": "evidence-limits",
+        "title": "Evidence Limits in Public Documentation",
+        "depends_on": [
+          "surface-selection"
+        ],
+        "introduced_in": [
+          "L14"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      },
+      {
+        "id": "workflow-risk-management",
+        "title": "Workflow Risk Management Under Uncertainty",
+        "depends_on": [
+          "evidence-limits",
+          "governance-layering"
+        ],
+        "introduced_in": [
+          "L14"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": []
+      }
+    ]
+  },
+  "adaptiveRules": {
+    "slug": "github-copilot-agentic-workflows-governance",
+    "generated": "2026-04-15",
+    "progression_rules": {
+      "unlock_next_lesson_if_mastery_above": 0.75,
+      "suggest_remediation_if_two_failures": true,
+      "allow_skip_with_mastery_above": 0.9
+    },
+    "review_policy": {
+      "default_intervals_days": [
+        1,
+        3,
+        7,
+        14
+      ],
+      "max_daily_reviews": 18,
+      "decay_threshold_days": 21,
+      "confidence_weight_low": 0.5,
+      "confidence_weight_medium": 1,
+      "confidence_weight_high": 1.5
+    },
+    "mastery_defaults": {
+      "foundational": 0.75,
+      "core": 0.8,
+      "applied": 0.8,
+      "debate": 0.75,
+      "frontier": 0.75
+    },
+    "remediation_policy": {
+      "trigger_on_quiz_score_below": 0.6,
+      "max_remediation_cycles": 2,
+      "remediation_card_count": 5
+    }
+  },
+  "learningPaths": {
+    "slug": "github-copilot-agentic-workflows-governance",
+    "generated": "2026-04-15",
+    "paths": [
+      {
+        "id": "default-path",
+        "title": "Complete Course",
+        "description": "All 14 lessons in the recommended order from artifact foundations through surface strategy and open limits.",
+        "entry_condition": {},
+        "sequence": [
+          "L01",
+          "L02",
+          "L03",
+          "L04",
+          "L05",
+          "L06",
+          "L07",
+          "L08",
+          "L09",
+          "L10",
+          "L11",
+          "L12",
+          "L13",
+          "L14"
+        ]
+      },
+      {
+        "id": "workflow-builder",
+        "title": "Workflow Builder Path",
+        "description": "Focus on designing practical staged workflows with clear artifact boundaries and context discipline.",
+        "entry_condition": {
+          "goal": "apply_practically"
+        },
+        "sequence": [
+          "L01",
+          "L02",
+          "L03",
+          "L04",
+          "L07",
+          "L08",
+          "L09",
+          "L12",
+          "L13",
+          "L14"
+        ]
+      },
+      {
+        "id": "governance-first",
+        "title": "Governance-First Path",
+        "description": "Prioritize policy, approval, audit, and cross-host control design before deeper portability work.",
+        "entry_condition": {
+          "interest": "governance"
+        },
+        "sequence": [
+          "L01",
+          "L05",
+          "L06",
+          "L07",
+          "L08",
+          "L11",
+          "L12",
+          "L13",
+          "L14"
+        ]
+      },
+      {
+        "id": "cross-tool-portability",
+        "title": "Cross-Tool Portability Path",
+        "description": "Focus on what can be reused safely across GitHub Copilot, VS Code, and Claude, and where semantic drift must be managed.",
+        "entry_condition": {
+          "interest": "portability"
+        },
+        "sequence": [
+          "L01",
+          "L02",
+          "L09",
+          "L10",
+          "L11",
+          "L12",
+          "L13",
+          "L14"
+        ]
+      }
+    ]
+  }
+}

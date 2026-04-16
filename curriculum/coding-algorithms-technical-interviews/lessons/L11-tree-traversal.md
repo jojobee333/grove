@@ -2,7 +2,7 @@
 
 **Module**: M04 · Tree and Graph Traversal — BFS/DFS Duality
 **Type**: core
-**Estimated time**: 35 minutes
+**Estimated time**: 16 minutes
 **Claim**: C12 from Strata synthesis
 
 ---

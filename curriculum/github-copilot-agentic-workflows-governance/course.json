@@ -1,0 +1,322 @@
+{
+  "topic": "GitHub Copilot Agentic Workflows and Governance",
+  "slug": "github-copilot-agentic-workflows-governance",
+  "strata_source": "vault/research/github-copilot-agentic-workflows-governance/",
+  "generated": "2026-04-15",
+  "learner": {
+    "goal": "apply_practically",
+    "background": "intermediate",
+    "session_time_min": 60
+  },
+  "summary": "Build governed, token-efficient agentic workflows across GitHub Copilot, VS Code, and Claude Code by learning how prompts, instructions, skills, agents, and subagents divide responsibility, how context pressure shapes orchestration, and how policy must live outside the prompt.",
+  "modules": [
+    {
+      "id": "M01",
+      "title": "The Agentic Stack: Five Layers, Five Jobs",
+      "strata_theme": "Theme 1 - Prompts, instructions, skills, agents, and subagents are distinct layers, not interchangeable abstractions",
+      "description": "Establish the operating model for agentic systems by separating reusable entry points, always-on guidance, packaged capabilities, role definitions, and isolated side workers.",
+      "objectives": [
+        "Differentiate prompts, instructions, skills, agents, and subagents by persistence, scope, and control surface",
+        "Select the correct artifact type for a workflow requirement such as role definition, reusable capability, or isolated exploration"
+      ],
+      "lessons": [
+        {
+          "id": "L01",
+          "title": "Five Layers, Five Jobs",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 25,
+          "description": "Define the five recurring workflow layers, the problem each one solves, and the failure modes created when teams collapse them into one artifact.",
+          "prerequisites": [],
+          "teaches_concepts": ["prompt-layer", "instruction-layer", "skill-layer", "agent-layer", "subagent-layer"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.8,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L02",
+          "title": "Artifact Selection in Real Workflow Design",
+          "strata_claim": "C1, C3",
+          "type": "applied",
+          "estimated_minutes": 25,
+          "description": "Apply the layer model to concrete workflow decisions such as where to place governance rules, reusable recipes, role policies, and exploratory subtasks.",
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["artifact-selection"],
+          "reinforces_concepts": ["prompt-layer", "instruction-layer", "skill-layer", "agent-layer", "subagent-layer"],
+          "mastery_threshold": 0.8,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M02",
+      "title": "Context Economics and Token Pressure",
+      "strata_theme": "Theme 2 - Context pressure is a primary workflow constraint, and the best-documented mitigations are progressive loading, compaction, and delegation",
+      "description": "Treat context as a budget to allocate deliberately rather than a hidden implementation detail, then design workflows that keep the main session lean and stable.",
+      "objectives": [
+        "Decompose a workflow so heavy context loads only when it is needed",
+        "Apply progressive disclosure, compaction, and delegated side work to protect the main session from context sprawl"
+      ],
+      "lessons": [
+        {
+          "id": "L03",
+          "title": "Progressive Disclosure Beats Monolithic Prompts",
+          "strata_claim": "C2",
+          "type": "core",
+          "estimated_minutes": 25,
+          "description": "Use metadata-first loading, targeted activation, and bounded context assembly instead of growing one ever-larger prompt or instruction file.",
+          "prerequisites": ["L02"],
+          "teaches_concepts": ["progressive-disclosure", "context-budget"],
+          "reinforces_concepts": ["artifact-selection", "skill-layer"],
+          "mastery_threshold": 0.8,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L04",
+          "title": "Compaction, Reinjection, and Subagent Isolation",
+          "strata_claim": "C2, C8",
+          "type": "applied",
+          "estimated_minutes": 30,
+          "description": "Translate context mechanics into workflow structure by isolating exploratory work, constraining reinjected context, and deciding what the parent session should retain.",
+          "prerequisites": ["L03"],
+          "teaches_concepts": ["context-compaction", "context-isolation"],
+          "reinforces_concepts": ["subagent-layer", "context-budget"],
+          "mastery_threshold": 0.8,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M03",
+      "title": "Governance Is a Control Plane",
+      "strata_theme": "Theme 3 - Governance is a product-native control layer, not just a matter of prompt discipline",
+      "description": "Separate behavior-shaping guidance from enforcement by designing permissions, hooks, approval gates, and audit trails as first-class workflow components.",
+      "objectives": [
+        "Design layered enforcement using permissions, hooks, admin policy, and audit trails",
+        "Separate behavioral guidance from enforceable controls when securing an agent workflow"
+      ],
+      "lessons": [
+        {
+          "id": "L05",
+          "title": "Why Prompts Cannot Enforce Policy",
+          "strata_claim": "C4",
+          "type": "core",
+          "estimated_minutes": 25,
+          "description": "Establish why instructions improve behavior but cannot replace access control, protected paths, managed settings, or review requirements.",
+          "prerequisites": ["L02"],
+          "teaches_concepts": ["behavior-vs-enforcement", "governance-layering"],
+          "reinforces_concepts": ["instruction-layer", "agent-layer"],
+          "mastery_threshold": 0.8,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L06",
+          "title": "Hooks, Permissions, and Audit Trails by Surface",
+          "strata_claim": "C4",
+          "type": "applied",
+          "estimated_minutes": 30,
+          "description": "Compare how GitHub, VS Code, and Claude expose approval hooks, admin controls, permission modes, and traceability so policy lives outside the prompt body.",
+          "prerequisites": ["L05"],
+          "teaches_concepts": ["approval-hooks", "auditability"],
+          "reinforces_concepts": ["governance-layering", "behavior-vs-enforcement"],
+          "mastery_threshold": 0.8,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M04",
+      "title": "Stage Work, Then Delegate",
+      "strata_theme": "Theme 4 - Recommended workflows are staged and delegated rather than monolithic",
+      "description": "Build workflows around explicit phases and independent workers so planning, implementation, and review remain specialized instead of collapsing into one role.",
+      "objectives": [
+        "Sequence plan, explore, implement, review, and handoff as distinct workflow phases",
+        "Decide when independence requires parallel workers instead of one continuous agent run"
+      ],
+      "lessons": [
+        {
+          "id": "L07",
+          "title": "Coordinator-Worker Workflows and Phase Boundaries",
+          "strata_claim": "C3",
+          "type": "core",
+          "estimated_minutes": 25,
+          "description": "Use a coordinator to control sequence, artifacts, and synthesis while workers handle bounded subtasks with narrower context and tool scope.",
+          "prerequisites": ["L04", "L06"],
+          "teaches_concepts": ["coordinator-worker", "workflow-phases"],
+          "reinforces_concepts": ["subagent-layer", "governance-layering"],
+          "mastery_threshold": 0.8,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L08",
+          "title": "Parallel Review Without Role Contamination",
+          "strata_claim": "C8, C9",
+          "type": "debate",
+          "estimated_minutes": 30,
+          "description": "Preserve independent judgment by separating roles, isolating perspectives, and preventing later stages from inheriting the framing of earlier ones.",
+          "prerequisites": ["L07"],
+          "teaches_concepts": ["parallel-independence", "role-contamination"],
+          "reinforces_concepts": ["coordinator-worker", "context-isolation"],
+          "mastery_threshold": 0.75,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M05",
+      "title": "Portability Has Sharp Edges",
+      "strata_theme": "Theme 5 - Portability exists mainly at the artifact and convention layer, while behavior remains partially implementation-specific",
+      "description": "Learn where shared standards such as skills and MCP genuinely reduce duplication and where runtime semantics still require host-specific validation.",
+      "objectives": [
+        "Reuse skills and MCP-backed artifacts without assuming identical runtime behavior",
+        "Validate portability at the artifact and semantic layers before standardizing a workflow"
+      ],
+      "lessons": [
+        {
+          "id": "L09",
+          "title": "Why Skills Travel Better Than Agents",
+          "strata_claim": "C5",
+          "type": "core",
+          "estimated_minutes": 25,
+          "description": "Explain why standards-backed skills are the clearest portability story while custom agents and instruction files still inherit host-specific behavior.",
+          "prerequisites": ["L02", "L07"],
+          "teaches_concepts": ["artifact-portability", "skill-portability", "mcp"],
+          "reinforces_concepts": ["skill-layer", "workflow-phases"],
+          "mastery_threshold": 0.8,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L10",
+          "title": "Structural Portability vs Behavioral Portability",
+          "strata_claim": "C5, C6",
+          "type": "debate",
+          "estimated_minutes": 25,
+          "description": "Distinguish reusable file structure from runtime meaning so teams do not mistake a portable artifact format for identical execution semantics.",
+          "prerequisites": ["L09"],
+          "teaches_concepts": ["behavioral-portability"],
+          "reinforces_concepts": ["artifact-portability", "agent-layer", "instruction-layer"],
+          "mastery_threshold": 0.75,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M06",
+      "title": "Shared Names, Different Meanings",
+      "strata_theme": "Theme 6 - Shared filenames do not imply shared semantics across tools",
+      "description": "Handle cross-tool convention drift by auditing what identically named artifacts mean on each host before reusing them in a shared workflow.",
+      "objectives": [
+        "Diagnose cross-tool semantic mismatches from the same artifact name",
+        "Refactor a workflow convention so shared filenames do not hide tool-specific behavior"
+      ],
+      "lessons": [
+        {
+          "id": "L11",
+          "title": "AGENTS.md Is Not One Thing Everywhere",
+          "strata_claim": "C6",
+          "type": "debate",
+          "estimated_minutes": 25,
+          "description": "Trace how AGENTS.md and related files are loaded differently across GitHub, VS Code, and Claude so naming conventions do not create false confidence.",
+          "prerequisites": ["L10"],
+          "teaches_concepts": ["agents-md-semantics"],
+          "reinforces_concepts": ["behavioral-portability"],
+          "mastery_threshold": 0.75,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [3, 7, 14]
+        },
+        {
+          "id": "L12",
+          "title": "Repairing Cross-Tool Convention Drift",
+          "strata_claim": "C6, C7",
+          "type": "applied",
+          "estimated_minutes": 30,
+          "description": "Create a validation checklist and compatibility notes that make shared artifacts usable without pretending the platforms interpret them the same way.",
+          "prerequisites": ["L11"],
+          "teaches_concepts": ["convention-audit"],
+          "reinforces_concepts": ["artifact-portability", "governance-layering", "agents-md-semantics"],
+          "mastery_threshold": 0.8,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M07",
+      "title": "Surface Strategy and Open Limits",
+      "strata_theme": "Theme 7 - GitHub and Claude emphasize different parts of the agentic problem",
+      "description": "Close the course by choosing the right host for the problem at hand and by planning around the evidence limits that still remain in the public documentation.",
+      "objectives": [
+        "Choose the right host surface for governance-heavy versus context-heavy work",
+        "Plan mitigations for unresolved documentation gaps around token budgets and subagent semantics"
+      ],
+      "lessons": [
+        {
+          "id": "L13",
+          "title": "GitHub for Governance, Claude for Context Mechanics",
+          "strata_claim": "C7",
+          "type": "applied",
+          "estimated_minutes": 30,
+          "description": "Use vendor strengths deliberately by matching governance-heavy collaboration to GitHub-centric controls and context-heavy local orchestration to Claude-style mechanics.",
+          "prerequisites": ["L06", "L10"],
+          "teaches_concepts": ["surface-selection"],
+          "reinforces_concepts": ["auditability", "context-compaction", "mcp"],
+          "mastery_threshold": 0.8,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L14",
+          "title": "Working Safely Through Documentation Gaps",
+          "strata_claim": "C7, C9",
+          "type": "frontier",
+          "estimated_minutes": 25,
+          "description": "Build fallback validation plans for unclear token ceilings, incomplete compatibility matrices, and partial subagent semantics so workflow decisions stay evidence-bound.",
+          "prerequisites": ["L12", "L13"],
+          "teaches_concepts": ["evidence-limits", "workflow-risk-management"],
+          "reinforces_concepts": ["surface-selection", "parallel-independence", "governance-layering"],
+          "mastery_threshold": 0.75,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    }
+  ],
+  "total_lessons": 14,
+  "total_estimated_hours": 6.3,
+  "learning_plan": {
+    "sessions_to_complete": 7,
+    "suggested_schedule": "2 lessons per session, 2-3 sessions per week (about 3 weeks to complete)",
+    "milestone_lessons": ["L02", "L04", "L06", "L08", "L10", "L12", "L14"]
+  }
+}

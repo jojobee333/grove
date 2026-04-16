@@ -1,0 +1,29 @@
+{
+  "slug": "test-driven-development-in-python",
+  "generated": "2026-04-15",
+  "progression_rules": {
+    "unlock_next_lesson_if_mastery_above": 0.75,
+    "suggest_remediation_if_two_failures": true,
+    "allow_skip_with_mastery_above": 0.90
+  },
+  "review_policy": {
+    "default_intervals_days": [1, 3, 7, 14],
+    "max_daily_reviews": 20,
+    "decay_threshold_days": 21,
+    "confidence_weight_low": 0.5,
+    "confidence_weight_medium": 1.0,
+    "confidence_weight_high": 1.5
+  },
+  "mastery_defaults": {
+    "foundational": 0.75,
+    "core": 0.80,
+    "applied": 0.80,
+    "debate": 0.75,
+    "gap": 0.75
+  },
+  "remediation_policy": {
+    "trigger_on_quiz_score_below": 0.60,
+    "max_remediation_cycles": 2,
+    "remediation_card_count": 5
+  }
+}

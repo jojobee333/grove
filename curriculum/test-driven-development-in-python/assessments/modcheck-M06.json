@@ -1,0 +1,42 @@
+{
+  "id": "modcheck-M06",
+  "module": "M06",
+  "title": "Broaden Specification Beyond Single Examples - Quick Check",
+  "generated": "2026-04-15",
+  "questions": [
+    {
+      "id": "MC06-1",
+      "type": "open",
+      "question": "When is parametrization the better move than writing several separate tests?",
+      "answer": "When multiple concrete cases express the same behavior pattern and can be captured with one shared test structure."
+    },
+    {
+      "id": "MC06-2",
+      "type": "open",
+      "question": "What does Hypothesis give you beyond hand-written examples?",
+      "answer": "It checks a property across generated inputs and can surface a falsifying example you would not likely have written by hand."
+    },
+    {
+      "id": "MC06-3",
+      "type": "open",
+      "question": "What should determine whether you add a new test layer?",
+      "answer": "Whether that layer answers a distinct question about logic, invariants, lifecycle, or boundary correctness."
+    },
+    {
+      "id": "MC06-4",
+      "type": "mcq",
+      "question": "What is the course's warning about advanced coverage?",
+      "options": { "A": "Never use generated tests", "B": "Do not add every test type by habit", "C": "Avoid persistence realism", "D": "Stop at one happy path" },
+      "correct": "B",
+      "explanation": "The module rejects piling on test types without a clear learning job for each one."
+    },
+    {
+      "id": "MC06-5",
+      "type": "mcq",
+      "question": "What kind of statement does a property-based test usually express?",
+      "options": { "A": "A class name", "B": "An invariant", "C": "A fixture scope", "D": "A CI secret" },
+      "correct": "B",
+      "explanation": "Properties state invariants that should hold across many inputs."
+    }
+  ]
+}

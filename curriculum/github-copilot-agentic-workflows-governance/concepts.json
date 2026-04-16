@@ -1,0 +1,222 @@
+{
+  "slug": "github-copilot-agentic-workflows-governance",
+  "generated": "2026-04-15",
+  "concepts": [
+    {
+      "id": "prompt-layer",
+      "title": "Prompt Files as Task Entry Points",
+      "depends_on": [],
+      "introduced_in": ["L01"],
+      "reinforced_in": ["L02"],
+      "assessment_sources": []
+    },
+    {
+      "id": "instruction-layer",
+      "title": "Instructions as Durable Guidance",
+      "depends_on": [],
+      "introduced_in": ["L01"],
+      "reinforced_in": ["L02", "L05", "L10"],
+      "assessment_sources": []
+    },
+    {
+      "id": "skill-layer",
+      "title": "Skills as Reusable Capabilities",
+      "depends_on": [],
+      "introduced_in": ["L01"],
+      "reinforced_in": ["L02", "L03", "L09"],
+      "assessment_sources": []
+    },
+    {
+      "id": "agent-layer",
+      "title": "Agents as Specialist Roles",
+      "depends_on": [],
+      "introduced_in": ["L01"],
+      "reinforced_in": ["L02", "L05", "L10"],
+      "assessment_sources": []
+    },
+    {
+      "id": "subagent-layer",
+      "title": "Subagents as Isolated Side Workers",
+      "depends_on": ["agent-layer"],
+      "introduced_in": ["L01"],
+      "reinforced_in": ["L02", "L04", "L07"],
+      "assessment_sources": []
+    },
+    {
+      "id": "artifact-selection",
+      "title": "Artifact Selection by Responsibility",
+      "depends_on": ["prompt-layer", "instruction-layer", "skill-layer", "agent-layer", "subagent-layer"],
+      "introduced_in": ["L02"],
+      "reinforced_in": ["L03"],
+      "assessment_sources": []
+    },
+    {
+      "id": "progressive-disclosure",
+      "title": "Progressive Disclosure",
+      "depends_on": ["artifact-selection", "skill-layer"],
+      "introduced_in": ["L03"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "context-budget",
+      "title": "Context as a Budget",
+      "depends_on": ["progressive-disclosure"],
+      "introduced_in": ["L03"],
+      "reinforced_in": ["L04", "L13"],
+      "assessment_sources": []
+    },
+    {
+      "id": "context-compaction",
+      "title": "Compaction and Reinjection",
+      "depends_on": ["context-budget"],
+      "introduced_in": ["L04"],
+      "reinforced_in": ["L14"],
+      "assessment_sources": []
+    },
+    {
+      "id": "context-isolation",
+      "title": "Context Isolation",
+      "depends_on": ["subagent-layer", "context-budget"],
+      "introduced_in": ["L04"],
+      "reinforced_in": ["L08"],
+      "assessment_sources": []
+    },
+    {
+      "id": "behavior-vs-enforcement",
+      "title": "Behavior Guidance vs Enforcement",
+      "depends_on": ["instruction-layer", "agent-layer"],
+      "introduced_in": ["L05"],
+      "reinforced_in": ["L06"],
+      "assessment_sources": []
+    },
+    {
+      "id": "governance-layering",
+      "title": "Governance Layering",
+      "depends_on": ["behavior-vs-enforcement"],
+      "introduced_in": ["L05"],
+      "reinforced_in": ["L06", "L07", "L13", "L14"],
+      "assessment_sources": []
+    },
+    {
+      "id": "approval-hooks",
+      "title": "Approval Hooks and Gating",
+      "depends_on": ["governance-layering"],
+      "introduced_in": ["L06"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "auditability",
+      "title": "Auditability and Traceability",
+      "depends_on": ["governance-layering"],
+      "introduced_in": ["L06"],
+      "reinforced_in": ["L13"],
+      "assessment_sources": []
+    },
+    {
+      "id": "coordinator-worker",
+      "title": "Coordinator-Worker Workflow",
+      "depends_on": ["subagent-layer", "governance-layering"],
+      "introduced_in": ["L07"],
+      "reinforced_in": ["L08"],
+      "assessment_sources": []
+    },
+    {
+      "id": "workflow-phases",
+      "title": "Workflow Phase Boundaries",
+      "depends_on": ["artifact-selection"],
+      "introduced_in": ["L07"],
+      "reinforced_in": ["L09"],
+      "assessment_sources": []
+    },
+    {
+      "id": "parallel-independence",
+      "title": "Independent Parallel Review",
+      "depends_on": ["coordinator-worker"],
+      "introduced_in": ["L08"],
+      "reinforced_in": ["L14"],
+      "assessment_sources": []
+    },
+    {
+      "id": "role-contamination",
+      "title": "Role Contamination Risk",
+      "depends_on": ["parallel-independence", "context-isolation"],
+      "introduced_in": ["L08"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "artifact-portability",
+      "title": "Artifact Portability",
+      "depends_on": ["skill-layer"],
+      "introduced_in": ["L09"],
+      "reinforced_in": ["L10", "L12"],
+      "assessment_sources": []
+    },
+    {
+      "id": "skill-portability",
+      "title": "Skill Portability",
+      "depends_on": ["artifact-portability"],
+      "introduced_in": ["L09"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "mcp",
+      "title": "Model Context Protocol",
+      "depends_on": ["artifact-portability"],
+      "introduced_in": ["L09"],
+      "reinforced_in": ["L13"],
+      "assessment_sources": []
+    },
+    {
+      "id": "behavioral-portability",
+      "title": "Behavioral Portability",
+      "depends_on": ["artifact-portability"],
+      "introduced_in": ["L10"],
+      "reinforced_in": ["L11"],
+      "assessment_sources": []
+    },
+    {
+      "id": "agents-md-semantics",
+      "title": "AGENTS.md Cross-Tool Semantics",
+      "depends_on": ["behavioral-portability"],
+      "introduced_in": ["L11"],
+      "reinforced_in": ["L12"],
+      "assessment_sources": []
+    },
+    {
+      "id": "convention-audit",
+      "title": "Convention Audit and Repair",
+      "depends_on": ["agents-md-semantics", "behavioral-portability"],
+      "introduced_in": ["L12"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "surface-selection",
+      "title": "Surface Selection Strategy",
+      "depends_on": ["governance-layering", "context-budget", "artifact-portability"],
+      "introduced_in": ["L13"],
+      "reinforced_in": ["L14"],
+      "assessment_sources": []
+    },
+    {
+      "id": "evidence-limits",
+      "title": "Evidence Limits in Public Documentation",
+      "depends_on": ["surface-selection"],
+      "introduced_in": ["L14"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    },
+    {
+      "id": "workflow-risk-management",
+      "title": "Workflow Risk Management Under Uncertainty",
+      "depends_on": ["evidence-limits", "governance-layering"],
+      "introduced_in": ["L14"],
+      "reinforced_in": [],
+      "assessment_sources": []
+    }
+  ]
+}

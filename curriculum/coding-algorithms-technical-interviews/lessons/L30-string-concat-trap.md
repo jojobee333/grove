@@ -2,7 +2,7 @@
 
 **Module**: M09 · Language-Specific Complexity Traps
 **Type**: applied
-**Estimated time**: 25 minutes
+**Estimated time**: 10 minutes
 **Claim**: C4 from Strata synthesis
 
 ---

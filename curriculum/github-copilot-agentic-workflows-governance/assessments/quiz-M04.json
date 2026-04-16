@@ -1,0 +1,89 @@
+{
+  "id": "quiz-M04",
+  "type": "module",
+  "module": "M04",
+  "title": "Assessment: Stage Work, Then Delegate",
+  "generated": "2026-04-15",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "Which sequence best matches the staged workflow pattern supported by the research?",
+      "options": {
+        "A": "Implement, explore, plan, review, hand off",
+        "B": "Plan, explore, implement, review, hand off",
+        "C": "Explore, implement, plan, hand off, review",
+        "D": "Review, plan, implement, explore, hand off"
+      },
+      "correct": "B",
+      "explanation": "The consistent pattern across the sources is to plan first, explore to reduce uncertainty, implement after the likely impact area is understood, then review and hand off.",
+      "lesson_ref": "L07",
+      "claim_ref": "C3",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "What is the coordinator's main job in a coordinator-worker workflow?",
+      "options": {
+        "A": "Perform every specialized subtask directly",
+        "B": "Keep sequence, task framing, and synthesis coherent",
+        "C": "Replace all review passes with a single summary",
+        "D": "Eliminate the need for phase boundaries"
+      },
+      "correct": "B",
+      "explanation": "The coordinator manages the overall thread and handoffs. Narrower workers handle specific subtasks without taking over overall sequence or synthesis.",
+      "lesson_ref": "L07",
+      "claim_ref": "C3",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "When is independent review most justified according to the course?",
+      "options": {
+        "A": "For every trivial file rename",
+        "B": "Only when a tool specifically requires two agents",
+        "C": "When independence matters because the task is risky, ambiguous, or governance-sensitive",
+        "D": "Never, because coordination cost always outweighs the benefit"
+      },
+      "correct": "C",
+      "explanation": "The course argues for separation when independent judgment matters, not as a universal rule for every small task.",
+      "lesson_ref": "L08",
+      "claim_ref": "C8",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "short_answer",
+      "question": "Give one good success criterion for planning and one for review, and explain why they should differ.",
+      "answer_key": {
+        "required_points": [
+          "Planning success should focus on decomposition or reduced uncertainty",
+          "Review success should focus on surfacing risk or missing evidence",
+          "They differ because the phases serve different reasoning goals"
+        ],
+        "full_credit": "Provides phase-appropriate criteria and explains why one should not be reused for the other",
+        "partial_credit": "Provides criteria without explaining the reason for the difference"
+      },
+      "lesson_ref": "L07",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "essay",
+      "prompt": "A team says parallel review is wasteful overhead. Evaluate that claim using the course's ideas about role contamination and independence, and explain when the extra coordination is worth paying for.",
+      "guidance": "Strong answers explain the risk of inherited framing, acknowledge that not every task needs separate review, and identify cases where independence materially improves quality.",
+      "rubric": {
+        "A": "Balanced answer that explains both cost and value, and identifies risk conditions that justify independent review",
+        "B": "Correctly favors or disfavors separate review but without a nuanced decision rule",
+        "C": "Treats parallel review as always good or always bad"
+      },
+      "lesson_ref": "L08",
+      "claim_ref": "C8/C9",
+      "difficulty": "analysis"
+    }
+  ]
+}

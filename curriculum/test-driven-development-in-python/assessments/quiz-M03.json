@@ -1,0 +1,89 @@
+{
+  "id": "quiz-M03",
+  "type": "module",
+  "module": "M03",
+  "title": "Assessment: Choose the Right Python Testing Surface",
+  "generated": "2026-04-15",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "Why does the course recommend pytest as the daily default for modern Python TDD?",
+      "options": {
+        "A": "Because unittest is unsupported",
+        "B": "Because pytest reduces friction in the small-step feedback loop",
+        "C": "Because pytest removes the need for fixture design",
+        "D": "Because only pytest supports mocks"
+      },
+      "correct": "B",
+      "explanation": "Pytest is favored for its ergonomics around plain tests, fixtures, and parametrization, which keep feedback cycles lightweight.",
+      "lesson_ref": "L05",
+      "claim_ref": "C3",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "What is the strongest reason parametrization matters to a TDD workflow?",
+      "options": {
+        "A": "It replaces all property-based testing",
+        "B": "It broadens one behavioral design into several executable cases without duplicating test bodies",
+        "C": "It forces use of classes",
+        "D": "It makes unittest obsolete"
+      },
+      "correct": "B",
+      "explanation": "The course treats parametrization as a clean way to broaden a single behavior into a case family.",
+      "lesson_ref": "L05",
+      "claim_ref": "C3",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "What remains true when pytest runs an existing unittest suite?",
+      "options": {
+        "A": "Every `TestCase` method automatically gains pytest fixture arguments",
+        "B": "The suite can benefit from pytest execution ergonomics without a full structural rewrite",
+        "C": "All old assertions must be rewritten first",
+        "D": "unittest discovery stops working entirely"
+      },
+      "correct": "B",
+      "explanation": "Pytest can improve selection and output even before a suite is migrated to pytest-native structure.",
+      "lesson_ref": "L06",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "short_answer",
+      "question": "Explain the course's rule 'migrate by pressure, not ideology' for unittest-heavy codebases.",
+      "answer_key": {
+        "required_points": [
+          "Do not rewrite stable tests just to chase a preferred brand",
+          "Adopt pytest-native style where fixtures, parametrization, or simpler tests materially reduce friction",
+          "Separate execution improvements from structural migration"
+        ],
+        "full_credit": "Explains incremental migration as a pragmatic response to testing pressure rather than a blanket rewrite campaign",
+        "partial_credit": "Mentions migration but not the pressure-based rationale"
+      },
+      "lesson_ref": "L06",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "essay",
+      "prompt": "You inherit a mixed suite of `unittest.TestCase` files and some newer pytest tests. Use Module 3 to propose a migration strategy that preserves working coverage while improving TDD ergonomics over time.",
+      "guidance": "Strong answers keep legacy tests runnable, use pytest execution benefits early, and target rewrites where pytest-native features reduce real friction.",
+      "rubric": {
+        "A": "Presents a staged, low-churn migration plan grounded in actual testing pressure",
+        "B": "Suggests migration but without clear prioritization or interoperability awareness",
+        "C": "Calls for an indiscriminate rewrite or ignores the mixed-suite reality"
+      },
+      "lesson_ref": "L05-L06",
+      "claim_ref": "C3",
+      "difficulty": "analysis"
+    }
+  ]
+}

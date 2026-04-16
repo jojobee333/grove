@@ -1,0 +1,89 @@
+{
+  "id": "quiz-M06",
+  "type": "module",
+  "module": "M06",
+  "title": "Assessment: Broaden Specification Beyond Single Examples",
+  "generated": "2026-04-15",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "When is parametrization the most natural next move?",
+      "options": {
+        "A": "When one behavior clearly has a family of concrete cases",
+        "B": "When you want to avoid naming behavior explicitly",
+        "C": "When every test should become property-based immediately",
+        "D": "Only in unittest"
+      },
+      "correct": "A",
+      "explanation": "Parametrization broadens one behavior into several explicit cases without duplicating the test body.",
+      "lesson_ref": "L11",
+      "claim_ref": "C7",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "What is the defining value of a property-based test in this course?",
+      "options": {
+        "A": "It guarantees zero bugs",
+        "B": "It checks an invariant across many generated inputs and can reveal falsifying examples",
+        "C": "It replaces readable examples",
+        "D": "It only matters for math libraries"
+      },
+      "correct": "B",
+      "explanation": "Property-based testing broadens the specification by checking invariants and surfacing concrete counterexamples.",
+      "lesson_ref": "L11",
+      "claim_ref": "C7",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "What is the main organizing principle in the course's advanced coverage model?",
+      "options": {
+        "A": "Use every test type available",
+        "B": "Choose layers by the kind of truth you need from each boundary",
+        "C": "Move everything to integration tests",
+        "D": "Keep only unit tests and cards"
+      },
+      "correct": "B",
+      "explanation": "The module synthesizes coverage choices around learning goals such as logic, invariants, lifecycle, and boundary truth.",
+      "lesson_ref": "L12",
+      "claim_ref": "C7",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "short_answer",
+      "question": "Explain why property-based testing complements rather than replaces example-driven TDD.",
+      "answer_key": {
+        "required_points": [
+          "Small concrete examples still help define the intended behavior clearly",
+          "Properties broaden the specification once the invariant is understood",
+          "Generated tests search for surprising counterexamples that hand-picked examples may miss"
+        ],
+        "full_credit": "Shows the progression from explicit examples to broader invariants without collapsing them into one technique",
+        "partial_credit": "Mentions examples and properties but not their complementary roles"
+      },
+      "lesson_ref": "L11",
+      "claim_ref": "C7",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "essay",
+      "prompt": "You are testing a component that validates inputs, writes to a database, and calls an external service. Use Module 6 to justify a layered suite that includes some combination of example tests, parametrization, properties, persistence realism, and boundary verification.",
+      "guidance": "Strong answers justify each layer by the question it answers rather than by attachment to a favorite testing style.",
+      "rubric": {
+        "A": "Builds a layered suite where each test type earns its place by answering a distinct question",
+        "B": "Uses several layers but with partial overlap or weak justification",
+        "C": "Mostly lists tools without explaining why each one belongs"
+      },
+      "lesson_ref": "L11-L12",
+      "claim_ref": "C7",
+      "difficulty": "analysis"
+    }
+  ]
+}

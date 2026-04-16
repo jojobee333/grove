@@ -2,7 +2,7 @@
 
 **Module**: M02 · Hash Maps — The Universal Speed-Up
 **Type**: applied
-**Estimated time**: 40 minutes
+**Estimated time**: 18 minutes
 **Claim**: C13 from Strata synthesis
 
 ---
@@ -133,6 +133,25 @@ This pattern achieves O(1) extra space by exploiting the constraint that values 
 - The problem says "O(1) extra space" or "in-place" — use index-as-key.
 - The problem says nothing about space — default to a real hash map for simplicity.
 - The problem involves general keys (strings, arbitrary integers) — you must use a real hash map.
+
+## The pattern-selection shortcut
+
+When an interview problem mentions hashing, ask which of these three jobs you are actually doing:
+
+| Job | Best pattern | Typical signal |
+|---|---|---|
+| Count / compare distributions | Frequency counting | anagram, duplicate count, character inventory |
+| Match values against a target | Complement lookup | two-sum style pair or group condition |
+| Exploit bounded integer range | Index-as-key | values in `[1..N]`, in-place or O(1)-space requirement |
+
+This classification matters because the implementation mistakes differ by pattern. Frequency counting tends to fail on deletion / decrement logic, complement lookup tends to fail on duplicate handling or wrong update order, and index-as-key fails when the candidate ignores the range constraint.
+
+## Common failure modes
+
+- **Complement lookup bug**: storing `num` before checking `target - num` can break cases where the same element cannot be reused.
+- **Frequency-map bug**: decrementing counts without removing zero-count keys makes some window-validity checks harder to reason about.
+- **Index-as-key bug**: applying the trick when values are negative or outside the stated bound silently corrupts the logic.
+- **Pattern mismatch**: using a hash map on already-sorted input when two pointers would be simpler and cheaper in space.
 
 ## Summary table
 

@@ -1,0 +1,129 @@
+{
+  "id": "quiz-final",
+  "type": "final",
+  "module": "all",
+  "title": "Final Assessment: GitHub Copilot Agentic Workflows and Governance",
+  "generated": "2026-04-15",
+  "passing_score": 75,
+  "questions": [
+    {
+      "id": "F01",
+      "type": "mcq",
+      "question": "Which pairing of responsibility and artifact is most consistent with the course?",
+      "options": {
+        "A": "Baseline standards -> prompt file; reusable task entry point -> instructions",
+        "B": "Reusable workflow capability -> skill; isolated exploratory side work -> subagent",
+        "C": "Protected path enforcement -> prompt file; repository governance -> lesson",
+        "D": "Context compaction -> instruction file; audit trail -> card deck"
+      },
+      "correct": "B",
+      "lesson_ref": "L01",
+      "module_ref": "M01",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "F02",
+      "type": "mcq",
+      "question": "What is the strongest reason the course rejects monolithic prompts as a default workflow design?",
+      "options": {
+        "A": "They prevent any use of subagents",
+        "B": "They are incompatible with MCP",
+        "C": "They waste context budget, blur responsibilities, and make important instructions compete with irrelevant detail",
+        "D": "They cannot mention tools by name"
+      },
+      "correct": "C",
+      "lesson_ref": "L03",
+      "module_ref": "M02",
+      "difficulty": "application"
+    },
+    {
+      "id": "F03",
+      "type": "mcq",
+      "question": "Why does the course insist that governance lives outside prompt wording?",
+      "options": {
+        "A": "Because prompts are never portable",
+        "B": "Because behavior guidance does not create enforceable control boundaries",
+        "C": "Because hooks can replace all instruction files",
+        "D": "Because audit logs are stored in course.json"
+      },
+      "correct": "B",
+      "lesson_ref": "L05",
+      "module_ref": "M03",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "F04",
+      "type": "mcq",
+      "question": "What is the best reason to keep review as a distinct phase from implementation?",
+      "options": {
+        "A": "To guarantee slower workflows",
+        "B": "To preserve independent judgment and reduce inherited framing from earlier steps",
+        "C": "To make prompts longer",
+        "D": "To avoid using any reusable artifacts"
+      },
+      "correct": "B",
+      "lesson_ref": "L08",
+      "module_ref": "M04",
+      "difficulty": "application"
+    },
+    {
+      "id": "F05",
+      "type": "mcq",
+      "question": "Which statement best captures the course's view of portability?",
+      "options": {
+        "A": "If an artifact is portable structurally, it is safe to assume identical runtime behavior",
+        "B": "Portability is mostly an illusion and should never be attempted",
+        "C": "Standards-backed artifacts are worth sharing, but behavior still needs per-host validation",
+        "D": "Only filenames matter for compatibility"
+      },
+      "correct": "C",
+      "lesson_ref": "L10",
+      "module_ref": "M05",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "F06",
+      "type": "mcq",
+      "question": "What does the `AGENTS.md` contradiction teach most directly?",
+      "options": {
+        "A": "One filename has one universal meaning across all tools",
+        "B": "A shared convention can still hide different host semantics",
+        "C": "Claude and GitHub use the same instruction precedence model",
+        "D": "Compatibility notes are unnecessary if the file is named consistently"
+      },
+      "correct": "B",
+      "lesson_ref": "L11",
+      "module_ref": "M06",
+      "difficulty": "application"
+    },
+    {
+      "id": "F07",
+      "type": "short_answer",
+      "question": "Explain how the course would tell you to combine shared artifacts with host-specific governance and validation in a real workflow.",
+      "answer_key": {
+        "required_points": [
+          "Reuse standards-backed artifacts such as skills where they add value",
+          "Treat policy intent as shareable but implement enforcement with host-native controls",
+          "Validate runtime behavior per host rather than assuming portable structure means portable semantics"
+        ],
+        "full_credit": "Connects artifact reuse, governance layering, and per-host validation into one coherent workflow strategy",
+        "partial_credit": "Mentions reuse or validation but not both"
+      },
+      "module_ref": "all",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "F08",
+      "type": "essay",
+      "prompt": "Design a governed, token-efficient cross-tool workflow for a nontrivial software task. Your answer should assign responsibilities across artifacts, explain where phase boundaries belong, justify how governance is enforced, and show how you would operate safely where documentation remains incomplete.",
+      "guidance": "Strong answers integrate the whole course: artifact layering, progressive disclosure, staged workflow, role independence, portability limits, host-specific controls, and explicit fallback plans for open gaps.",
+      "rubric": {
+        "A": "Integrates the course's major frameworks into one coherent workflow and handles uncertainty with explicit validation and conservative assumptions",
+        "B": "Applies several frameworks correctly but leaves one major area underdeveloped",
+        "C": "Describes a workflow without using the course's governing ideas"
+      },
+      "module_ref": "all",
+      "difficulty": "analysis"
+    }
+  ]
+}

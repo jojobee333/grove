@@ -1,0 +1,42 @@
+{
+  "id": "modcheck-M01",
+  "module": "M01",
+  "title": "The Agentic Stack: Five Layers, Five Jobs - Quick Check",
+  "generated": "2026-04-15",
+  "questions": [
+    {
+      "id": "MC01-1",
+      "type": "open",
+      "question": "Name the five workflow layers taught in Module 1.",
+      "answer": "Prompt files, instructions, skills, agents, and subagents. The course treats them as different layers with different responsibilities rather than interchangeable labels."
+    },
+    {
+      "id": "MC01-2",
+      "type": "open",
+      "question": "What job should instructions own that prompt files should not?",
+      "answer": "Instructions should own durable baseline guidance such as standards or conventions. Prompt files are reusable entry points, not always-on policy containers."
+    },
+    {
+      "id": "MC01-3",
+      "type": "open",
+      "question": "Why is a subagent not just a renamed skill?",
+      "answer": "A subagent performs isolated side work in a separate context. A skill packages reusable workflow instructions and resources but does not itself exist as an isolated worker."
+    },
+    {
+      "id": "MC01-4",
+      "type": "mcq",
+      "question": "Which artifact is the best home for a reusable multi-step workflow recipe?",
+      "options": { "A": "Skill", "B": "Audit log", "C": "Protected path", "D": "Bundle" },
+      "correct": "A",
+      "explanation": "Skills package reusable workflow capability and supporting resources."
+    },
+    {
+      "id": "MC01-5",
+      "type": "mcq",
+      "question": "What is the safest heuristic when choosing among artifacts?",
+      "options": { "A": "Use the heaviest artifact available", "B": "Use the lightest artifact that still matches the responsibility", "C": "Default every task to a specialist agent", "D": "Put everything in one instruction file" },
+      "correct": "B",
+      "explanation": "The course emphasizes picking the smallest control surface that cleanly owns the job."
+    }
+  ]
+}

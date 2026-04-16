@@ -1,0 +1,89 @@
+{
+  "id": "quiz-M05",
+  "type": "module",
+  "module": "M05",
+  "title": "Assessment: Use Mocks, Fakes, and Contracts Intentionally",
+  "generated": "2026-04-15",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What makes a mock 'strict' in the sense taught by this course?",
+      "options": {
+        "A": "It records every possible call forever",
+        "B": "It is constrained to the real interface and used at a narrow owned collaborator boundary",
+        "C": "It replaces every dependency in the module",
+        "D": "It only works in unittest"
+      },
+      "correct": "B",
+      "explanation": "Strictness comes from autospec-like constraints and narrow use at collaborators the application owns.",
+      "lesson_ref": "L09",
+      "claim_ref": "C5",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Where should a Python patch usually be applied?",
+      "options": {
+        "A": "Where the dependency was first implemented",
+        "B": "Where the code under test looks it up",
+        "C": "Only inside setup functions",
+        "D": "In a global conftest file"
+      },
+      "correct": "B",
+      "explanation": "Patching the lookup site changes the object the code under test actually uses.",
+      "lesson_ref": "L09",
+      "claim_ref": "C5",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "When is a verified fake often better than a deep mock?",
+      "options": {
+        "A": "When you need speed plus a stronger connection to real boundary behavior",
+        "B": "When you want to avoid learning the external system at all",
+        "C": "When your team dislikes adapters",
+        "D": "Only when writing UI tests"
+      },
+      "correct": "A",
+      "explanation": "Verified fakes keep tests fast but are anchored more closely to real service behavior than deep mocks are.",
+      "lesson_ref": "L10",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "short_answer",
+      "question": "Explain what question the course uses to choose among mocks, fakes, contract checks, and integration tests.",
+      "answer_key": {
+        "required_points": [
+          "Choose the cheapest test that still tells the truth about the boundary",
+          "Owned collaborators often justify strict mocks",
+          "External boundaries often need higher-fidelity checks"
+        ],
+        "full_credit": "Explains the decision rule and distinguishes owned-collaborator use from external-boundary use",
+        "partial_credit": "Mentions truth or cost but not both"
+      },
+      "lesson_ref": "L10",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "essay",
+      "prompt": "A team is deeply mocking a payment SDK and getting brittle tests. Use Module 5 to argue for a better combination of seam design, strict mocking, and higher-fidelity alternatives where appropriate.",
+      "guidance": "Strong answers narrow mocks to owned collaborators, move provider detail behind an adapter, and justify when verified fakes, contracts, or integration checks should replace deep mocks.",
+      "rubric": {
+        "A": "Presents a clear migration away from deep external mocks with defensible replacement choices",
+        "B": "Suggests fewer mocks but leaves the alternative coverage model unclear",
+        "C": "Mostly argues from preference without boundary-specific reasoning"
+      },
+      "lesson_ref": "L09-L10",
+      "claim_ref": "C5/C6",
+      "difficulty": "analysis"
+    }
+  ]
+}
