@@ -4,7 +4,7 @@
   "title": "Grove Bundle",
   "description": "Schema for curriculum/<slug>/bundle.json (v3) — produced by build-bundle.mjs",
   "type": "object",
-  "required": ["version", "slug", "bundled", "course", "lessons", "cards", "quizzes", "modchecks", "concepts", "adaptiveRules", "learningPaths", "codeChallenges"],
+  "required": ["version", "slug", "bundled", "course", "lessons", "cards", "quizzes", "modchecks", "concepts", "adaptiveRules", "learningPaths", "codeChallenges", "practicalApplications"],
   "additionalProperties": true,
   "properties": {
     "version":  { "type": "string", "const": "3.0" },
@@ -111,6 +111,41 @@
                 "lesson_ref":            { "type": "string" },
                 "pass_criteria":         { "type": "number", "minimum": 0, "maximum": 1 },
                 "remediation_lesson_ids": { "type": "array", "items": { "type": "string" } }
+              }
+            }
+          }
+        }
+      }
+    },
+    "practicalApplications": {
+      "type": "object",
+      "description": "Map of moduleId → practical application collection with project or workflow ideas",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["module_id", "title", "applications"],
+        "properties": {
+          "module_id": { "type": "string" },
+          "title": { "type": "string" },
+          "applications": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "type", "title", "summary", "prompt", "deliverable", "estimated_minutes", "difficulty", "lesson_refs"],
+              "properties": {
+                "id": { "type": "string" },
+                "type": { "type": "string", "enum": ["project", "implementation", "workflow", "artifact"] },
+                "title": { "type": "string" },
+                "summary": { "type": "string" },
+                "prompt": { "type": "string" },
+                "deliverable": { "type": "string" },
+                "estimated_minutes": { "type": "number", "minimum": 1 },
+                "difficulty": { "type": "integer", "minimum": 1, "maximum": 5 },
+                "lesson_refs": { "type": "array", "items": { "type": "string" } },
+                "concepts": { "type": "array", "items": { "type": "string" } },
+                "tools": { "type": "array", "items": { "type": "string" } },
+                "steps": { "type": "array", "items": { "type": "string" } },
+                "success_criteria": { "type": "array", "items": { "type": "string" } },
+                "extension_ideas": { "type": "array", "items": { "type": "string" } }
               }
             }
           }

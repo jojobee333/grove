@@ -11,123 +11,134 @@ allowed-tools:
   - editFiles
 ---
 
-# Grove Map
+# Grove map skill
 
-## Purpose
+You turn Strata analysis into a structured course outline. You do not write
+lesson content — that is /grove-lessons. You design the architecture of the course.
 
-Grove Map converts Strata analysis plus learner profile inputs into a structured
-`curriculum/[slug]/course.json` outline. It designs course architecture only; it does
-not write lesson prose.
+## Input: read these Strata files
 
-## Non-Negotiable Rules
+- `research/[slug]/02-analysis/themes.md` → modules (one theme = one module)
+- `research/[slug]/03-synthesis/claims.md` → learning objectives (one strong claim = one objective)
+- `research/[slug]/03-synthesis/narrative.md` → narrative arc for sequencing
+- `research/[slug]/02-analysis/contradictions.md` → discussion/debate lessons
+- `research/[slug]/02-analysis/gaps.md` → "what we don't know" lessons
+- `curriculum/[slug]/learner.json` → depth, time, and goal calibration
 
-- Read the full required input set before mapping modules or lessons.
-- Use [references/outline-generation-reference.md](references/outline-generation-reference.md) as the canonical input, calibration, and `course.json` contract.
-- Each theme becomes one module.
-- Sequence modules from foundations to applications, then contradictions, then gaps.
-- Use measurable Bloom-style verbs in objectives; do not use `understand` or `know`.
-- Every lesson must include the full v3 adaptive field set.
-- `teaches_concepts` must be populated for lessons that introduce concepts.
-- If `learner.json` is missing, stop rather than guessing calibration.
-- Treat learner session time as a cap for grouping lessons into sessions, not a reason to inflate every lesson into a 25- to 40-minute block.
-- Run `node scripts/validate-curriculum.mjs [slug]` after writing `course.json`.
+## Mapping themes to modules
 
-## Workflow
+Each theme in `themes.md` becomes one module. Sequence them so:
+1. Foundational concepts come before applied ones
+2. Each module builds on the previous (no orphan modules)
+3. Contradictions cluster near the end (after learner has context to evaluate them)
+4. Gaps and limitations come last (intellectual humility as a closing lesson)
 
-### Phase 1 - Resolve inputs
+## Mapping claims to lessons within modules
 
-**Entry:** The caller provides a Strata topic slug.
-**Exit:** All required Strata artifacts and `learner.json` are loaded.
+Within each module, each claim that falls under that theme becomes a lesson.
+Sequence lessons from concrete → abstract, or from "what" → "why" → "so what".
 
-1. **[PARALLEL]** Load `themes.md`, `claims.md`, `narrative.md`, `contradictions.md`, `gaps.md`, and `learner.json`.
-2. If any required file is missing or empty, stop and report the exact blocker.
+Strong claims (confidence: strong) → core lessons (required)
+Moderate claims → standard lessons
+Weak/speculative claims → clearly labelled "frontier" or "debated" lessons
 
-### Phase 2 - Build the module skeleton
+## Calibrating for learner profile
 
-**Entry:** Inputs are loaded.
-**Exit:** Every module has an ID, title, theme, sequence position, and assessment flag.
+Read `curriculum/[slug]/learner.json`:
 
-1. Convert each theme into one module.
-2. Order modules so foundational context appears before applied material.
-3. Push contradiction-heavy modules near the end.
-4. Place gap or limitation modules last.
+- **Goal: understand broadly** → fewer lessons per module, more overview lessons
+- **Goal: apply practically** → add "how to apply this" lessons, skip deep theory
+- **Goal: teach others** → add explanation/analogy lessons
+- **Goal: pass an exam** → add recall-focused lessons, increase flashcard density
 
-### Phase 3 - Build the lesson skeleton
+- **Background: beginner** → add a "foundations" module at the start
+- **Background: intermediate** → skip basics, go deeper faster
+- **Background: expert** → focus on nuance, contradictions, gaps
 
-**Entry:** Module skeleton exists.
-**Exit:** Every lesson has type, ordering, description, estimated minutes, and adaptive fields.
+- **Time: 15 min/session** → lessons ≤ 800 words, max 2 lessons per module
+- **Time: 30 min/session** → lessons ≤ 1500 words, 3-4 lessons per module
+- **Time: 1 hour** → lessons up to 2500 words, 5-6 lessons per module
 
-1. Map strong claims to core lessons.
-2. Map moderate claims to standard or applied lessons.
-3. Map weak or speculative claims to frontier or debated lessons.
-4. Add contradiction and gap lessons where the Strata analysis requires them.
-5. Fill the v3 lesson fields from the outline generation reference.
+## Output: course.json
 
-### Phase 4 - Calibrate to the learner profile
+```json
+{
+  "topic": "Topic Name",
+  "slug": "topic-slug",
+  "strata_source": "research/topic-slug/",
+  "generated": "YYYY-MM-DD",
+  "learner": {
+    "goal": "understand broadly",
+    "background": "beginner",
+    "session_time_min": 30
+  },
+  "summary": "One sentence describing what this course teaches",
+  "modules": [
+    {
+      "id": "M01",
+      "title": "Module title",
+      "strata_theme": "Theme N from themes.md",
+      "description": "What the learner will understand after this module",
+      "objectives": [
+        "By the end of this module, you will be able to [verb] [thing]"
+      ],
+      "lessons": [
+        {
+          "id": "L01",
+          "title": "Lesson title",
+          "strata_claim": "C1",
+          "type": "core | applied | frontier | debate | gap",
+          "estimated_minutes": 20,
+          "description": "One sentence: what this lesson covers",
+          "difficulty": 2,
+          "prerequisites": [],
+          "teaches_concepts": ["concept-slug"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": 7
+        }
+      ],
+      "has_assessment": true
+    }
+  ],
+  "total_lessons": 0,
+  "total_estimated_hours": 0,
+  "learning_plan": {
+    "sessions_to_complete": 0,
+    "suggested_schedule": "3 sessions per week",
+    "milestone_lessons": ["L01", "L05", "L10"]
+  }
+}
+```
 
-**Entry:** Modules and lesson skeletons exist.
-**Exit:** Lesson count, pacing, and difficulty reflect `learner.json`.
+## Learning objectives must be verbs
 
-1. Adjust module and lesson density by learner goal.
-2. Add or remove foundational scaffolding by learner background.
-3. Scale lesson count and estimated minutes by session-time target without trying to fill the entire session budget with every lesson.
-4. Prefer multiple focused lessons per session when the material is narrow; reserve 20+ minute lessons for genuinely dense synthesis or multi-example material.
+Use Bloom's taxonomy verbs appropriate to the goal:
+- **Understand broadly**: define, explain, describe, identify, summarize
+- **Apply practically**: use, implement, demonstrate, apply, solve
+- **Teach others**: explain, compare, justify, critique, illustrate
+- **Pass an exam**: recall, list, match, distinguish, calculate
 
-### Phase 5 - Assemble and validate the output
+Avoid "understand" and "know" as objectives — they are not measurable.
 
-**Entry:** The calibrated outline is complete.
-**Exit:** `course.json` is written and validated.
+## v3 lesson fields reference
 
-1. Write `curriculum/[slug]/course.json`.
-2. Ensure totals and learning-plan fields are populated from summed lesson minutes and the learner's session budget, not raw lesson count alone.
-3. Run `node scripts/validate-curriculum.mjs [slug]`.
-4. If validation fails, repair the invalid fields before returning completion.
+Every lesson in `course.json` must include these adaptive fields (v3 schema):
 
-## Output Contract
+| Field | Type | Notes |
+|---|---|---|
+| `difficulty` | integer 1–5 | Default by type: core=2, applied=3, frontier=4, debate=3, gap=3 |
+| `prerequisites` | string[] | Lesson IDs (`L0N`) that must be completed before this lesson unlocks |
+| `teaches_concepts` | string[] | Concept slugs this lesson *introduces* — drives card/quiz enrichment |
+| `reinforces_concepts` | string[] | Concept slugs this lesson *revisits* (secondary coverage) |
+| `mastery_threshold` | float 0–1 | Minimum average mastery score before lesson is counted complete (default 0.7) |
+| `unlock_rule` | string | `"all_prerequisites_mastered"` or `"none"` (for the first lessons in a module) |
+| `review_after_days` | integer | Days after completion before app flags this lesson for review (default 7) |
 
-Required deliverable:
+**`teaches_concepts` is the most important field.** The bundler (`build-bundle.mjs`) uses it to
+enrich every flashcard and MCQ question in that lesson with `concepts`, `cognitive_level`, and `weight`.
+If a lesson has no `teaches_concepts`, its cards and questions will not have adaptive metadata.
 
-1. `curriculum/[slug]/course.json` with course metadata, module metadata, lesson metadata, totals, and learning plan.
-
-Completion criteria:
-
-- Every theme is represented as one module.
-- Every lesson has a valid type and the full v3 adaptive field set.
-- Objectives use measurable verbs.
-- The outline matches the learner profile.
-- Validation passes after writing the file.
-
-## Failure Mode Handling
-
-| Failure | Prevention / Recovery |
-| --- | --- |
-| Missing Strata inputs | Stop and name the missing file instead of inferring content. |
-| Missing `learner.json` | Stop and require Grove to collect the learner profile first. |
-| Modules are sequenced without prerequisites in mind | Reorder modules from foundations to applications before finalizing the file. |
-| Lessons are missing v3 fields | Repair the missing fields before validation or return. |
-| Concept IDs do not align with adaptive metadata needs | Add or correct `teaches_concepts` and `reinforces_concepts` before saving. |
-| Lesson estimates cluster around 25 to 30 minutes without enough planned depth | Recalibrate the lesson minutes downward or split / expand the lesson before saving. |
-| Validation script fails | Fix the reported schema issues and rerun validation. |
-
-## Anti-Patterns
-
-- Writing lesson prose inside `course.json`.
-- Copying claims into objectives without converting them into measurable outcomes.
-- Treating contradictions or gaps as beginner-first material.
-- Returning a course outline without validation.
-
-## Examples
-
-### Example 1 - Standard outline generation
-
-Input: `ai-regulation`
-
-1. Load Strata artifacts and `learner.json`.
-2. Convert themes into modules.
-3. Map claims to lessons and calibrate density.
-4. Write `course.json` and validate it.
-
-### Example 2 - Beginner learner profile
-
-If `learner.json` says beginner with 15-minute sessions, add a foundations module,
-keep lessons short, and avoid overloading each module with too many lessons.
+Concept slugs must match IDs defined in `curriculum/[slug]/concepts.json`.
+After generating `course.json`, run `node scripts/validate-curriculum.mjs [slug]` to check compliance.

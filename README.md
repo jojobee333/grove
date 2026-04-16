@@ -59,6 +59,7 @@ This writes `curriculum/<slug>/bundle.json`.
 | **Cards** | Spaced-repetition flashcard review (SM-2 scheduler) |
 | **Quiz** | Module assessments with MCQ + short answer |
 | **Code challenges** | In-browser coding problems with WASM test execution (Python + JS) |
+| **Practical applications** | Project and workflow ideas that turn a module into something shippable or usable |
 | **My progress** | Concept mastery heatmap; per-module coverage stats |
 | **Learning paths** | Pick a guided path (e.g. "Fast track", "Deep dive") |
 | **What's next?** | Adaptive planner — next lessons, weak concepts, review queue |
@@ -95,6 +96,7 @@ curriculum/
     assessments/         # Quiz JSON files (quiz-M01.json …)
                          # Code challenges (code-challenge-M01.json …)
     cards.json           # Flashcard deck
+    applications.json    # Practical project/workflow ideas by module
     learner.json         # Learner profile (goal, background, session time)
 ```
 

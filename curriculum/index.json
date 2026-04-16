@@ -8,6 +8,7 @@
       "total_lessons": 13,
       "total_cards": 69,
       "total_questions": 53,
+      "total_practical_applications": 0,
       "generated": "2026-04-12",
       "adaptive": true,
       "bundle_version": "3.0"
@@ -20,6 +21,7 @@
       "total_lessons": 16,
       "total_cards": 97,
       "total_questions": 96,
+      "total_practical_applications": 0,
       "generated": "2026-04-13",
       "adaptive": true,
       "bundle_version": "3.0"
@@ -68,6 +70,7 @@
       "total_lessons": 14,
       "total_cards": 42,
       "total_questions": 43,
+      "total_practical_applications": 7,
       "generated": "2026-04-15",
       "adaptive": true,
       "bundle_version": "3.0"

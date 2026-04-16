@@ -5,18 +5,21 @@ import { computeQuizScore }                                     from './modules/
 import { isModcheckUnlocked as _isModcheckUnlocked, submitModcheckLogic } from './modules/modcheck.js';
 import { moduleProgress as _moduleProgress, isLessonLocked as _isLessonLocked } from './modules/progress-utils.js';
 import { computeNextSteps as _computeNextSteps }                from './modules/planner.js';
+import { buildCardModuleSummaries, getReviewableCards }         from './modules/cards.js';
+import { flattenPracticalApplications, getPracticalApplicationsForModule, summarizePracticalApplications } from './modules/practical-applications.js';
 
 // ── STATE ──────────────────────────────────────────────────
 let course = null;
 let cards = null;
 let assessments = {};
 let progress = {};
-let cardSession = { queue: [], current: 0, flipped: false };
+let cardSession = { queue: [], current: 0, flipped: false, moduleId: null, label: '' };
 let quizState = { answers: {}, submitted: false };
 let bundle = null;        // v3 bundle (loaded from bundle.json)
 let concepts = { concepts: [] };
 let adaptiveRules = {};
 let learningPaths = { paths: [] };
+let practicalApplications = {};
 
 function saveProgress() {
   if (!course) return;
@@ -63,16 +66,18 @@ function initFromBundle(data) {
   concepts = data.concepts || { concepts: [] };
   adaptiveRules = data.adaptiveRules || {};
   learningPaths = data.learningPaths || { paths: [] };
+  practicalApplications = data.practicalApplications || {};
   // Pre-populate assessments so no per-module file loading is needed
   Object.assign(assessments, data.quizzes || {});
   loadProgress();
   // Initialize SR on all cards and merge saved state
   cards = (data.cards || []).map(c => {
-    const sr = { ease: 2.5, interval: 0, reviews: 0, lapses: 0, next_review: null };
+    const sr = { ease: 2.5, interval: 0, reviews: 0, lapses: 0, next_review: null, ...(c.sr || {}) };
     const saved = progress.cards[c.id];
     if (saved) Object.assign(sr, saved);
     return { ...c, sr };
   });
+  cardSession = { queue: [], current: 0, flipped: false, moduleId: null, label: '' };
   buildSidebar();
   showView('plan');
   document.getElementById('course-meta').style.display = 'block';
@@ -82,10 +87,13 @@ function initFromBundle(data) {
   const nprog = document.getElementById('nav-progress');
   const npath = document.getElementById('nav-paths');
   const ncode = document.getElementById('nav-code');
+  const napps = document.getElementById('nav-applications');
   if (nprog) nprog.style.display = '';
   if (npath) npath.style.display = '';
   const hasChallenges = Object.values(data.codeChallenges || {}).some(m => m.challenges?.length > 0);
   if (ncode) ncode.style.display = hasChallenges ? '' : 'none';
+  const hasApplications = Object.values(data.practicalApplications || {}).some(m => m.applications?.length > 0);
+  if (napps) napps.style.display = hasApplications ? '' : 'none';
 }
 
 function loadCards(file) {
@@ -96,9 +104,10 @@ function loadCards(file) {
       cards = data.cards || [];
       // Merge saved SR state (initialize SR if not present in source file)
       cards.forEach(c => {
-        if (!c.sr) c.sr = { ease: 2.5, interval: 0, reviews: 0, lapses: 0, next_review: null };
+        c.sr = { ease: 2.5, interval: 0, reviews: 0, lapses: 0, next_review: null, ...(c.sr || {}) };
         if (progress.cards[c.id]) Object.assign(c.sr, progress.cards[c.id]);
       });
+      cardSession = { queue: [], current: 0, flipped: false, moduleId: null, label: '' };
       showView('cards');
     } catch(err) { alert('Could not parse cards.json'); }
   };
@@ -275,13 +284,14 @@ function updateOverallProgress() {
 
 // ── VIEWS ──────────────────────────────────────────────────
 function showView(view) {
-  ['plan','cards','code','progress','paths'].forEach(v => {
+  ['plan','cards','code','applications','progress','paths'].forEach(v => {
     const el = document.getElementById('nav-' + v);
     if (el) el.classList.toggle('active', v === view);
   });
   if (view === 'plan')     renderPlan();
   if (view === 'cards')    renderCards();
   if (view === 'code')     renderCodeView();
+  if (view === 'applications') renderApplicationsView();
   if (view === 'progress') renderProgress();
   if (view === 'paths')    renderPaths();
 }
@@ -461,6 +471,33 @@ function renderModule(moduleId) {
   const mc = bundle?.modchecks?.[moduleId];
   const mcUnlocked = isModcheckUnlocked(moduleId);
   const mcDone = !!progress.modchecks?.[moduleId]?.done;
+  const cardSummary = buildCardModuleSummaries({ course, cards, progress }).find(summary => summary.moduleId === moduleId) || null;
+  const moduleApplications = getPracticalApplicationsForModule(practicalApplications, moduleId);
+
+  const flashcardSection = cardSummary ? `
+    <div class="card card-sm flex justify-between items-center" style="margin-top:8px;${cardSummary.isReached ? '' : 'opacity:0.55;'}">
+      <div>
+        <div style="font-size:14px;font-weight:500">Module flashcards${cardSummary.isReached ? '' : ' 🔒'}</div>
+        <div class="text-muted">${cardSummary.isReached
+          ? `${cardSummary.dueCount} due now · ${cardSummary.totalCount} total · ${cardSummary.reviewedCount} reviewed`
+          : 'Reach this module in the learning flow to unlock its deck'}</div>
+      </div>
+      ${cardSummary.isReached
+        ? `<button class="btn ${cardSummary.dueCount > 0 ? 'btn-primary' : ''}" onclick="startCardSession('${moduleId}','${cardSummary.dueCount > 0 ? 'due' : 'all'}')">
+            ${cardSummary.dueCount > 0 ? `Review ${cardSummary.dueCount} due` : 'Review module'}
+          </button>`
+        : ''}
+    </div>`
+    : '';
+
+  const applicationsSection = moduleApplications.length ? `
+    <div class="card card-sm flex justify-between items-center" style="margin-top:8px;cursor:pointer" onclick="renderApplicationsView('${moduleId}')">
+      <div>
+        <div style="font-size:14px;font-weight:500">Practical applications</div>
+        <div class="text-muted">${moduleApplications.length} project idea${moduleApplications.length === 1 ? '' : 's'} for putting this module to work</div>
+      </div>
+      <button class="btn btn-primary" onclick="event.stopPropagation();renderApplicationsView('${moduleId}')">Open ideas</button>
+    </div>` : '';
 
   const modcheckSection = mc ? `
     <div class="card card-sm flex justify-between items-center" style="${mcUnlocked ? 'cursor:pointer;' : 'opacity:0.45;'}" ${mcUnlocked ? `onclick="showModcheck('${moduleId}')"` : ''}>
@@ -504,6 +541,8 @@ function renderModule(moduleId) {
       `;
       }).join('')}
     </div>
+    ${flashcardSection}
+    ${applicationsSection}
     ${modcheckSection}
     ${m.has_assessment ? `
       <div class="card card-sm flex justify-between items-center" style="margin-top:8px">
@@ -518,6 +557,110 @@ function renderModule(moduleId) {
         </div>
       </div>
     ` : ''}
+  `;
+}
+
+function renderApplicationsView(moduleId = null) {
+  const main = document.getElementById('main');
+  if (!bundle) {
+    main.innerHTML = '<div class="card"><p>Load a bundle.json to see practical applications.</p></div>';
+    return;
+  }
+
+  const summaries = summarizePracticalApplications(course, practicalApplications);
+  const scopedSummaries = moduleId ? summaries.filter(summary => summary.moduleId === moduleId) : summaries;
+  const scopedApplications = moduleId && practicalApplications[moduleId]
+    ? { [moduleId]: practicalApplications[moduleId] }
+    : practicalApplications;
+
+  if (!scopedSummaries.length) {
+    main.innerHTML = '<div class="card"><h1>Practical applications</h1><p class="text-muted">No practical application ideas found in this bundle.</p></div>';
+    return;
+  }
+
+  const rows = flattenPracticalApplications(course, scopedApplications);
+
+  const cardsHtml = rows.map(({ moduleId: applicationModuleId, moduleTitle, application }) => `
+    <div class="module-card" onclick="showPracticalApplication('${applicationModuleId}','${application.id}')" style="cursor:pointer">
+      <div class="module-header">
+        <span class="module-title" style="font-size:14px">${application.title}</span>
+        <span class="badge badge-${application.type === 'project' || application.type === 'implementation' ? 'green' : 'amber'}">${application.type}</span>
+      </div>
+      <div class="module-meta">${moduleTitle} · ${application.estimated_minutes} min · difficulty ${application.difficulty}</div>
+      <p style="margin:10px 0 0">${application.summary}</p>
+    </div>
+  `).join('');
+
+  main.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:0.75rem">
+      <div>
+        <h1>Practical applications</h1>
+        <p class="text-muted">Move from understanding to shipping something concrete: tools, workflows, artifacts, or small standalone projects.</p>
+      </div>
+      ${moduleId ? `<button class="btn" onclick="showModule('${moduleId}')">← Back to module</button>` : ''}
+    </div>
+    <div class="flex gap-8 items-center mb-4" style="flex-wrap:wrap">
+      <span class="badge badge-green">${rows.length} ideas</span>
+      <span class="badge badge-gray">${scopedSummaries.length} module${scopedSummaries.length === 1 ? '' : 's'}</span>
+    </div>
+    <div class="module-grid" style="margin-top:1.5rem">${cardsHtml}</div>
+  `;
+}
+
+function showPracticalApplication(moduleId, applicationId) {
+  const summary = summarizePracticalApplications(course, practicalApplications).find(item => item.moduleId === moduleId);
+  const application = summary?.applications.find(item => item.id === applicationId);
+  if (!summary || !application) return;
+
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const navApplications = document.getElementById('nav-applications');
+  if (navApplications) navApplications.classList.add('active');
+
+  const list = items => (items?.length
+    ? `<ul style="padding-left:1.4rem;margin-top:0.75rem">${items.map(item => `<li style="font-size:14px;margin-bottom:6px">${item}</li>`).join('')}</ul>`
+    : '<p class="text-muted" style="margin-top:0.75rem">None listed.</p>');
+
+  const lessonLinks = (application.lesson_refs ?? []).map(lessonId => {
+    const module = course.modules.find(courseModule => courseModule.lessons?.some(lesson => lesson.id === lessonId));
+    const lesson = module?.lessons?.find(item => item.id === lessonId);
+    if (!lesson || !module) return lessonId;
+    return `<button class="btn" style="font-size:12px;padding:5px 10px" onclick="showLesson('${lessonId}','${module.id}')">${lesson.title}</button>`;
+  }).join('');
+
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:0.5rem">
+      <button class="btn" onclick="renderApplicationsView('${moduleId}')" style="font-size:12px;padding:5px 10px">← Back to applications</button>
+      <span class="badge badge-${application.type === 'project' || application.type === 'implementation' ? 'green' : 'amber'}">${application.type}</span>
+    </div>
+    <div class="flex items-center gap-8 mb-4" style="flex-wrap:wrap">
+      <h1>${application.title}</h1>
+      <span class="badge badge-gray">${summary.moduleTitle}</span>
+      <span class="badge badge-gray">${application.estimated_minutes} min</span>
+      <span class="badge badge-gray">difficulty ${application.difficulty}</span>
+    </div>
+    <p>${application.summary}</p>
+    <div class="card">
+      <h2>Build brief</h2>
+      <p>${application.prompt}</p>
+      <h3>Deliverable</h3>
+      <p>${application.deliverable}</p>
+      ${(application.tools ?? []).length ? `<h3>Suggested tools</h3><div style="display:flex;gap:8px;flex-wrap:wrap">${application.tools.map(tool => `<span class="badge badge-gray">${tool}</span>`).join('')}</div>` : ''}
+      ${(application.lesson_refs ?? []).length ? `<h3 style="margin-top:1rem">Anchor lessons</h3><div style="display:flex;gap:8px;flex-wrap:wrap">${lessonLinks}</div>` : ''}
+    </div>
+    <div class="card">
+      <h2>Suggested steps</h2>
+      ${list(application.steps)}
+    </div>
+    <div class="card">
+      <h2>Success criteria</h2>
+      ${list(application.success_criteria)}
+    </div>
+    ${(application.extension_ideas ?? []).length ? `
+      <div class="card">
+        <h2>Extension ideas</h2>
+        ${list(application.extension_ideas)}
+      </div>` : ''}
   `;
 }
 
@@ -881,27 +1024,112 @@ function renderCards() {
     return;
   }
 
-  const due = cards.filter(c => {
-    if (!c.sr) c.sr = { ease: 2.5, interval: 0, reviews: 0, lapses: 0, next_review: null };
-    if (!c.sr.next_review) return true;
-    return new Date(c.sr.next_review) <= new Date();
-  });
+  if (cardSession.queue.length) {
+    renderCard();
+    return;
+  }
 
-  if (!due.length) {
-    const next = cards.reduce((a, b) => new Date(a.sr.next_review) < new Date(b.sr.next_review) ? a : b);
+  const summaries = buildCardModuleSummaries({ course, cards, progress });
+  const reachedSummaries = summaries.filter(summary => summary.isReached);
+  const reachedDue = reachedSummaries.reduce((sum, summary) => sum + summary.dueCount, 0);
+  const totalCards = summaries.reduce((sum, summary) => sum + summary.totalCount, 0);
+
+  if (!summaries.length) {
     main.innerHTML = `
       <h1>Flashcards</h1>
       <div class="card" style="text-align:center;padding:2.5rem">
-        <h2>All caught up!</h2>
-        <p>Next card due: ${new Date(next.sr.next_review).toLocaleDateString()}</p>
-        <p>${cards.length} cards total · ${cards.filter(c=>c.sr.reviews>0).length} reviewed</p>
+        <h2>No flashcards found</h2>
+        <p>This course does not currently expose any module flashcard decks.</p>
       </div>
     `;
     return;
   }
 
-  cardSession = { queue: [...due].sort(() => Math.random()-0.5), current: 0, flipped: false };
+  const statusBadge = summary => {
+    if (summary.status === 'completed') return '<span class="badge badge-green">Completed</span>';
+    if (summary.status === 'in-progress') return '<span class="badge badge-amber">In progress</span>';
+    if (summary.status === 'current') return '<span class="badge badge-amber">Current module</span>';
+    if (summary.status === 'available') return '<span class="badge badge-gray">Available</span>';
+    return '<span class="badge badge-gray">Locked</span>';
+  };
+
+  const moduleCards = summaries.map(summary => {
+    const action = summary.isReached && summary.dueCount > 0
+      ? `<button class="btn btn-primary" onclick="startCardSession('${summary.moduleId}')">Review ${summary.dueCount} due</button>`
+      : summary.isReached
+        ? `<span class="badge badge-gray">All caught up</span>`
+        : `<span class="badge badge-gray">Reach this module first</span>`;
+
+    const bodyText = summary.isReached
+      ? `${summary.totalCount} cards total · ${summary.reviewedCount} reviewed`
+      : `${summary.totalCount} cards waiting once you reach this module`;
+
+    return `
+      <div class="module-card${summary.isReached ? '' : ' locked'}" style="cursor:${summary.isReached && summary.dueCount > 0 ? 'pointer' : 'default'}" ${summary.isReached && summary.dueCount > 0 ? `onclick="startCardSession('${summary.moduleId}')"` : ''}>
+        <div class="module-header">
+          <span class="module-title">${summary.moduleId} — ${summary.title}</span>
+          ${statusBadge(summary)}
+        </div>
+        <div class="module-meta">${bodyText}</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:8px;flex-wrap:wrap">
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <span class="badge badge-gray">${summary.dueCount} due</span>
+            <span class="badge badge-gray">${summary.totalCount} total</span>
+          </div>
+          ${action}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  main.innerHTML = `
+    <h1>Flashcards</h1>
+    <div class="card">
+      <h2>Study by module</h2>
+      <p>Flashcards are organized by module so you can review the part of the course you are actually working through.</p>
+      <div class="flex gap-8 items-center mb-4" style="flex-wrap:wrap">
+        <span class="badge badge-green">${reachedSummaries.length} reached modules</span>
+        <span class="badge badge-amber">${reachedDue} due now</span>
+        <span class="badge badge-gray">${totalCards} cards total</span>
+      </div>
+    </div>
+    <div class="module-grid">${moduleCards}</div>
+  `;
+}
+
+function startCardSession(moduleId, scope = 'due') {
+  const summary = buildCardModuleSummaries({ course, cards, progress }).find(item => item.moduleId === moduleId);
+  const dueQueue = getReviewableCards({ course, cards, progress, moduleId });
+  const queue = scope === 'all'
+    ? (cards ?? []).filter(card => card.module === moduleId)
+    : dueQueue;
+  if (!summary || !queue.length) {
+    cardSession = { queue: [], current: 0, flipped: false, moduleId: null, label: '' };
+    renderCards();
+    return;
+  }
+
+  cardSession = {
+    queue: [...queue].sort(() => Math.random() - 0.5),
+    current: 0,
+    flipped: false,
+    moduleId,
+    label: `${summary.moduleId} — ${summary.title}${scope === 'all' ? ' · full deck' : ''}`,
+  };
   renderCard();
+}
+
+function resetCardSession() {
+  cardSession = { queue: [], current: 0, flipped: false, moduleId: null, label: '' };
+  renderCards();
+}
+
+function restartCardSession() {
+  if (!cardSession.moduleId) {
+    resetCardSession();
+    return;
+  }
+  startCardSession(cardSession.moduleId);
 }
 
 function renderCard() {
@@ -912,8 +1140,11 @@ function renderCard() {
       <h1>Session complete</h1>
       <div class="card" style="text-align:center;padding:2.5rem">
         <h2>Well done!</h2>
-        <p>Reviewed ${queue.length} cards.</p>
-        <button class="btn btn-primary mt-4" onclick="renderCards()">Review again</button>
+        <p>Reviewed ${queue.length} cards from ${cardSession.label || 'this module'}.</p>
+        <div class="btn-row" style="justify-content:center">
+          <button class="btn btn-primary mt-4" onclick="restartCardSession()">Review module again</button>
+          <button class="btn mt-4" onclick="resetCardSession()">Choose another module</button>
+        </div>
       </div>
     `;
     return;
@@ -922,7 +1153,8 @@ function renderCard() {
   const card = queue[current];
   main.innerHTML = `
     <h1>Flashcards</h1>
-    <div class="fc-progress">${current + 1} of ${queue.length} due today</div>
+    <p class="text-muted" style="margin-bottom:0.75rem">${cardSession.label}</p>
+    <div class="fc-progress">${current + 1} of ${queue.length} due in this module</div>
     <div class="flashcard-wrap">
       <div class="flashcard" id="fc" onclick="flipCard()">
         <div class="fc-face">
@@ -1414,7 +1646,9 @@ Object.assign(window, {
   checkModcheckAnswer, overrideModcheckScore, retakeModcheck,
   scoreModcheckQ, selectModcheckOption, submitModcheck, renderPlan, promptQuiz,
   submitQuiz, selectOption, renderCodeView, showChallenge,
-  runChallengeTests, submitChallenge, renderCards, flipCard,
+  renderApplicationsView, showPracticalApplication,
+  runChallengeTests, submitChallenge, renderCards, startCardSession,
+  resetCardSession, restartCardSession, flipCard,
   rateCard, selectPath, loadCards, loadQuiz, loadLessonFile,
 });
 

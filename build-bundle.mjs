@@ -182,6 +182,7 @@ for (const id of allLessonIds) {
 // ── Flashcards ──────────────────────────────────────────────────────────────
 const cardsData = readJSON(join(base, 'cards.json'));
 const cards = cardsData?.cards ?? [];
+const applicationsData = readJSON(join(base, 'applications.json')) ?? { applications: [] };
 
 // ── Adaptive learning artifacts (v3) ─────────────────────────────────────────
 const conceptsData  = readJSON(join(base, 'concepts.json'))       ?? { concepts: [] };
@@ -214,6 +215,22 @@ if (existsSync(assessmentsDir)) {
     const moduleId = qMatch?.[1] ?? file.replace('.json', '');
     quizzes[moduleId] = data;
   }
+}
+
+// ── Practical applications ─────────────────────────────────────────────────
+const practicalApplications = {};
+for (const application of applicationsData.applications ?? []) {
+  const moduleId = application.module;
+  if (!moduleId) continue;
+  if (!practicalApplications[moduleId]) {
+    const moduleTitle = course.modules.find(module => module.id === moduleId)?.title ?? moduleId;
+    practicalApplications[moduleId] = {
+      module_id: moduleId,
+      title: `Practical applications — ${moduleTitle}`,
+      applications: [],
+    };
+  }
+  practicalApplications[moduleId].applications.push(application);
 }
 
 // ── v3 Schema validation ─────────────────────────────────────────────────────
@@ -299,6 +316,29 @@ if (existsSync(assessmentsDir)) {
     }
   }
 
+  for (const application of applicationsData.applications ?? []) {
+    if (!application.id) { errs.push('application missing id'); continue; }
+    const moduleExists = course.modules.some(module => module.id === application.module);
+    if (!moduleExists)
+      errs.push(`${application.id}: module "${application.module}" does not exist`);
+    if (application.type && !['project', 'implementation', 'workflow', 'artifact'].includes(application.type))
+      errs.push(`${application.id}: type must be one of project, implementation, workflow, artifact`);
+    if (application.difficulty !== undefined && (typeof application.difficulty !== 'number' || application.difficulty < 1 || application.difficulty > 5))
+      errs.push(`${application.id}: difficulty must be a number between 1 and 5`);
+    if (application.estimated_minutes !== undefined && (typeof application.estimated_minutes !== 'number' || application.estimated_minutes < 1))
+      errs.push(`${application.id}: estimated_minutes must be a positive number`);
+    for (const lid of application.lesson_refs ?? []) {
+      if (!allLessonIds.has(lid))
+        errs.push(`${application.id}: lesson_ref "${lid}" does not exist`);
+    }
+    if (hasConceptGraph) {
+      for (const cid of application.concepts ?? []) {
+        if (!allConceptIds.has(cid))
+          errs.push(`${application.id}: concept "${cid}" not in concepts.json`);
+      }
+    }
+  }
+
   if (errs.length) {
     console.error('\n❌ Curriculum validation failed:');
     for (const e of errs) console.error(`  • ${e}`);
@@ -359,6 +399,26 @@ for (const [k, v] of Object.entries(codeChallenges)) {
   enrichedCodeChallenges[k] = { ...v, challenges: enrichChallenges(v.challenges) };
 }
 
+function enrichApplications(applications) {
+  return (applications ?? []).map(application => ({
+    ...application,
+    type: application.type ?? 'project',
+    difficulty: application.difficulty ?? 3,
+    estimated_minutes: application.estimated_minutes ?? 60,
+    lesson_refs: application.lesson_refs ?? [],
+    concepts: application.concepts ?? [...new Set((application.lesson_refs ?? []).flatMap(lid => lessonConceptMap[lid] ?? []))],
+    tools: application.tools ?? [],
+    steps: application.steps ?? [],
+    success_criteria: application.success_criteria ?? [],
+    extension_ideas: application.extension_ideas ?? [],
+  }));
+}
+
+const enrichedPracticalApplications = {};
+for (const [k, v] of Object.entries(practicalApplications)) {
+  enrichedPracticalApplications[k] = { ...v, applications: enrichApplications(v.applications) };
+}
+
 // ── Build bundle ─────────────────────────────────────────────────────────────
 const bundle = {
   version: '3.0',
@@ -371,6 +431,7 @@ const bundle = {
   quizzes: enrichedQuizzes,
   modchecks,
   codeChallenges: enrichedCodeChallenges,
+  practicalApplications: enrichedPracticalApplications,
   concepts:      conceptsData,
   adaptiveRules,
   learningPaths,
@@ -385,6 +446,7 @@ console.log(`  Cards:      ${enrichedCards.length}`);
 console.log(`  Quizzes:    ${Object.keys(enrichedQuizzes).length}`);
 console.log(`  Mod checks: ${Object.keys(modchecks).length}`);
 console.log(`  Code challenges: ${Object.keys(enrichedCodeChallenges).length}`);
+console.log(`  Practical application modules: ${Object.keys(enrichedPracticalApplications).length}`);
 console.log(`  Concepts:   ${conceptsData.concepts?.length ?? 0}`);
 console.log(`  Paths:      ${learningPaths.paths?.length ?? 0}`);
 
@@ -401,6 +463,7 @@ const entry = {
   total_lessons: allLessonIds.length,
   total_cards: enrichedCards.length,
   total_questions: Object.values(enrichedQuizzes).reduce((n, q) => n + (q.questions?.length ?? 0), 0),
+  total_practical_applications: Object.values(enrichedPracticalApplications).reduce((n, set) => n + (set.applications?.length ?? 0), 0),
   generated: course.generated ?? new Date().toISOString().slice(0, 10),
   adaptive:       (conceptsData.concepts?.length ?? 0) > 0,
   bundle_version: '3.0',

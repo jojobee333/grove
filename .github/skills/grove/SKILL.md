@@ -15,214 +15,300 @@ allowed-tools:
   - search
 ---
 
-# Grove - Curriculum generation from Strata
+# Grove — Curriculum generation from Strata
 
-## Purpose
+Grove reads Strata research artifacts and produces a complete, structured
+curriculum that can be studied with or without an LLM.
 
-Grove converts a completed Strata research project into a study-ready curriculum:
-course map, lessons, flashcards, quizzes, retention checks, adaptive artifacts,
-and a bundle.
-
-Command shape:
-
-```text
+```
 /grove [topic-slug]
+
+  Strata artifacts  →  course map  →  lessons  →  flashcards  →  assessments
+  (your research)      (outline)      (content)    (recall)       (testing)
 ```
 
-Use this skill when the user wants to turn a Strata topic into a course, lesson
-sequence, flashcard deck, quiz set, or full Grove bundle.
+## Step 1 — Validate Strata input
 
-## Non-Negotiable Rules
+Look for the Strata project at `research/[topic-slug]/`.
 
-- Only proceed when `research/[topic-slug]/` contains non-empty `03-synthesis/claims.md`, `03-synthesis/narrative.md`, `02-analysis/themes.md`, and `state.json` with `phase: complete`.
-- If the Strata project is incomplete, stop and tell the user exactly which files must be finished first.
-- Ask the three learner-profile questions together before generating any curriculum artifact.
-- Save learner answers to `curriculum/[topic-slug]/learner.json` before course generation begins.
-- Treat `time-per-session` as a session budget cap, not a target duration for every lesson; multiple short lessons can fit in one session.
-- Generate `curriculum/[topic-slug]/course.json` before lessons, flashcards, quizzes, retention checks, adaptive artifacts, or bundling.
-- After the course map is created, show the module list and wait for user confirmation before lesson generation.
-- Generate lessons before flashcards or quizzes.
-- Mark independent phases explicitly: Step 5 and Step 6 are [PARALLEL] once lessons exist; Step 7a, Step 7b, and Step 7c are [PARALLEL] after Step 7d confirms the v3 lesson fields.
-- Generate retention checks only after quizzes exist.
-- Use [references/curriculum-artifact-contract-reference.md](references/curriculum-artifact-contract-reference.md) as the canonical file-contract reference.
-- Use [references/modcheck-contract-reference.md](references/modcheck-contract-reference.md) as the canonical retention-check contract.
-- If any required v3 lesson fields are missing from `course.json`, run `node scripts/migrate-course-v2-to-v3.mjs [topic-slug]` before adaptive artifact generation or bundling.
-- Do not mark the project complete until all required curriculum artifacts exist and `bundle.json` has been generated.
+Required files (all must exist and be non-empty):
+- `03-synthesis/claims.md` — the conclusions to teach
+- `03-synthesis/narrative.md` — the explanatory prose
+- `02-analysis/themes.md` — the module structure
+- `state.json` — phase must be `complete`
 
-## Workflow
+If any are missing or incomplete: tell the user which files need to be finished
+in Strata first. Do not proceed with incomplete research.
 
-### Phase 1 - Resolve and validate source
+Check for an existing Grove project at `curriculum/[topic-slug]/state.json`:
+- **Found, complete** → show summary, ask if they want to regenerate anything
+- **Found, in-progress** → resume from last completed step
+- **Not found** → new project, proceed to Step 2
 
-**Entry:** The caller provides a `topic-slug`.
-**Exit:** The Strata source is validated and the Grove project state is classified as new, in-progress, or complete.
+## Step 2 — Ask learner profile questions
 
-1. Look for the Strata project at `research/[topic-slug]/`.
-2. Confirm the required source files listed in the Non-Negotiable Rules exist and are non-empty.
-3. If any required file is missing or incomplete, stop and report the exact blockers.
-4. Check `curriculum/[topic-slug]/state.json`.
-5. Branch explicitly:
-   - Found and complete: show the current summary and ask whether to regenerate.
-   - Found and in-progress: resume from the last completed step.
-   - Not found: start a new Grove project.
+Before generating anything, ask these three questions together:
 
-### Phase 2 - Capture learner profile
+1. **Goal**: What do you want to be able to do after completing this course?
+   (understand broadly / apply practically / teach others / pass an exam)
 
-**Entry:** Source validation passed and the project is either new, resuming, or approved for regeneration.
-**Exit:** `curriculum/[topic-slug]/learner.json` exists with learner goal, background, and time-per-session.
+2. **Background**: How familiar are you with this topic already?
+   (complete beginner / some exposure / intermediate / deep expert in adjacent area)
 
-Ask these questions together:
+3. **Time**: How much time can you commit per session?
+   (15 min / 30 min / 1 hour / flexible)
 
-1. Goal: What should the learner be able to do after finishing the course? (`understand broadly` / `apply practically` / `teach others` / `pass an exam`)
-2. Background: How familiar is the learner already? (`complete beginner` / `some exposure` / `intermediate` / `deep expert in adjacent area`)
-3. Time: How much time is available per session? (`15 min` / `30 min` / `1 hour` / `flexible`)
+Store answers in `curriculum/[topic-slug]/learner.json`. These drive:
+- Lesson depth and length
+- Flashcard density
+- Assessment difficulty
+- Pacing in the learning plan
 
-Store the answers in `curriculum/[topic-slug]/learner.json`. These answers drive lesson depth, flashcard density, assessment difficulty, and pacing.
-Use the time answer to decide how many lessons fit in a session and how the learning plan should be packed, not to inflate individual lesson estimates.
+## Step 3 — Generate course map (invoke /grove-map)
 
-### Phase 3 - Generate course map
+Load `.github/skills/grove-map/SKILL.md` and follow its instructions.
 
-**Entry:** Learner profile exists.
-**Exit:** `curriculum/[topic-slug]/course.json` exists and the user has approved the module list.
+This produces `curriculum/[topic-slug]/course.json` — the master outline.
 
-1. Load `.github/skills/grove-map/SKILL.md` and follow it.
-2. Generate `curriculum/[topic-slug]/course.json`.
-3. Tell the user: `Course map created - N modules, N lessons. Review before continuing?`
-4. Show the module list.
-5. Wait for confirmation before moving to Phase 4.
+Tell the user: "Course map created — N modules, N lessons. Review before continuing?"
+Show the module list and wait for confirmation.
 
-### Phase 4 - Generate lessons
+## Step 4 — Generate lessons (invoke /grove-lessons)
 
-**Entry:** The course map has been generated and approved.
-**Exit:** Lesson markdown files exist for each module, realistic lesson timing remains aligned with the prose, and checkpoint state has been updated after each module.
+Load `.github/skills/grove-lessons/SKILL.md` and follow its instructions.
 
-1. Load `.github/skills/grove-lessons/SKILL.md` and follow it.
-2. Generate lessons one module at a time.
-3. If lesson drafts materially differ from the `course.json` timing assumptions, reconcile the estimates before continuing.
-4. After each module, checkpoint state before continuing.
+Generate lessons one module at a time. After each module, checkpoint state.
 
-### Phase 5 - Generate recall and quiz artifacts
+## Step 5 — Generate flashcards (invoke /grove-cards)
 
-**Entry:** Lessons exist for the course.
-**Exit:** `cards.json`, quiz files, and modcheck files exist for every module.
+Load `.github/skills/grove-cards/SKILL.md` and follow its instructions.
 
-1. **[PARALLEL] Step 5 - Generate flashcards**
-   - Load `.github/skills/grove-cards/SKILL.md` and follow it.
-   - Write `curriculum/[topic-slug]/cards.json`.
-2. **[PARALLEL] Step 6 - Generate assessments**
-   - Load `.github/skills/grove-assess/SKILL.md` and follow it.
-   - Write one quiz per module under `curriculum/[topic-slug]/assessments/`.
-3. Step 6b - Generate module retention checks after Step 6 completes.
-   - Use [references/modcheck-contract-reference.md](references/modcheck-contract-reference.md).
-   - **[PARALLEL]** Generate one `modcheck-[MID].json` file per module after its quiz is available.
+Produces `curriculum/[topic-slug]/cards.json`.
 
-### Phase 6 - Generate adaptive artifacts and bundle
+## Step 6 — Generate assessments (invoke /grove-assess)
 
-**Entry:** Lessons, flashcards, quizzes, and retention checks exist.
-**Exit:** Adaptive v3 files exist, the bundle has been built, and `curriculum/index.json` has been updated.
+Load `.github/skills/grove-assess/SKILL.md` and follow its instructions.
 
-1. Step 7d - Confirm `course.json` has `prerequisites`, `teaches_concepts`, `reinforces_concepts`, `mastery_threshold`, `difficulty`, `unlock_rule`, and `review_after_days` for every lesson.
-2. If any field is missing, run:
+Produces `curriculum/[topic-slug]/assessments/` with one quiz per module.
 
-```text
-node scripts/migrate-course-v2-to-v3.mjs [topic-slug]
+### Step 6b — Generate module retention checks
+
+After generating quizzes, create a short retention check for every module.
+Write one file per module: `curriculum/[topic-slug]/assessments/modcheck-[MID].json`.
+
+Each file must follow this schema:
+
+```json
+{
+  "module": "M01",
+  "title": "[Module Title] — Quick Check",
+  "questions": [
+    { "id": "MC01-1", "q": "...", "a": "..." },
+    { "id": "MC01-2", "q": "...", "a": "..." },
+    { "id": "MC01-3", "q": "...", "a": "..." }
+  ]
+}
 ```
 
-3. **[PARALLEL] Step 7a - Generate `concepts.json` if missing.**
-   - Derive one concept per distinct `teaches_concepts` value across lessons.
-   - Use `schemas/concepts.schema.json` for structure.
-4. **[PARALLEL] Step 7b - Generate `learning-paths.json` if missing.**
-   - Always include `default-path` with all lessons.
-   - Add 1-3 additional paths aligned to the learner goal.
-5. **[PARALLEL] Step 7c - Generate `adaptive-rules.json` if missing.**
-   - Include progression, review, mastery, and remediation defaults.
-6. Run the bundler:
+Rules:
+- 3–5 questions per module — no more, no less
+- Questions must be recall-level (not recognition): no multiple-choice, just open-ended prompts
+- Answers should be 1–3 sentences — concise, no padding
+- IDs use the pattern `MC[module-num]-[question-num]`, e.g. `MC01-2`
+- Questions should target the module’s stated learning objectives from `course.json`
+- Do NOT duplicate questions already present in the module’s `quiz-*.json`
 
-```text
+## Step 7 — Build the bundle
+
+After all content is generated, run the bundler to produce a single v3 bundle:
+
+```
 node build-bundle.mjs [topic-slug]
 ```
 
-7. Treat [references/curriculum-artifact-contract-reference.md](references/curriculum-artifact-contract-reference.md) as the canonical file contract for the bundle inputs and outputs.
+The bundler reads `course.json`, all lesson `.md` files, `cards.json`,
+`assessments/`, and the three v3 adaptive artifacts (if present), then writes
+`curriculum/[topic-slug]/bundle.json`.
 
-### Phase 7 - Finalize and hand off
+The v3 bundle shape:
 
-**Entry:** Bundle generation succeeded.
-**Exit:** `state.json` is complete and the user receives a completion summary plus study handoff.
-
-1. Update `curriculum/[topic-slug]/state.json` to `phase: complete`.
-2. Return a completion summary containing:
-   - Topic and source project path.
-   - Learner profile summary.
-   - Counts for modules, lessons, flashcards, quizzes, modchecks, concepts, and learning paths.
-   - Key output files from the curriculum artifact contract reference.
-3. End with the study handoff:
-
-```text
-1. cd grove/
-2. npx serve .
-3. Open http://localhost:3000
-4. Click "Load bundle.json" and select curriculum/[slug]/bundle.json
+```json
+{
+  "version": "3.0",
+  "slug":    "[topic-slug]",
+  "bundled": "<ISO timestamp>",
+  "course":  { /* course.json contents */ },
+  "learner": { /* learner.json contents */ },
+  "lessons": {
+    "L01": "# full markdown content of L01",
+    "L02": "# full markdown content of L02"
+  },
+  "cards": [ /* enriched cards (concepts, cognitive_level, weight, reviewable added) */ ],
+  "quizzes": {
+    "M01": { /* quiz-M01.json with enriched questions */ }
+  },
+  "modchecks": {
+    "M01": { /* modcheck-M01.json */ }
+  },
+  "concepts":      { /* concepts.json contents  — empty shell if file missing */ },
+  "adaptiveRules": { /* adaptive-rules.json      — empty object if file missing */ },
+  "learningPaths": { /* learning-paths.json      — {paths:[]} if file missing */ }
+}
 ```
 
-## Output Contract
+Also update (or create) `curriculum/index.json` — the bundler handles this automatically.
 
-Required deliverables:
+**If the v3 adaptive artifacts are missing**, generate them before running the bundler:
 
-1. `learner.json`, `course.json`, lesson markdown files, `cards.json`, quiz files, and modcheck files under `curriculum/[topic-slug]/`.
-2. Missing adaptive v3 files before bundling: `concepts.json`, `learning-paths.json`, and `adaptive-rules.json`.
-3. `bundle.json` and an updated `curriculum/index.json`.
-4. A completion summary with counts and study instructions.
+### Step 7a — Generate `concepts.json`
 
-The skill is complete when all of the following are true:
+Create `curriculum/[topic-slug]/concepts.json`:
 
-- The Strata source project passed validation.
-- `learner.json` exists before course generation.
-- `course.json` was generated before lesson generation.
-- Lessons exist before flashcards and assessments begin.
-- Each module has both a quiz file and a modcheck file.
-- Every lesson in `course.json` has the required v3 metadata fields.
-- The bundle has been generated successfully.
-- `curriculum/[topic-slug]/state.json` is marked complete.
-- The user received the completion summary and study handoff.
+```json
+{
+  "slug": "[topic-slug]",
+  "concepts": [
+    {
+      "id": "concept-id",
+      "title": "Human-readable title",
+      "depends_on": ["other-concept-id"],
+      "introduced_in": ["L01"],
+      "reinforced_in": ["L03", "L05"],
+      "assessment_sources": ["M01"]
+    }
+  ]
+}
+```
 
-## Failure Mode Handling
+Derive one concept per distinct `teaches_concepts` entry across all lessons.
+Use the `concepts.schema.json` in `schemas/` for reference.
 
-| Failure | Prevention / Recovery |
-| --- | --- |
-| Required Strata source files are missing or incomplete | Stop immediately and tell the user exactly which files in `research/[topic-slug]/` must be completed. |
-| Existing Grove project is already complete | Show the current summary and ask whether to regenerate before writing new artifacts. |
-| Existing Grove project is in progress | Resume from the last completed step instead of restarting from scratch. |
-| Learner profile was not captured before generation | Ask the three learner questions together, write `learner.json`, then continue. |
-| `course.json` is missing required v3 lesson fields | Run `node scripts/migrate-course-v2-to-v3.mjs [topic-slug]` before adaptive generation or bundling. |
-| Quizzes are missing when modchecks are about to be generated | Finish Step 6 first, then generate modchecks using the modcheck contract reference. |
-| Bundle generation fails or required artifacts are missing | Do not mark the project complete; repair the missing artifact set from the curriculum artifact contract reference, then rerun the bundler. |
+### Step 7b — Generate `learning-paths.json`
 
-## Anti-Patterns
+Create `curriculum/[topic-slug]/learning-paths.json`:
 
-- Starting curriculum generation from incomplete Strata research.
-- Asking learner questions one at a time across multiple turns when all three can be collected together.
-- Generating lessons before the course map is approved.
-- Running flashcards, quizzes, or bundling before lesson generation is complete.
-- Generating modchecks before quizzes exist.
-- Marking the project complete before `bundle.json` is present.
-- Repeating full file schemas inline when the contract already exists in the reference docs.
+```json
+{
+  "slug": "[topic-slug]",
+  "generated": "YYYY-MM-DD",
+  "paths": [
+    {
+      "id": "default-path",
+      "title": "Complete Course",
+      "description": "All lessons in recommended order.",
+      "lessons": ["L01", "L02", "..."],
+      "focus_areas": []
+    }
+  ]
+}
+```
 
-## Examples
+Always include a `default-path` with all lessons. Add 1–3 tailored paths based on
+the learner's stated goal (e.g. fast-track, teach-others, security-focus).
 
-### Example 1 - New course from a completed Strata project
+### Step 7c — Generate `adaptive-rules.json`
 
-Input: `/grove ai-regulation`
+Create `curriculum/[topic-slug]/adaptive-rules.json`:
 
-1. Validate `research/ai-regulation/`.
-2. Ask the learner-profile questions and save `learner.json`.
-3. Run Grove Map and wait for approval on the module list.
-4. Generate lessons.
-5. Run flashcards and quizzes in parallel, then generate one modcheck per module.
-6. Repair missing v3 lesson fields if needed, generate missing adaptive files, bundle, and mark the project complete.
+```json
+{
+  "slug": "[topic-slug]",
+  "progression_rules": {
+    "unlock_threshold": 0.75,
+    "remediation_trigger": { "consecutive_failures": 2 }
+  },
+  "review_policy": {
+    "intervals_days": [1, 3, 7, 14],
+    "max_daily_reviews": 20,
+    "decay_after_days": 21
+  },
+  "mastery_defaults": {
+    "core": 0.80,
+    "applied": 0.80,
+    "debate": 0.75,
+    "gap": 0.75
+  },
+  "remediation_policy": {
+    "suggest_lessons":        true,
+    "suggest_flashcard_review": true
+  }
+}
+```
 
-### Example 2 - Resume an interrupted Grove run
+### Step 7d — Ensure course.json has v3 lesson fields
 
-Input: `/grove resume`
+Every lesson in `course.json` must have:
+`prerequisites`, `teaches_concepts`, `reinforces_concepts`, `mastery_threshold`,
+`difficulty` (1–5), `unlock_rule`, `review_after_days`.
 
-1. Detect an in-progress `curriculum/[topic-slug]/state.json`.
-2. Resume from the last completed phase instead of restarting.
-3. Preserve completed outputs, generate the missing artifacts, rerun the bundler if needed, and return the completion summary.
+If any are missing, run the migration script first:
+```
+node scripts/migrate-course-v2-to-v3.mjs [topic-slug]
+```
+
+## Step 8 — Final output
+
+Update `curriculum/[topic-slug]/state.json` to `phase: complete`.
+
+Show the completion summary:
+
+```
+Grove curriculum complete
+────────────────────────────────────────
+Topic:       [topic]
+Source:      Strata project research/[slug]/
+Learner:     [goal] · [background] · [time/session]
+
+Curriculum:
+  Modules:     N
+  Lessons:     N (avg N min each)
+  Flashcards:  N cards
+  Assessments: N quizzes (N questions total)
+  Mod checks:  N retention checks (3–5 questions each)
+  Concepts:    N adaptive concepts
+  Paths:       N learning paths
+
+Files:
+  → curriculum/[slug]/course.json
+  → curriculum/[slug]/lessons/L01.md … L0N.md
+  → curriculum/[slug]/cards.json
+  → curriculum/[slug]/assessments/quiz-*.json
+  → curriculum/[slug]/assessments/modcheck-*.json
+  → curriculum/[slug]/learner.json
+  → curriculum/[slug]/concepts.json       ← adaptive concept graph
+  → curriculum/[slug]/learning-paths.json ← learner paths
+  → curriculum/[slug]/adaptive-rules.json ← progression rules
+  → curriculum/[slug]/bundle.json         ← single-file v3 app bundle
+  → curriculum/index.json                 ← course registry
+
+To study:
+  1. cd grove/
+  2. npx serve .
+  3. Open http://localhost:3000
+  4. Click "Load bundle.json" and select curriculum/[slug]/bundle.json
+────────────────────────────────────────
+```
+
+## Curriculum folder structure
+
+```
+curriculum/
+├── index.json              ← course registry (all courses)
+└── [topic-slug]/
+    ├── state.json          ← Grove session state
+    ├── learner.json        ← learner profile
+    ├── course.json         ← master outline + learning plan (v3 lesson fields)
+    ├── bundle.json         ← single-file v3 bundle for the app
+    ├── concepts.json       ← adaptive concept graph (v3)
+    ├── learning-paths.json ← learner path definitions (v3)
+    ├── adaptive-rules.json ← progression + review rules (v3)
+    ├── lessons/
+    │   ├── L01-[slug].md   ← source markdown (also embedded in bundle)
+    │   └── L0N-[slug].md
+    ├── cards.json          ← full flashcard deck (also embedded in bundle)
+    └── assessments/
+        ├── quiz-M01.json       ← one full quiz per module (also embedded in bundle)
+        ├── quiz-M0N.json
+        ├── modcheck-M01.json   ← 3–5 short retention Qs per module
+        └── modcheck-M0N.json
+```

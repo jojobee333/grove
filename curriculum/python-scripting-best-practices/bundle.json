@@ -1,7 +1,7 @@
 {
   "version": "3.0",
   "slug": "python-scripting-best-practices",
-  "bundled": "2026-04-15T01:12:14.762Z",
+  "bundled": "2026-04-16T23:23:41.926Z",
   "course": {
     "topic": "Python Scripting Best Practices",
     "slug": "python-scripting-best-practices",
@@ -4400,6 +4400,7 @@
       ]
     }
   },
+  "practicalApplications": {},
   "concepts": {
     "slug": "python-scripting-best-practices",
     "generated": "2026-04-13",

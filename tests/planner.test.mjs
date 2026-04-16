@@ -61,6 +61,9 @@ const CARDS = [
   { id: 'C01', front: 'Q1', back: 'A1', module: 'M01', lesson: 'L01', type: 'definition',
     concepts: ['alpha'], cognitive_level: 'recall', weight: 0.5, reviewable: true,
     sr: { ease: 2.5, interval: 0, reviews: 0, lapses: 0, next_review: null } },
+  { id: 'C02', front: 'Q2', back: 'A2', module: 'M02', lesson: 'L03', type: 'definition',
+    concepts: ['gamma'], cognitive_level: 'recall', weight: 0.5, reviewable: true,
+    sr: { ease: 2.5, interval: 0, reviews: 0, lapses: 0, next_review: null } },
 ];
 
 const EMPTY_PROGRESS = { lessons: {}, cards: {}, quizzes: {}, conceptMastery: {} };
@@ -177,7 +180,10 @@ test('review queue: card with past next_review is due', () => {
   const pastDate = '2000-01-01';
   const progressWithCard = {
     ...EMPTY_PROGRESS,
-    cards: { C01: { ease: 2.5, interval: 7, reviews: 1, lapses: 0, next_review: pastDate } }
+    cards: {
+      C01: { ease: 2.5, interval: 7, reviews: 1, lapses: 0, next_review: pastDate },
+      C02: { ease: 2.5, interval: 7, reviews: 1, lapses: 0, next_review: pastDate }
+    }
   };
   const { reviewQueue } = computeNextSteps({
     course: COURSE, cards: CARDS, concepts: CONCEPTS,
@@ -185,6 +191,7 @@ test('review queue: card with past next_review is due', () => {
     progress: progressWithCard
   });
   assert.ok(reviewQueue.some(c => c.id === 'C01'), 'C01 should be due');
+  assert.ok(!reviewQueue.some(c => c.id === 'C02'), 'C02 should not be due before M02 is reached');
 });
 
 test('review queue: card with future next_review not due', () => {

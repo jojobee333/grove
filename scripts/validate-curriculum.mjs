@@ -50,6 +50,7 @@ const cardsData     = readJSON(join(base, 'cards.json'));
 const conceptsData  = readJSON(join(base, 'concepts.json'));
 const adaptiveRules = readJSON(join(base, 'adaptive-rules.json'));
 const learningPaths = readJSON(join(base, 'learning-paths.json'));
+const applicationsData = readJSON(join(base, 'applications.json'));
 
 // ── Build lookup sets ───────────────────────────────────────────────────────
 const allLessons = {};
@@ -213,6 +214,38 @@ if (existsSync(assessmentsDir)) {
   } else {
     ok(`${totalQuestions} questions across ${files.length} assessment files checked`);
   }
+}
+
+// ── Validate applications.json ─────────────────────────────────────────────
+if (applicationsData) {
+  console.log('\napplications.json');
+  const moduleIds = new Set((course.modules ?? []).map(module => module.id));
+  for (const application of applicationsData.applications ?? []) {
+    if (!application.id) { err('application missing id'); continue; }
+    if (!moduleIds.has(application.module))
+      err(`${application.id}: module "${application.module}" does not exist`);
+    if (!application.title) err(`${application.id}: title missing`);
+    if (!application.summary) err(`${application.id}: summary missing`);
+    if (!application.prompt) err(`${application.id}: prompt missing`);
+    if (!application.deliverable) err(`${application.id}: deliverable missing`);
+    if (application.type && !['project', 'implementation', 'workflow', 'artifact'].includes(application.type))
+      err(`${application.id}: invalid type`);
+    if (application.difficulty !== undefined && (typeof application.difficulty !== 'number' || application.difficulty < 1 || application.difficulty > 5))
+      err(`${application.id}: difficulty must be between 1 and 5`);
+    if (application.estimated_minutes !== undefined && (typeof application.estimated_minutes !== 'number' || application.estimated_minutes < 1))
+      err(`${application.id}: estimated_minutes must be positive`);
+    for (const lid of application.lesson_refs ?? []) {
+      if (!allLessons[lid])
+        err(`${application.id}: lesson_ref "${lid}" does not exist`);
+    }
+    if (hasConceptGraph) {
+      for (const cid of application.concepts ?? []) {
+        if (!allConceptIds.has(cid))
+          err(`${application.id}: concept "${cid}" not found in concepts.json`);
+      }
+    }
+  }
+  ok(`${applicationsData.applications?.length ?? 0} practical applications checked`);
 }
 
 // ── Validate learning-paths.json ────────────────────────────────────────────

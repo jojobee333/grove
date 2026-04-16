@@ -1,7 +1,7 @@
 {
   "version": "3.0",
   "slug": "test-driven-development-in-python",
-  "bundled": "2026-04-16T12:02:22.105Z",
+  "bundled": "2026-04-16T23:23:37.751Z",
   "course": {
     "topic": "Test-Driven Development in Python",
     "slug": "test-driven-development-in-python",
@@ -3280,6 +3280,341 @@
     }
   },
   "codeChallenges": {},
+  "practicalApplications": {
+    "M01": {
+      "module_id": "M01",
+      "title": "Practical applications — Drive Design with Red-Green-Refactor",
+      "applications": [
+        {
+          "id": "APP-M01-01",
+          "module": "M01",
+          "type": "project",
+          "title": "Build a Tiny String Calculator Kata",
+          "summary": "Turn red-green-refactor into a concrete habit by shipping a tiny calculator that grows through deliberately small tests.",
+          "prompt": "Create a small Python package called `string_calculator` that starts with one passing case, then grows through comma-separated inputs, newlines, and invalid-input behavior one failing test at a time.",
+          "deliverable": "A runnable Python project with a focused README, a passing test suite, and a short log explaining each red-green-refactor step you took.",
+          "estimated_minutes": 75,
+          "difficulty": 2,
+          "lesson_refs": [
+            "L01",
+            "L02"
+          ],
+          "tools": [
+            "python",
+            "pytest"
+          ],
+          "steps": [
+            "Start with one failing test for a single number input.",
+            "Grow the parser one behavior at a time instead of designing the whole interface upfront.",
+            "After each green test, note whether refactoring improved the next likely step.",
+            "Write a brief README section describing how the design emerged from the test sequence."
+          ],
+          "success_criteria": [
+            "The project history or notes show multiple small TDD cycles rather than one large implementation drop.",
+            "The README explains at least one refactor that made the next test easier to express.",
+            "The suite stays readable and fast enough to rerun continuously."
+          ],
+          "extension_ideas": [
+            "Add custom delimiter support without rewriting earlier tests.",
+            "Record a short screencast narrating your red-green-refactor decisions."
+          ],
+          "concepts": [
+            "red-green-refactor",
+            "test-list",
+            "behavior-first-design",
+            "micro-cycle-judgment"
+          ]
+        }
+      ]
+    },
+    "M02": {
+      "module_id": "M02",
+      "title": "Practical applications — Control State, Isolation, and Cleanup",
+      "applications": [
+        {
+          "id": "APP-M02-01",
+          "module": "M02",
+          "type": "workflow",
+          "title": "Harden a File-Backed Test Harness",
+          "summary": "Practice isolation by building a tiny app that writes files and proving your tests leave no residue behind.",
+          "prompt": "Build a command-line note saver that writes and reads JSON notes from disk, then design its tests so every case controls setup and teardown explicitly.",
+          "deliverable": "A small CLI project plus a test harness that uses temp directories or fixtures to guarantee clean state across runs.",
+          "estimated_minutes": 60,
+          "difficulty": 3,
+          "lesson_refs": [
+            "L03",
+            "L04"
+          ],
+          "tools": [
+            "python",
+            "pytest",
+            "tempfile"
+          ],
+          "steps": [
+            "Write one end-to-end test that saves and reloads a note using an isolated temp path.",
+            "Add failure-path tests for malformed files or missing storage.",
+            "Make cleanup deterministic so rerunning the suite in any order still passes.",
+            "Document which parts you kept realistic and which parts you isolated."
+          ],
+          "success_criteria": [
+            "Tests never depend on manually cleaned folders or pre-existing files.",
+            "Async or persistence boundaries are handled intentionally rather than implicitly.",
+            "The suite can run repeatedly without flaky state leakage."
+          ],
+          "extension_ideas": [
+            "Swap disk storage for SQLite behind a seam and keep the tests trustworthy.",
+            "Add an async save path and document how you controlled event-loop scope."
+          ],
+          "concepts": [
+            "fixture-scope",
+            "deterministic-cleanup",
+            "test-isolation",
+            "async-loop-scope",
+            "transactional-test-isolation"
+          ]
+        }
+      ]
+    },
+    "M03": {
+      "module_id": "M03",
+      "title": "Practical applications — Choose the Right Python Testing Surface",
+      "applications": [
+        {
+          "id": "APP-M03-01",
+          "module": "M03",
+          "type": "project",
+          "title": "Migrate a Legacy unittest Slice to pytest",
+          "summary": "Use the framework tradeoffs in a practical migration rather than arguing about them abstractly.",
+          "prompt": "Take a small `unittest`-style module or a toy legacy test file and migrate only the parts where pytest materially improves readability, fixtures, or parametrization.",
+          "deliverable": "A before-and-after repository slice showing what stayed in unittest, what moved to pytest, and why.",
+          "estimated_minutes": 70,
+          "difficulty": 3,
+          "lesson_refs": [
+            "L05",
+            "L06"
+          ],
+          "tools": [
+            "python",
+            "pytest",
+            "unittest"
+          ],
+          "steps": [
+            "Run the legacy tests under pytest first without rewriting them.",
+            "Identify one repeated pattern where fixtures or parametrization reduce friction.",
+            "Migrate only that slice and compare clarity, not just syntax.",
+            "Write a migration note explaining what remained in place and why."
+          ],
+          "success_criteria": [
+            "The migration is pressure-driven rather than total-rewrite theater.",
+            "You can point to one concrete ergonomics gain from the pytest-native slice.",
+            "Compatibility constraints are documented honestly."
+          ],
+          "extension_ideas": [
+            "Add a parametrized edge-case matrix for one behavior.",
+            "Turn your migration note into an internal engineering guideline."
+          ],
+          "concepts": [
+            "pytest-default",
+            "parametrization",
+            "test-layout",
+            "unittest-baseline",
+            "migration-strategy"
+          ]
+        }
+      ]
+    },
+    "M04": {
+      "module_id": "M04",
+      "title": "Practical applications — Design Seams the Tests Can Trust",
+      "applications": [
+        {
+          "id": "APP-M04-01",
+          "module": "M04",
+          "type": "project",
+          "title": "Wrap a Third-Party API Behind an Owned Seam",
+          "summary": "Design a small project around an adapter so your tests target behavior instead of vendor call shapes.",
+          "prompt": "Build a tiny weather, email, or currency-conversion service wrapper with an owned interface and tests that exercise your business logic without coupling directly to the external client.",
+          "deliverable": "A small service module with an adapter, business logic tests, and a note showing what contract the seam protects.",
+          "estimated_minutes": 90,
+          "difficulty": 4,
+          "lesson_refs": [
+            "L07",
+            "L08"
+          ],
+          "tools": [
+            "python",
+            "pytest",
+            "requests or a stub client"
+          ],
+          "steps": [
+            "Define the business-facing interface before choosing how the external call is made.",
+            "Write tests against the owned seam rather than the vendor client API.",
+            "Keep one realistic boundary test so you do not lose external behavior entirely.",
+            "Document how the seam would let you replace the provider later."
+          ],
+          "success_criteria": [
+            "Business rules are testable without importing third-party response shapes everywhere.",
+            "At least one realistic boundary check remains in the suite.",
+            "The seam makes provider replacement or persistence changes cheaper."
+          ],
+          "extension_ideas": [
+            "Add retry or fallback behavior behind the same seam.",
+            "Introduce a second adapter implementation and keep the calling code unchanged."
+          ],
+          "concepts": [
+            "owned-seams",
+            "adapter-pattern",
+            "dependency-injection",
+            "boundary-targeting",
+            "service-adapter",
+            "persistence-boundary"
+          ]
+        }
+      ]
+    },
+    "M05": {
+      "module_id": "M05",
+      "title": "Practical applications — Use Mocks, Fakes, and Contracts Intentionally",
+      "applications": [
+        {
+          "id": "APP-M05-01",
+          "module": "M05",
+          "type": "implementation",
+          "title": "Replace Brittle Deep Mocks with a Verified Fake",
+          "summary": "Build a more trustworthy collaborator strategy by comparing a strict mock approach against a fake with real behavior.",
+          "prompt": "Create a small notification or payment workflow where you first test with strict mocks, then replace the deeper infrastructure simulation with a verified fake and compare the results.",
+          "deliverable": "A repository slice containing both approaches, plus a short comparison of confidence, brittleness, and maintenance cost.",
+          "estimated_minutes": 80,
+          "difficulty": 4,
+          "lesson_refs": [
+            "L09",
+            "L10"
+          ],
+          "tools": [
+            "python",
+            "pytest",
+            "unittest.mock"
+          ],
+          "steps": [
+            "Start with strict mocks around an owned collaborator.",
+            "Notice where the mocks begin to model infrastructure rather than business intent.",
+            "Introduce a verified fake or contract-style check for the deeper boundary.",
+            "Write up which parts stayed mocked and which parts moved to higher-fidelity verification."
+          ],
+          "success_criteria": [
+            "Mocks remain narrow and intentional rather than sprawling across system boundaries.",
+            "The verified fake or contract check demonstrates behavior a deep mock could miss.",
+            "You can explain the tradeoff without resorting to blanket anti-mock slogans."
+          ],
+          "extension_ideas": [
+            "Add autospec and patch-location mistakes intentionally, then document the failure modes.",
+            "Turn the comparison into a team decision rubric."
+          ],
+          "concepts": [
+            "strict-mocks",
+            "patch-location",
+            "autospec",
+            "verified-fakes",
+            "consumer-provider-contracts",
+            "contract-ambiguity"
+          ]
+        }
+      ]
+    },
+    "M06": {
+      "module_id": "M06",
+      "title": "Practical applications — Broaden Specification Beyond Single Examples",
+      "applications": [
+        {
+          "id": "APP-M06-01",
+          "module": "M06",
+          "type": "project",
+          "title": "Broaden a Real Parser with Parametrized and Property Tests",
+          "summary": "Apply advanced specification techniques by hardening a small but realistic parser or validator.",
+          "prompt": "Choose a small parser, formatter, or validator function and expand its coverage with parametrized examples plus at least one property-based invariant.",
+          "deliverable": "A mini project where one real behavior is covered by both concrete case tables and generated invariants, with notes on what each style revealed.",
+          "estimated_minutes": 85,
+          "difficulty": 4,
+          "lesson_refs": [
+            "L11",
+            "L12"
+          ],
+          "tools": [
+            "python",
+            "pytest",
+            "hypothesis or equivalent property testing tool"
+          ],
+          "steps": [
+            "Start from a function that already has a few concrete example tests.",
+            "Refactor repeated cases into parametrized tests.",
+            "Add at least one generated property that expresses an invariant or round-trip behavior.",
+            "Record one surprising falsifying example and what it taught you."
+          ],
+          "success_criteria": [
+            "Concrete examples and generated tests complement each other rather than duplicate effort.",
+            "A property expresses a real invariant, not just random inputs for spectacle.",
+            "The test suite still communicates intent clearly."
+          ],
+          "extension_ideas": [
+            "Add an async or persistence boundary and decide which broader technique still fits.",
+            "Publish the parser as a small utility package."
+          ],
+          "concepts": [
+            "broad-specification",
+            "property-based-testing",
+            "falsifying-example",
+            "boundary-coverage-strategy"
+          ]
+        }
+      ]
+    },
+    "M07": {
+      "module_id": "M07",
+      "title": "Practical applications — Adopt TDD Without Overclaiming It",
+      "applications": [
+        {
+          "id": "APP-M07-01",
+          "module": "M07",
+          "type": "artifact",
+          "title": "Write a TDD Adoption Plan for a Real Team",
+          "summary": "Turn the evidence limits into an adoption artifact instead of a generic opinion about TDD.",
+          "prompt": "Draft a concrete adoption plan for one real team or codebase, covering where TDD is likely to help, where evidence is thin, and what outcomes you would measure locally.",
+          "deliverable": "A short project brief or internal memo with scope, pilot area, risks, metrics, and rollback criteria.",
+          "estimated_minutes": 50,
+          "difficulty": 3,
+          "lesson_refs": [
+            "L13",
+            "L14"
+          ],
+          "tools": [
+            "markdown",
+            "team context"
+          ],
+          "steps": [
+            "Choose a real team, repo, or problem area rather than talking in abstractions.",
+            "State which TDD outcome claims you are willing to rely on and which you are not.",
+            "Define a narrow pilot, success metrics, and conditions that would invalidate the approach.",
+            "Name the gaps you would still need to validate inside the target environment."
+          ],
+          "success_criteria": [
+            "The plan distinguishes evidence-backed expectations from optimistic assumptions.",
+            "Metrics are concrete enough to inspect after a pilot.",
+            "The rollout scope is small enough to learn from without organizational theater."
+          ],
+          "extension_ideas": [
+            "Convert the memo into a lightweight pilot charter template for future teams.",
+            "Pair it with one of the earlier module projects as the pilot workload."
+          ],
+          "concepts": [
+            "evidence-calibration",
+            "context-sensitive-outcomes",
+            "large-system-limit",
+            "evidence-gap-planning"
+          ]
+        }
+      ]
+    }
+  },
   "concepts": {
     "slug": "test-driven-development-in-python",
     "generated": "2026-04-15",

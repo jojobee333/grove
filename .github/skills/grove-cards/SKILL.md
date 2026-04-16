@@ -11,102 +11,120 @@ allowed-tools:
   - editFiles
 ---
 
-# Grove Cards
+# Grove cards skill
 
-## Purpose
+You generate flashcards for spaced repetition study. Each card tests exactly
+one thing. The Grove app handles scheduling — you just write good cards.
 
-Grove Cards generates a spaced-repetition flashcard deck from lessons and Strata
-claims. It produces `cards.json` for the Grove app and focuses on atomic recall.
+## What makes a good flashcard
 
-## Non-Negotiable Rules
+The single most important rule: **one card, one fact**.
 
-- Use [references/cards-authoring-reference.md](references/cards-authoring-reference.md) as the canonical card-type, schema, calibration, and validation reference.
-- One card tests one fact, distinction, or application.
-- Every card must stay concise and sourced.
-- `lesson` is required on every card because the bundler uses it for adaptive enrichment.
-- Do not author adaptive fields that the bundler injects automatically.
-- Match card density and card mix to `learner.json`.
-- When generating across many lessons, write independent lesson card sets **[PARALLEL]** only after the source context for each lesson is resolved.
+Good card: "What is the primary mechanism by which X causes Y?"
+Bad card: "Explain everything about X and its relationship to Y, Z, and W."
 
-## Workflow
+A card a learner gets wrong should feel like a specific, fixable gap —
+not an overwhelming topic they didn't study enough.
 
-### Phase 1 - Resolve input scope
+## Card types to generate
 
-**Entry:** The caller provides a topic slug.
-**Exit:** The course, lessons, claims, and learner profile are loaded.
+For each Strata claim, generate cards across these types:
 
-1. **[PARALLEL]** Load `course.json`, `learner.json`, lesson files, relevant Strata claims, and contradiction notes when present.
-2. If lessons are missing, stop and require Grove Lessons output first.
+**Definition card** — what is this term/concept?
+```
+Front: What is [term]?
+Back: [Precise 1-2 sentence definition from the research]
+Source: S00N
+```
 
-### Phase 2 - Build the card inventory
+**Claim card** — what did the research find?
+```
+Front: What does the evidence say about [topic]?
+Back: [The claim from claims.md, confidence level, key supporting source]
+Source: S00N
+```
 
-**Entry:** Input scope is loaded.
-**Exit:** Each lesson has a planned card mix.
+**Application card** — how is this used?
+```
+Front: When would you [apply concept X]?
+Back: [Specific situation + what to do, from applied lessons]
+Source: L0N
+```
 
-1. Decide card density by learner goal.
-2. Select card types that fit the lesson and claim material.
-3. Avoid duplicating prompts that test the same thing.
+**Distinction card** — what's the difference?
+```
+Front: What is the difference between [A] and [B]?
+Back: [Key distinguishing feature, sourced from research]
+Source: S00N
+```
 
-### Phase 3 - Draft card objects
+**Contradiction card** — where does evidence conflict?
+```
+Front: Why do [Source A] and [Source B] reach different conclusions about [topic]?
+Back: [The specific reason for the contradiction from contradictions.md]
+Source: contradictions.md
+```
 
-**Entry:** Card inventory exists.
-**Exit:** Card objects exist for all target lessons.
+## Output: cards.json
 
-1. **[PARALLEL]** Draft card sets lesson by lesson once source context is complete.
-2. Keep fronts narrow and backs concise.
-3. Set the standard initial `sr` state for every card.
+```json
+{
+  "topic": "Topic Name",
+  "slug": "topic-slug",
+  "generated": "YYYY-MM-DD",
+  "total_cards": 0,
+  "cards": [
+    {
+      "id": "CARD-001",
+      "type": "definition | claim | application | distinction | contradiction",
+      "module": "M01",
+      "lesson": "L01",
+      "front": "Question or prompt — one thing only",
+      "back": "Answer — concise, accurate, sourced",
+      "source_ref": "S001 or L01 or contradictions.md",
+      "confidence_required": "low | medium | high",
+      "tags": ["module-M01", "claim-C1", "type-definition"],
+      "sr": {
+        "interval": 1,
+        "ease": 2.5,
+        "reviews": 0,
+        "next_review": "YYYY-MM-DD",
+        "lapses": 0
+      }
+    }
+  ]
+}
+```
 
-### Phase 4 - Assemble and validate `cards.json`
+> **Do NOT add `concepts`, `cognitive_level`, `weight`, or `reviewable` fields to cards manually.**
+> These are injected automatically by `build-bundle.mjs` at build time using the lesson's
+> `teaches_concepts` from `course.json`. The `lesson` field on each card is the key the
+> bundler uses to look up the lesson and derive its adaptive metadata.
+> Authoring these fields manually will have no effect — the bundler overwrites them.
 
-**Entry:** Card objects are drafted.
-**Exit:** `curriculum/[slug]/cards.json` is complete and internally consistent.
+The `sr` block is the SM-2 spaced repetition state. The Grove app updates this
+as the learner reviews cards. Initial values are always: interval 1, ease 2.5, reviews 0.
 
-1. Write the deck file.
-2. Confirm `total_cards` matches the card count.
-3. Confirm no forbidden adaptive fields were authored manually.
-4. Confirm there are no near-duplicate cards.
+## Card density guidelines
 
-## Output Contract
+Calibrate to `learner.json`:
 
-Required deliverable:
+- **Goal: understand broadly** — 3-5 cards per lesson (definition + claim cards only)
+- **Goal: apply practically** — 5-8 cards per lesson (heavier on application cards)
+- **Goal: teach others** — 6-10 cards per lesson (include distinction + contradiction)
+- **Goal: pass an exam** — 8-12 cards per lesson (all types, emphasis on recall)
 
-1. `curriculum/[slug]/cards.json` containing deck metadata and a `cards` array.
+## Confidence required field
 
-Completion criteria:
+Maps to how hard the app should push the learner:
+- `low` — factual definitions, basic claims
+- `medium` — relationships between concepts, applications
+- `high` — contradictions, nuanced distinctions, speculative claims
 
-- Every card uses the required schema.
-- Every card is atomic and sourced.
-- The `lesson` field is present.
-- `total_cards` matches the number of cards written.
-- Card mix matches learner calibration.
+## What to avoid
 
-## Failure Mode Handling
-
-| Failure | Prevention / Recovery |
-| --- | --- |
-| Lessons do not exist yet | Stop and wait for Grove Lessons output instead of inventing card content. |
-| Cards duplicate the same knowledge point | Merge or remove the weaker duplicate before saving. |
-| A card front asks multiple things | Split it into multiple cards. |
-| Adaptive fields are authored manually | Remove them and rely on bundler enrichment. |
-| `lesson` or source traceability is missing | Add the missing reference before returning completion. |
-| Card density ignores the learner goal | Rebalance the deck using the card calibration rules. |
-
-## Anti-Patterns
-
-- Yes or no cards.
-- Trivia cards that do not reflect understanding.
-- Answers longer than four sentences.
-- Slightly reworded duplicates.
-- One oversized card that should be several smaller cards.
-
-## Examples
-
-### Example 1 - Practical learner profile
-
-If the learner goal is `apply practically`, increase application cards and keep the
-deck centered on situations where the lesson content is used.
-
-### Example 2 - Multi-lesson batch generation
-
-For a full course deck, resolve the lesson set first, then draft lesson-specific card
-sets in parallel once each lesson has complete claim and source context.
+- Cards that can be answered with "yes" or "no"
+- Cards testing trivia rather than understanding
+- Cards with answers longer than 4 sentences
+- Multiple questions crammed into one card front
+- Cards that test the same thing as another card with slightly different wording

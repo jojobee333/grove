@@ -140,7 +140,7 @@ for (const slug of SLUGS) {
   test(`${slug}: bundle has required top-level keys`, () => {
     if (!existsSync(bundlePath)) return;
     const bundle = JSON.parse(readFileSync(bundlePath, 'utf8'));
-    for (const key of ['course', 'lessons', 'cards', 'quizzes', 'modchecks', 'codeChallenges', 'concepts', 'adaptiveRules', 'learningPaths']) {
+    for (const key of ['course', 'lessons', 'cards', 'quizzes', 'modchecks', 'codeChallenges', 'practicalApplications', 'concepts', 'adaptiveRules', 'learningPaths']) {
       assert.ok(key in bundle, `Missing key: ${key}`);
     }
   });

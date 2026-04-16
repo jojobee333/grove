@@ -3,6 +3,8 @@
  * Pure functions — all dependencies passed as explicit parameters.
  */
 
+import { getReviewableCards } from './cards.js';
+
 /**
  * Compute which modules have an unlocked, incomplete module check.
  *
@@ -119,12 +121,8 @@ export function computeNextSteps({ course, bundle, cards, concepts, adaptiveRule
   }
   weakConcepts.sort((a, b) => a.mastery - b.mastery);
 
-  // Cards due for review today
-  const reviewQueue = (cards ?? []).filter(c => {
-    const sr = (progress.cards ?? {})[c.id] ?? c.sr;
-    if (!sr?.next_review) return false;
-    return new Date(sr.next_review) <= new Date();
-  });
+  // Cards due for review today, limited to modules the learner has reached.
+  const reviewQueue = getReviewableCards({ course, cards, progress });
 
   // Module checks unlocked (all lessons done, modcheck not completed)
   const unlockedModchecks = computeUnlockedModchecks({ course, bundle, progress });
