@@ -1,6 +1,6 @@
 {
   "slug": "security-foundations",
-  "phase": "complete",
+  "phase": "in-progress",
   "progress": {
     "course_map": false,
     "lessons": false,
@@ -8,6 +8,6 @@
     "assessments": false,
     "bundle": false
   },
-  "last_action": "Grove project started — learner.json created",
+  "last_action": "Full rebuild initiated — new learner profile: complete_beginner, apply_practically, flexible time",
   "next_action": "Generate course.json course map"
 }

@@ -36,7 +36,7 @@
           "visibility": "hidden"
         }
       ],
-      "concepts": ["kdf-password-storage", "forward-secrecy"],
+      "concepts": ["password-hashing", "forward-secrecy"],
       "cognitive_level": "application",
       "weight": 1.0,
       "difficulty": 2,
@@ -76,7 +76,7 @@
           "visibility": "hidden"
         }
       ],
-      "concepts": ["pki-chain-validation", "forward-secrecy"],
+      "concepts": ["pki-certificate-chain", "forward-secrecy"],
       "cognitive_level": "application",
       "weight": 1.0,
       "difficulty": 3,

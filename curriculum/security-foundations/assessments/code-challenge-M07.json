@@ -36,7 +36,7 @@
           "visibility": "hidden"
         }
       ],
-      "concepts": ["windows-event-logs", "event-correlation"],
+      "concepts": ["windows-event-logs", "windows-event-logs"],
       "cognitive_level": "application",
       "weight": 1.0,
       "difficulty": 3,

@@ -1,8 +1,10 @@
 {
   "goal": "apply_practically",
   "goal_label": "Apply practically — use these skills in real security work or CTFs",
-  "background": "some_exposure",
-  "background_label": "Some exposure — dabbled in networking or security basics",
-  "session_time_min": 15,
-  "created": "2026-04-13"
+  "background": "complete_beginner",
+  "background_label": "Complete beginner — no prior networking or security background assumed",
+  "session_time_min": 0,
+  "session_time_label": "Flexible — no time constraint",
+  "created": "2026-04-13",
+  "updated": "2026-04-19"
 }

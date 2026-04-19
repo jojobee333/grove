@@ -36,7 +36,7 @@
           "visibility": "hidden"
         }
       ],
-      "concepts": ["persistence-mechanisms"],
+      "concepts": ["windows-persistence"],
       "cognitive_level": "application",
       "weight": 1.0,
       "difficulty": 3,

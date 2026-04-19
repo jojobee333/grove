@@ -1,0 +1,31 @@
+{
+  "module": "M10",
+  "title": "Defence in Depth and Modern Hardening — Quick Check",
+  "questions": [
+    {
+      "id": "MC10-1",
+      "q": "What is the principle of least privilege? State it precisely including scope, duration, and method.",
+      "a": "Every principal (user, process, service) should hold the minimum privilege required to perform its authorised function, for only the duration that function requires, at the narrowest scope where that privilege satisfies the requirement. In practice: read-only where possible, named accounts over shared accounts, time-limited privilege elevation over permanent admin membership."
+    },
+    {
+      "id": "MC10-2",
+      "q": "What specific protections does the Protected Users security group enforce for Domain Admin accounts?",
+      "a": "Five protections: (1) No NTLM authentication — Kerberos only, defeating Pass-the-Hash. (2) No credential caching — cannot log in offline. (3) AES-only Kerberos encryption — no RC4, preventing crackable Kerberoasting ticket hashes. (4) TGT lifetime limited to 4 hours. (5) No Kerberos unconstrained delegation."
+    },
+    {
+      "id": "MC10-3",
+      "q": "Why is FIDO2 the only phishing-resistant MFA factor, while TOTP and push notifications are not?",
+      "a": "FIDO2 uses origin-bound asymmetric cryptography. The authenticator signs a challenge that includes the current site's origin (RP ID). A phishing site at a different origin cannot obtain a valid assertion — the authenticator rejects it. TOTP codes and push notifications are not bound to any origin, so an AiTM proxy can forward them to the legitimate site in real time."
+    },
+    {
+      "id": "MC10-4",
+      "q": "What is MTTD and why does closing the MTTD gap matter more than eliminating specific attack techniques?",
+      "a": "MTTD = Mean Time to Detection. Without mature detection, dwell time averages weeks to months — during which attackers establish persistence, harvest credentials, and move laterally. Reducing MTTD to hours limits what attackers can accomplish before discovery. No prevention control eliminates all attack techniques; detection is the control that bounds damage regardless of which technique succeeds."
+    },
+    {
+      "id": "MC10-5",
+      "q": "A service account currently runs as Domain Admin. Using the least privilege principle, what should it run as, and what specific steps would you take?",
+      "a": "Run as a standard domain user account or gMSA with only the specific permissions the service needs. Steps: (1) Identify what the service actually accesses (files, databases, network shares). (2) Create a dedicated service account. (3) Grant only the required NTFS/database/network permissions. (4) If cross-machine domain access is needed, use a gMSA for auto-rotating passwords. (5) Remove from Domain Admin and any other high-privilege groups. (6) Test that the service still functions."
+    }
+  ]
+}

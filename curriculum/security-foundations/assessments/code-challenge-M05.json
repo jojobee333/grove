@@ -76,7 +76,7 @@
           "visibility": "hidden"
         }
       ],
-      "concepts": ["linux-permissions", "linux-filesystem"],
+      "concepts": ["linux-permissions", "linux-fhs"],
       "cognitive_level": "application",
       "weight": 1.0,
       "difficulty": 3,

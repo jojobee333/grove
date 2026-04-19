@@ -1,0 +1,174 @@
+{
+  "id": "quiz-M10",
+  "type": "module",
+  "module": "M10",
+  "title": "Assessment: Defence in Depth and Modern Hardening",
+  "generated": "2026-04-19",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "An organisation places all Domain Admin accounts in the Protected Users security group. Which of the following attacks does this DIRECTLY defeat?",
+      "options": {
+        "A": "Kerberoasting via RC4-encrypted service tickets",
+        "B": "Pass-the-Hash using NTLM network authentication",
+        "C": "Pass-the-Ticket using stolen Kerberos TGTs",
+        "D": "DCShadow attacks using replication permissions"
+      },
+      "correct": "B",
+      "explanation": "Protected Users enforces Kerberos-only authentication — NTLM is blocked entirely for members. This directly defeats Pass-the-Hash, which requires NTLM. Kerberoasting is addressed indirectly (AES-only, no RC4), but the primary PtH defeat is the NTLM block. Kerberos TGT theft (Pass-the-Ticket) is limited by the 4-hour TGT lifetime but not defeated. DCShadow requires separate mitigations.",
+      "lesson_ref": "L30",
+      "claim_ref": "C19",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Why is FIDO2 (WebAuthn) considered phishing-resistant while TOTP codes and push notifications are not?",
+      "options": {
+        "A": "FIDO2 tokens require physical presence, making remote theft impossible",
+        "B": "FIDO2 authentication is cryptographically bound to the specific site origin, so a phishing site receives an assertion it cannot use",
+        "C": "FIDO2 codes expire in 5 seconds, too fast for an attacker to relay",
+        "D": "FIDO2 requires biometric verification that phishing proxies cannot capture"
+      },
+      "correct": "B",
+      "explanation": "FIDO2 authenticators sign a challenge that includes the current site's origin (RP ID). A phishing site at a different origin will receive a signed assertion that is only valid for that origin — the legitimate site will reject it. TOTP codes and push approvals are not bound to any origin, so an AiTM proxy can relay them in real time.",
+      "lesson_ref": "L30",
+      "claim_ref": "C19",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "An attacker uses msbuild.exe to compile and execute a C# payload inline, bypassing application whitelisting. What category of technique is this?",
+      "options": {
+        "A": "DLL injection",
+        "B": "LOLBin (Living-off-the-Land Binary) abuse",
+        "C": "Process hollowing",
+        "D": "Reflective DLL loading"
+      },
+      "correct": "B",
+      "explanation": "LOLBins are legitimate, Microsoft-signed binaries that can execute arbitrary code and are therefore trusted by whitelisting solutions. msbuild.exe, certutil.exe, regsvr32.exe, and others are canonical examples. The defence is not blocking the binary (which breaks legitimate use) but detecting anomalous execution context via Sysmon.",
+      "lesson_ref": "L29",
+      "claim_ref": "C19",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "An Adversary-in-the-Middle (AiTM) phishing attack successfully captures a session cookie despite the user completing TOTP-based MFA. Which control would have prevented this specific attack?",
+      "options": {
+        "A": "Requiring a 30-day password rotation policy",
+        "B": "Enforcing HSTS on the legitimate application",
+        "C": "Deploying FIDO2 hardware security keys as the MFA factor",
+        "D": "Using SMS-based OTP instead of TOTP authenticator apps"
+      },
+      "correct": "C",
+      "explanation": "AiTM captures the authenticated session cookie after the user completes MFA — the session cookie is replayable. FIDO2 prevents the authentication from completing at the phishing site because the origin is wrong. HSTS prevents HTTP downgrade but not HTTPS-to-HTTPS proxying. SMS OTP is weaker than TOTP, not stronger.",
+      "lesson_ref": "L29",
+      "claim_ref": "C19",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "Without LAPS, 300 domain-joined workstations all share the same local administrator password hash. An attacker compromises one workstation and extracts this hash. What is the immediate consequence?",
+      "options": {
+        "A": "The attacker can authenticate only to the compromised workstation until the password rotates",
+        "B": "The attacker can authenticate to all 300 workstations using Pass-the-Hash without cracking the password",
+        "C": "The attacker can authenticate to the Domain Controller using the same hash",
+        "D": "The attacker needs to crack the hash before lateral movement is possible"
+      },
+      "correct": "B",
+      "explanation": "NTLM uses the hash directly for authentication — no password needed. A single local admin hash shared across all machines means one captured hash authenticates to all 300 machines. LAPS prevents this by making every machine's local admin password unique. Domain Controllers are not joined with local admin accounts in standard configurations.",
+      "lesson_ref": "L28",
+      "claim_ref": "C19",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "A Conditional Access policy triggers a step-up MFA challenge when a user signs in from an IP address in an unexpected country. What security principle does this policy implement?",
+      "options": {
+        "A": "Least privilege — restrict access based on the minimum required identity proof",
+        "B": "Detection-based prevention — use a risk signal to require additional verification before granting access",
+        "C": "Defence in depth — add a second perimeter firewall in front of the application",
+        "D": "Zero trust — deny all access until complete network topology verification"
+      },
+      "correct": "B",
+      "explanation": "Conditional Access uses a detection signal (anomalous location) to trigger a preventive response (step-up MFA). This is the 'every preventive control paired with detection' principle applied at the authentication layer. It is not least privilege (which is about what you can do, not how you prove identity) nor a second perimeter firewall.",
+      "lesson_ref": "L30",
+      "claim_ref": "C19",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "A service account runs as 'Domain Admin' because 'it just worked when we set it up years ago'. Applying least privilege would change it to what, assuming it only needs to read files on one server?",
+      "options": {
+        "A": "A gMSA with Domain Admin membership but auto-rotating password",
+        "B": "A standard domain user account with read NTFS permission on the specific folder only",
+        "C": "A Virtual Account (NT SERVICE\\ServiceName) to eliminate domain exposure entirely",
+        "D": "A local administrator account to reduce domain-wide exposure"
+      },
+      "correct": "B",
+      "explanation": "Least privilege: minimum rights for the task, at the narrowest scope. File read on one server requires a domain user account with only read NTFS ACL on that folder — no Domain Admin. A Virtual Account cannot access network resources. A gMSA is overkill for single-server local file read. Local admin grants excessive local privilege.",
+      "lesson_ref": "L28",
+      "claim_ref": "C19",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "Explain the concept of 'every preventive control must be paired with detection'. Use one specific bypass technique from this module and show how detection would catch the bypass.",
+      "answer_key": {
+        "required_points": [
+          "Preventive controls can be bypassed — no control is 100% effective",
+          "Without detection, a bypass goes unnoticed for an extended period (dwell time)",
+          "Specific bypass example: AV bypass via custom shellcode / LOLBin / AiTM MFA bypass",
+          "Detection mechanism that catches the bypass: Sysmon process injection events / Sysmon Event 1 for LOLBin anomalous execution / impossible travel Conditional Access signal"
+        ],
+        "acceptable_variations": "Any bypass technique from L29-L30 paired with a plausible detection mechanism. The key requirement is that the pair is specific — not generic 'use SIEM'.",
+        "full_credit": "Names a specific bypass, explains why the preventive control fails, names the detection mechanism that catches it, and explains how it catches it.",
+        "partial_credit": "Correct principle stated but bypass/detection pair is vague or only one half is addressed."
+      },
+      "lesson_ref": "L29",
+      "claim_ref": "C19",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "What are the five highest-signal SIEM alert rules for a new security monitoring programme? For each, state the detection mechanism (event ID and field) and the attack it catches.",
+      "answer_key": {
+        "required_points": [
+          "1. Office app → cmd.exe/powershell.exe (Sysmon Event 1 parent-child chain) → macro malware",
+          "2. NTLM V2 network logon from workstation to DC (Security 4624, LogonType=3, LmPackageName=NTLM V2) → Pass-the-Hash",
+          "3. lsass.exe OpenProcess from non-SYSTEM process (Sysmon Event 10, TargetImage=lsass.exe) → credential dumping",
+          "4. New service with user-writable ImagePath (Security 7045, ImagePath contains Temp/AppData/Public) → persistence",
+          "5. DNS query volume anomaly or long random subdomains (Sysmon Event 22) → C2/exfiltration"
+        ],
+        "acceptable_variations": "Order does not matter. AiTM detection via Conditional Access impossible travel is acceptable for rule 5. Event IDs from L25-L27 are also acceptable alternatives.",
+        "full_credit": "All five rules named with specific detection mechanism and attack technique for each.",
+        "partial_credit": "Three or four rules with mechanisms, or five rules with vague mechanisms."
+      },
+      "lesson_ref": "L31",
+      "claim_ref": "C19",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "A CISO presents their security posture: 'We have Defender Antivirus, TOTP-based MFA on all accounts, and a next-generation firewall at the perimeter.' Critically evaluate this posture using evidence from this module. What specific attack techniques bypass each control, and what three hardening additions would you recommend first?",
+      "guidance": "A strong response is evidence-based — specific bypass techniques, not just 'sophisticated attackers can bypass AV'. Recommendations should be prioritised by impact and linked to the module's key claims. Generic advice ('patch more', 'train users') should be penalised without specifics.",
+      "rubric": {
+        "A": "Names specific bypass for AV (LOLBin, custom shellcode via Sysmon Event 1), TOTP MFA (AiTM proxy), firewall (DNS C2, LOLBin outbound via trusted processes); three recommendations are specific (e.g. FIDO2 keys, Sysmon deployment, LAPS) with impact reasoning tied to module claims",
+        "B": "Identifies most bypasses; recommendations are correct but partially generic; makes the detection pairing argument",
+        "C": "Mentions bypasses exist but is vague; recommendations are generic (patch, train users); no evidence-based reasoning"
+      },
+      "lesson_ref": "L28-L31",
+      "difficulty": "analysis"
+    }
+  ]
+}

@@ -1,34 +1,41 @@
 {
   "slug": "security-foundations",
-  "generated": "2026-04-13",
+  "generated": "2026-04-19",
   "paths": [
     {
       "id": "default-path",
       "title": "Complete Security Foundations",
-      "description": "All 16 lessons in module order. Full course coverage from protocol analysis to layered authentication defence.",
+      "description": "All 31 lessons in module order. Full course coverage from security mindset through detection imperative.",
       "goal": "any",
-      "lessons": ["L01","L02","L03","L04","L05","L06","L07","L08","L09","L10","L11","L12","L13","L14","L15","L16"]
+      "sequence": ["L01","L02","L03","L04","L05","L06","L07","L08","L09","L10","L11","L12","L13","L14","L15","L16","L17","L18","L19","L20","L21","L22","L23","L24","L25","L26","L27","L28","L29","L30","L31"]
     },
     {
       "id": "ctf-fast-track",
-      "title": "CTF Fast Track",
-      "description": "Focus on offensive techniques, exploitation patterns, and detection bypass. Skips defensive-only lessons and certificate validation deep-dives. ~10 lessons.",
+      "title": "CTF and Offensive Techniques Fast Track",
+      "description": "Offensive attack patterns, exploitation techniques, and persistence mechanisms. Skips defensive-only lessons. ~15 lessons.",
       "goal": "apply_practically",
-      "lessons": ["L01","L02","L03","L05","L07","L09","L11","L13","L15","L16"]
+      "sequence": ["L01","L02","L04","L05","L06","L08","L11","L13","L20","L22","L24","L25","L26","L27","L29"]
     },
     {
       "id": "blue-team-focus",
-      "title": "Defensive Operations Focus",
-      "description": "Prioritises detection, telemetry, and response. Covers all defensive lessons in sequence with offensive context first.",
+      "title": "Defensive Operations and Detection Focus",
+      "description": "Prioritises detection signals, telemetry correlation, and hardening controls. Full defensive context with just enough offensive coverage to understand what is being detected.",
       "goal": "apply_practically",
-      "lessons": ["L01","L03","L04","L06","L09","L10","L11","L12","L13","L14","L15","L16"]
+      "sequence": ["L01","L02","L03","L07","L09","L12","L14","L15","L16","L17","L18","L19","L20","L21","L23","L25","L27","L28","L30","L31"]
     },
     {
       "id": "crypto-deep-dive",
       "title": "Cryptography and PKI Track",
-      "description": "Complete cryptographic foundations: CBC attacks, AEAD, forward secrecy, KDFs, PKI chain validation.",
+      "description": "Complete cryptographic foundations: symmetric encryption, CBC attacks, AEAD, key exchange, forward secrecy, TLS policy, hash functions, password KDFs, and PKI chain validation.",
       "goal": "apply_practically",
-      "lessons": ["L05","L06","L07","L08"]
+      "sequence": ["L10","L11","L12","L13","L14","L15","L16","L17","L18"]
+    },
+    {
+      "id": "windows-security-track",
+      "title": "Windows Authentication and Endpoint Defence",
+      "description": "Windows-focused path: NTLM/Kerberos attack surface, registry forensics, Pass-the-Hash, Kerberoasting, event log correlation, persistence detection, and layered authentication controls.",
+      "goal": "apply_practically",
+      "sequence": ["L01","L02","L22","L23","L24","L25","L26","L27","L28","L30","L31"]
     }
   ]
 }

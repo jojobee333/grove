@@ -76,7 +76,7 @@
           "visibility": "hidden"
         }
       ],
-      "concepts": ["dns-architecture", "dns-defense"],
+      "concepts": ["dns-architecture", "dns-c2-detection"],
       "cognitive_level": "application",
       "weight": 1.0,
       "difficulty": 2,
