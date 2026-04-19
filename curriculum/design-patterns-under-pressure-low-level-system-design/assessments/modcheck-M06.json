@@ -1,0 +1,26 @@
+{
+  "module": "M06",
+  "title": "Behavioral Patterns One by One — Quick Check",
+  "questions": [
+    {
+      "id": "MC06-1",
+      "q": "What makes Command different from a plain function call, and why does that difference matter?",
+      "a": "A Command is a first-class object that encapsulates an action including its parameters and an undo() counterpart. Unlike a function call, a Command can be stored, queued, replayed, or undone — the action becomes a thing you can manage, not just a step you execute."
+    },
+    {
+      "id": "MC06-2",
+      "q": "What traceability cost does Observer introduce?",
+      "a": "Observer decouples subject from subscribers, which means control flow is no longer readable top-to-bottom. Tracing what happens after an event fires requires knowing all current subscribers, making debugging, failure propagation, and timing analysis harder."
+    },
+    {
+      "id": "MC06-3",
+      "q": "When does the State pattern become worth its overhead compared to a long if/elif chain?",
+      "a": "When the number of distinct behavioral states is large enough that adding a new state requires modifying many scattered conditionals. State pattern moves each state's behavior into its own object, so adding a new state means adding a new class with no changes to existing states."
+    },
+    {
+      "id": "MC06-4",
+      "q": "In a text editor, which pattern owns undo/redo, which owns propagating changes to the UI, and which owns mode switching (insert vs visual)?",
+      "a": "Command owns undo/redo via its history stack. Observer owns change propagation to UI components. State owns mode switching by delegating behavior to the current state object."
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+{
+  "id": "code-challenge-M06",
+  "type": "module",
+  "module": "M06",
+  "title": "Coding Challenge: Behavioral Patterns",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `apply_commands(state_and_commands)` that takes a tuple `(initial_value, commands)` where `commands` is a list of strings like `'+5'`, `'-3'`, `'*2'`, `'/4'`. Apply each command in order to `initial_value` using integer arithmetic (use integer division `//` for `/`). Return the final integer result.\n\nThis simulates a Command pattern sequence: each command is an encapsulated operation applied to shared state.",
+      "starter_code": "def apply_commands(state_and_commands):\n    \"\"\"\n    Unpack (initial_value, commands). Apply each command string to the value.\n    Command format: first char is operator (+, -, *, /), rest is integer operand.\n    Returns an integer.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Three commands: add, subtract, multiply",
+          "input": "(10, ['+5', '-3', '*2'])",
+          "expected_output": "24",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single add command from zero",
+          "input": "(0, ['+10'])",
+          "expected_output": "10",
+          "visibility": "visible"
+        },
+        {
+          "name": "Subtract to zero then add zero",
+          "input": "(5, ['-5', '+0'])",
+          "expected_output": "0",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Multiply by zero",
+          "input": "(100, ['*0'])",
+          "expected_output": "0",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["command-pattern", "behavioral-execution"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L16",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L16"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `get_subscribers(event_and_subs)` that takes a tuple `(event_name, subscriptions)` where `subscriptions` is a list of `(event, subscriber)` tuples. Return a **sorted** list of subscriber names that are subscribed to `event_name`.\n\nThis models the Observer pattern's subscription registry.",
+      "starter_code": "def get_subscribers(event_and_subs):\n    \"\"\"\n    Unpack (event_name, subscriptions). Return sorted list of subscribers\n    whose event matches event_name.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Two subscribers to login event",
+          "input": "('login', [('login', 'audit'), ('logout', 'cache'), ('login', 'email')])",
+          "expected_output": "['audit', 'email']",
+          "visibility": "visible"
+        },
+        {
+          "name": "One subscriber to logout event",
+          "input": "('logout', [('login', 'audit'), ('logout', 'cache')])",
+          "expected_output": "['cache']",
+          "visibility": "visible"
+        },
+        {
+          "name": "No subscribers for event",
+          "input": "('signup', [('login', 'audit')])",
+          "expected_output": "[]",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Two click subscribers sorted alphabetically",
+          "input": "('click', [('click', 'tracker'), ('click', 'analytics'), ('hover', 'tooltip')])",
+          "expected_output": "['analytics', 'tracker']",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["observer-pattern", "event-subscription"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L17",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L17"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `get_valid_transitions(state_and_map)` that takes a tuple `(current_state, transitions)` where `transitions` is a dict mapping each state name to a list of allowed next states. Return the list of allowed next states for `current_state`, or an empty list if the state is not in the map.\n\nThis is the core of the State pattern: the machine only allows the transitions defined for the current state.",
+      "starter_code": "def get_valid_transitions(state_and_map):\n    \"\"\"\n    Unpack (current_state, transitions) and return allowed next states.\n    Returns a list (empty if state not found).\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Idle has two transitions",
+          "input": "('idle', {'idle': ['running', 'error'], 'running': ['idle', 'done'], 'done': []})",
+          "expected_output": "['running', 'error']",
+          "visibility": "visible"
+        },
+        {
+          "name": "Done state has no transitions",
+          "input": "('done', {'idle': ['running'], 'done': []})",
+          "expected_output": "[]",
+          "visibility": "visible"
+        },
+        {
+          "name": "Unknown state returns empty list",
+          "input": "('unknown', {'idle': ['running']})",
+          "expected_output": "[]",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Running state transitions",
+          "input": "('running', {'idle': ['running', 'error'], 'running': ['idle', 'done'], 'done': []})",
+          "expected_output": "['idle', 'done']",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["state-pattern", "state-machine"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L18",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L18"]
+    }
+  ]
+}

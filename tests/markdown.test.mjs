@@ -97,8 +97,31 @@ test('fenced code block is not transformed by inline rules', () => {
 
 test('language hint after fence is accepted', () => {
   const out = simpleMarkdown('```js\nconsole.log("hi");\n```');
-  assert.ok(out.includes('<pre><code>'));
+  assert.ok(out.includes('class="language-js"'), 'should emit language class');
   assert.ok(out.includes('console.log'));
+});
+
+// ── Syntax highlighting language classes ──────────────────────────────────────
+
+test('fenced code block with python emits language-python class', () => {
+  const out = simpleMarkdown('```python\nprint("hi")\n```');
+  assert.ok(out.includes('<code class="language-python">'));
+});
+
+test('fenced code block with javascript emits language-javascript class', () => {
+  const out = simpleMarkdown('```javascript\nconst x = 1;\n```');
+  assert.ok(out.includes('<code class="language-javascript">'));
+});
+
+test('fenced code block with typescript emits language-typescript class', () => {
+  const out = simpleMarkdown('```typescript\nconst x: number = 1;\n```');
+  assert.ok(out.includes('<code class="language-typescript">'));
+});
+
+test('fenced code block without language has no class attribute', () => {
+  const out = simpleMarkdown('```\nsome code\n```');
+  assert.ok(out.includes('<pre><code>'), 'no-language block must have no class');
+  assert.ok(!out.includes('class="language-'), 'must not emit a language class when none specified');
 });
 
 // ── GFM Tables ────────────────────────────────────────────────────────────────

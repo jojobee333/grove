@@ -1,0 +1,157 @@
+{
+  "id": "quiz-M08",
+  "type": "module",
+  "module": "M08",
+  "title": "Assessment: Closures & Iterators",
+  "generated": "2026-04-19",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What makes a closure `FnOnce` instead of `Fn`?",
+      "options": {
+        "A": "The closure captures variables by mutable reference",
+        "B": "The closure moves a captured value out of its body, so it can only be called once",
+        "C": "The closure takes exactly one argument",
+        "D": "The closure is defined with the move keyword"
+      },
+      "correct": "B",
+      "explanation": "FnOnce closures consume a captured variable by moving it out. Since the value is gone after the first call, the closure can only be called once. Fn can be called any number of times; FnMut requires a mutable capture.",
+      "lesson_ref": "L22",
+      "claim_ref": "C6",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Why are iterator adapters (map, filter, etc.) described as 'lazy' in Rust?",
+      "options": {
+        "A": "They execute asynchronously in the background",
+        "B": "They do nothing until a consuming adaptor (collect, sum, etc.) drives the iterator",
+        "C": "They are slower than explicit loops because they defer work",
+        "D": "They cache results to avoid recomputation"
+      },
+      "correct": "B",
+      "explanation": "Iterator adapters are lazy: they return a new iterator struct but perform no computation until a consuming adaptor calls next(). This avoids allocating intermediate collections and lets the compiler optimize the entire chain into a single loop.",
+      "lesson_ref": "L23",
+      "claim_ref": "C6",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "What does `.enumerate()` add to an iterator?",
+      "options": {
+        "A": "Converts the iterator to a Vec",
+        "B": "Pairs each item with its zero-based index as a (usize, T) tuple",
+        "C": "Counts the total number of items and returns a usize",
+        "D": "Groups items into chunks of fixed size"
+      },
+      "correct": "B",
+      "explanation": ".enumerate() wraps each element in a (index, value) tuple, where index is a usize starting at 0. This is the idiomatic way to iterate with position: `for (i, val) in v.iter().enumerate() { ... }`",
+      "lesson_ref": "L24",
+      "claim_ref": "C6",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "Which statement correctly describes the difference between `iter()` and `into_iter()` on a Vec<T>?",
+      "options": {
+        "A": "iter() moves the Vec; into_iter() borrows it",
+        "B": "iter() yields &T (borrows elements); into_iter() consumes the Vec and yields T",
+        "C": "They are identical — into_iter() is just the older name",
+        "D": "into_iter() is only available on HashMap, not Vec"
+      },
+      "correct": "B",
+      "explanation": ".iter() borrows the Vec and yields shared references &T. .into_iter() consumes the Vec (takes ownership) and yields owned values T. After .into_iter(), the original Vec can no longer be used.",
+      "lesson_ref": "L23",
+      "claim_ref": "C6",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "What does `.collect::<Vec<_>>()` do at the end of an iterator chain?",
+      "options": {
+        "A": "Frees all items in the iterator",
+        "B": "Counts the number of items and returns a usize",
+        "C": "Drives the iterator to completion and assembles results into a Vec",
+        "D": "Returns an iterator that replays the chain from the beginning"
+      },
+      "correct": "C",
+      "explanation": ".collect() is a consuming adaptor that drives the entire iterator chain, calling next() until exhausted, and assembles the results into the specified collection type. Without a consuming adaptor, the chain does nothing.",
+      "lesson_ref": "L24",
+      "claim_ref": "C6",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "You have a Vec<Option<i32>>. Which iterator adapter produces a Vec<i32> containing only the Some values, unwrapped?",
+      "options": {
+        "A": ".map(|x| x.unwrap())",
+        "B": ".filter(|x| x.is_some()).map(|x| x.unwrap())",
+        "C": ".flat_map(|x| x)",
+        "D": ".filter_map(|x| x)"
+      },
+      "correct": "D",
+      "explanation": ".filter_map(|x| x) calls the closure on each element; if it returns Some(v), v is included; if None, the element is skipped. Options A panics on None; option B works but is verbose; option C (flat_map) works here but filter_map is more idiomatic.",
+      "lesson_ref": "L24",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "Rewrite this index-based loop as an idiomatic iterator chain:\n\n```rust\nlet mut result = Vec::new();\nfor i in 0..numbers.len() {\n    if numbers[i] % 2 == 0 {\n        result.push(numbers[i] * 3);\n    }\n}\n```",
+      "answer_key": {
+        "required_points": [
+          "Uses .iter() or .into_iter() on numbers",
+          "Chains .filter() for the even check",
+          "Chains .map() for the *3 transformation",
+          "Calls .collect() to produce the Vec"
+        ],
+        "acceptable_variations": "Can use filter_map; can use copied() or & deref patterns.",
+        "full_credit": "```rust\nlet result: Vec<i32> = numbers.iter()\n    .filter(|&&n| n % 2 == 0)\n    .map(|&n| n * 3)\n    .collect();\n```",
+        "partial_credit": "Correct structure but incorrect deref of references (&& pattern)."
+      },
+      "lesson_ref": "L24",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "Explain the difference between `Fn`, `FnMut`, and `FnOnce`. Why does Rust have three traits instead of one?",
+      "answer_key": {
+        "required_points": [
+          "Fn: captures by shared reference, callable any number of times",
+          "FnMut: captures by mutable reference, callable multiple times but requires exclusive access",
+          "FnOnce: moves captured values, callable exactly once",
+          "Three traits allow functions to express the minimum capability they need"
+        ],
+        "acceptable_variations": "May describe in terms of what the closure does to captured values.",
+        "full_credit": "All three defined correctly with the rationale that using the least restrictive bound makes APIs more flexible.",
+        "partial_credit": "Two of three defined correctly."
+      },
+      "lesson_ref": "L22",
+      "claim_ref": "C6",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q09",
+      "type": "essay",
+      "prompt": "Rust claims iterator chains are zero-cost abstractions — they compile to code as efficient as hand-written loops. Explain what 'zero-cost abstraction' means, how it applies to iterator adapters, and why this makes functional-style code preferable to index loops in Rust.",
+      "guidance": "Strong response: (1) zero-cost = no runtime overhead compared to the manually written equivalent; (2) iterator chains are inlined and fused by the optimizer — no intermediate allocations; (3) functional chains are safer (no off-by-one, no manual indexing) and often more readable; (4) concrete comparison of an index loop vs its iterator-chain equivalent.",
+      "rubric": {
+        "A": "Defines zero-cost correctly, explains inlining/fusion, gives a concrete example comparing loop vs chain, notes safety benefits.",
+        "B": "Correct definition and iterator example but doesn't explain the optimizer or intermediate allocations.",
+        "C": "Describes lazy evaluation but doesn't connect to zero-cost or inlining."
+      },
+      "lesson_ref": "L23-L24",
+      "difficulty": "analysis"
+    }
+  ]
+}

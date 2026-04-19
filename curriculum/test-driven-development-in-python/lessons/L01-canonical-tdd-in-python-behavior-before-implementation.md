@@ -3,63 +3,113 @@
 **Module**: M01 · Drive Design with Red-Green-Refactor
 **Type**: core
 **Estimated time**: 12 minutes
-**Claim**: C1 - TDD in Python is best understood as a disciplined, incremental behavior-design workflow, not merely a habit of writing tests before code
+**Claim**: C1 — TDD in Python is best understood as a disciplined, incremental behavior-design workflow, not merely a habit of writing tests before code
 
 ---
 
 ## The core idea
 
-Canonical TDD is not just "write a test first." It is a way to drive software design through behavior. The core loop is simple to state but easy to dilute in practice: decide the next behavior you need, write a failing test for that behavior, write the smallest useful code that makes the test pass, and then clean up the design so the next change is easier rather than harder. The research base treats that sequence as the defining mechanism of TDD, not as optional ceremony. Source trail: `vault/research/test-driven-development-in-python/03-synthesis/claims.md`, `vault/research/test-driven-development-in-python/01-sources/web/S006-fowler-tdd.md`, `vault/research/test-driven-development-in-python/01-sources/web/S007-canon-tdd.md`.
+Test-driven development has a naming problem. "Test-driven" sounds like a testing technique, which causes most newcomers to reach for it as a way to verify code they have already designed. That framing misses the point entirely. TDD is a way of driving the design of code through small, explicit behavioral steps — the tests are the medium, not the purpose.
 
-That emphasis on behavior matters in Python because the language makes it easy to move quickly and equally easy to accumulate loose, implicit structure. A developer can write code fast, patch a test later, and still feel productive. Canonical TDD pushes in the other direction. It asks you to expose the next needed behavior first so the interface, call shape, and success condition become visible before the implementation starts growing. In the research narrative, that is why TDD is described as a design discipline rather than a testing habit.
+Martin Fowler defines the core loop precisely: write a failing test, write the minimum code to make it pass, then refactor to preserve structural integrity — in that order, without collapsing the steps [S006](../../research/test-driven-development-in-python/01-sources/web/S006-fowler-tdd.md). Kent Beck adds a layer that shorter summaries often omit: before any test is written, canonical TDD begins with a *test list* — a brief enumeration of the behaviors you intend to drive through the cycle [S007](../../research/test-driven-development-in-python/01-sources/web/S007-canon-tdd.md). That list is not a plan in the project-management sense. It is a thinking tool: you are deciding what the next meaningful behavior is before committing to the exact test that will specify it.
 
-The other part people often miss is sequencing. Beck's test-list framing matters because TDD is not "write all the tests up front." It is "pick the next useful test." Fowler reinforces the same pattern from a slightly different angle: the loop stays useful only if each cycle is small enough to guide design without turning into speculative architecture. Together the sources make a practical rule: if your next test requires you to imagine half the system before you can write it, the step is too large.
+This changes what TDD actually demands. You are not proving code works after the fact. You are deciding, one small step at a time, what the code should do — and letting the test force you to express that decision in a form the system can verify. Fowler and Beck converge on this point even though they describe the rhythm slightly differently. Both treat behavioral sequencing as the core discipline, and both identify the same most common failure mode: skipping or deferring the refactor step [S006](../../research/test-driven-development-in-python/01-sources/web/S006-fowler-tdd.md).
 
 ## Why it matters
 
-If you have some exposure to tests already, the most likely mistake is not ignorance of syntax. It is collapsing all of TDD into the word "test." Once that happens, developers keep the word but lose the discipline. They write implementation-heavy code first, then add tests that merely confirm what already exists. Or they write a big batch of tests based on assumptions that the final design will not actually keep. Both patterns still produce tests, but neither uses tests to steer design.
+If you already have some exposure to Python and testing, the most dangerous mistake is collapsing TDD into the word "test." Once that collapse happens, developers preserve the label while losing the discipline. They build implementation-heavy code first, then write tests that merely confirm what already exists. Or they write a large batch of tests based on assumptions the final design will not keep. Both patterns produce tests, but neither uses tests to steer design.
 
-For practical Python work, this difference changes how you approach a feature. A TDD-oriented developer asks, "What is the next observable behavior I can specify?" A non-TDD but test-aware developer often asks, "How should I build this, and how will I verify it afterward?" The second question is not useless, but it makes it much easier to overbuild or to hide design decisions until later. The first question keeps design pressure close to the behavior the code must expose.
+For practical Python work, this distinction changes how you approach a feature. A TDD-oriented developer asks: what is the next observable behavior I can specify? A non-TDD, test-aware developer often asks: how should I build this, and how will I verify it afterward? The second question is not useless, but it makes it much easier to overbuild early or to defer interface decisions until the design is already sticky. The first question keeps design pressure close to the behavior the code must expose.
+
+Beck also identifies something important about criticisms of TDD: many attacks target strawman workflows like "write all tests up front" or "one long test per feature" [S007](../../research/test-driven-development-in-python/01-sources/web/S007-canon-tdd.md). Those are not canonical TDD. If you read critiques of TDD, it is worth asking which workflow the critic is actually describing — you will often find it is not the test-list-driven, one-behavior-at-a-time, refactor-separately cycle that Fowler and Beck both endorse.
 
 ## A concrete example
 
-Imagine you want a small Python function that normalizes user-entered tags before saving them.
+Here is a full walkthrough of canonical TDD for a small Python feature: a function that normalizes user-entered tags before saving them.
 
-Shallow test-first thinking often looks like this:
+Start by writing the test list. Do not write any code yet:
 
-- define a `normalize_tags()` function
-- write logic for trimming whitespace, lowercasing, and deduplicating
-- add tests after the function exists
+- A single tag with leading and trailing whitespace becomes lowercase and trimmed
+- An already-normalized tag is unchanged
+- An empty-string tag is discarded
+- A list with duplicate tags after normalization retains only the first occurrence
 
-Canonical TDD starts smaller:
+Now convert the first list item into a concrete failing test:
 
-- write one failing test that says a single tag like `"  Python  "` becomes `"python"`
-- make that test pass with the smallest change
-- pick the next behavior, such as preserving input order while removing duplicates
-- refactor only when the code starts getting awkward
+```python
+# test_tags.py — RED: function does not exist yet
+def test_trims_and_lowercases_tag():
+    assert normalize_tag("  Python  ") == "python"
+```
 
-That step order changes the design. Instead of building a whole "tag normalization system" in your head, you let behavior expose what is actually needed. Maybe the second test reveals you need a list out, not a set. Maybe a third test shows empty strings should be discarded. The point is not that tag normalization is a hard problem. The point is that small behavioral steps produce a clearer interface and fewer speculative choices.
+Running this produces `NameError`. That is the red phase — the test is failing for the right reason. Now write the minimum code to make it pass:
 
-This example is illustrative, not a sourced case study. The factual rule underneath it comes from the research: TDD works best when each test drives one meaningful step of behavior and the sequence of tests shapes the code a little at a time. Source trail: `vault/research/test-driven-development-in-python/03-synthesis/narrative.md`, `vault/research/test-driven-development-in-python/01-sources/web/S006-fowler-tdd.md`, `vault/research/test-driven-development-in-python/01-sources/web/S007-canon-tdd.md`.
+```python
+# tags.py — GREEN: simplest possible implementation
+def normalize_tag(raw: str) -> str:
+    return raw.strip().lower()
+```
 
-## Recognition cues
+The test is green. Now the refactor step: is there anything here that will make the next step harder? At this scale, no. Proceed to the next item on the test list.
 
-- You are probably doing canonical TDD when you can name the next behavior before you name the full implementation plan.
-- Your step is probably too large when the next test forces you to invent several future abstractions at once.
-- You are drifting away from TDD when tests mostly confirm code you already designed in detail before writing them.
+```python
+def test_unchanged_normalized_tag():
+    assert normalize_tag("python") == "python"
+```
+
+This passes immediately. That is valid. Beck explicitly notes that a test that passes without new code is still a productive step — you confirmed the behavior and moved forward [S007](../../research/test-driven-development-in-python/01-sources/web/S007-canon-tdd.md). Do not manufacture an artificial failure.
+
+```python
+def test_empty_string_returns_empty():
+    assert normalize_tag("") == ""
+```
+
+This also passes. The next item — discarding empties — requires a decision about the return type. Returning `None` or `""` are both options. The test forces you to make that call explicitly before implementing:
+
+```python
+def test_discards_blank_tag():
+    assert normalize_tag("   ") is None
+```
+
+Now the test fails. You update the implementation:
+
+```python
+def normalize_tag(raw: str) -> str | None:
+    result = raw.strip().lower()
+    return result if result else None
+```
+
+Green. Now the refactor step is more meaningful: the function signature changed to allow `None`. Any caller that assumed a `str` return type needs to handle `None` now. TDD has surfaced that design decision at the exact moment when the behavioral need appeared — not speculatively, and not after several callers were already written.
+
+## The interface design benefit, made explicit
+
+The deepest reason TDD improves design is not that it produces more tests. It is that writing the test first forces you to think from the caller's perspective before thinking from the implementer's perspective. When you write `normalize_tag("  Python  ")` before writing `normalize_tag`, you are deciding the function name, the argument type, and the expected return value in one gesture. That decision happens before you know *how* the function will work internally.
+
+This ordering matters because interface decisions and implementation decisions are naturally in tension. Implementation thinking pushes toward convenience: "I already have a set internally, so I'll just return a set." Interface thinking pushes toward clarity: "My caller works with ordered lists, so the return type should respect that." Writing the test first forces interface clarity upfront, when changing your mind is still cheap.
+
+Fowler captures this exactly: writing tests first supports self-testing code and forces earlier thinking about interface and usage rather than implementation details [S006](../../research/test-driven-development-in-python/01-sources/web/S006-fowler-tdd.md). The practice does not guarantee good design, but it consistently raises the cost of bad interface choices early — at the moment when they are still easy to revise.
+
+In Python specifically, this benefit is especially useful because the language offers maximum flexibility in how you structure things. Without TDD's discipline, a Python codebase can grow a lot of code where objects do everything themselves and callers are tightly coupled to internal details. The test-list and behavioral-specification approach keeps the interface visible and negotiable throughout development.
+
+## Limitations
+
+The exact granularity of the refactor step is less standardized across canonical sources than the red and green steps. Fowler emphasizes the risk of skipping refactoring [S006](../../research/test-driven-development-in-python/01-sources/web/S006-fowler-tdd.md), and Beck treats refactoring as a mode of work that must stay separate from the making-it-pass mode [S007](../../research/test-driven-development-in-python/01-sources/web/S007-canon-tdd.md). But neither defines a hard threshold for how much cleanup each cycle requires. In practice, beginners often over-refactor — redesigning before the suite is large enough to guide the redesign — or skip entirely, accumulating inconsistency across cycles.
+
+There is also a practical caveat about how canonical TDD scales to larger systems. The test-list and one-behavior-at-a-time discipline works cleanly when a feature is small enough to drive without a global design plan. For genuinely complex systems with many interdependencies, the discipline must coexist with some higher-level architecture thinking. Beck acknowledges this implicitly by framing TDD as a design *aid*, not a design *replacement* [S007](../../research/test-driven-development-in-python/01-sources/web/S007-canon-tdd.md). The specific calibration of when micro-cycle discipline is sufficient and when larger structural thinking is also needed is addressed in later lessons on boundary design and advanced coverage.
 
 ## Key points
 
-- Canonical TDD is a behavior-design loop, not just a rule to write tests before code.
-- The loop depends on small steps, explicit sequencing, and visible behavioral intent.
-- In Python, the main value is not extra ceremony but earlier design feedback on interface and structure.
+- TDD starts with a test list that names intended behaviors, not a test that encodes an implementation assumption.
+- Red, green, and refactor are separate modes of work; mixing them undermines the discipline.
+- Writing the test first forces interface decisions before implementation decisions — that is the primary design benefit.
+- A test that passes immediately after a prior green step is valid; do not manufacture artificial failures.
+- Neglecting the refactor step is the most common way teams undermine their own TDD suites.
 
 ## Go deeper
 
-- `vault/research/test-driven-development-in-python/03-synthesis/claims.md`
-- `vault/research/test-driven-development-in-python/01-sources/web/S006-fowler-tdd.md`
-- `vault/research/test-driven-development-in-python/01-sources/web/S007-canon-tdd.md`
+- [S006](../../research/test-driven-development-in-python/01-sources/web/S006-fowler-tdd.md) — Fowler's canonical explanation of red-green-refactor and his identification of refactor-skipping as the key failure mode
+- [S007](../../research/test-driven-development-in-python/01-sources/web/S007-canon-tdd.md) — Beck's sharper formulation including the test list, test ordering, and which TDD criticisms attack strawman workflows
 
 ---
 
-*[Next lesson: Refactor Timing and Small-Step Control ->](./L02-refactor-timing-and-small-step-control.md)*
+*[Next lesson](./L02-refactor-timing-and-small-step-control.md) →*

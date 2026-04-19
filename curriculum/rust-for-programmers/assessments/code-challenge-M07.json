@@ -1,0 +1,128 @@
+{
+  "id": "code-challenge-M07",
+  "type": "module",
+  "module": "M07",
+  "title": "Coding Challenges: Generics, Traits & Lifetimes",
+  "challenges": [
+    {
+      "id": "CC16",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a generic function `largest<T: PartialOrd>(list: &[T]) -> &T` that returns a reference to the largest element in the slice. Then write an entry function `largest_int(input: &str) -> i64` that parses a space-separated list of integers, collects them into a `Vec<i64>`, and returns the largest.",
+      "starter_code": "fn largest<T: PartialOrd>(list: &[T]) -> &T {\n    // Return reference to the largest element\n    &list[0]\n}\n\nfn largest_int(input: &str) -> i64 {\n    let nums: Vec<i64> = input.split_whitespace()\n        .filter_map(|s| s.parse().ok())\n        .collect();\n    *largest(&nums)\n}\n",
+      "test_cases": [
+        {
+          "name": "Largest of three",
+          "input": "\"3 1 4\"",
+          "expected_output": "4",
+          "visibility": "visible"
+        },
+        {
+          "name": "Largest is first",
+          "input": "\"99 10 5\"",
+          "expected_output": "99",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single element",
+          "input": "\"42\"",
+          "expected_output": "42",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Negatives",
+          "input": "\"-3 -1 -7\"",
+          "expected_output": "-1",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["generic", "generic-function", "type-parameter", "monomorphization"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L19",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L19"]
+    },
+    {
+      "id": "CC17",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Define a trait `Summary` with a method `summarize(&self) -> String`. Implement it for a struct `Article { title: String, author: String }` to return `\"{title} by {author}\"`. Write an entry function `summarize_article(title: &str, author: &str) -> String` that constructs an Article and calls `.summarize()`.",
+      "starter_code": "trait Summary {\n    fn summarize(&self) -> String;\n}\n\nstruct Article {\n    title: String,\n    author: String,\n}\n\nimpl Summary for Article {\n    fn summarize(&self) -> String {\n        // Return \"{title} by {author}\"\n        String::new()\n    }\n}\n\nfn summarize_article(title: &str, author: &str) -> String {\n    let article = Article {\n        title: title.to_string(),\n        author: author.to_string(),\n    };\n    article.summarize()\n}\n",
+      "test_cases": [
+        {
+          "name": "Standard article",
+          "input": "\"Ownership Rules Alice\"",
+          "expected_output": "Ownership Rules by Alice",
+          "visibility": "visible"
+        },
+        {
+          "name": "Another author",
+          "input": "\"Lifetimes in Rust Bob\"",
+          "expected_output": "Lifetimes in Rust by Bob",
+          "visibility": "visible"
+        },
+        {
+          "name": "Short title",
+          "input": "\"Rust Carol\"",
+          "expected_output": "Rust by Carol",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Multi-word author",
+          "input": "\"Iterators Dan Smith\"",
+          "expected_output": "Iterators by Dan Smith",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["trait", "trait-impl", "impl-trait-param"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L20",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L19", "L20"]
+    },
+    {
+      "id": "CC18",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a function `longest_string<'a>(x: &'a str, y: &'a str) -> &'a str` that returns the longer of the two string slices (if equal length, return `x`). Write an entry function `compare(input: &str) -> String` that parses `\"word1 word2\"` (split on the first space) and returns the longer word.",
+      "starter_code": "fn longest_string<'a>(x: &'a str, y: &'a str) -> &'a str {\n    // Return the longer string; prefer x on tie\n    x\n}\n\nfn compare(input: &str) -> String {\n    // Split input into two parts on the first space\n    let parts: Vec<&str> = input.splitn(2, ' ').collect();\n    if parts.len() < 2 { return parts[0].to_string(); }\n    longest_string(parts[0], parts[1]).to_string()\n}\n",
+      "test_cases": [
+        {
+          "name": "Second is longer",
+          "input": "\"hi there\"",
+          "expected_output": "there",
+          "visibility": "visible"
+        },
+        {
+          "name": "First is longer",
+          "input": "\"elephant ant\"",
+          "expected_output": "elephant",
+          "visibility": "visible"
+        },
+        {
+          "name": "Tie returns first",
+          "input": "\"abc def\"",
+          "expected_output": "abc",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Single char vs word",
+          "input": "\"a rust\"",
+          "expected_output": "rust",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["lifetime", "lifetime-annotation", "lifetime-elision", "borrow-checker-lifetime"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 4,
+      "lesson_ref": "L21",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L20", "L21"]
+    }
+  ]
+}

@@ -1,0 +1,277 @@
+{
+  "slug": "rust-for-programmers",
+  "generated": "2026-04-19",
+  "applications": [
+    {
+      "id": "APP-M01-01",
+      "module": "M01",
+      "type": "project",
+      "title": "CLI Temperature Converter",
+      "summary": "Put Rust's functions, control flow, and Cargo to work by shipping a real command-line tool that converts temperatures between three scales.",
+      "prompt": "Build a Cargo project called `tempconv` that reads a temperature value and scale flag from the command line (`cargo run -- 100 C`) and prints the equivalent in the other two scales. Use `match` to dispatch on scale, `fn` for each conversion, and clean error messages for invalid input.",
+      "deliverable": "A runnable Cargo binary that handles F, C, and K inputs with correct output and a friendly error message for unknown scales.",
+      "estimated_minutes": 45,
+      "difficulty": 2,
+      "lesson_refs": ["L01", "L02", "L03"],
+      "tools": ["cargo", "rustup"],
+      "steps": [
+        "Run `cargo new tempconv --bin` and add a `main` that reads `std::env::args`.",
+        "Write one conversion function per pair (c_to_f, f_to_c, c_to_k, etc.) with explicit `-> f64` return types.",
+        "Use `match` on the scale argument to dispatch to the right pair of functions.",
+        "Print all three scales in a formatted table and test with edge values (−273.15 °C, 0 °F, 373.15 K).",
+        "Add a usage message when the argument count is wrong."
+      ],
+      "success_criteria": [
+        "`cargo run -- 100 C` prints correct Fahrenheit and Kelvin values.",
+        "All conversion functions use explicit parameter and return types — no type inference on signatures.",
+        "Invalid scale inputs print a helpful error and exit with a non-zero code.",
+        "The project builds with `cargo build --release` without warnings."
+      ],
+      "extension_ideas": [
+        "Add a `--round N` flag to control decimal precision.",
+        "Read a list of temperatures from a file and convert all of them."
+      ]
+    },
+    {
+      "id": "APP-M02-01",
+      "module": "M02",
+      "type": "implementation",
+      "title": "String Reversal Without Allocation",
+      "summary": "Prove you understand slices and borrowing by writing a sentence-reversal library that never clones the input string.",
+      "prompt": "Create a Cargo library crate `word_reverse` with a public function `reverse_words(s: &str) -> String` that reverses the order of words in a sentence (words separated by spaces) without allocating a copy of the input. The returned `String` is freshly constructed from slices only.",
+      "deliverable": "A library crate with at least six unit tests covering normal input, single words, multiple spaces, and empty strings.",
+      "estimated_minutes": 50,
+      "difficulty": 3,
+      "lesson_refs": ["L04", "L05", "L06"],
+      "tools": ["cargo"],
+      "steps": [
+        "Run `cargo new word_reverse --lib`.",
+        "Write `reverse_words` to split the input into `&str` slices using `.split_whitespace()`.",
+        "Collect slices into a `Vec<&str>`, reverse the vec, and join with a single space — no intermediate `String` clones.",
+        "Add tests: `\"hello world\"` → `\"world hello\"`, `\"rust\"` → `\"rust\"`, `\"  a  b  \"` → `\"b a\"`, `\"\"` → `\"\"`.",
+        "Run `cargo clippy` and resolve any lint warnings."
+      ],
+      "success_criteria": [
+        "The function signature is `fn reverse_words(s: &str) -> String` — no owned `String` input.",
+        "All unit tests pass with `cargo test`.",
+        "No `.clone()` call appears inside `reverse_words`.",
+        "Clippy is clean."
+      ],
+      "extension_ideas": [
+        "Add a `reverse_chars(s: &str) -> String` that reverses individual characters, respecting multi-byte UTF-8.",
+        "Benchmark with `cargo bench` and compare with a naive clone-based version."
+      ]
+    },
+    {
+      "id": "APP-M03-01",
+      "module": "M03",
+      "type": "project",
+      "title": "Point and Shape Library",
+      "summary": "Apply structs, impl blocks, and derived traits to build a small 2D geometry library you'd actually import.",
+      "prompt": "Create a Cargo library `geometry` with three structs: `Point { x: f64, y: f64 }`, `Circle { center: Point, radius: f64 }`, and `Rectangle { top_left: Point, bottom_right: Point }`. Implement `area()` and `perimeter()` methods on both shapes, a `distance_from_origin(&self) -> f64` method on `Point`, and `Display` formatting that renders them like `Circle(center=(1.0, 2.0), r=3.0)`.",
+      "deliverable": "A library crate with `#[derive(Debug, Clone, PartialEq)]` on all structs, `Display` implementations, and a suite of unit tests.",
+      "estimated_minutes": 60,
+      "difficulty": 3,
+      "lesson_refs": ["L07", "L08", "L09"],
+      "tools": ["cargo"],
+      "steps": [
+        "Define the three structs with `#[derive(Debug, Clone, PartialEq)]`.",
+        "Implement `Point::new(x, y)`, `Circle::new(center, radius)`, `Rectangle::new(top_left, bottom_right)` associated functions.",
+        "Add `area()` and `perimeter()` methods using `&self`.",
+        "Implement `std::fmt::Display` for all three types.",
+        "Write at least eight unit tests covering area, perimeter, display output, and clone equality."
+      ],
+      "success_criteria": [
+        "All methods take `&self` — none mutate the struct.",
+        "Display output matches the specified format exactly in tests.",
+        "Clone and PartialEq work correctly in test assertions.",
+        "`cargo test` passes without warnings."
+      ],
+      "extension_ideas": [
+        "Add a `contains(point: &Point) -> bool` method on both shapes.",
+        "Implement `From<(f64, f64)>` for `Point` so you can write `Point::from((1.0, 2.0))`."
+      ]
+    },
+    {
+      "id": "APP-M04-01",
+      "module": "M04",
+      "type": "project",
+      "title": "Mini Expression Evaluator",
+      "summary": "Use enums with data-carrying variants and exhaustive match to build a tiny expression tree that eliminates null-pointer bugs by design.",
+      "prompt": "Build a `calculator` library that represents arithmetic expressions as an enum `Expr { Num(f64), Add(Box<Expr>, Box<Expr>), Sub(Box<Expr>, Box<Expr>), Mul(Box<Expr>, Box<Expr>), Div(Box<Expr>, Box<Expr>) }` and evaluates them with `fn eval(expr: &Expr) -> Option<f64>` (returning `None` on division by zero).",
+      "deliverable": "A library crate where `eval` is fully exhaustive, all division-by-zero cases return `None`, and at least eight tests exercise different expression trees.",
+      "estimated_minutes": 75,
+      "difficulty": 4,
+      "lesson_refs": ["L10", "L11", "L12"],
+      "tools": ["cargo"],
+      "steps": [
+        "Define the `Expr` enum with `Box<Expr>` for recursive variants.",
+        "Write `eval` using a recursive `match` — every variant must be handled.",
+        "Return `None` from the `Div` arm when the right operand evaluates to 0.",
+        "Use `Option::and_then` to propagate `None` through nested expressions.",
+        "Test trees that are two and three levels deep; test division by zero in a nested position."
+      ],
+      "success_criteria": [
+        "The `match` in `eval` is exhaustive — removing a variant causes a compile error.",
+        "Division by zero at any depth returns `None`.",
+        "No `unwrap()` calls inside `eval` — only `?` or `and_then`.",
+        "All tests pass."
+      ],
+      "extension_ideas": [
+        "Add `Neg(Box<Expr>)` and `Pow(Box<Expr>, Box<Expr>)` variants.",
+        "Write a simple recursive-descent parser that converts `\"3 + 4 * 2\"` into an `Expr` tree."
+      ]
+    },
+    {
+      "id": "APP-M05-01",
+      "module": "M05",
+      "type": "implementation",
+      "title": "Word Frequency Counter",
+      "summary": "Combine Vec, HashMap, and String operations to build a production-quality text analysis tool.",
+      "prompt": "Build a Cargo binary `wordfreq` that reads text from stdin (or a file argument), counts word frequencies (case-insensitive, stripped of punctuation), and prints the top N most frequent words in descending order. N defaults to 10 and can be overridden with `--top N`.",
+      "deliverable": "A runnable binary that correctly handles multi-paragraph input and prints a ranked frequency table with counts.",
+      "estimated_minutes": 70,
+      "difficulty": 3,
+      "lesson_refs": ["L13", "L14", "L15"],
+      "tools": ["cargo"],
+      "steps": [
+        "Read all of stdin into a `String` using `std::io::Read`.",
+        "Normalize: `to_lowercase()`, strip non-alphabetic chars using `.chars().filter(|c| c.is_alphabetic() || *c == ' ')`.",
+        "Split on whitespace, insert into `HashMap<String, usize>` using the entry API.",
+        "Collect entries into a `Vec<(String, usize)>`, sort by count descending then alphabetically on ties.",
+        "Print the top N entries as `word: count`.",
+        "Parse `--top N` from `std::env::args` and fall back to 10."
+      ],
+      "success_criteria": [
+        "The entry API (`or_insert`) is used — no `contains_key` + `insert` pattern.",
+        "Output is sorted correctly: count descending, alpha ascending on ties.",
+        "Running on a 500-word input produces correct results verified by hand for the top 3 words.",
+        "`cargo clippy` is clean."
+      ],
+      "extension_ideas": [
+        "Add a `--exclude stopwords.txt` flag to skip common words.",
+        "Output results as JSON using only the standard library (`serde` not allowed)."
+      ]
+    },
+    {
+      "id": "APP-M06-01",
+      "module": "M06",
+      "type": "project",
+      "title": "CSV Parser with Custom Errors",
+      "summary": "Build real-world error handling by writing a CSV parser that propagates IO and parse errors through a custom error enum.",
+      "prompt": "Create a library `csvparse` that reads a CSV file with a header row, parses each subsequent row into a `Record { name: String, age: u32, score: f64 }`, and returns `Result<Vec<Record>, AppError>`. Define `AppError` as an enum with variants `Io(std::io::Error)`, `MissingField(usize)` (row number), and `ParseError { row: usize, field: String, value: String }`.",
+      "deliverable": "A library crate with `From<io::Error>` implemented on `AppError`, a `Display` impl on `AppError`, at least six tests (happy path, missing field, bad age, bad score, empty file, header-only file), and a small `main.rs` that demonstrates the `?` operator through a full call chain.",
+      "estimated_minutes": 90,
+      "difficulty": 4,
+      "lesson_refs": ["L16", "L17", "L18"],
+      "tools": ["cargo"],
+      "steps": [
+        "Define `AppError` enum and implement `std::fmt::Display` on it.",
+        "Implement `From<std::io::Error> for AppError` so IO errors coerce with `?`.",
+        "Write `parse_csv(path: &str) -> Result<Vec<Record>, AppError>` using `?` throughout — no `unwrap`.",
+        "Test happy path with a two-row CSV, then test each error variant by passing malformed input.",
+        "Write a `main.rs` that calls `parse_csv`, prints each record on success, or prints the error on failure."
+      ],
+      "success_criteria": [
+        "`AppError` implements `Display` and `std::error::Error`.",
+        "`From<io::Error>` is implemented — `?` converts IO errors automatically.",
+        "No `unwrap()` or `expect()` calls inside `parse_csv`.",
+        "All six tests pass."
+      ],
+      "extension_ideas": [
+        "Add `impl std::error::Error for AppError` with `source()` returning the inner IO error.",
+        "Support dynamic column schemas using a header-driven field map."
+      ]
+    },
+    {
+      "id": "APP-M07-01",
+      "module": "M07",
+      "type": "implementation",
+      "title": "Generic Stack with Trait Bounds",
+      "summary": "Cement generics and traits by building a type-safe generic stack that works with any Display + Clone type and prints a human-readable state.",
+      "prompt": "Create a library `genstack` with `Stack<T>` where T must implement `Clone`. Add `push`, `pop() -> Option<T>`, `peek() -> Option<&T>`, `is_empty()`, `size()`, and a `display()` method (requires `T: Display`) that prints the stack top-to-bottom as `[top → ... → bottom]`. Write a generic function `transfer<T: Clone>(from: &mut Stack<T>, to: &mut Stack<T>)` that pops all items from `from` and pushes them onto `to`.",
+      "deliverable": "A library with at least eight tests, including generic use with both `i32` and `String`, and tests that verify the `transfer` function preserves order.",
+      "estimated_minutes": 65,
+      "difficulty": 4,
+      "lesson_refs": ["L19", "L20", "L21"],
+      "tools": ["cargo"],
+      "steps": [
+        "Define `Stack<T>` wrapping a `Vec<T>` — the vec is private.",
+        "Implement all five methods on `impl<T: Clone> Stack<T>`.",
+        "Add `display()` in a separate `impl<T: Clone + std::fmt::Display> Stack<T>` block.",
+        "Implement `transfer` as a standalone generic function with a `where T: Clone` bound.",
+        "Write tests: push 3 items, pop 2, peek, display, transfer to empty stack, transfer preserves reverse order."
+      ],
+      "success_criteria": [
+        "`Stack<T>` works with any `Clone` type — tested with `i32` and `String`.",
+        "`display()` is only available when `T: Display` (orphan rule respected).",
+        "`transfer` tests verify the stack is empty after and the target has items in correct order.",
+        "No `pub` on the internal `Vec`."
+      ],
+      "extension_ideas": [
+        "Add a lifetime-annotated `iter()` method returning a slice iterator over `&T`.",
+        "Implement `Iterator` for `Stack<T>` to consume the stack lazily."
+      ]
+    },
+    {
+      "id": "APP-M08-01",
+      "module": "M08",
+      "type": "project",
+      "title": "Functional Log Analyzer",
+      "summary": "Replace explicit loops with idiomatic iterator chains to transform, filter, and summarize a log stream — proving zero-cost abstraction in practice.",
+      "prompt": "Create a binary `loganalyze` that reads a newline-delimited log file where each line is `LEVEL: message` (e.g. `ERROR: disk full`). Using only iterator adapters (no `for` loops in processing code), produce: (1) a count per level, (2) all ERROR messages with line numbers, (3) the five most recent WARN messages. Write the output to stdout.",
+      "deliverable": "A runnable binary where all data processing is done with `.map()`, `.filter()`, `.enumerate()`, `.fold()` or similar — reviewable by grep for absence of `for` in processing functions.",
+      "estimated_minutes": 75,
+      "difficulty": 4,
+      "lesson_refs": ["L22", "L23", "L24"],
+      "tools": ["cargo"],
+      "steps": [
+        "Read the file into a `String`, split on newlines, enumerate to track line numbers.",
+        "Parse each line into a `LogEntry { line: usize, level: String, message: String }` using `.map()` and `.filter_map()` — skip malformed lines.",
+        "Use `.filter()` + `.count()` to build level counts, then `.collect::<HashMap<_, _>>()`.",
+        "Chain `.filter()` + `.map()` for ERROR messages with line numbers.",
+        "Use `.filter()` + `.rev()` + `.take(5)` for recent WARNs."
+      ],
+      "success_criteria": [
+        "No `for` loop appears in any processing function — only iterator adapters.",
+        "Malformed lines are silently skipped with `filter_map`, not panicked on.",
+        "Output is clearly formatted with section headers.",
+        "`cargo clippy` is clean."
+      ],
+      "extension_ideas": [
+        "Add a `--level WARN` flag to filter output to a single level.",
+        "Implement `FromStr` for `LogEntry` and parse with `.parse::<LogEntry>()`."
+      ]
+    },
+    {
+      "id": "APP-M09-01",
+      "module": "M09",
+      "type": "project",
+      "title": "Parallel Word Counter",
+      "summary": "Apply threads, channels, and Arc<Mutex<T>> to build a concurrent text analysis pipeline — and observe that Rust's type system prevents the data races you'd write by accident in other languages.",
+      "prompt": "Build a binary `parcount` that reads a text file, splits it into N equal chunks (N = number of CPUs, default 4), spawns one thread per chunk, counts word frequencies in each thread, then merges results into a single `HashMap<String, usize>` and prints the top 20 words. Implement two versions: one using `Arc<Mutex<HashMap>>` shared state and one using channels — compare them in a README note.",
+      "deliverable": "A binary with two functions `count_shared` and `count_channels`, a `main` that calls both and asserts they produce identical results, and a short README note comparing the two approaches.",
+      "estimated_minutes": 90,
+      "difficulty": 5,
+      "lesson_refs": ["L25", "L26", "L27"],
+      "tools": ["cargo"],
+      "steps": [
+        "Read the file, split into N chunks by line count using `.chunks()` on a `Vec<String>`.",
+        "Implement `count_shared`: create `Arc<Mutex<HashMap<String, usize>>>`, clone the Arc N times, spawn threads with `move` closures that lock, count, and release.",
+        "Implement `count_channels`: create one `mpsc::channel`, clone the `Sender` N times, each thread sends a local `HashMap`, the main thread drains the receiver and merges.",
+        "Assert both functions return identical results on the same input.",
+        "Print top 20 words from `count_channels` output."
+      ],
+      "success_criteria": [
+        "Both `count_shared` and `count_channels` compile — the type system rejects any accidental data race.",
+        "The assertion that both produce identical results passes.",
+        "Threads are joined before results are used.",
+        "The README note identifies at least one concrete tradeoff between the two approaches."
+      ],
+      "extension_ideas": [
+        "Replace manual chunking with a thread pool using the `rayon` crate.",
+        "Measure wall-clock time for both versions with `std::time::Instant` and note the difference."
+      ]
+    }
+  ]
+}

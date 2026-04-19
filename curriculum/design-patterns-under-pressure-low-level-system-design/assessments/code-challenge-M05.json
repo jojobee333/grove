@@ -1,0 +1,128 @@
+{
+  "id": "code-challenge-M05",
+  "type": "module",
+  "module": "M05",
+  "title": "Coding Challenge: Data Mapping & Unit of Work",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `map_to_domain(raw_record)` that takes a dict with keys prefixed by `'user_'` and returns a new dict with those prefixes stripped. Keys that do **not** start with `'user_'` are kept unchanged.\n\nExample: `{'user_id': 1, 'user_name': 'Alice', 'status': 'active'}` → `{'id': 1, 'name': 'Alice', 'status': 'active'}`",
+      "starter_code": "def map_to_domain(raw_record):\n    \"\"\"\n    Strip the 'user_' prefix from dict keys that have it.\n    Returns a new dict.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Strips user_ from all three keys",
+          "input": "{'user_id': 1, 'user_name': 'Alice', 'user_email': 'a@b.com'}",
+          "expected_output": "{'id': 1, 'name': 'Alice', 'email': 'a@b.com'}",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single key stripped",
+          "input": "{'user_id': 42}",
+          "expected_output": "{'id': 42}",
+          "visibility": "visible"
+        },
+        {
+          "name": "Non-prefixed key kept as-is",
+          "input": "{'user_id': 1, 'status': 'active'}",
+          "expected_output": "{'id': 1, 'status': 'active'}",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Zero value preserved correctly",
+          "input": "{'user_id': 0, 'user_name': 'Bob'}",
+          "expected_output": "{'id': 0, 'name': 'Bob'}",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["data-mapper", "object-relational-mapping"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L13",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L13"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `collect_dirty_ids(entities)` that takes a list of entity dicts, each with an `'id'` field and an `'is_dirty'` boolean. Return a **sorted** list of IDs for all entities where `is_dirty` is `True`.\n\nThis simulates Unit of Work change tracking: identifying which objects need to be flushed to the database.",
+      "starter_code": "def collect_dirty_ids(entities):\n    \"\"\"\n    Return sorted list of IDs for entities where is_dirty is True.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Two dirty entities",
+          "input": "[{'id': 1, 'is_dirty': True}, {'id': 2, 'is_dirty': False}, {'id': 3, 'is_dirty': True}]",
+          "expected_output": "[1, 3]",
+          "visibility": "visible"
+        },
+        {
+          "name": "Empty list",
+          "input": "[]",
+          "expected_output": "[]",
+          "visibility": "visible"
+        },
+        {
+          "name": "All clean — no dirty IDs",
+          "input": "[{'id': 5, 'is_dirty': False}]",
+          "expected_output": "[]",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Two dirty in reverse order — sorted output",
+          "input": "[{'id': 2, 'is_dirty': True}, {'id': 1, 'is_dirty': True}]",
+          "expected_output": "[1, 2]",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["unit-of-work", "change-tracking"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L15",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L15"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `build_identity_map(records)` that takes a list of dicts, each with an `'id'` key, and returns a dict keyed by `id`. If two records share the same `id`, the later one wins.\n\nThe Identity Map pattern prevents loading the same database row twice by caching objects in memory keyed by primary key.",
+      "starter_code": "def build_identity_map(records):\n    \"\"\"\n    Build a dict of {id: record} from a list of records.\n    Returns a dict.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Two records mapped by id",
+          "input": "[{'id': 1, 'name': 'Alice'}, {'id': 2, 'name': 'Bob'}]",
+          "expected_output": "{1: {'id': 1, 'name': 'Alice'}, 2: {'id': 2, 'name': 'Bob'}}",
+          "visibility": "visible"
+        },
+        {
+          "name": "Empty list returns empty map",
+          "input": "[]",
+          "expected_output": "{}",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single record",
+          "input": "[{'id': 5, 'val': 'x'}]",
+          "expected_output": "{5: {'id': 5, 'val': 'x'}}",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Duplicate id — last record wins",
+          "input": "[{'id': 1, 'v': 'a'}, {'id': 1, 'v': 'b'}]",
+          "expected_output": "{1: {'id': 1, 'v': 'b'}}",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["data-mapper", "repository-pattern", "identity-map"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L14",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L14", "L15"]
+    }
+  ]
+}

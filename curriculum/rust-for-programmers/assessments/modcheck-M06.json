@@ -1,0 +1,26 @@
+{
+  "module": "M06",
+  "title": "Error Handling — Quick Check",
+  "questions": [
+    {
+      "id": "MC06-1",
+      "q": "What is `Result<T, E>` and when should you use it instead of `panic!`?",
+      "a": "`Result<T, E>` is an enum with `Ok(T)` for success and `Err(E)` for failure. Use `Result` for recoverable errors (file not found, parse failure, network timeout) where the caller can meaningfully handle the problem. Use `panic!` only for unrecoverable programming errors (broken invariants, logic bugs)."
+    },
+    {
+      "id": "MC06-2",
+      "q": "What does the `?` operator do, and what return types can it be used in?",
+      "a": "`?` is syntactic sugar for: if the value is `Ok(v)`, unwrap to `v`; if `Err(e)`, call `From::from(e)` to convert the error type and return early with that error. It can only be used in functions returning `Result<_, E>` or `Option<_>` (and `main()` if it returns `Result`)."
+    },
+    {
+      "id": "MC06-3",
+      "q": "When would you write a custom error type instead of using `Box<dyn Error>`?",
+      "a": "Custom error types are preferred in library code where callers need to match on specific error variants, when you want structured error data (e.g., line number, field name), or when you need to document the exact failure modes in the public API. `Box<dyn Error>` is fine for applications and prototypes."
+    },
+    {
+      "id": "MC06-4",
+      "q": "What must a custom error type implement to work with the `?` operator and standard error handling?",
+      "a": "It must implement `std::fmt::Display` (for human-readable messages) and `std::error::Error` (the error trait). To use `?` for automatic type conversion, you also implement `From<OtherError> for MyError`, which `?` calls via `From::from`."
+    }
+  ]
+}

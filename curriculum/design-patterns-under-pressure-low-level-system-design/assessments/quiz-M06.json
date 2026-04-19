@@ -1,0 +1,171 @@
+{
+  "id": "quiz-M06",
+  "type": "module",
+  "module": "M06",
+  "title": "Assessment: Behavioral Patterns One by One",
+  "generated": "2026-04-17",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What action-reification property of the Command pattern enables undo/redo functionality?",
+      "options": {
+        "A": "Commands are executed synchronously, so they can be cancelled",
+        "B": "Each command is an object that encapsulates the action and optionally its inverse (undo logic), allowing it to be stored and reversed",
+        "C": "Commands are immutable, so the original state is always recoverable",
+        "D": "Commands log to a file automatically, enabling state reconstruction"
+      },
+      "correct": "B",
+      "explanation": "Reification means the action becomes a first-class object. That object can carry an execute() and undo() method. A history stack stores executed commands; undo pops and calls undo(). Synchronicity (A), immutability (C), and file logging (D) are not what enables this.",
+      "lesson_ref": "L16",
+      "claim_ref": "C4",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "A job processing system needs to retry failed jobs up to 3 times. Which Command property makes this possible without changing each job's business logic?",
+      "options": {
+        "A": "Commands are stateless, so retrying is always safe",
+        "B": "The queue treats each job as a Command object and calls execute() again, managing retry count externally through the uniform interface",
+        "C": "Command includes built-in retry logic via its base class",
+        "D": "Commands automatically clone themselves for retry attempts"
+      },
+      "correct": "B",
+      "explanation": "Reification means the queue can hold, inspect, and re-execute any command through a uniform interface. The business logic inside execute() is unchanged — retry policy is managed externally by the queue. A, C, D are incorrect characterizations.",
+      "lesson_ref": "L16",
+      "claim_ref": "C4",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "What traceability cost does the Observer pattern introduce that direct method calls do not?",
+      "options": {
+        "A": "Observer requires a message broker that adds network latency",
+        "B": "The control flow becomes implicit — a reader of the subject's code cannot see which handlers will run for an event",
+        "C": "Observer forces all subscribers to run on the same thread",
+        "D": "The subject must know all subscriber types to send the right event"
+      },
+      "correct": "B",
+      "explanation": "The traceability cost is implicit control flow. With Observer, firing an event triggers subscriber code that is invisible from the subject. Debugging requires knowing all registered observers. A describes messaging infrastructure. C is an implementation concern. D is wrong — Observer decouples subject from subscriber types.",
+      "lesson_ref": "L17",
+      "claim_ref": "C4",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "Claim C4 states behavioral patterns trade directness for coordination control. Which scenario best illustrates this tradeoff with Observer?",
+      "options": {
+        "A": "Observer removes the need for any interfaces between the subject and its subscribers",
+        "B": "An Order fires an order_placed event; EmailService, InventoryService, and AnalyticsService respond independently — Order is simpler but a bug in InventoryService is invisible when reading Order's code",
+        "C": "Observer is used to replace try/except blocks with event-based error handling",
+        "D": "Observer allows multiple subjects to share a single subscriber"
+      },
+      "correct": "B",
+      "explanation": "This directly illustrates C4: directness is lost (implicit flow from Order to its subscribers) but coordination is controlled (Order doesn't need to enumerate or call each service). A, C, D mischaracterize Observer's mechanics.",
+      "lesson_ref": "L17",
+      "claim_ref": "C4",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "What condition-sprawl pressure justifies the State pattern over an if-elif chain?",
+      "options": {
+        "A": "The object has more than three states to track",
+        "B": "State-dependent logic is spread across many methods and adding a new state requires modifying each one",
+        "C": "The object must transition between states faster than an if-elif chain can execute",
+        "D": "The application uses a database to persist state values"
+      },
+      "correct": "B",
+      "explanation": "State is justified when condition-heavy logic spreads across many methods and adding a state means modifying many places. If there are three states but only one method, an if-elif is simpler. A uses state count as a proxy — wrong. C and D describe performance and persistence, not the structural pressure.",
+      "lesson_ref": "L18",
+      "claim_ref": "C4",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "Distinguish State from Strategy: a Document changes behavior based on its status (Draft, Review, Published). An OrderProcessor selects a pricing algorithm (Standard, Premium, Bulk) per order. Which uses State and which uses Strategy?",
+      "options": {
+        "A": "Both use State; the pricing algorithm selection is just a special case",
+        "B": "Document uses State (lifecycle transitions over time); OrderProcessor uses Strategy (algorithm selection at point of use)",
+        "C": "Document uses Strategy; OrderProcessor uses State",
+        "D": "Both use Strategy; the document status is just an algorithm selection"
+      },
+      "correct": "B",
+      "explanation": "Document transitions between states over its lifecycle (Draft → Review → Published) — that is State. OrderProcessor selects an algorithm per order at the point of use without lifecycle transitions — that is Strategy. C has them reversed. A and D collapse the distinction.",
+      "lesson_ref": "L18",
+      "claim_ref": "C4",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "A text editor uses Command for edit operations. When would adding Observer to the same system be justified alongside Command?",
+      "options": {
+        "A": "When there are more than 10 different command types",
+        "B": "When multiple independent components (UI, undo history, collaborators) need to react to document changes without the document knowing each one",
+        "C": "When Command objects need to communicate with each other",
+        "D": "When undo operations must be confirmed by the user before executing"
+      },
+      "correct": "B",
+      "explanation": "Observer is justified when a document change must fan out to multiple independent consumers (UI rendering, undo stack, network sync) that shouldn't be coupled to the document. This is a distinct pressure from what Command addresses. A uses count as proxy. C and D are different concerns.",
+      "lesson_ref": "L17",
+      "claim_ref": "C4",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "Explain the difference between Command and a direct function call in terms of lifecycle control. Give one scenario where Command's lifecycle capabilities are essential.",
+      "answer_key": {
+        "required_points": [
+          "Direct call: action executes immediately, no identity, no history, no deferral",
+          "Command: action is packaged as an object with identity — can be stored, queued, replayed, undone, serialized",
+          "Scenario where essential: undo/redo (must reverse past actions), job retry queue (must re-execute without rebuilding context), audit log (must record and replay specific actions)"
+        ],
+        "acceptable_variations": "Any scenario that genuinely requires at least one of the lifecycle capabilities (defer, queue, replay, undo)",
+        "full_credit": "Correct distinction, lifecycle capabilities named, scenario where essential identified",
+        "partial_credit": "Correct distinction without lifecycle capabilities, or scenario without the distinction"
+      },
+      "lesson_ref": "L16",
+      "claim_ref": "C4",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "A Document class has if/elif status checks in 6 different methods. Sketch the State refactor: what classes are created, what disappears from Document, and what happens when a 7th state is added later?",
+      "answer_key": {
+        "required_points": [
+          "Classes created: DraftState, ReviewState, PublishedState (one per state) each implementing the document's state-dependent interface",
+          "What disappears from Document: the if/elif chains in the 6 methods — Document delegates to self.state.method_name()",
+          "Adding a 7th state: create a new state class; Document and all existing state classes are unchanged — open/closed principle in practice"
+        ],
+        "acceptable_variations": "State class names can vary; key elements are the delegation and the extensibility without modification",
+        "full_credit": "Names the classes, describes what is removed from Document, and explains extensibility correctly",
+        "partial_credit": "Describes the refactor without the extensibility consequence"
+      },
+      "lesson_ref": "L18",
+      "claim_ref": "C4",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "You are designing a collaborative document editor. Three behavioral pressures exist: (1) users can undo/redo edits, (2) multiple UI components must update when the document changes, (3) the document has three distinct editing modes (insert, read-only, commenting) with different behavior per mode. Using Command, Observer, and State, explain how these three patterns compose, what each owns, and what would break if you collapsed two of them into one.",
+      "guidance": "A strong response assigns Command → undo/redo history (action reification), Observer → reactive UI updates (fan-out notification), State → mode-based behavior (lifecycle-driven delegation). It explains they address different pressures so there is no overlap. The collapse test should show what breaks: e.g., merging Command and State creates objects that are both action records and mode controllers — conflated responsibilities.",
+      "rubric": {
+        "A": "Correctly assigns all three patterns to distinct pressures, describes composition (no overlap), performs the collapse test for at least two combinations",
+        "B": "Correctly assigns two of three, describes partial composition, performs one collapse test",
+        "C": "Names all three without pressure assignment or composition reasoning"
+      },
+      "lesson_ref": "L16-L18",
+      "difficulty": "analysis"
+    }
+  ]
+}

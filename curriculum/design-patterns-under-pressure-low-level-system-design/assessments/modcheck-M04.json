@@ -1,0 +1,26 @@
+{
+  "module": "M04",
+  "title": "Application and Boundary-Shaping Patterns — Quick Check",
+  "questions": [
+    {
+      "id": "MC04-1",
+      "q": "What pressure does the Service Layer pattern address, and what does it not own?",
+      "a": "Service Layer owns application orchestration — coordinating use-case steps across domain objects and infrastructure. It does not own business rules; those belong in domain objects. Letting the service layer absorb rules produces an anemic domain model."
+    },
+    {
+      "id": "MC04-2",
+      "q": "What is a Special Case object and what problem does it eliminate?",
+      "a": "A Special Case object is a domain object that handles a boundary condition (null user, empty order, guest customer) through polymorphism instead of conditional checks. It eliminates repeated null/sentinel checks scattered across the codebase."
+    },
+    {
+      "id": "MC04-3",
+      "q": "How do you select between Service Layer, Special Case, and Registry for a boundary problem?",
+      "a": "Match the pattern to the mismatch type. Service Layer fits use-case coordination across multiple domain objects. Special Case fits edge-condition behavior that would otherwise scatter conditionals. Registry fits centralized lookup where explicit references are impractical."
+    },
+    {
+      "id": "MC04-4",
+      "q": "What is the failure mode of a Service Layer that grows too large?",
+      "a": "An over-grown Service Layer absorbs business rules from the domain, leaving domain objects as data bags. This produces an Anemic Domain Model — the structural appearance of OOP with the behavioral reality of procedural scripts."
+    }
+  ]
+}

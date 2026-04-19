@@ -1,0 +1,26 @@
+{
+  "module": "M07",
+  "title": "Generics, Traits & Lifetimes — Quick Check",
+  "questions": [
+    {
+      "id": "MC07-1",
+      "q": "What is monomorphization and why does it make generic Rust code zero-cost?",
+      "a": "Monomorphization is the compiler generating a concrete copy of each generic function or struct for every type it is instantiated with. There is no boxing or runtime dispatch — the resulting machine code is identical to what you would write by hand for each specific type."
+    },
+    {
+      "id": "MC07-2",
+      "q": "What does the orphan rule say, and why does it exist?",
+      "a": "The orphan rule says: you can implement a trait for a type only if the trait or the type (or both) are defined in your crate. It prevents two crates from providing conflicting implementations of the same trait for the same type, which would be ambiguous."
+    },
+    {
+      "id": "MC07-3",
+      "q": "When do you need to write lifetime annotations explicitly, and when can you omit them?",
+      "a": "You can omit lifetimes (elision) when: (1) each reference parameter gets an independent lifetime, (2) there is exactly one input reference (it applies to output), or (3) one input is `&self`/`&mut self` (its lifetime applies to output). You must write annotations when there are multiple input references and the compiler cannot determine which one the output borrows from."
+    },
+    {
+      "id": "MC07-4",
+      "q": "What is the difference between `impl Trait` (static dispatch) and `dyn Trait` (dynamic dispatch)? When would you choose each?",
+      "a": "`impl Trait` is resolved at compile time — the compiler generates concrete code per type (fast, zero-cost, but the type must be known at compile time). `dyn Trait` dispatches through a vtable at runtime (small overhead, but allows storing heterogeneous types in a collection such as `Vec<Box<dyn Trait>>`)."
+    }
+  ]
+}

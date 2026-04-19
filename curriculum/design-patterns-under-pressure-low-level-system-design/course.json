@@ -1,0 +1,582 @@
+{
+  "topic": "Design Patterns Under Pressure for Low-Level System Design",
+  "slug": "design-patterns-under-pressure-low-level-system-design",
+  "strata_source": "vault/research/design-patterns-under-pressure-low-level-system-design/",
+  "generated": "2026-04-16",
+  "learner": {
+    "goal": "apply practically",
+    "background": "complete beginner",
+    "session_time_min": 45
+  },
+  "summary": "A 28-lesson deep-study course that teaches a beginner to evaluate, apply, criticize, and combine major low-level design patterns one pattern at a time, using design pressure and tradeoff analysis as the organizing lens.",
+  "modules": [
+    {
+      "id": "M01",
+      "title": "Pressure-First Foundations",
+      "strata_theme": "Theme 1: Patterns are pressure-responses, not catalog trivia",
+      "description": "Build the decision model for the whole course: patterns exist because recurring forces make simple designs too costly.",
+      "objectives": [
+        "Identify and define the recurring pressures that make patterns useful",
+        "Apply a pressure-first method before selecting a pattern",
+        "Explain how pattern languages differ from catalog memorization"
+      ],
+      "lessons": [
+        {
+          "id": "L01",
+          "title": "Why Patterns Exist at All",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 20,
+          "description": "Why coupling, volatility, coordination, and boundary mismatch create recurring design problems that patterns answer.",
+          "prerequisites": [],
+          "teaches_concepts": ["design-pressure", "pressure-taxonomy", "pattern-purpose", "force-based-selection"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.80,
+          "difficulty": 1,
+          "unlock_rule": "always",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L02",
+          "title": "Diagnosing Pressure Before Adding Structure",
+          "strata_claim": "C1",
+          "type": "applied",
+          "estimated_minutes": 24,
+          "description": "A practical method for converting observed design pain into a justified structural response instead of speculative architecture.",
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["pressure-diagnosis", "tradeoff-triage"],
+          "reinforces_concepts": ["design-pressure", "pressure-taxonomy", "force-based-selection"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L03",
+          "title": "Pattern Languages and Design Vocabulary",
+          "strata_claim": "C1, C6",
+          "type": "core",
+          "estimated_minutes": 20,
+          "description": "How patterns function as a language of related design moves rather than isolated names on a checklist.",
+          "prerequisites": ["L02"],
+          "teaches_concepts": ["pattern-language", "composition-vocabulary"],
+          "reinforces_concepts": ["pattern-purpose", "tradeoff-triage"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M02",
+      "title": "Construction and Runtime Variation",
+      "strata_theme": "Theme 2: Creational patterns earn their keep when construction or runtime variation becomes a real source of coupling",
+      "description": "Study the major patterns that reshape object creation, configuration, and runtime extension.",
+      "objectives": [
+        "Apply creational patterns when construction has become a real source of coupling",
+        "Compare dependency injection, plugins, and prototype-style variation by the pressure they relieve",
+        "Judge when creational flexibility is solving a real problem versus adding wiring overhead"
+      ],
+      "lessons": [
+        {
+          "id": "L04",
+          "title": "Dependency Injection as a Construction Boundary",
+          "strata_claim": "C2",
+          "type": "core",
+          "estimated_minutes": 24,
+          "description": "How dependency injection separates configuration from use and what construction pressures justify the indirection.",
+          "prerequisites": ["L03"],
+          "teaches_concepts": ["dependency-injection", "construction-coupling", "configuration-boundary"],
+          "reinforces_concepts": ["pressure-diagnosis"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L05",
+          "title": "Plugin as a Runtime Extension Pattern",
+          "strata_claim": "C2",
+          "type": "applied",
+          "estimated_minutes": 24,
+          "description": "How plugin architectures centralize runtime variability instead of scattering conditionals and environment-specific branches.",
+          "prerequisites": ["L04"],
+          "teaches_concepts": ["plugin-pattern", "runtime-variation", "extension-boundary"],
+          "reinforces_concepts": ["configuration-boundary", "force-based-selection"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L06",
+          "title": "Prototype and the Cost of Cloning-Based Flexibility",
+          "strata_claim": "C2; Contradiction 2",
+          "type": "applied",
+          "estimated_minutes": 22,
+          "description": "When prototype-style cloning earns its keep and when modern language features or direct construction are cleaner.",
+          "prerequisites": ["L05"],
+          "teaches_concepts": ["prototype", "cloning-tradeoff"],
+          "reinforces_concepts": ["runtime-variation", "tradeoff-triage"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M03",
+      "title": "Ambient Access and Hidden Dependencies",
+      "strata_theme": "Theme 3 and Theme 5 overlap around global convenience patterns and hidden coupling",
+      "description": "Study the convenience-oriented access patterns that save plumbing while risking invisible coupling and harder reasoning.",
+      "objectives": [
+        "Compare registry, service locator, and singleton by the convenience they offer and the coupling they hide",
+        "Diagnose when ambient access is justified narrowly and when it becomes architectural debt",
+        "Evaluate dependency visibility as a first-class design concern"
+      ],
+      "lessons": [
+        {
+          "id": "L07",
+          "title": "Registry: Centralized Access with Hidden Cost",
+          "strata_claim": "C3, C5",
+          "type": "core",
+          "estimated_minutes": 20,
+          "description": "How registries centralize lookup and why that convenience can quietly widen dependency webs.",
+          "prerequisites": ["L04"],
+          "teaches_concepts": ["registry-pattern", "ambient-access"],
+          "reinforces_concepts": ["configuration-boundary", "construction-coupling"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L08",
+          "title": "Service Locator: A Legitimate Tool with Sharp Edges",
+          "strata_claim": "C3, C5; Contradiction 1",
+          "type": "core",
+          "estimated_minutes": 24,
+          "description": "Why service locator remains useful in some environments and why it is also one of the easiest patterns to misuse.",
+          "prerequisites": ["L07"],
+          "teaches_concepts": ["service-locator", "dependency-visibility"],
+          "reinforces_concepts": ["ambient-access", "tradeoff-triage"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L09",
+          "title": "Singleton Beyond the Joke Version",
+          "strata_claim": "C5",
+          "type": "applied",
+          "estimated_minutes": 22,
+          "description": "What singleton actually solves, why it is commonly abused as ambient global access, and how to recognize both cases.",
+          "prerequisites": ["L08"],
+          "teaches_concepts": ["singleton", "global-state-risk"],
+          "reinforces_concepts": ["dependency-visibility", "ambient-access"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M04",
+      "title": "Application and Boundary-Shaping Patterns",
+      "strata_theme": "Theme 3: Structural patterns are boundary-management tools whose main value is selective decoupling",
+      "description": "Study patterns that define application boundaries and isolate awkward cases so they do not leak across the system.",
+      "objectives": [
+        "Apply service and special-case patterns at the boundaries where mismatches actually occur",
+        "Use structural indirection to localize complexity instead of spreading it",
+        "Select boundary patterns based on mismatch type rather than generic decoupling slogans"
+      ],
+      "lessons": [
+        {
+          "id": "L10",
+          "title": "Service Layer as Orchestration Boundary",
+          "strata_claim": "C3",
+          "type": "core",
+          "estimated_minutes": 24,
+          "description": "How service layers centralize application orchestration and where they stop so they do not hollow out the domain.",
+          "prerequisites": ["L03"],
+          "teaches_concepts": ["service-layer", "application-orchestration"],
+          "reinforces_concepts": ["boundary-isolation", "force-based-selection"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L11",
+          "title": "Special Case for Edge Conditions Without Branch Explosion",
+          "strata_claim": "C3",
+          "type": "applied",
+          "estimated_minutes": 20,
+          "description": "How special case objects replace repeated null and sentinel handling with local, polymorphic behavior.",
+          "prerequisites": ["L10"],
+          "teaches_concepts": ["special-case", "edge-case-localization"],
+          "reinforces_concepts": ["boundary-isolation"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L12",
+          "title": "Choosing the Right Structural Pattern for the Boundary",
+          "strata_claim": "C3",
+          "type": "applied",
+          "estimated_minutes": 24,
+          "description": "A selection workshop that matches concrete boundary problems to service layer, special case, registry, or other structural responses.",
+          "prerequisites": ["L11"],
+          "teaches_concepts": ["structural-pattern-selection", "boundary-mismatch"],
+          "reinforces_concepts": ["service-layer", "special-case", "registry-pattern"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M05",
+      "title": "Persistence Boundaries in Depth",
+      "strata_theme": "Theme 3 and Theme 6 around persistence separation and composition",
+      "description": "Study the persistence patterns that protect the domain from relational concerns while keeping writes and queries manageable.",
+      "objectives": [
+        "Apply Data Mapper, Repository, and Unit of Work to distinct persistence pressures",
+        "Compare query abstraction, object-relational isolation, and transactional coordination as separate concerns",
+        "Diagnose when persistence patterns are clarifying the design and when they are decorative ceremony"
+      ],
+      "lessons": [
+        {
+          "id": "L13",
+          "title": "Data Mapper: Keeping the Domain Ignorant of the Database",
+          "strata_claim": "C3, C6",
+          "type": "core",
+          "estimated_minutes": 22,
+          "description": "How Data Mapper isolates object models from relational models and what complexity justifies that extra layer.",
+          "prerequisites": ["L12"],
+          "teaches_concepts": ["data-mapper", "object-relational-mismatch"],
+          "reinforces_concepts": ["boundary-mismatch", "service-layer"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L14",
+          "title": "Repository: Query Boundaries That Still Feel Like Collections",
+          "strata_claim": "C3, C6",
+          "type": "core",
+          "estimated_minutes": 22,
+          "description": "How repositories centralize query logic, preserve cleaner domain access, and sometimes drift into needless indirection.",
+          "prerequisites": ["L13"],
+          "teaches_concepts": ["repository", "query-abstraction"],
+          "reinforces_concepts": ["data-mapper", "persistence-boundary"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L15",
+          "title": "Unit of Work: Transaction-Scope Coordination",
+          "strata_claim": "C4, C6",
+          "type": "applied",
+          "estimated_minutes": 24,
+          "description": "How Unit of Work coordinates multi-object changes and writeback timing without turning every save into a local event.",
+          "prerequisites": ["L14"],
+          "teaches_concepts": ["unit-of-work", "transaction-scope"],
+          "reinforces_concepts": ["repository", "data-mapper", "workflow-coordination"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M06",
+      "title": "Behavioral Patterns One by One",
+      "strata_theme": "Theme 4: Behavioral patterns manage time, coordination, and changing roles, but they trade directness for control",
+      "description": "Study the flagship behavioral patterns in depth instead of collapsing them into one survey lesson.",
+      "objectives": [
+        "Apply Command, Observer, and State to the specific coordination pressures they address",
+        "Explain the clarity and traceability cost introduced by each behavioral pattern",
+        "Compare behavioral pattern fit across editors, workflows, and event-driven systems"
+      ],
+      "lessons": [
+        {
+          "id": "L16",
+          "title": "Command: Reified Actions, Undo, and Replay",
+          "strata_claim": "C4",
+          "type": "core",
+          "estimated_minutes": 24,
+          "description": "How Command turns actions into first-class objects so a system can defer, queue, replay, or undo work.",
+          "prerequisites": ["L03"],
+          "teaches_concepts": ["command-pattern", "action-reification", "undo-replay"],
+          "reinforces_concepts": ["workflow-coordination"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L17",
+          "title": "Observer: Notifications, Fan-Out, and Hidden Flow",
+          "strata_claim": "C4",
+          "type": "core",
+          "estimated_minutes": 22,
+          "description": "How Observer enables decoupled notification while also making control flow, failure propagation, and timing harder to see.",
+          "prerequisites": ["L16"],
+          "teaches_concepts": ["observer-pattern", "notification-fanout"],
+          "reinforces_concepts": ["traceability-cost"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L18",
+          "title": "State: Making Behavioral Change Explicit",
+          "strata_claim": "C4",
+          "type": "applied",
+          "estimated_minutes": 24,
+          "description": "How State and FSM-style design make behavior changes explicit enough to reason about when condition-heavy code starts to sprawl.",
+          "prerequisites": ["L17"],
+          "teaches_concepts": ["state-pattern", "finite-state-model"],
+          "reinforces_concepts": ["traceability-cost", "command-pattern"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M07",
+      "title": "Modeling Business Complexity",
+      "strata_theme": "Theme 5 and Contradiction 3 around procedural simplicity versus rich domain behavior",
+      "description": "Study the patterns and anti-patterns that decide whether behavior should remain procedural or live inside a richer domain model.",
+      "objectives": [
+        "Compare Transaction Script and Domain Model by the complexity they are meant to absorb",
+        "Identify the pressure that turns a script-shaped design into a modeling problem",
+        "Detect Anemic Domain Model as a mismatch between object form and behavioral substance"
+      ],
+      "lessons": [
+        {
+          "id": "L19",
+          "title": "Transaction Script: Simple on Purpose",
+          "strata_claim": "C5; Contradiction 3",
+          "type": "core",
+          "estimated_minutes": 22,
+          "description": "Why Transaction Script remains a legitimate pattern when workflow complexity is modest and richer modeling would add unnecessary indirection.",
+          "prerequisites": ["L10"],
+          "teaches_concepts": ["transaction-script", "procedural-workflow"],
+          "reinforces_concepts": ["service-layer", "tradeoff-triage"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L20",
+          "title": "Domain Model: Behavior Where the Concepts Live",
+          "strata_claim": "C6; Contradiction 3",
+          "type": "core",
+          "estimated_minutes": 24,
+          "description": "How Domain Model becomes valuable when business rules, relationships, and stateful interactions are dense enough to justify richer objects.",
+          "prerequisites": ["L19"],
+          "teaches_concepts": ["domain-model", "behavior-rich-objects"],
+          "reinforces_concepts": ["service-layer", "transaction-script"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L21",
+          "title": "Anemic Domain Model and the Complexity Curve",
+          "strata_claim": "C5; Contradiction 3",
+          "type": "debate",
+          "estimated_minutes": 22,
+          "description": "How to spot a design that preserved the outer shell of object modeling while pushing the real behavior elsewhere.",
+          "prerequisites": ["L20"],
+          "teaches_concepts": ["anemic-domain-model", "complexity-curve"],
+          "reinforces_concepts": ["domain-model", "transaction-script", "application-orchestration"],
+          "mastery_threshold": 0.75,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M08",
+      "title": "Criticism, Overuse, and Pattern Economics",
+      "strata_theme": "Theme 5: The central failure mode is not using patterns, but paying their indirection cost before the pressure is real",
+      "description": "Study the strongest anti-pattern lessons and the real debates that prevent this course from becoming dogmatic.",
+      "objectives": [
+        "Detect premature indirection before it hardens into architecture",
+        "Compare dependency strategies without pretending the evidence yields a universal rule",
+        "Explain how language evolution changes pattern form without erasing the underlying problem"
+      ],
+      "lessons": [
+        {
+          "id": "L22",
+          "title": "YAGNI, Premature Indirection, and Abstraction Debt",
+          "strata_claim": "C5",
+          "type": "core",
+          "estimated_minutes": 24,
+          "description": "The main economic lesson of the research: abstractions must pay rent by solving a present cost, not a hypothetical future one.",
+          "prerequisites": ["L09", "L15", "L21"],
+          "teaches_concepts": ["premature-indirection", "abstraction-debt", "yagni"],
+          "reinforces_concepts": ["tradeoff-triage", "complexity-curve"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L23",
+          "title": "Dependency Injection vs Service Locator vs Explicit Passing",
+          "strata_claim": "Contradiction 1",
+          "type": "debate",
+          "estimated_minutes": 24,
+          "description": "A deep comparison of three dependency access strategies and the contextual factors that decide between them.",
+          "prerequisites": ["L08", "L22"],
+          "teaches_concepts": ["dependency-strategy-debate", "explicit-passing"],
+          "reinforces_concepts": ["dependency-injection", "service-locator", "dependency-visibility"],
+          "mastery_threshold": 0.75,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [3, 7, 14]
+        },
+        {
+          "id": "L24",
+          "title": "When Languages Outgrow Pattern Templates",
+          "strata_claim": "Contradiction 2",
+          "type": "debate",
+          "estimated_minutes": 20,
+          "description": "Why some classic class-heavy implementations age badly while the force behind the pattern remains useful.",
+          "prerequisites": ["L06", "L18", "L22"],
+          "teaches_concepts": ["pattern-form-vs-problem", "language-evolution"],
+          "reinforces_concepts": ["prototype", "command-pattern", "observer-pattern", "state-pattern"],
+          "mastery_threshold": 0.75,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M09",
+      "title": "Composition Studios",
+      "strata_theme": "Theme 6: Coherent composition comes from layering small, force-specific patterns around a problem, not from stacking abstractions indiscriminately",
+      "description": "Use integrated case studies to learn how patterns compose when each one owns a distinct pressure.",
+      "objectives": [
+        "Compose multiple patterns by responsibility rather than by category coverage",
+        "Apply persistence, service, domain, and coordination patterns in one coherent design",
+        "Refactor a naive design into a staged pattern stack only as pressures appear"
+      ],
+      "lessons": [
+        {
+          "id": "L25",
+          "title": "Composing the Enterprise Stack",
+          "strata_claim": "C6",
+          "type": "core",
+          "estimated_minutes": 26,
+          "description": "How service layer, domain model, data mapper, repository, and unit of work fit together when each abstraction owns one pressure.",
+          "prerequisites": ["L15", "L20", "L23"],
+          "teaches_concepts": ["enterprise-pattern-stack", "responsibility-layering"],
+          "reinforces_concepts": ["service-layer", "domain-model", "data-mapper", "repository", "unit-of-work"],
+          "mastery_threshold": 0.80,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L26",
+          "title": "Composing Editor and Workflow Patterns",
+          "strata_claim": "C6",
+          "type": "applied",
+          "estimated_minutes": 24,
+          "description": "How command, observer, and state combine in interaction-heavy systems and where the source base remains thinner.",
+          "prerequisites": ["L18", "L25"],
+          "teaches_concepts": ["workflow-pattern-stack", "editor-composition"],
+          "reinforces_concepts": ["command-pattern", "observer-pattern", "state-pattern"],
+          "mastery_threshold": 0.80,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L27",
+          "title": "From Naive Design to Coherent Pattern Stack",
+          "strata_claim": "C6",
+          "type": "applied",
+          "estimated_minutes": 28,
+          "description": "A guided refactor path showing how patterns should accumulate only when a concrete pressure actually appears.",
+          "prerequisites": ["L26"],
+          "teaches_concepts": ["composition-heuristics", "accidental-complexity"],
+          "reinforces_concepts": ["responsibility-layering", "premature-indirection", "force-based-selection"],
+          "mastery_threshold": 0.80,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M10",
+      "title": "Limits, Gaps, and Honest Uncertainty",
+      "strata_theme": "Contradictions and gaps from analysis",
+      "description": "Close the course by making the real limits of the evidence explicit instead of pretending pattern judgment can be reduced to a formula.",
+      "objectives": [
+        "Explain the main unresolved limits in the research base honestly",
+        "Identify what evidence would be needed to sharpen the remaining open questions",
+        "Use research limits to calibrate confidence rather than to discard the findings"
+      ],
+      "lessons": [
+        {
+          "id": "L28",
+          "title": "What This Research Still Cannot Settle",
+          "strata_claim": "G005, G006, G007",
+          "type": "gap",
+          "estimated_minutes": 20,
+          "description": "The remaining limits of the research, including missing GoF excerpts, context-dependent indirection thresholds, and thinner editor case studies.",
+          "prerequisites": ["L27"],
+          "teaches_concepts": ["evidence-limit", "research-gap", "confidence-calibration"],
+          "reinforces_concepts": ["pattern-language", "composition-heuristics"],
+          "mastery_threshold": 0.75,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7, 14]
+        }
+      ],
+      "has_assessment": false
+    }
+  ],
+  "total_lessons": 28,
+  "total_estimated_hours": 10.7,
+  "learning_plan": {
+    "sessions_to_complete": 16,
+    "suggested_schedule": "2-3 flexible sessions per week (7-9 weeks)",
+    "milestone_lessons": ["L03", "L09", "L15", "L21", "L27"],
+    "notes": "This revised map is intentionally comprehensive. It keeps the pressure-first foundation, but now gives each major pattern or pattern cluster its own deeper lesson. A typical 45-minute session can cover one deep lesson with notes and reflection, or two shorter review-oriented lessons. The milestones mark the transitions from foundations to construction, then to persistence, then to domain modeling, and finally to full composition."
+  }
+}

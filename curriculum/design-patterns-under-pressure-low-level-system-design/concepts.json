@@ -1,0 +1,734 @@
+{
+  "slug": "design-patterns-under-pressure-low-level-system-design",
+  "generated": "2026-04-17",
+  "concepts": [
+    {
+      "id": "design-pressure",
+      "title": "Design Pressure",
+      "depends_on": [],
+      "introduced_in": ["L01"],
+      "reinforced_in": ["L02", "L03", "L12"],
+      "assessment_sources": ["M01"]
+    },
+    {
+      "id": "pressure-taxonomy",
+      "title": "Pressure Taxonomy",
+      "depends_on": ["design-pressure"],
+      "introduced_in": ["L01"],
+      "reinforced_in": ["L02", "L03"],
+      "assessment_sources": ["M01"]
+    },
+    {
+      "id": "pattern-purpose",
+      "title": "Pattern Purpose and Force-Based Justification",
+      "depends_on": ["design-pressure"],
+      "introduced_in": ["L01"],
+      "reinforced_in": ["L22", "L27"],
+      "assessment_sources": ["M01"]
+    },
+    {
+      "id": "force-based-selection",
+      "title": "Force-Based Pattern Selection",
+      "depends_on": ["design-pressure", "pattern-purpose"],
+      "introduced_in": ["L01"],
+      "reinforced_in": ["L02", "L12", "L27"],
+      "assessment_sources": ["M01"]
+    },
+    {
+      "id": "pressure-diagnosis",
+      "title": "Pressure Diagnosis Method",
+      "depends_on": ["design-pressure"],
+      "introduced_in": ["L02"],
+      "reinforced_in": ["L22"],
+      "assessment_sources": ["M01"]
+    },
+    {
+      "id": "tradeoff-triage",
+      "title": "Tradeoff Triage",
+      "depends_on": ["pressure-diagnosis"],
+      "introduced_in": ["L02"],
+      "reinforced_in": ["L06", "L08", "L22"],
+      "assessment_sources": ["M01"]
+    },
+    {
+      "id": "pattern-language",
+      "title": "Pattern Language vs Pattern Catalog",
+      "depends_on": ["pattern-purpose"],
+      "introduced_in": ["L03"],
+      "reinforced_in": ["L25", "L28"],
+      "assessment_sources": ["M01"]
+    },
+    {
+      "id": "dependency-injection",
+      "title": "Dependency Injection",
+      "depends_on": ["design-pressure", "force-based-selection"],
+      "introduced_in": ["L04"],
+      "reinforced_in": ["L23"],
+      "assessment_sources": ["M02"]
+    },
+    {
+      "id": "construction-coupling",
+      "title": "Construction Coupling",
+      "depends_on": ["design-pressure"],
+      "introduced_in": ["L04"],
+      "reinforced_in": ["L07"],
+      "assessment_sources": ["M02"]
+    },
+    {
+      "id": "configuration-boundary",
+      "title": "Configuration Boundary (Composition Root)",
+      "depends_on": ["dependency-injection"],
+      "introduced_in": ["L04"],
+      "reinforced_in": ["L07"],
+      "assessment_sources": ["M02"]
+    },
+    {
+      "id": "plugin-pattern",
+      "title": "Plugin Pattern",
+      "depends_on": ["dependency-injection", "construction-coupling"],
+      "introduced_in": ["L05"],
+      "reinforced_in": [],
+      "assessment_sources": ["M02"]
+    },
+    {
+      "id": "runtime-variation",
+      "title": "Runtime Variation",
+      "depends_on": ["construction-coupling"],
+      "introduced_in": ["L05"],
+      "reinforced_in": ["L06"],
+      "assessment_sources": ["M02"]
+    },
+    {
+      "id": "extension-boundary",
+      "title": "Extension Boundary",
+      "depends_on": ["plugin-pattern"],
+      "introduced_in": ["L05"],
+      "reinforced_in": [],
+      "assessment_sources": ["M02"]
+    },
+    {
+      "id": "prototype",
+      "title": "Prototype Pattern",
+      "depends_on": ["runtime-variation"],
+      "introduced_in": ["L06"],
+      "reinforced_in": ["L24"],
+      "assessment_sources": ["M02"]
+    },
+    {
+      "id": "cloning-tradeoff",
+      "title": "Cloning Tradeoff and Language Evolution",
+      "depends_on": ["prototype"],
+      "introduced_in": ["L06"],
+      "reinforced_in": ["L24"],
+      "assessment_sources": ["M02"]
+    },
+    {
+      "id": "registry-pattern",
+      "title": "Registry Pattern",
+      "depends_on": ["configuration-boundary", "construction-coupling"],
+      "introduced_in": ["L07"],
+      "reinforced_in": ["L12"],
+      "assessment_sources": ["M03"]
+    },
+    {
+      "id": "ambient-access",
+      "title": "Ambient Access",
+      "depends_on": ["registry-pattern"],
+      "introduced_in": ["L07"],
+      "reinforced_in": ["L08", "L09"],
+      "assessment_sources": ["M03"]
+    },
+    {
+      "id": "service-locator",
+      "title": "Service Locator",
+      "depends_on": ["ambient-access", "registry-pattern"],
+      "introduced_in": ["L08"],
+      "reinforced_in": ["L23"],
+      "assessment_sources": ["M03"]
+    },
+    {
+      "id": "dependency-visibility",
+      "title": "Dependency Visibility",
+      "depends_on": ["ambient-access"],
+      "introduced_in": ["L08"],
+      "reinforced_in": ["L23"],
+      "assessment_sources": ["M03"]
+    },
+    {
+      "id": "singleton",
+      "title": "Singleton Pattern",
+      "depends_on": ["ambient-access"],
+      "introduced_in": ["L09"],
+      "reinforced_in": [],
+      "assessment_sources": ["M03"]
+    },
+    {
+      "id": "global-state-risk",
+      "title": "Global State Risk",
+      "depends_on": ["singleton", "ambient-access"],
+      "introduced_in": ["L09"],
+      "reinforced_in": [],
+      "assessment_sources": ["M03"]
+    },
+    {
+      "id": "service-layer",
+      "title": "Service Layer",
+      "depends_on": ["force-based-selection"],
+      "introduced_in": ["L10"],
+      "reinforced_in": ["L13", "L19", "L25"],
+      "assessment_sources": ["M04"]
+    },
+    {
+      "id": "application-orchestration",
+      "title": "Application Orchestration",
+      "depends_on": ["service-layer"],
+      "introduced_in": ["L10"],
+      "reinforced_in": ["L21", "L25"],
+      "assessment_sources": ["M04"]
+    },
+    {
+      "id": "boundary-isolation",
+      "title": "Boundary Isolation",
+      "depends_on": ["service-layer"],
+      "introduced_in": ["L10"],
+      "reinforced_in": ["L11", "L12"],
+      "assessment_sources": ["M04"]
+    },
+    {
+      "id": "special-case",
+      "title": "Special Case Pattern",
+      "depends_on": ["boundary-isolation"],
+      "introduced_in": ["L11"],
+      "reinforced_in": [],
+      "assessment_sources": ["M04"]
+    },
+    {
+      "id": "edge-case-localization",
+      "title": "Edge Case Localization",
+      "depends_on": ["special-case"],
+      "introduced_in": ["L11"],
+      "reinforced_in": [],
+      "assessment_sources": ["M04"]
+    },
+    {
+      "id": "structural-pattern-selection",
+      "title": "Structural Pattern Selection",
+      "depends_on": ["boundary-isolation", "force-based-selection"],
+      "introduced_in": ["L12"],
+      "reinforced_in": [],
+      "assessment_sources": ["M04"]
+    },
+    {
+      "id": "boundary-mismatch",
+      "title": "Boundary Mismatch",
+      "depends_on": ["design-pressure"],
+      "introduced_in": ["L12"],
+      "reinforced_in": ["L13"],
+      "assessment_sources": ["M04"]
+    },
+    {
+      "id": "data-mapper",
+      "title": "Data Mapper",
+      "depends_on": ["boundary-mismatch", "service-layer"],
+      "introduced_in": ["L13"],
+      "reinforced_in": ["L15", "L25"],
+      "assessment_sources": ["M05"]
+    },
+    {
+      "id": "object-relational-mismatch",
+      "title": "Object-Relational Mismatch",
+      "depends_on": ["data-mapper"],
+      "introduced_in": ["L13"],
+      "reinforced_in": [],
+      "assessment_sources": ["M05"]
+    },
+    {
+      "id": "repository",
+      "title": "Repository Pattern",
+      "depends_on": ["data-mapper"],
+      "introduced_in": ["L14"],
+      "reinforced_in": ["L15", "L25"],
+      "assessment_sources": ["M05"]
+    },
+    {
+      "id": "query-abstraction",
+      "title": "Query Abstraction",
+      "depends_on": ["repository"],
+      "introduced_in": ["L14"],
+      "reinforced_in": [],
+      "assessment_sources": ["M05"]
+    },
+    {
+      "id": "persistence-boundary",
+      "title": "Persistence Boundary",
+      "depends_on": ["data-mapper", "repository"],
+      "introduced_in": ["L14"],
+      "reinforced_in": [],
+      "assessment_sources": ["M05"]
+    },
+    {
+      "id": "unit-of-work",
+      "title": "Unit of Work",
+      "depends_on": ["repository", "data-mapper"],
+      "introduced_in": ["L15"],
+      "reinforced_in": ["L25"],
+      "assessment_sources": ["M05"]
+    },
+    {
+      "id": "transaction-scope",
+      "title": "Transaction Scope Coordination",
+      "depends_on": ["unit-of-work"],
+      "introduced_in": ["L15"],
+      "reinforced_in": [],
+      "assessment_sources": ["M05"]
+    },
+    {
+      "id": "workflow-coordination",
+      "title": "Workflow Coordination",
+      "depends_on": ["transaction-scope"],
+      "introduced_in": ["L15"],
+      "reinforced_in": ["L16"],
+      "assessment_sources": ["M05"]
+    },
+    {
+      "id": "command-pattern",
+      "title": "Command Pattern",
+      "depends_on": ["force-based-selection"],
+      "introduced_in": ["L16"],
+      "reinforced_in": ["L26"],
+      "assessment_sources": ["M06"]
+    },
+    {
+      "id": "action-reification",
+      "title": "Action Reification",
+      "depends_on": ["command-pattern"],
+      "introduced_in": ["L16"],
+      "reinforced_in": [],
+      "assessment_sources": ["M06"]
+    },
+    {
+      "id": "undo-replay",
+      "title": "Undo and Replay",
+      "depends_on": ["command-pattern"],
+      "introduced_in": ["L16"],
+      "reinforced_in": ["L26"],
+      "assessment_sources": ["M06"]
+    },
+    {
+      "id": "observer-pattern",
+      "title": "Observer Pattern",
+      "depends_on": ["force-based-selection"],
+      "introduced_in": ["L17"],
+      "reinforced_in": ["L26"],
+      "assessment_sources": ["M06"]
+    },
+    {
+      "id": "notification-fanout",
+      "title": "Notification Fan-Out",
+      "depends_on": ["observer-pattern"],
+      "introduced_in": ["L17"],
+      "reinforced_in": [],
+      "assessment_sources": ["M06"]
+    },
+    {
+      "id": "traceability-cost",
+      "title": "Traceability Cost",
+      "depends_on": ["observer-pattern"],
+      "introduced_in": ["L17"],
+      "reinforced_in": ["L18"],
+      "assessment_sources": ["M06"]
+    },
+    {
+      "id": "state-pattern",
+      "title": "State Pattern",
+      "depends_on": ["command-pattern"],
+      "introduced_in": ["L18"],
+      "reinforced_in": ["L26"],
+      "assessment_sources": ["M06"]
+    },
+    {
+      "id": "finite-state-model",
+      "title": "Finite State Model",
+      "depends_on": ["state-pattern"],
+      "introduced_in": ["L18"],
+      "reinforced_in": [],
+      "assessment_sources": ["M06"]
+    },
+    {
+      "id": "transaction-script",
+      "title": "Transaction Script",
+      "depends_on": ["service-layer", "tradeoff-triage"],
+      "introduced_in": ["L19"],
+      "reinforced_in": ["L21"],
+      "assessment_sources": ["M07"]
+    },
+    {
+      "id": "procedural-workflow",
+      "title": "Procedural Workflow",
+      "depends_on": ["transaction-script"],
+      "introduced_in": ["L19"],
+      "reinforced_in": [],
+      "assessment_sources": ["M07"]
+    },
+    {
+      "id": "domain-model",
+      "title": "Domain Model",
+      "depends_on": ["service-layer"],
+      "introduced_in": ["L20"],
+      "reinforced_in": ["L21", "L25"],
+      "assessment_sources": ["M07"]
+    },
+    {
+      "id": "behavior-rich-objects",
+      "title": "Behavior-Rich Domain Objects",
+      "depends_on": ["domain-model"],
+      "introduced_in": ["L20"],
+      "reinforced_in": ["L25"],
+      "assessment_sources": ["M07"]
+    },
+    {
+      "id": "anemic-domain-model",
+      "title": "Anemic Domain Model",
+      "depends_on": ["domain-model", "transaction-script"],
+      "introduced_in": ["L21"],
+      "reinforced_in": [],
+      "assessment_sources": ["M07"]
+    },
+    {
+      "id": "complexity-curve",
+      "title": "Complexity Curve",
+      "depends_on": ["anemic-domain-model"],
+      "introduced_in": ["L21"],
+      "reinforced_in": ["L22"],
+      "assessment_sources": ["M07"]
+    },
+    {
+      "id": "premature-indirection",
+      "title": "Premature Indirection",
+      "depends_on": ["tradeoff-triage", "complexity-curve"],
+      "introduced_in": ["L22"],
+      "reinforced_in": ["L27"],
+      "assessment_sources": ["M08"]
+    },
+    {
+      "id": "abstraction-debt",
+      "title": "Abstraction Debt",
+      "depends_on": ["premature-indirection"],
+      "introduced_in": ["L22"],
+      "reinforced_in": [],
+      "assessment_sources": ["M08"]
+    },
+    {
+      "id": "yagni",
+      "title": "YAGNI Principle",
+      "depends_on": ["premature-indirection"],
+      "introduced_in": ["L22"],
+      "reinforced_in": [],
+      "assessment_sources": ["M08"]
+    },
+    {
+      "id": "dependency-strategy-debate",
+      "title": "Dependency Strategy Debate (DI vs SL vs Explicit)",
+      "depends_on": ["dependency-injection", "service-locator", "dependency-visibility"],
+      "introduced_in": ["L23"],
+      "reinforced_in": [],
+      "assessment_sources": ["M08"]
+    },
+    {
+      "id": "explicit-passing",
+      "title": "Explicit Dependency Passing",
+      "depends_on": ["dependency-visibility"],
+      "introduced_in": ["L23"],
+      "reinforced_in": [],
+      "assessment_sources": ["M08"]
+    },
+    {
+      "id": "pattern-form-vs-problem",
+      "title": "Pattern Form vs Underlying Problem",
+      "depends_on": ["pattern-language"],
+      "introduced_in": ["L24"],
+      "reinforced_in": [],
+      "assessment_sources": ["M08"]
+    },
+    {
+      "id": "language-evolution",
+      "title": "Language Evolution and Pattern Obsolescence",
+      "depends_on": ["pattern-form-vs-problem", "prototype", "cloning-tradeoff"],
+      "introduced_in": ["L24"],
+      "reinforced_in": [],
+      "assessment_sources": ["M08"]
+    },
+    {
+      "id": "enterprise-pattern-stack",
+      "title": "Enterprise Pattern Stack",
+      "depends_on": ["service-layer", "domain-model", "data-mapper", "repository", "unit-of-work"],
+      "introduced_in": ["L25"],
+      "reinforced_in": ["L27"],
+      "assessment_sources": ["M09"]
+    },
+    {
+      "id": "responsibility-layering",
+      "title": "Responsibility Layering",
+      "depends_on": ["enterprise-pattern-stack"],
+      "introduced_in": ["L25"],
+      "reinforced_in": ["L26", "L27"],
+      "assessment_sources": ["M09"]
+    },
+    {
+      "id": "workflow-pattern-stack",
+      "title": "Workflow Pattern Stack (Command+Observer+State)",
+      "depends_on": ["command-pattern", "observer-pattern", "state-pattern"],
+      "introduced_in": ["L26"],
+      "reinforced_in": ["L27"],
+      "assessment_sources": ["M09"]
+    },
+    {
+      "id": "editor-composition",
+      "title": "Editor Composition",
+      "depends_on": ["workflow-pattern-stack"],
+      "introduced_in": ["L26"],
+      "reinforced_in": [],
+      "assessment_sources": ["M09"]
+    },
+    {
+      "id": "composition-heuristics",
+      "title": "Composition Heuristics",
+      "depends_on": ["responsibility-layering", "premature-indirection"],
+      "introduced_in": ["L27"],
+      "reinforced_in": [],
+      "assessment_sources": ["M09"]
+    },
+    {
+      "id": "accidental-complexity",
+      "title": "Accidental Complexity",
+      "depends_on": ["composition-heuristics", "abstraction-debt"],
+      "introduced_in": ["L27"],
+      "reinforced_in": [],
+      "assessment_sources": ["M09"]
+    },
+    {
+      "id": "evidence-limit",
+      "title": "Evidence Limit",
+      "depends_on": ["pattern-purpose"],
+      "introduced_in": ["L28"],
+      "reinforced_in": [],
+      "assessment_sources": ["M10"]
+    },
+    {
+      "id": "research-gap",
+      "title": "Research Gap",
+      "depends_on": ["evidence-limit"],
+      "introduced_in": ["L28"],
+      "reinforced_in": [],
+      "assessment_sources": ["M10"]
+    },
+    {
+      "id": "confidence-calibration",
+      "title": "Confidence Calibration from Uncertainty",
+      "depends_on": ["evidence-limit", "research-gap"],
+      "introduced_in": ["L28"],
+      "reinforced_in": [],
+      "assessment_sources": ["M10"]
+    },
+    {
+      "id": "composition-vocabulary",
+      "title": "Composition Vocabulary",
+      "depends_on": ["pattern-language"],
+      "introduced_in": ["L03"],
+      "reinforced_in": ["L25", "L26"],
+      "assessment_sources": ["M01"]
+    },
+    {
+      "id": "coupling-diagnosis",
+      "title": "Coupling Diagnosis",
+      "depends_on": ["design-pressure", "pressure-diagnosis"],
+      "introduced_in": ["L01"],
+      "reinforced_in": ["L04", "L07", "L22"],
+      "assessment_sources": ["M01"]
+    },
+    {
+      "id": "pattern-classification",
+      "title": "Pattern Classification",
+      "depends_on": ["pattern-language"],
+      "introduced_in": ["L03"],
+      "reinforced_in": [],
+      "assessment_sources": ["M01"]
+    },
+    {
+      "id": "constructor-injection",
+      "title": "Constructor Injection",
+      "depends_on": ["dependency-injection"],
+      "introduced_in": ["L04"],
+      "reinforced_in": [],
+      "assessment_sources": ["M02"]
+    },
+    {
+      "id": "dependency-graph",
+      "title": "Dependency Graph",
+      "depends_on": ["dependency-injection", "coupling-diagnosis"],
+      "introduced_in": ["L04"],
+      "reinforced_in": ["L23"],
+      "assessment_sources": ["M02"]
+    },
+    {
+      "id": "service-registry",
+      "title": "Service Registry",
+      "depends_on": ["registry-pattern"],
+      "introduced_in": ["L07"],
+      "reinforced_in": [],
+      "assessment_sources": ["M03"]
+    },
+    {
+      "id": "singleton-pattern",
+      "title": "Singleton Pattern (alias)",
+      "depends_on": ["singleton"],
+      "introduced_in": ["L09"],
+      "reinforced_in": [],
+      "assessment_sources": ["M03"]
+    },
+    {
+      "id": "global-state",
+      "title": "Global State",
+      "depends_on": ["global-state-risk"],
+      "introduced_in": ["L09"],
+      "reinforced_in": [],
+      "assessment_sources": ["M03"]
+    },
+    {
+      "id": "operation-routing",
+      "title": "Operation Routing",
+      "depends_on": ["service-layer"],
+      "introduced_in": ["L10"],
+      "reinforced_in": [],
+      "assessment_sources": ["M04"]
+    },
+    {
+      "id": "null-object",
+      "title": "Null Object",
+      "depends_on": ["special-case"],
+      "introduced_in": ["L11"],
+      "reinforced_in": [],
+      "assessment_sources": ["M04"]
+    },
+    {
+      "id": "special-case-pattern",
+      "title": "Special Case Pattern (alias)",
+      "depends_on": ["special-case"],
+      "introduced_in": ["L11"],
+      "reinforced_in": [],
+      "assessment_sources": ["M04"]
+    },
+    {
+      "id": "object-relational-mapping",
+      "title": "Object-Relational Mapping",
+      "depends_on": ["data-mapper", "object-relational-mismatch"],
+      "introduced_in": ["L13"],
+      "reinforced_in": [],
+      "assessment_sources": ["M05"]
+    },
+    {
+      "id": "change-tracking",
+      "title": "Change Tracking",
+      "depends_on": ["unit-of-work"],
+      "introduced_in": ["L15"],
+      "reinforced_in": [],
+      "assessment_sources": ["M05"]
+    },
+    {
+      "id": "repository-pattern",
+      "title": "Repository Pattern (alias)",
+      "depends_on": ["repository"],
+      "introduced_in": ["L14"],
+      "reinforced_in": [],
+      "assessment_sources": ["M05"]
+    },
+    {
+      "id": "identity-map",
+      "title": "Identity Map",
+      "depends_on": ["data-mapper", "repository"],
+      "introduced_in": ["L13"],
+      "reinforced_in": [],
+      "assessment_sources": ["M05"]
+    },
+    {
+      "id": "behavioral-execution",
+      "title": "Behavioral Execution",
+      "depends_on": ["command-pattern"],
+      "introduced_in": ["L16"],
+      "reinforced_in": [],
+      "assessment_sources": ["M06"]
+    },
+    {
+      "id": "event-subscription",
+      "title": "Event Subscription",
+      "depends_on": ["observer-pattern"],
+      "introduced_in": ["L17"],
+      "reinforced_in": [],
+      "assessment_sources": ["M06"]
+    },
+    {
+      "id": "state-machine",
+      "title": "State Machine",
+      "depends_on": ["state-pattern", "finite-state-model"],
+      "introduced_in": ["L18"],
+      "reinforced_in": [],
+      "assessment_sources": ["M06"]
+    },
+    {
+      "id": "domain-complexity",
+      "title": "Domain Complexity",
+      "depends_on": ["complexity-curve", "domain-model"],
+      "introduced_in": ["L20"],
+      "reinforced_in": ["L21"],
+      "assessment_sources": ["M07"]
+    },
+    {
+      "id": "domain-design",
+      "title": "Domain Design",
+      "depends_on": ["domain-model", "behavior-rich-objects"],
+      "introduced_in": ["L20"],
+      "reinforced_in": [],
+      "assessment_sources": ["M07"]
+    },
+    {
+      "id": "rich-domain",
+      "title": "Rich Domain Model",
+      "depends_on": ["domain-model", "behavior-rich-objects"],
+      "introduced_in": ["L20"],
+      "reinforced_in": [],
+      "assessment_sources": ["M07"]
+    },
+    {
+      "id": "architectural-composition",
+      "title": "Architectural Composition",
+      "depends_on": ["enterprise-pattern-stack", "responsibility-layering"],
+      "introduced_in": ["L25"],
+      "reinforced_in": ["L26", "L27"],
+      "assessment_sources": ["M09"]
+    },
+    {
+      "id": "layer-ordering",
+      "title": "Layer Ordering",
+      "depends_on": ["responsibility-layering"],
+      "introduced_in": ["L25"],
+      "reinforced_in": [],
+      "assessment_sources": ["M09"]
+    },
+    {
+      "id": "research-gaps",
+      "title": "Research Gaps",
+      "depends_on": ["research-gap", "evidence-limit"],
+      "introduced_in": ["L28"],
+      "reinforced_in": [],
+      "assessment_sources": ["M10"]
+    },
+    {
+      "id": "evidence-evaluation",
+      "title": "Evidence Evaluation",
+      "depends_on": ["confidence-calibration"],
+      "introduced_in": ["L28"],
+      "reinforced_in": [],
+      "assessment_sources": ["M10"]
+    }
+  ]
+}

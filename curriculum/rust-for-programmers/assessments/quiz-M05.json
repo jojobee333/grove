@@ -1,0 +1,154 @@
+{
+  "id": "quiz-M05",
+  "type": "module",
+  "module": "M05",
+  "title": "Assessment: Collections",
+  "generated": "2026-04-19",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What does `vec.get(5)` return when the Vec has only 3 elements?",
+      "options": {
+        "A": "0 (the default value)",
+        "B": "A panic — index out of bounds",
+        "C": "None",
+        "D": "A compile error"
+      },
+      "correct": "C",
+      "explanation": ".get(i) returns Option<&T> — None if the index is out of bounds. Direct indexing with vec[5] would panic at runtime. .get() is the safe choice when the index may be out of range.",
+      "lesson_ref": "L13",
+      "claim_ref": "C1",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "What does this code do?\n\n```rust\nlet mut scores: HashMap<String, u32> = HashMap::new();\nscores.entry(String::from(\"Alice\")).or_insert(0);\n```",
+      "options": {
+        "A": "Replaces Alice's score with 0",
+        "B": "Inserts 0 for Alice only if Alice is not already in the map; returns a mutable reference to the value",
+        "C": "Returns None if Alice is missing; returns Some(&value) if present",
+        "D": "Inserts Alice unconditionally and panics if Alice already exists"
+      },
+      "correct": "B",
+      "explanation": "The entry API checks if the key exists. .or_insert(v) inserts v only when the key is absent and returns a &mut to the value in either case. This is the idiomatic Rust pattern for initialise-or-update.",
+      "lesson_ref": "L14",
+      "claim_ref": "C1",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "Why does Rust disallow `my_string[0]` for a String?",
+      "options": {
+        "A": "Strings are immutable in Rust",
+        "B": "String is stored on the heap, so indexing requires an unsafe block",
+        "C": "String is UTF-8 encoded; byte 0 may be the middle of a multi-byte character",
+        "D": "There is no 0-based indexing in Rust; all collections use 1-based indexing"
+      },
+      "correct": "C",
+      "explanation": "Rust refuses to let you index a String by integer because the result would be ambiguous — is it a byte, a char, or a grapheme cluster? UTF-8 characters can span 1–4 bytes. Use .chars().nth(0) or .bytes().nth(0) depending on what you need.",
+      "lesson_ref": "L15",
+      "claim_ref": "C1",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "What is the difference between `.iter()` and `.into_iter()` on a Vec<T>?",
+      "options": {
+        "A": ".iter() is faster; .into_iter() is safer",
+        "B": ".iter() yields &T (borrows the Vec); .into_iter() consumes the Vec and yields T",
+        "C": ".iter() yields T; .into_iter() yields &T",
+        "D": "They are identical — both borrow the Vec"
+      },
+      "correct": "B",
+      "explanation": ".iter() borrows the Vec and yields shared references (&T) — the Vec is still usable afterward. .into_iter() moves the Vec and yields owned values (T) — the Vec is consumed and no longer accessible.",
+      "lesson_ref": "L13",
+      "claim_ref": "C1",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "When you insert a String key into a HashMap, what happens to the key?",
+      "options": {
+        "A": "The HashMap stores a clone; the original is still valid",
+        "B": "The HashMap stores a reference; you must keep the original alive",
+        "C": "The key is moved into the HashMap; the original binding is no longer valid",
+        "D": "Keys are always copied regardless of type"
+      },
+      "correct": "C",
+      "explanation": "HashMap takes ownership of keys and values that do not implement Copy. After inserting a String key, the original variable is moved and cannot be used unless you first clone it.",
+      "lesson_ref": "L14",
+      "claim_ref": "C1",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "Which method correctly counts the number of Unicode characters (not bytes) in a Rust String?",
+      "options": {
+        "A": "my_string.len()",
+        "B": "my_string.count()",
+        "C": "my_string.chars().count()",
+        "D": "my_string.bytes().count()"
+      },
+      "correct": "C",
+      "explanation": ".len() returns the number of bytes, which may be larger than the character count for non-ASCII UTF-8 strings. .chars() produces an iterator over Unicode scalar values; .count() on that gives the character count.",
+      "lesson_ref": "L15",
+      "claim_ref": "C1",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "Describe the HashMap entry API pattern for counting word occurrences. Write the core loop (3–5 lines) using `.entry().or_insert(0)` and explain each step.",
+      "answer_key": {
+        "required_points": [
+          "Calls .entry(word) to get an Entry for the key",
+          "Calls .or_insert(0) to initialise to 0 if missing, returning &mut u32",
+          "Dereferences the &mut and increments with += 1"
+        ],
+        "acceptable_variations": "Variable names and exact string splitting method may vary.",
+        "full_credit": "```rust\nfor word in text.split_whitespace() {\n    let count = map.entry(word).or_insert(0);\n    *count += 1;\n}\n```\nWith explanation of each step.",
+        "partial_credit": "Correct logic but forgets to dereference the &mut (missing *count)."
+      },
+      "lesson_ref": "L14",
+      "claim_ref": "C1",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "When would you choose a Vec over a HashMap, and vice versa? Give one concrete use case for each.",
+      "answer_key": {
+        "required_points": [
+          "Vec: ordered, indexed by position, O(1) push/index — use for sequences (e.g., task queue, sorted list)",
+          "HashMap: key-value lookup, O(1) average get/insert — use for associative data (e.g., user sessions by ID, word counts)"
+        ],
+        "acceptable_variations": "Any valid and distinct use cases accepted.",
+        "full_credit": "Clear distinction with concrete use case per collection type.",
+        "partial_credit": "Identifies Vec or HashMap correctly but only one."
+      },
+      "lesson_ref": "L13",
+      "claim_ref": "C1",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q09",
+      "type": "essay",
+      "prompt": "You are building a text analytics tool that reads a document and reports: total word count, unique word count, and the top-5 most frequent words. Describe the data structures you would use (Vec, HashMap, or both), why you chose them, and sketch the core algorithm — including how the HashMap entry API handles repeated words.",
+      "guidance": "Strong response: (1) uses a HashMap<String, u32> for frequency counting; (2) explains why Vec<(String, u32)> is useful after counting (for sorting); (3) walks through the entry pattern for counting; (4) derives unique word count from HashMap's key count.",
+      "rubric": {
+        "A": "Correctly uses both HashMap and Vec, explains the entry API for counting, derives unique count from map keys, and sketches sort for top-5.",
+        "B": "Correct collection choices and entry API, but doesn't explain how to get top-5 or unique count.",
+        "C": "Identifies HashMap for counting but doesn't demonstrate entry API knowledge."
+      },
+      "lesson_ref": "L13-L15",
+      "difficulty": "application"
+    }
+  ]
+}

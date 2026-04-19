@@ -1,0 +1,26 @@
+{
+  "module": "M04",
+  "title": "Enums, Pattern Matching & Option — Quick Check",
+  "questions": [
+    {
+      "id": "MC04-1",
+      "q": "Why must a `match` expression in Rust cover all variants of an enum?",
+      "a": "Rust enforces exhaustive matching at compile time. If any variant is unhandled the code will not compile, making it impossible to ship code that silently ignores a case. This eliminates a whole class of runtime bugs common in switch-based languages."
+    },
+    {
+      "id": "MC04-2",
+      "q": "What is `Option<T>` and what problem does it solve compared to null in other languages?",
+      "a": "`Option<T>` is an enum with two variants: `Some(T)` when a value is present, `None` when absent. Unlike null, the compiler forces you to handle both variants before accessing the inner value — eliminating null pointer exceptions entirely."
+    },
+    {
+      "id": "MC04-3",
+      "q": "What is the difference between `if let` and `match`? When would you prefer each?",
+      "a": "`if let` is syntactic sugar for a match with one handled arm and an implicit `_ => ()` fallthrough. Use `if let` when you only care about one pattern; use `match` when you need to handle multiple variants, especially for exhaustiveness."
+    },
+    {
+      "id": "MC04-4",
+      "q": "How do you extract data from an enum variant that carries a value? Write a one-line example.",
+      "a": "Use pattern matching to destructure: `if let Some(value) = my_option { ... }` or inside a match arm: `Message::Write(text) => println!(\"{text}\")`. You cannot access variant data directly like a struct field."
+    }
+  ]
+}

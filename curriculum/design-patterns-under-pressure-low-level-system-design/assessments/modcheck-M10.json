@@ -1,0 +1,21 @@
+{
+  "module": "M10",
+  "title": "Limits, Gaps, and Honest Uncertainty — Quick Check",
+  "questions": [
+    {
+      "id": "MC10-1",
+      "q": "What are the three main unresolved gaps left in this course's research base?",
+      "a": "G005: Missing direct GoF primary source access. G006: No empirical data on the threshold at which indirection becomes net-negative. G007: Thin case study coverage of editor and interactive system pattern composition."
+    },
+    {
+      "id": "MC10-2",
+      "q": "How should you use a research gap to calibrate your confidence rather than discard the finding?",
+      "a": "A gap tells you which conclusions are held with strong evidence and which are provisional. You keep using the finding at a lower confidence level, note where it could be wrong, and look for new evidence before applying it in high-stakes decisions."
+    },
+    {
+      "id": "MC10-3",
+      "q": "What evidence would resolve Gap G006 — the missing indirection threshold?",
+      "a": "Controlled studies measuring maintainability, bug rate, or onboarding time for matched codebases that differ only in the number of active abstractions. The studies would need to hold domain complexity constant to isolate the indirection variable."
+    }
+  ]
+}

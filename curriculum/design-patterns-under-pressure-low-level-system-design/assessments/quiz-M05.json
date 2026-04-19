@@ -1,0 +1,171 @@
+{
+  "id": "quiz-M05",
+  "type": "module",
+  "module": "M05",
+  "title": "Assessment: Persistence Boundaries in Depth",
+  "generated": "2026-04-17",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What object-relational mismatch does Data Mapper address that Active Record does not?",
+      "options": {
+        "A": "Data Mapper supports more database vendors than Active Record",
+        "B": "Data Mapper keeps domain objects ignorant of the database schema; Active Record mixes persistence knowledge into the domain object",
+        "C": "Data Mapper is faster than Active Record for write-heavy workloads",
+        "D": "Data Mapper eliminates the need for SQL; Active Record requires raw SQL"
+      },
+      "correct": "B",
+      "explanation": "The core distinction is domain/persistence separation. Active Record objects know how to save themselves — persistence leaks into the domain. Data Mapper keeps them separate — the domain model has no save() method. A, C, D describe performance or vendor concerns unrelated to the mismatch addressed.",
+      "lesson_ref": "L13",
+      "claim_ref": "C3",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Under what domain complexity threshold does Data Mapper become worth its additional layer?",
+      "options": {
+        "A": "Any application with more than one database table",
+        "B": "Any application using PostgreSQL rather than SQLite",
+        "C": "When domain objects have meaningful invariants and behavior that would be corrupted by mixing in persistence concerns",
+        "D": "When the development team has more than three engineers"
+      },
+      "correct": "C",
+      "explanation": "Data Mapper earns its layer when domain complexity is high enough that mixing persistence into domain objects corrupts the model. For simple CRUD with no meaningful domain behavior, Active Record is cheaper and sufficient. A, B, D apply irrelevant proxies (table count, DB type, team size).",
+      "lesson_ref": "L13",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "How does Repository differ from a DAO (Data Access Object) in how it presents its interface to callers?",
+      "options": {
+        "A": "Repository supports transactions; DAO does not",
+        "B": "Repository presents a collection-like, domain-facing interface; DAO presents a table-close, data-structure interface",
+        "C": "Repository is only used with NoSQL databases; DAO is used with relational databases",
+        "D": "Repository generates SQL at runtime; DAO uses stored procedures"
+      },
+      "correct": "B",
+      "explanation": "Repository's key characteristic is the collection metaphor — callers think in domain terms (find_active_subscribers()). DAO is thinner and closer to the database structure. A, C, D describe implementation details unrelated to the abstraction level distinction.",
+      "lesson_ref": "L14",
+      "claim_ref": "C3",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "When does adding a Repository become needless indirection rather than a justified abstraction?",
+      "options": {
+        "A": "When the application has fewer than 10 domain objects",
+        "B": "When the repository methods are pass-throughs to ORM calls with no domain logic or reuse value",
+        "C": "When the team uses an ORM that was released more than five years ago",
+        "D": "When queries are fast and do not require optimization"
+      },
+      "correct": "B",
+      "explanation": "If every repository method simply delegates to an ORM call (repo.get(id) → Model.objects.get(id=id)) with no domain abstraction added, the Repository layer has no abstraction value. The ORM already provides the collection interface. A, C, D are not relevant decision factors.",
+      "lesson_ref": "L14",
+      "claim_ref": "C5",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "What transaction-scope problem does Unit of Work solve that explicit .save() calls on each object do not?",
+      "options": {
+        "A": "UoW makes write operations faster by batching them",
+        "B": "UoW prevents the service from needing to know which objects it loaded",
+        "C": "UoW coordinates all multi-object changes into one atomic commit, preventing partial writes and forgotten saves",
+        "D": "UoW automatically creates rollback scripts in case of failure"
+      },
+      "correct": "C",
+      "explanation": "UoW's core value is atomic multi-object commit — tracking all dirty objects and writing them in one transaction. Explicit saves require the service to know and call save on each object, risking partial writes. A is a possible side effect, not the core value. B is partially true but incomplete. D describes database features, not UoW.",
+      "lesson_ref": "L15",
+      "claim_ref": "C4",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "How do Repository and Unit of Work complement each other at the persistence boundary?",
+      "options": {
+        "A": "Repository handles reads; Unit of Work handles writes for the same table",
+        "B": "Repository provides domain-facing query access; Unit of Work coordinates atomic write-back for all objects loaded through repositories",
+        "C": "Repository replaces Unit of Work when using modern ORMs",
+        "D": "Unit of Work is only needed when Repository is not present"
+      },
+      "correct": "B",
+      "explanation": "They address different pressures in collaboration: Repository = where to get/find domain objects (query abstraction). UoW = how all changes commit atomically (transaction coordination). A incorrectly implies they handle reads and writes for the same table separately. C and D suggest mutual exclusivity that is wrong.",
+      "lesson_ref": "L15",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "A service modifies an Order and 4 LineItems, then calls order.save(), item1.save(), item2.save(), item3.save(), item4.save(). A network error occurs after item3.save(). What does Unit of Work prevent in this scenario?",
+      "options": {
+        "A": "It prevents the network error from occurring",
+        "B": "It prevents the partial write — either all 5 objects commit together or none do",
+        "C": "It logs the error and retries item4.save() automatically",
+        "D": "It splits the saves into two separate transactions to reduce risk"
+      },
+      "correct": "B",
+      "explanation": "UoW wraps all changes in one atomic transaction. A partial write (3 of 5 objects saved) leaves data inconsistent — UoW prevents this by ensuring all-or-nothing commit semantics. A, C, D describe error handling or optimization strategies, not UoW's transactional guarantee.",
+      "lesson_ref": "L15",
+      "claim_ref": "C4",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "Explain the 'persistence boundary' and why it matters for domain object design. What does it mean for a domain object to be 'DB-ignorant'?",
+      "answer_key": {
+        "required_points": [
+          "Persistence boundary: the layer that separates domain objects from relational database concerns (SQL, table structure, foreign keys)",
+          "DB-ignorant domain object: has no save(), find(), or SQL methods — it only contains domain behavior and state",
+          "Matters because: mixing persistence into domain objects ties business logic to database structure, making both harder to change and test independently"
+        ],
+        "acceptable_variations": "Can express the same idea using Data Mapper or Active Record as contrast examples",
+        "full_credit": "Defines the boundary, explains DB-ignorance, explains why it matters with a testability or change-isolation consequence",
+        "partial_credit": "Correct definition without the 'why it matters' explanation"
+      },
+      "lesson_ref": "L13",
+      "claim_ref": "C3",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "A UserService has 15 different SQL query strings embedded in its methods. Describe the Repository refactor: what changes, what stays the same, and what pressure is addressed.",
+      "answer_key": {
+        "required_points": [
+          "What changes: the 15 SQL strings move into a UserRepository with named domain-facing methods (find_by_email, find_active_users, etc.)",
+          "What stays the same: the UserService still calls the same logical operations — it just calls user_repo.find_by_email() instead of writing SQL",
+          "Pressure addressed: query scattering — SQL is scattered, inconsistent, and untestable; Repository centralizes it behind a domain-facing boundary"
+        ],
+        "acceptable_variations": "May describe specific method names differently",
+        "full_credit": "All three elements: what changes, what stays, and pressure named correctly",
+        "partial_credit": "Describes the refactor without naming the pressure, or names the pressure without describing the change"
+      },
+      "lesson_ref": "L14",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "You are designing the persistence layer for an e-commerce application with complex domain rules (multi-currency pricing, loyalty tiers, inventory reservations). Using Data Mapper, Repository, and Unit of Work together, explain: (1) what pressure each pattern addresses, (2) how they compose without overlap, and (3) what would break if you removed any one of them.",
+      "guidance": "A strong response maps each pattern to a distinct force, describes the information flow (domain → mapper → DB for writes; repo query → mapper reconstruction for reads; UoW wraps the whole write operation), and identifies the specific failure mode of removing each layer: removing Data Mapper couples domain to DB schema; removing Repository scatters query logic; removing UoW risks partial writes.",
+      "rubric": {
+        "A": "Correctly maps all three patterns to distinct pressures, describes composition with information flow, identifies specific failure mode for removing each",
+        "B": "Correctly maps two of three, describes partial composition, identifies one or two removal consequences",
+        "C": "Names all three without pressure mapping or composition description"
+      },
+      "lesson_ref": "L13-L15",
+      "difficulty": "analysis"
+    }
+  ]
+}

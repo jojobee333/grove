@@ -3,87 +3,139 @@
 **Module**: M07 · Windows Telemetry — Seeing the Full Picture
 **Type**: core
 **Estimated time**: 14 minutes
-**Claim**: C7 — Multi-source Windows telemetry is required; no single source provides complete visibility
+**Claim**: C7 from Strata synthesis
 
 ---
 
 ## The core idea
 
-A single Windows log source provides only a partial view of attacker activity. Event 4624 tells you a user authenticated — but not what they ran after. Sysmon tells you a process launched and connected to a remote host — but not who was authenticated when it happened. AD domain controller events tell you when a Kerberos ticket was issued — but not what the client did with it.
+No single Windows log source provides complete visibility into attacker activity. Event 4624 tells you that a user authenticated — but not what they ran afterward. Sysmon Event 1 tells you a process launched and Event 3 tells you it connected to a remote host — but neither tells you which authenticated session was active at the time. Active Directory domain controller events tell you a Kerberos ticket was issued and what encryption type it used — but not what the recipient did with it.
 
-Effective Windows detection requires understanding the coverage boundary of each source and knowing which source fills which gap. This is the architecture.
+Effective detection requires three sources operating simultaneously, each covering what the others cannot see. Claim C7 from Strata synthesis: Windows security telemetry requires correlated multi-source collection; no single source provides complete visibility. Every attacker technique that evades detection exploits a blind spot in a single-source collection strategy [S011](../../research/security-foundations/01-sources/web/S011-windows-event-4624.md) [S015](../../research/security-foundations/01-sources/web/S015-sysmon-v15.md) [S016](../../research/security-foundations/01-sources/web/S016-ad-security-best-practices.md) [S023](../../research/security-foundations/01-sources/web/S023-windows-security-events.md).
 
 ## Why it matters
 
-Attacker tools that evade endpoint detection typically do so by living in one log source's blind spot. Cobalt Strike's `execute-assembly` runs .NET code in memory and won't appear as a new process in Event 4688 — but Sysmon Event 10 (LSASS access) fires when it dumps credentials. Understanding which events fire for which actions means you can design detections that don't have blind spots.
+Cobalt Strike's `execute-assembly` runs .NET code inside an existing process's memory without spawning a new process. Event 4688 (process creation in the Security log) does not fire. But Sysmon Event 10 fires when the injected code accesses LSASS for credential dumping. Understanding which events fire for which actions lets you build detections with no blind spots rather than hoping a single source catches everything.
+
+For penetration testing reports: "no detectable activity" is a meaningful claim only if you have verified which log sources were active and what their coverage gaps are. Absence of evidence in one log is not absence of evidence.
 
 ---
 
-## Source 1: Windows Security Event Log (Event 4624 — Logon)
+## Source 1: Windows Security Event Log — Event 4624
 
-**What it provides**: WHO authenticated, to WHAT host, using WHAT protocol, from WHERE, and HOW.
+**What it provides**: WHO authenticated, to WHAT host, using WHAT protocol, from WHERE, in WHAT session.
 
-Key fields to examine in Event 4624:
-- **LogonType**: 2 = interactive (local keyboard), 3 = network (SMB, WMI, etc.), 10 = RemoteInteractive (RDP), 5 = service
-- **LmPackageName**: `NTLM V1`, `NTLM V2`, `Kerberos`, or `Negotiate`. NTLM V1 is crackable; presence is a finding
-- **IpAddress**: source IP of the authentication. `127.0.0.1` = local; `::1` = IPv6 local; anything else is remote
-- **TargetLogonId**: session identifier for correlating this logon to subsequent Sysmon events
+Key fields in Event 4624 [S011](../../research/security-foundations/01-sources/web/S011-windows-event-4624.md):
 
-**What it does NOT provide**: what programs ran after logon, what network connections were made, what files were accessed. (S011)
+| Field | Security significance |
+|---|---|
+| `LogonType` | 2=interactive (keyboard), 3=network (SMB/WMI), 10=RemoteInteractive (RDP), 5=service |
+| `LmPackageName` | `NTLM V1`, `NTLM V2`, `Kerberos`. NTLM on internal lateral movement paths = Pass-the-Hash signal |
+| `IpAddress` | Source IP of the authentication. `127.0.0.1` = local; unexpected internal IP = lateral movement |
+| `TargetLogonId` | Session handle; correlates this logon to all subsequent events in the same session |
+| `LogonGuid` | Present only for Kerberos; absent = NTLM was used |
+
+**What it does NOT provide**: what processes ran after logon, what network connections were made, what files were accessed, what registry was modified. Coverage boundary: authentication events only.
+
+Event 4624 requires the "Audit Logon" policy to be enabled. This is enabled by default on Windows Server but must be explicitly verified [S023](../../research/security-foundations/01-sources/web/S023-windows-security-events.md).
 
 ---
 
 ## Source 2: Sysmon
 
-**What it provides**: WHAT ran, WHAT connected, WHAT was loaded, WHAT accessed LSASS.
+**What it provides**: WHAT ran, WHAT connected, WHAT was loaded, WHAT accessed LSASS, WHAT DNS query was made.
 
-Critical Sysmon events:
-- **Event 1 (Process Create)**: image path, commandline, parent process, MD5/SHA256 hash, ProcessGUID. This is the primary process creation record — more detailed than Event 4688 from the Security log because it includes the hash.
-- **Event 3 (Network Connection)**: source/destination IP, port, protocol — linked to the initiating process via ProcessGUID
-- **Event 10 (Process Access)**: fires when one process opens the memory of another. `TargetImage: lsass.exe` = credential dumping attempt (Mimikatz, LSASS procdump)
-- **Event 22 (DNS Query)**: which process made which DNS lookup — essential for C2 detection as noted in L04
+Sysmon is not a native Windows component — it requires explicit installation and configuration. But it provides coverage that the Security log cannot offer [S015](../../research/security-foundations/01-sources/web/S015-sysmon-v15.md):
 
-**What it does NOT provide**: who was authenticated (that's Event 4624), what Kerberos tickets were issued (that's AD events). (S015)
+| Event | Coverage |
+|---|---|
+| **Event 1 (Process Create)** | Image path, full commandline, parent process, MD5/SHA256 hash, ProcessGUID |
+| **Event 3 (Network Connection)** | Source/dest IP, port, protocol; linked to the creating process via ProcessGUID |
+| **Event 10 (Process Access)** | One process opening another's memory; `TargetImage: lsass.exe` = credential dumping |
+| **Event 12/13 (Registry)** | Key creation/deletion (12) and value writes (13); targets persistence paths |
+| **Event 19/20/21 (WMI)** | WMI filter, consumer, and binding creation; persistence and execution via WMI |
+| **Event 22 (DNS Query)** | Process-level DNS query attribution; essential for C2 detection |
+
+**The correlation key**: `ProcessGUID` — a stable identifier present in Events 1, 3, 10, 12, 13, and 22 for the same process across all Sysmon event types. This is what makes it possible to say "the same process that was created at time T is the one that connected to this IP and made these DNS queries."
+
+**What it does NOT provide**: who was authenticated (that's Event 4624), what Kerberos tickets were issued (that's AD events).
 
 ---
 
 ## Source 3: Active Directory Domain Controller Events
 
-**What it provides**: DC-level authentication and replication events invisible to endpoint logs.
+**What it provides**: DC-level authentication and replication events that never appear in endpoint logs.
 
-- **Event 4769 (Kerberos Service Ticket Requested)**: includes `TicketEncryptionType` — value `0x17` indicates RC4, which is the Kerberoasting target
-- **Event 4768 (Kerberos Authentication Ticket Requested)**: initial TGT issuance — maps a username to a TGT
-- **Event 4662 (Object accessed in AD)**: fires when a user accesses directory objects with extended rights — DCSync uses `GetChangesAll` on the DomainDNS object; this is detectable here
-- **Event 4698 (Scheduled task created)**: domain-wide task creation audit — GPO-deployed persistence
+| Event | Coverage |
+|---|---|
+| **4769 (Kerberos Service Ticket)** | `TicketEncryptionType` field: `0x17`=RC4 (Kerberoasting target), `0x12`=AES-256 (secure) |
+| **4768 (Kerberos TGT)** | Initial TGT issuance; maps a username to a session on a specific host |
+| **4662 (Object accessed in AD)** | `GetChangesAll` on domainDNS object = DCSync request from non-DC account |
+| **4698 (Scheduled task created)** | Domain-wide task creation; includes full task XML in `TaskContent` field |
+| **4688 (Process created)** | Available but inferior to Sysmon Event 1 — lacks hash and ProcessGUID |
 
-**What it does NOT provide**: what the client did with the ticket after receipt. (S016, S023)
+Events 4769 and 4768 require "Audit Kerberos Service Ticket Operations" and "Audit Kerberos Authentication Service" policies to be enabled on DCs. These are not enabled by default on all Windows Server versions [S023](../../research/security-foundations/01-sources/web/S023-windows-security-events.md).
+
+**What it does NOT provide**: what the client did with the Kerberos ticket after receipt; process-level activity on endpoints.
 
 ---
 
 ## The coverage gap matrix
 
-| Question | Event 4624 | Sysmon | AD Events |
+| Detection question | Event 4624 | Sysmon | AD Events |
 |---|---|---|---|
 | Who authenticated? | ✅ | ❌ | ✅ (partial) |
-| What process ran? | ❌ | ✅ | ❌ |
-| What connected where? | ❌ | ✅ (Event 3) | ❌ |
+| What process ran? | ❌ | ✅ (Event 1) | ❌ |
+| What network connection? | ❌ | ✅ (Event 3) | ❌ |
 | What DNS query? | ❌ | ✅ (Event 22) | ❌ |
 | What Kerberos ticket type? | ❌ | ❌ | ✅ (Event 4769) |
 | Was LSASS accessed? | ❌ | ✅ (Event 10) | ❌ |
 | DCSync request? | ❌ | ❌ | ✅ (Event 4662) |
+| WMI persistence? | ❌ | ✅ (19/20/21) | ❌ |
+
+## Limitations
+
+Correlating all three sources requires a SIEM or log aggregation platform that indexes events from endpoint Security logs, Sysmon logs, and DC Security logs simultaneously, and allows queries that join on `ProcessGUID`, `TargetLogonId`, and `IpAddress` across sources. Without this infrastructure, the matrix above is theoretical. Sysmon `ProcessGUID` and `SessionGUID` are the primary programmatic correlation keys — they are designed to be unique per process or session across the enterprise rather than just per host [S015](../../research/security-foundations/01-sources/web/S015-sysmon-v15.md).
 
 ## Key points
 
-- Event 4624: WHO authenticated and WHAT protocol; check `LmPackageName` for NTLM vs Kerberos
-- Sysmon: WHAT ran and WHAT connected; Event 10 catches credential dumping; Event 22 catches DNS-based C2
-- AD events: Kerberos ticket type (Event 4769), DCSync (Event 4662), task creation (Event 4698) — none of these appear in the endpoint Security log
+- Event 4624 answers WHO authenticated and HOW; check `LmPackageName` for NTLM vs Kerberos, `LogonType` for the channel used, and `LogonGuid` for presence/absence of Kerberos
+- Sysmon answers WHAT ran and WHERE it connected; ProcessGUID is the correlation key linking process creation to network connections, DNS queries, and registry writes
+- AD DC events answer WHAT Kerberos encryption type was used (Event 4769) and whether DCSync was performed (Event 4662); neither of these appears in endpoint logs
+- Full coverage requires all three sources: authentication + process/network + domain authentication; each has a coverage gap the others fill
 
 ## Go deeper
 
-- [S011 — Windows Event 4624](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4624) — Full field reference for logon events
-- [S015 — Sysmon v15](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon) — All event types and configuration reference
-- [S023 — Windows Security Events](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/security-auditing-overview) — Events 4625/4688/4698/4768/4769 reference
+- [S011 — Windows Event 4624](../../research/security-foundations/01-sources/web/S011-windows-event-4624.md) — Full field reference: LogonType, LmPackageName, IpAddress, TargetLogonId, LogonGuid
+- [S015 — Sysmon v15](../../research/security-foundations/01-sources/web/S015-sysmon-v15.md) — All event types, ProcessGUID correlation model, and SessionGUID design
+- [S023 — Windows Security Events](../../research/security-foundations/01-sources/web/S023-windows-security-events.md) — Events 4688/4698/4768/4769/4662 and required audit policy settings
 
 ---
 
-*← [Previous: Detecting Persistence](./L12-detecting-persistence.md)* · *[Next: Correlating Events to Detect Lateral Movement](./L14-event-correlation.md) →*
+*← [Previous lesson](./L12-detecting-persistence.md)* · *[Next lesson →](./L14-event-correlation.md)
+| What DNS query? | ❌ | ✅ (Event 22) | ❌ |
+| What Kerberos ticket type? | ❌ | ❌ | ✅ (Event 4769) |
+| Was LSASS accessed? | ❌ | ✅ (Event 10) | ❌ |
+| DCSync request? | ❌ | ❌ | ✅ (Event 4662) |
+| WMI persistence? | ❌ | ✅ (19/20/21) | ❌ |
+
+## Limitations
+
+Correlating all three sources requires a SIEM or log aggregation platform that indexes events from endpoint Security logs, Sysmon logs, and DC Security logs simultaneously, and allows queries that join on `ProcessGUID`, `TargetLogonId`, and `IpAddress` across sources. Without this infrastructure, the matrix above is theoretical. Sysmon `ProcessGUID` and `SessionGUID` are the primary programmatic correlation keys — they are designed to be unique per process or session across the enterprise rather than just per host [S015](../../research/security-foundations/01-sources/web/S015-sysmon-v15.md).
+
+## Key points
+
+- Event 4624 answers WHO authenticated and HOW; check `LmPackageName` for NTLM vs Kerberos, `LogonType` for the channel used, and `LogonGuid` for presence/absence of Kerberos
+- Sysmon answers WHAT ran and WHERE it connected; ProcessGUID is the correlation key linking process creation to network connections, DNS queries, and registry writes
+- AD DC events answer WHAT Kerberos encryption type was used (Event 4769) and whether DCSync was performed (Event 4662); neither of these appears in endpoint logs
+- Full coverage requires all three sources: authentication + process/network + domain authentication; each has a coverage gap the others fill
+
+## Go deeper
+
+- [S011 — Windows Event 4624](../../research/security-foundations/01-sources/web/S011-windows-event-4624.md) — Full field reference: LogonType, LmPackageName, IpAddress, TargetLogonId, LogonGuid
+- [S015 — Sysmon v15](../../research/security-foundations/01-sources/web/S015-sysmon-v15.md) — All event types, ProcessGUID correlation model, and SessionGUID design
+- [S023 — Windows Security Events](../../research/security-foundations/01-sources/web/S023-windows-security-events.md) — Events 4688/4698/4768/4769/4662 and required audit policy settings
+
+---
+
+*← [Previous lesson](./L12-detecting-persistence.md)* · *[Next lesson →](./L14-event-correlation.md)*

@@ -1,0 +1,88 @@
+{
+  "id": "code-challenge-M09",
+  "type": "module",
+  "module": "M09",
+  "title": "Coding Challenges: Concurrency",
+  "challenges": [
+    {
+      "id": "CC22",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a function `parallel_sum(numbers: Vec<i64>) -> i64` that splits the input vector into two halves, spawns a thread for each half, computes the partial sum in each thread using a `move` closure, joins both handles, and returns the total sum. Write an entry function `sum_parallel(input: &str) -> i64` that parses a space-separated list of integers.",
+      "starter_code": "use std::thread;\n\nfn parallel_sum(numbers: Vec<i64>) -> i64 {\n    let mid = numbers.len() / 2;\n    let first_half = numbers[..mid].to_vec();\n    let second_half = numbers[mid..].to_vec();\n\n    // Spawn two threads with move closures; join and sum results\n    let h1 = thread::spawn(move || -> i64 { 0 });\n    let h2 = thread::spawn(move || -> i64 { 0 });\n\n    h1.join().unwrap() + h2.join().unwrap()\n}\n\nfn sum_parallel(input: &str) -> i64 {\n    let numbers: Vec<i64> = input.split_whitespace()\n        .filter_map(|s| s.parse().ok())\n        .collect();\n    parallel_sum(numbers)\n}\n",
+      "test_cases": [
+        {
+          "name": "Sum 1 to 4",
+          "input": "\"1 2 3 4\"",
+          "expected_output": "10",
+          "visibility": "visible"
+        },
+        {
+          "name": "Sum 1 to 6",
+          "input": "\"1 2 3 4 5 6\"",
+          "expected_output": "21",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single element",
+          "input": "\"42\"",
+          "expected_output": "42",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Negatives and positives",
+          "input": "\"-5 10 -3 8\"",
+          "expected_output": "10",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["thread-spawn", "join-handle", "move-closure-thread", "send-trait"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 4,
+      "lesson_ref": "L25",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L25"]
+    },
+    {
+      "id": "CC23",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a function `shared_counter(increments: u32) -> u32` that uses `Arc<Mutex<u32>>` to share a counter across `increments` threads (spawn one thread per increment, each adding 1 to the shared counter), joins all threads, and returns the final counter value. Write an entry function `count_concurrent(input: &str) -> u32` that parses `input` as a `u32`.",
+      "starter_code": "use std::sync::{Arc, Mutex};\nuse std::thread;\n\nfn shared_counter(increments: u32) -> u32 {\n    let counter = Arc::new(Mutex::new(0u32));\n    let mut handles = vec![];\n\n    for _ in 0..increments {\n        let counter_clone = Arc::clone(&counter);\n        let handle = thread::spawn(move || {\n            // Lock the mutex and increment\n        });\n        handles.push(handle);\n    }\n\n    for h in handles { h.join().unwrap(); }\n    *counter.lock().unwrap()\n}\n\nfn count_concurrent(input: &str) -> u32 {\n    let n: u32 = input.trim().parse().unwrap_or(0);\n    shared_counter(n)\n}\n",
+      "test_cases": [
+        {
+          "name": "5 increments = 5",
+          "input": "5",
+          "expected_output": "5",
+          "visibility": "visible"
+        },
+        {
+          "name": "10 increments = 10",
+          "input": "10",
+          "expected_output": "10",
+          "visibility": "visible"
+        },
+        {
+          "name": "1 increment = 1",
+          "input": "1",
+          "expected_output": "1",
+          "visibility": "hidden"
+        },
+        {
+          "name": "20 increments = 20",
+          "input": "20",
+          "expected_output": "20",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["arc", "mutex", "mutex-lock", "mutex-guard", "thread-spawn", "sync-trait"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 4,
+      "lesson_ref": "L27",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L25", "L26", "L27"]
+    }
+  ]
+}

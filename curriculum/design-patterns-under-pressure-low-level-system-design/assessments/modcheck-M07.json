@@ -1,0 +1,26 @@
+{
+  "module": "M07",
+  "title": "Modeling Business Complexity — Quick Check",
+  "questions": [
+    {
+      "id": "MC07-1",
+      "q": "What domain characteristics push a design from Transaction Script territory into Domain Model territory?",
+      "a": "When business rules are dense, shared across multiple workflows, and must be enforced as invariants. If the same rule appears in several service methods, or if violating it would cause inconsistency that a single script cannot protect, a domain model is justified."
+    },
+    {
+      "id": "MC07-2",
+      "q": "Describe Transaction Script as a correct design choice, not a failure.",
+      "a": "Transaction Script is correct when workflows are linear, rules are local (not shared), and domain interactions are minimal. It is honest simplicity — not a skill gap or a shortcut, but the right structural choice for genuinely modest complexity."
+    },
+    {
+      "id": "MC07-3",
+      "q": "What code signal identifies an Anemic Domain Model in an existing codebase?",
+      "a": "Domain objects have only getters and setters while all business logic lives in service classes. The objects are data bags — they have the form of a domain model (named classes) without the substance (behavior, invariant enforcement, rules)."
+    },
+    {
+      "id": "MC07-4",
+      "q": "How does Contradiction 3 resolve the Transaction Script vs Domain Model debate?",
+      "a": "It resolves by reframing: TS and DM are not competing universals — they address different regions of a complexity curve. Simple domain = TS. Complex, shared-rule domain = Domain Model. Picking based on team habit or ideology rather than complexity is the actual mistake."
+    }
+  ]
+}

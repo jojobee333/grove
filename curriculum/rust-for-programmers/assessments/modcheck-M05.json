@@ -1,0 +1,26 @@
+{
+  "module": "M05",
+  "title": "Collections — Quick Check",
+  "questions": [
+    {
+      "id": "MC05-1",
+      "q": "What does `vec.get(i)` return that `vec[i]` does not, and why is this the safer choice for potentially-out-of-bounds access?",
+      "a": "`.get(i)` returns `Option<&T>` — `None` if the index is out of bounds. Direct indexing with `vec[i]` panics at runtime if `i` is out of range. `.get()` forces the caller to handle the missing case explicitly."
+    },
+    {
+      "id": "MC05-2",
+      "q": "Explain the HashMap entry API: what does `.entry(k).or_insert(v)` do when the key is present vs absent?",
+      "a": "When the key is absent, it inserts the provided value `v` and returns a `&mut` to it. When the key is present, it skips the insertion and returns a `&mut` to the existing value. Either way the return is a mutable reference, which lets you increment in place."
+    },
+    {
+      "id": "MC05-3",
+      "q": "Why does Rust disallow `my_string[0]` for a String, unlike arrays or Vec?",
+      "a": "String is UTF-8 encoded, and characters can span 1–4 bytes. Indexing by integer could land in the middle of a multi-byte character, producing invalid data. Rust refuses this at compile time; use `.chars().nth(i)` for characters or `.bytes().nth(i)` for raw bytes."
+    },
+    {
+      "id": "MC05-4",
+      "q": "What is the difference between `.iter()` and `.into_iter()` on a Vec?",
+      "a": "`.iter()` borrows the Vec and yields `&T` references — the Vec remains usable after. `.into_iter()` consumes the Vec and yields owned `T` values — the Vec is no longer accessible after the call."
+    }
+  ]
+}

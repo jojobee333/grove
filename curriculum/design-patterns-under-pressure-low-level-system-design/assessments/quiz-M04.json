@@ -1,0 +1,172 @@
+{
+  "id": "quiz-M04",
+  "type": "module",
+  "module": "M04",
+  "title": "Assessment: Application and Boundary-Shaping Patterns",
+  "generated": "2026-04-17",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What is the orchestration pressure that justifies a Service Layer?",
+      "options": {
+        "A": "Multiple domain objects share a single database table",
+        "B": "The same use case sequence is needed in multiple entry points and would otherwise scatter",
+        "C": "The application has too many classes for a single developer to understand",
+        "D": "Domain objects are too simple to hold any behavior"
+      },
+      "correct": "B",
+      "explanation": "Service Layer is justified when the same multi-step operation (validate, load, check, update, notify) must be coordinated consistently across multiple entry points. A is a persistence concern, C is a complexity concern unrelated to patterns, and D describes a symptom of anemic domain model, not a Service Layer justification.",
+      "lesson_ref": "L10",
+      "claim_ref": "C3",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Where does Service Layer stop, and what is the failure mode when it expands beyond its boundary?",
+      "options": {
+        "A": "It stops at the database; failure mode is too many SQL queries",
+        "B": "It stops at orchestration; failure mode is absorbing domain rules and creating an anemic domain model",
+        "C": "It stops at the UI; failure mode is coupling to presentation concerns",
+        "D": "It stops when it reaches 500 lines; failure mode is a God class"
+      },
+      "correct": "B",
+      "explanation": "Service Layer owns orchestration (sequencing, coordination). Business rules belong in domain objects. When Service Layer absorbs rules, domain objects become data bags — the anemic domain model. A, C, D describe different but incorrect boundaries.",
+      "lesson_ref": "L10",
+      "claim_ref": "C3",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "A method checks `if user is None: return 'Guest'` in 15 separate places. What does the Special Case pattern replace these checks with?",
+      "options": {
+        "A": "A centralized null check utility function called once",
+        "B": "A GuestUser object that implements the same interface as User with default behavior",
+        "C": "A database default value that prevents null users from being created",
+        "D": "A validation layer that rejects null inputs before they reach the method"
+      },
+      "correct": "B",
+      "explanation": "Special Case replaces repeated null checks with a polymorphic object (GuestUser) that provides correct default behavior through the same interface — callers no longer branch. A centralizes but doesn't eliminate the check. C and D prevent the case from arising rather than handling it with the pattern.",
+      "lesson_ref": "L11",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "What edge-case pressure justifies Special Case (Null Object) over a simple null check?",
+      "options": {
+        "A": "The null check logic is complex and involves more than one condition",
+        "B": "The same edge condition is checked in many places and each check must be kept consistent",
+        "C": "The team wants to avoid using null values in Python",
+        "D": "The object being checked is an external dependency"
+      },
+      "correct": "B",
+      "explanation": "The pressure is scattered, repeated edge-case handling that must stay consistent. When the same null/sentinel check appears in many places, any policy change requires touching all of them. Special Case localizes the policy once. A describes complexity, not recurrence. C is a style preference. D is a boundary issue, not a Special Case trigger.",
+      "lesson_ref": "L11",
+      "claim_ref": "C3",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "Claim C3 states structural patterns are most valuable at unstable or mismatched boundaries. Which of the following best applies this claim?",
+      "options": {
+        "A": "Adding a facade around a stable, well-documented internal library the team controls",
+        "B": "Adding an adapter at the boundary between the domain and a third-party API whose response format changes with each version",
+        "C": "Using a service layer to reduce the number of classes in the codebase",
+        "D": "Applying data mapper to a project with a single SQLite table and no domain behavior"
+      },
+      "correct": "B",
+      "explanation": "C3 is about boundary instability and mismatch. A third-party API with changing response formats is the clearest example of an unstable, mismatched boundary where structural isolation pays. A describes a stable boundary. C is not a structural-pattern justification. D applies data mapper before domain complexity warrants it.",
+      "lesson_ref": "L12",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "A system has both orchestration pressure (repeated use-case sequences) and edge-condition pressure (null user in 10 places). How should these two pressures be addressed?",
+      "options": {
+        "A": "Pick the most pressing one and use one pattern for both",
+        "B": "Address each with its own pattern: Service Layer for orchestration, Special Case for edge conditions",
+        "C": "Use Service Layer and add null-handling logic inside the service methods",
+        "D": "Use Special Case for everything and skip the Service Layer"
+      },
+      "correct": "B",
+      "explanation": "Coherent composition addresses each distinct pressure with its own pattern. Service Layer owns orchestration; Special Case owns the null policy. Merging them (A, C) or picking one (D) leaves one pressure unaddressed or mixes concerns.",
+      "lesson_ref": "L12",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "How do you decide between Service Layer and Registry when both seem like potential responses to an access boundary problem?",
+      "options": {
+        "A": "Service Layer for problems with more than three steps; Registry for simpler problems",
+        "B": "Service Layer for orchestrating a sequence of operations; Registry for locating a shared object",
+        "C": "Registry is always preferred because it requires less code",
+        "D": "Service Layer is always preferred because it provides better testability"
+      },
+      "correct": "B",
+      "explanation": "The patterns address different pressures: Service Layer = use-case coordination (sequencing operations), Registry = lookup (finding a shared object without threading it through call trees). Pressure maps to pattern. A uses complexity as a proxy — incorrect. C and D are blanket preferences, not pressure-based reasoning.",
+      "lesson_ref": "L12",
+      "claim_ref": "C3",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "Explain why Special Case (Null Object) is described as 'localizing policy' and null checks are described as 'scattering policy.' Give an example showing the difference.",
+      "answer_key": {
+        "required_points": [
+          "Null check: each call site is responsible for deciding what to do with a null — the policy lives at the point of use and can drift between sites",
+          "Special Case: the policy is inside the GuestUser (or similar) object — it is called once when the degenerate object is created and applied consistently wherever the object is used",
+          "Example: user.display_name() returns 'Guest' from GuestUser without the caller checking for null — the policy is local to the object, not scattered across callers"
+        ],
+        "acceptable_variations": "Any domain example showing the localization",
+        "full_credit": "Correct policy-localization vs. policy-scattering distinction with concrete example",
+        "partial_credit": "Correct principle without example, or example without the localization explanation"
+      },
+      "lesson_ref": "L11",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "A Service Layer method contains this logic: `if order.total > 1000 and order.customer.tier == 'gold': apply_discount(order, 0.15)`. Should this stay in the service or move to the domain? Justify your answer using what you know about where business rules belong.",
+      "answer_key": {
+        "required_points": [
+          "This is a business rule (discount eligibility based on order total and customer tier) — it belongs in the domain",
+          "Service Layer should orchestrate (call domain.apply_discount_if_eligible()) not contain the rule",
+          "If the rule stays in the service, any other workflow needing the same discount logic must duplicate it or call this service — violating encapsulation",
+          "Domain location: e.g., Order.apply_eligible_discount() or a domain service that knows both Order and Customer"
+        ],
+        "acceptable_variations": "May place the rule on Order or on a domain service — either is defensible",
+        "full_credit": "Correctly identifies the rule as domain logic, explains why it should move, and names a domain location",
+        "partial_credit": "Correctly identifies it should move without explaining why or naming a destination"
+      },
+      "lesson_ref": "L10",
+      "claim_ref": "C3",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "A team is building a customer portal. Users can be logged-in, guests, and suspended accounts. The portal has 6 different features that behave differently for each user type. The team is considering three approaches: (1) null checks everywhere, (2) a single UserType enum with switch statements, (3) Special Case objects for Guest and Suspended. Using pressure-first reasoning and boundary-isolation principles from Module 4, evaluate all three approaches and recommend one.",
+      "guidance": "A strong response maps the edge-condition pressure to each approach: approach 1 scatters policy, approach 2 centralizes the type but still requires each feature to know all cases, approach 3 localizes each user type's policy in an object. The recommendation should explain what happens when a fourth user type is added (extensibility test).",
+      "rubric": {
+        "A": "Evaluates all three approaches with pressure mapping, identifies Special Case as the recommendation, justifies with the extensibility test and policy-localization argument",
+        "B": "Evaluates two of three correctly, makes a justified recommendation with some reasoning",
+        "C": "Recommends one approach without comparative evaluation of the alternatives"
+      },
+      "lesson_ref": "L10-L12",
+      "difficulty": "analysis"
+    }
+  ]
+}

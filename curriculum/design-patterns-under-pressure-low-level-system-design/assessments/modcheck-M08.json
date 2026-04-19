@@ -1,0 +1,26 @@
+{
+  "module": "M08",
+  "title": "Criticism, Overuse, and Pattern Economics — Quick Check",
+  "questions": [
+    {
+      "id": "MC08-1",
+      "q": "What three steps constitute the rent test for a proposed abstraction?",
+      "a": "1) Name the specific cost the abstraction is meant to relieve. 2) Confirm that cost is present now, not speculative. 3) Confirm the indirection cost of the abstraction is smaller than the relief it provides. An abstraction that fails any step is not paying rent."
+    },
+    {
+      "id": "MC08-2",
+      "q": "Why is the dependency strategy debate (DI vs Service Locator vs explicit passing) classified as unresolved?",
+      "a": "Because the right choice depends on contextual variables — team size, framework constraints, call-tree depth, testing discipline — that vary too much for a universal rule. No empirical study has measured these tradeoffs at matched complexity levels."
+    },
+    {
+      "id": "MC08-3",
+      "q": "Explain how language evolution can make a classic pattern implementation obsolete while the underlying problem persists.",
+      "a": "A language feature can solve the same problem natively, making the class-heavy form unnecessary. For example, Python generators solve the iteration problem directly — the GoF ConcreteIterator hierarchy is redundant — but the need to traverse sequences lazily still exists."
+    },
+    {
+      "id": "MC08-4",
+      "q": "How is YAGNI compatible with good design? What does it not prohibit?",
+      "a": "YAGNI prohibits adding abstractions for speculative future requirements. It does not prohibit clean, present-requirement design. Writing readable code, naming things well, and structuring present logic clearly are not YAGNI violations — adding an entire plugin system for a feature that doesn't exist is."
+    }
+  ]
+}

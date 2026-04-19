@@ -1,0 +1,34 @@
+{
+  "slug": "rust-for-programmers",
+  "generated": "2026-04-19",
+  "paths": [
+    {
+      "id": "default-path",
+      "title": "Complete Course",
+      "description": "All 27 lessons in recommended pedagogical order — setup through safe concurrency.",
+      "entry_condition": {},
+      "sequence": ["L01","L02","L03","L04","L05","L06","L07","L08","L09","L10","L11","L12","L13","L14","L15","L16","L17","L18","L19","L20","L21","L22","L23","L24","L25","L26","L27"]
+    },
+    {
+      "id": "ownership-focus",
+      "title": "Ownership Mastery Track",
+      "description": "Deep focus on ownership, borrowing, and lifetimes — the hardest part of Rust.",
+      "entry_condition": { "background": "intermediate" },
+      "sequence": ["L01","L02","L03","L04","L05","L06","L21"]
+    },
+    {
+      "id": "systems-track",
+      "title": "Systems Programming Track",
+      "description": "Ownership + types + error handling + concurrency — skip functional patterns.",
+      "entry_condition": { "background": "intermediate" },
+      "sequence": ["L01","L02","L03","L04","L05","L06","L07","L08","L09","L10","L11","L12","L16","L17","L18","L19","L20","L25","L26","L27"]
+    },
+    {
+      "id": "fast-track",
+      "title": "Fast Track — Core Concepts",
+      "description": "One lesson per module covering the most important concept. Covers all nine modules.",
+      "entry_condition": { "background": "experienced" },
+      "sequence": ["L01","L04","L07","L10","L13","L16","L20","L23","L25"]
+    }
+  ]
+}

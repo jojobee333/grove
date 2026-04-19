@@ -3,29 +3,40 @@
 **Module**: M06 · Broaden Specification Beyond Single Examples
 **Type**: advanced
 **Estimated time**: 15 minutes
-**Claim**: C7 - Advanced Python TDD expertise includes using broader specification techniques than single example-based unit tests
+**Claim**: C7 from Strata synthesis
 
 ---
 
-## The advanced move
+## The core idea
 
-Single examples are where most TDD work starts, but they are not where strong specification work has to end. The research makes a clear progression: once a behavior stops being well described by one or two hand-picked examples, Python teams should broaden the specification with parametrization or property-based testing rather than duplicating nearly identical tests or hoping edge cases will appear later. Source trail: `vault/research/test-driven-development-in-python/03-synthesis/claims.md`, `vault/research/test-driven-development-in-python/01-sources/web/S005-pytest-parametrize.md`, `vault/research/test-driven-development-in-python/01-sources/web/S010-hypothesis-quickstart.md`.
+Single examples are where most TDD work starts, and for good reason: they are readable, concrete, and fast to write. But they have a ceiling. Once a behavior has more than two or three interesting input families, writing one example at a time stops being the most efficient way to specify it. And for behaviors with very large or continuous input spaces, hand-picking examples may leave whole regions of the behavior unexplored without you realizing it.
 
-Parametrization is the simpler expansion. It says, "This one behavior should hold across several named cases." Property-based testing goes further. It says, "This invariant should hold across many generated inputs, and if it breaks, show me the smallest falsifying example." Both are useful, but they answer slightly different questions.
+Python TDD provides two tools for moving past that ceiling. Parametrization lets you express a known family of cases in one test design — the same assertion, applied systematically across a table of named examples [S005](../../research/test-driven-development-in-python/01-sources/web/S005-pytest-parametrize.md). Property-based testing with Hypothesis takes the next step: you define an invariant that should hold across a broad class of inputs, then the library generates inputs and searches for counterexamples you did not think to write [S010](../../research/test-driven-development-in-python/01-sources/web/S010-hypothesis-quickstart.md).
 
-For TDD, that distinction matters. Parametrization is usually the next move when you already understand the case family and want to express it clearly. Hypothesis becomes valuable when the space of interesting inputs is too broad, too surprising, or too combinatorial to cover comfortably by hand. Neither replaces small example-driven design work. They extend it.
+The two tools answer different questions. Parametrization says: "This behavior should produce exactly these outputs for these named cases." Hypothesis says: "This property should hold for any input the library can generate — find the smallest one that breaks it." Neither replaces small example-driven TDD. They extend it when the example space becomes too large or unpredictable to express manually.
 
 ## Why it matters
 
-Teams often hit a ceiling where their tests are technically numerous but conceptually narrow. They have one happy-path example, one obvious failure, and maybe one edge case, but they have not actually described the behavior space. At that point, design can still be under-specified even though the file has many green tests.
+A test suite with one happy-path case, one failure case, and one edge case per function is often under-specified in ways that are hard to see by reading the tests. The tests are green, but the behavior on inputs you did not explicitly choose is undefined territory. Bugs from that territory are often the hardest to reproduce and diagnose, because the test suite gave no signal that the input space had interesting structure beyond the three hand-picked cases.
 
-Broader specification techniques solve that by changing the unit of thinking. Instead of asking only, "What is one more example?" you ask, "What family of cases belongs together?" or "What property should always remain true?" That pushes the suite closer to real behavioral coverage.
+Parametrization and property-based testing both sharpen specification coverage. Parametrization makes a case family explicit — the developer chooses the cases intentionally and names them. Hypothesis explores beyond the developer's choices, looking for inputs where the stated invariant breaks. Both changes reduce the gap between what the tests verify and what the function is actually expected to do.
 
-## A concrete example
+## Example 1 — starting point: three separate examples that want to be parametrized
 
-Suppose you are driving a function that normalizes tags by trimming whitespace, lowercasing text, and discarding blanks.
+An initial pass through `normalize_tag` might produce three separate tests:
 
-You might begin with one concrete example, then broaden with parametrization:
+```python
+def test_strips_whitespace():
+    assert normalize_tag("  Python  ") == "python"
+
+def test_lowercases():
+    assert normalize_tag("PYTHON") == "python"
+
+def test_blank_becomes_none():
+    assert normalize_tag("   ") is None
+```
+
+Each test is simple, but they share an identical structure: call `normalize_tag(input)`, assert the output. That repetition is the signal to consolidate with `pytest.mark.parametrize`:
 
 ```python
 import pytest
@@ -34,49 +45,97 @@ import pytest
 @pytest.mark.parametrize(
     ("raw", "expected"),
     [
-        (" Python ", "python"),
-        ("PYTHON", "python"),
-        ("   ", ""),
+        ("  Python  ", "python"),     # trims and lowercases
+        ("PYTHON",     "python"),     # only lowercases
+        ("python",     "python"),     # already normal
+        ("   ",        None),         # blank → None
+        ("",           None),         # empty → None
+        ("C++",        "c++"),        # non-alpha characters preserved
     ],
 )
-def test_normalize_tag_examples(raw, expected):
+def test_normalize_tag(raw: str, expected: str | None) -> None:
     assert normalize_tag(raw) == expected
 ```
 
-That is a useful family of explicit cases. But maybe you also want to state a broader invariant: normalizing a tag twice should produce the same result as normalizing it once. That is where Hypothesis becomes useful:
+Now six cases live in one test. Adding a seventh is one line in the table. Pytest reports each case individually if it fails, so you still get precise diagnostics. The parametrized form is more expressive, not less readable [S005](../../research/test-driven-development-in-python/01-sources/web/S005-pytest-parametrize.md).
+
+## Example 2 — property-based testing with Hypothesis
+
+After establishing the specific cases, you may want to state a broader invariant. For `normalize_tag`, one natural invariant is idempotency: normalizing an already-normalized tag should return the same tag. Another is the output type: the result is always either a lowercase string or `None`.
 
 ```python
 from hypothesis import given, strategies as st
 
 
 @given(st.text())
-def test_normalize_tag_is_idempotent(text):
-    assert normalize_tag(normalize_tag(text)) == normalize_tag(text)
+def test_normalize_tag_is_idempotent(raw: str) -> None:
+    """Normalizing twice should give the same result as normalizing once."""
+    once  = normalize_tag(raw)
+    twice = normalize_tag(raw) if once is None else normalize_tag(once)
+    assert once == twice
+
+
+@given(st.text())
+def test_normalize_tag_result_type(raw: str) -> None:
+    """Result is always str (lowercase) or None — never anything else."""
+    result = normalize_tag(raw)
+    assert result is None or (isinstance(result, str) and result == result.lower())
 ```
 
-Now the test is not tied to a few manually chosen strings. It is checking a property across many generated inputs. If the behavior fails, Hypothesis gives you a falsifying example small enough to reason about.
+Hypothesis generates hundreds of inputs across runs, then shrinks any falsifying example to its minimum form. If your implementation has a bug that only appears with a Unicode character, a zero-width space, or a very specific combination of whitespace, Hypothesis will find it and show you the smallest input that demonstrates the failure [S010](../../research/test-driven-development-in-python/01-sources/web/S010-hypothesis-quickstart.md).
 
-The example is illustrative, but the research-backed lesson is direct: parametrization broadens example coverage cleanly, and Hypothesis adds generated exploration that complements, rather than replaces, example-driven TDD. Source trail: `vault/research/test-driven-development-in-python/01-sources/web/S005-pytest-parametrize.md`, `vault/research/test-driven-development-in-python/01-sources/web/S010-hypothesis-quickstart.md`.
+## Example 3 — applying both techniques to a business function
 
-## Common mistakes
+A discount calculation rule: orders over a threshold earn a percentage discount. The discount rate should never exceed 1.0, and orders below the threshold should always receive 0 discount.
 
-- Using property-based tests before you can name the core behavior in ordinary examples.
-- Writing giant parametrized matrices that hide the behavior under too much data.
-- Treating generated inputs as magical coverage instead of tying them to a meaningful invariant.
-- Replacing readable examples with properties when the examples are still the clearest teaching tool.
+Specific cases with parametrization:
+
+```python
+@pytest.mark.parametrize(
+    ("total_cents", "threshold_cents", "rate", "expected_discount_cents"),
+    [
+        (10_000, 5_000, 0.10, 1_000),   # above threshold → discount applied
+        (5_000,  5_000, 0.10, 0),        # exactly at threshold → no discount (exclusive)
+        (4_999,  5_000, 0.10, 0),        # below threshold → no discount
+        (10_000, 5_000, 0.00, 0),        # zero rate → no discount
+    ],
+)
+def test_calculate_discount(total_cents, threshold_cents, rate, expected_discount_cents):
+    assert calculate_discount(total_cents, threshold_cents, rate) == expected_discount_cents
+```
+
+Invariant with Hypothesis: the discount should never exceed the total order amount, and should always be non-negative:
+
+```python
+from hypothesis import given, settings, strategies as st
+
+
+@given(
+    total_cents    = st.integers(min_value=0, max_value=1_000_000),
+    threshold_cents = st.integers(min_value=1, max_value=1_000_000),
+    rate           = st.floats(min_value=0.0, max_value=1.0, allow_nan=False),
+)
+def test_discount_is_non_negative_and_bounded(total_cents, threshold_cents, rate):
+    discount = calculate_discount(total_cents, threshold_cents, rate)
+    assert 0 <= discount <= total_cents
+```
+
+The parametrized tests verify named cases precisely. The Hypothesis test guards against a whole class of implementation errors — negative discounts, discounts larger than the order, off-by-one threshold bugs — across the full input space. Together they give stronger behavioral coverage than either technique alone.
 
 ## Key points
 
-- Parametrization is best for a known family of concrete cases.
-- Property-based testing is best for broader invariants and surprising input exploration.
-- Both techniques strengthen Python TDD when they extend small example-driven design rather than trying to skip it.
+- Parametrize when you have a known family of named cases that share a test structure [S005](../../research/test-driven-development-in-python/01-sources/web/S005-pytest-parametrize.md)
+- Use Hypothesis when you can state a meaningful invariant and want the library to search for counterexamples [S010](../../research/test-driven-development-in-python/01-sources/web/S010-hypothesis-quickstart.md)
+- Both techniques extend small example-driven TDD rather than replace it
+- Hypothesis output is a falsifying example shrunk to its minimum — if it fails, the error is always reproducible and minimal
+- Avoid large parametrized matrices with no clear pattern — if the data does not tell a story, the test probably covers too much or too little
 
 ## Go deeper
 
-- `vault/research/test-driven-development-in-python/01-sources/web/S005-pytest-parametrize.md`
-- `vault/research/test-driven-development-in-python/01-sources/web/S010-hypothesis-quickstart.md`
-- `vault/research/test-driven-development-in-python/03-synthesis/narrative.md`
+- [S005](../../research/test-driven-development-in-python/01-sources/web/S005-pytest-parametrize.md) — parametrize usage including IDs, indirect fixtures, and stacking multiple decorators
+- [S010](../../research/test-driven-development-in-python/01-sources/web/S010-hypothesis-quickstart.md) — Hypothesis quickstart: strategies, given decorator, settings, and shrinking behavior
+- [S007](../../research/test-driven-development-in-python/01-sources/web/S007-canon-tdd.md) — how broader specification fits into the TDD loop without abandoning the example-first discipline
 
 ---
 
-*[<- Previous: When to Prefer Verified Fakes or Contract Checks](./L10-when-to-prefer-verified-fakes-or-contract-checks.md)* · *[Next lesson: Advanced Boundary Coverage in Practice ->](./L12-advanced-boundary-coverage-in-practice.md)*
+*[← Previous lesson](./L10-when-to-prefer-verified-fakes-or-contract-checks.md)* · *[Next lesson →](./L12-advanced-boundary-coverage-in-practice.md)*

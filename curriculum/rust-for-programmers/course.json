@@ -1,0 +1,581 @@
+{
+  "topic": "Rust for Programmers",
+  "slug": "rust-for-programmers",
+  "strata_source": "research/rust-for-programmers/",
+  "generated": "2026-04-19",
+  "learner": {
+    "goal": "learn",
+    "background": "intermediate",
+    "session_time_min": 20
+  },
+  "summary": "A hands-on, project-driven Rust course for developers who know Python, JavaScript, or Java. 9 modules, 27 lessons, one runnable mini-project per lesson — covering ownership through fearless concurrency.",
+  "modules": [
+    {
+      "id": "M01",
+      "title": "Setup & Rust Fundamentals",
+      "strata_theme": "T4: Canonical learning sequence validated across three independent sources",
+      "description": "Install Rust, write your first program, and learn the core building blocks: variables, types, functions, and control flow. Ends with a CLI temperature converter.",
+      "objectives": [
+        "Set up a working Rust development environment with Cargo",
+        "Explain the difference between Rust's expressions and statements",
+        "Write functions with explicit type signatures and return values",
+        "Use match, loop, while, and for to control program flow"
+      ],
+      "lessons": [
+        {
+          "id": "L01",
+          "title": "Installing Rust and Hello, Cargo",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 15,
+          "description": "Install Rust via rustup, understand the role of Cargo, and write your first Rust program. Covers the project structure created by cargo new.",
+          "prerequisites": [],
+          "teaches_concepts": ["cargo", "rustup", "fn-main", "println-macro", "cargo-run"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.75,
+          "difficulty": 1,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14],
+          "mini_project": "hello_world — print a greeting, compile and run with cargo"
+        },
+        {
+          "id": "L02",
+          "title": "Variables, Types, and Mutability",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 18,
+          "description": "Rust variables are immutable by default. Learn scalar types (i32, f64, bool, char), compound types (tuples, arrays), shadowing, and the mut keyword.",
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["let", "mut", "shadowing", "scalar-types", "tuple", "array"],
+          "reinforces_concepts": ["cargo"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14],
+          "mini_project": "type_explorer — declare variables of 5 different types, shadow one, print all"
+        },
+        {
+          "id": "L03",
+          "title": "Functions and Control Flow",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 20,
+          "description": "Functions in Rust are expressions. Learn the -> return type syntax, if/else as an expression, loop/while/for, and ranges. Mini-project: CLI temperature converter.",
+          "prerequisites": ["L02"],
+          "teaches_concepts": ["fn-signature", "return-type", "if-expression", "loop", "while", "for-range", "range"],
+          "reinforces_concepts": ["let", "mut", "scalar-types"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14],
+          "mini_project": "temperature_converter — CLI tool converting Fahrenheit ↔ Celsius ↔ Kelvin with match"
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M02",
+      "title": "Ownership & Borrowing",
+      "strata_theme": "T1: Ownership is the central conceptual barrier; T3: Type system prevents bugs at compile time",
+      "description": "The single most important concept in Rust. Learn move semantics, borrowing rules, the borrow checker, and the String/&str distinction. This module is the gateway to everything else.",
+      "objectives": [
+        "Explain Rust's ownership rules and why assignments are moves by default",
+        "Apply borrowing rules: when to use &T vs &mut T",
+        "Distinguish String (owned, heap) from &str (borrowed slice)",
+        "Read and understand borrow checker error messages"
+      ],
+      "lessons": [
+        {
+          "id": "L04",
+          "title": "Ownership Rules and Move Semantics",
+          "strata_claim": "C2, C4",
+          "type": "core",
+          "estimated_minutes": 22,
+          "description": "Stack vs heap, the three ownership rules, why assignment is a move (not a copy), Copy vs Clone, and RAII (values dropped at end of scope). The bug this prevents: use-after-free and double-free.",
+          "prerequisites": ["L03"],
+          "teaches_concepts": ["ownership-rules", "move-semantics", "copy-trait", "clone", "drop", "raii", "stack-heap"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.85,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7],
+          "mini_project": "ownership_trace — write a program that demonstrates move, clone, and copy with printed output showing when values are dropped"
+        },
+        {
+          "id": "L05",
+          "title": "References and the Borrow Checker",
+          "strata_claim": "C2, C4",
+          "type": "core",
+          "estimated_minutes": 22,
+          "description": "Borrowing as temporary access. The two rules: one &mut OR many &. Non-lexical lifetimes (NLL). Dangling reference prevention. The bug this prevents: data races and invalid memory access.",
+          "prerequisites": ["L04"],
+          "teaches_concepts": ["reference", "borrow", "mutable-reference", "borrow-rules", "nll", "dangling-reference"],
+          "reinforces_concepts": ["ownership-rules"],
+          "mastery_threshold": 0.85,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7],
+          "mini_project": "borrow_checker_tour — write 3 functions: one takes &T, one takes &mut T, one takes T; call each and observe what can be used afterward"
+        },
+        {
+          "id": "L06",
+          "title": "String vs &str and Slices",
+          "strata_claim": "C2",
+          "type": "core",
+          "estimated_minutes": 18,
+          "description": "String owns heap data; &str borrows a slice. String operations (push_str, len, chars, split). The &String → &str deref coercion. When to use which in function parameters.",
+          "prerequisites": ["L05"],
+          "teaches_concepts": ["string", "str-slice", "string-slice", "deref-coercion", "string-methods"],
+          "reinforces_concepts": ["borrow", "reference", "ownership-rules"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14],
+          "mini_project": "string_reversal — reverse words in a sentence using &str slices, no String allocation in the processing function"
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M03",
+      "title": "Structs & Methods",
+      "strata_theme": "T4: Canonical sequence — structs after ownership, before enums",
+      "description": "Group related data with structs. Add behavior with impl blocks. Use associated functions as constructors. Derive Debug and Clone.",
+      "objectives": [
+        "Define structs and create instances using field init shorthand",
+        "Implement methods on structs using impl blocks",
+        "Write associated functions (constructors without self)",
+        "Derive common traits: Debug, Clone, PartialEq"
+      ],
+      "lessons": [
+        {
+          "id": "L07",
+          "title": "Defining Structs",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 15,
+          "description": "Struct syntax, field init shorthand, struct update syntax (..), tuple structs, unit structs. Ownership in structs: use owned types (String, not &str) until lifetimes are learned.",
+          "prerequisites": ["L06"],
+          "teaches_concepts": ["struct", "field-init-shorthand", "struct-update", "tuple-struct", "unit-struct"],
+          "reinforces_concepts": ["ownership-rules", "string"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14],
+          "mini_project": "point_struct — 2D Point struct with x, y fields; create instances using both explicit syntax and shorthand"
+        },
+        {
+          "id": "L08",
+          "title": "Methods and impl Blocks",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 18,
+          "description": "The impl block. Methods that take &self (read), &mut self (mutate), or self (consume). Method call auto-referencing. Multiple impl blocks.",
+          "prerequisites": ["L07"],
+          "teaches_concepts": ["impl", "method", "self", "mut-self", "associated-function", "method-syntax"],
+          "reinforces_concepts": ["borrow", "mutable-reference", "struct"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14],
+          "mini_project": "rectangle — Rectangle struct with area(), perimeter(), is_square() methods and new() constructor"
+        },
+        {
+          "id": "L09",
+          "title": "Derived Traits and Debug",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 15,
+          "description": "The #[derive] attribute for Debug, Clone, PartialEq, Copy. How {:?} and {:#?} format structs. When Copy is appropriate. Display trait with fmt::Display.",
+          "prerequisites": ["L08"],
+          "teaches_concepts": ["derive", "debug-trait", "clone-trait", "partialeq", "display-trait", "fmt"],
+          "reinforces_concepts": ["copy-trait", "impl"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14],
+          "mini_project": "student_grade_calculator — Student struct with name, grades Vec<f64>, average() method, Display impl, Debug derive"
+        }
+      ],
+      "has_assessment": false
+    },
+    {
+      "id": "M04",
+      "title": "Enums, Pattern Matching & Option",
+      "strata_theme": "T2: Enums replace three different language features; T3: Type system prevents null deref",
+      "description": "Rust enums carry data. match replaces switch and eliminates forgotten cases. Option<T> replaces null. Together, these three tools eliminate an entire category of runtime bugs.",
+      "objectives": [
+        "Define enums with data-carrying variants",
+        "Write exhaustive match expressions including nested patterns",
+        "Use Option<T> in place of null — unwrap, if let, match",
+        "Apply pattern destructuring to structs, tuples, and enum variants"
+      ],
+      "lessons": [
+        {
+          "id": "L10",
+          "title": "Enums and Data-Carrying Variants",
+          "strata_claim": "C3",
+          "type": "core",
+          "estimated_minutes": 18,
+          "description": "Enum syntax, variants with no data / tuple data / struct data. Method on enums. Why enums with data eliminate the need for inheritance hierarchies.",
+          "prerequisites": ["L09"],
+          "teaches_concepts": ["enum", "enum-variant", "enum-data", "enum-method"],
+          "reinforces_concepts": ["struct", "impl"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14],
+          "mini_project": "shape_enum — Shape enum with Circle(f64), Rectangle(f64, f64), Triangle(f64, f64, f64) variants and area() method"
+        },
+        {
+          "id": "L11",
+          "title": "match and Pattern Matching",
+          "strata_claim": "C3, C4",
+          "type": "core",
+          "estimated_minutes": 20,
+          "description": "match is exhaustive — compiler enforces all cases. Patterns: literals, ranges, binding (x @ 1..=5), destructuring enums/structs/tuples, catch-all (_). if let as concise single-arm match.",
+          "prerequisites": ["L10"],
+          "teaches_concepts": ["match", "exhaustive-match", "pattern-binding", "destructuring", "if-let", "while-let", "catch-all"],
+          "reinforces_concepts": ["enum", "struct"],
+          "mastery_threshold": 0.85,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7],
+          "mini_project": "traffic_light — TrafficLight enum, match to get duration and instruction, if let for optional pedestrian signal"
+        },
+        {
+          "id": "L12",
+          "title": "Option<T> — Rust's Null Alternative",
+          "strata_claim": "C3, C4",
+          "type": "core",
+          "estimated_minutes": 18,
+          "description": "Option<T> = Some(T) | None. Why there is no null in Rust. unwrap, expect, unwrap_or, map, and_then (Option chaining). The compiler forces you to handle None.",
+          "prerequisites": ["L11"],
+          "teaches_concepts": ["option", "some", "none", "option-unwrap", "option-expect", "option-map", "option-and-then"],
+          "reinforces_concepts": ["match", "if-let", "enum"],
+          "mastery_threshold": 0.85,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7],
+          "mini_project": "contact_lookup — Vec<Contact> with find_by_name returning Option<&Contact>; chain map/unwrap_or for display"
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M05",
+      "title": "Collections",
+      "strata_theme": "T4: Collections before error handling in validated sequence",
+      "description": "Vec<T>, HashMap<K,V>, and String operations. These three collections cover 80% of real-world Rust application data needs.",
+      "objectives": [
+        "Create, populate, and iterate over Vec<T> using owned and borrowed patterns",
+        "Use HashMap with the entry API for safe insert-or-update",
+        "Perform common String operations: split, trim, chars, push_str",
+        "Choose the right collection type for a given use case"
+      ],
+      "lessons": [
+        {
+          "id": "L13",
+          "title": "Vec<T> — Dynamic Arrays",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 18,
+          "description": "Vec creation (vec![], Vec::new(), Vec::with_capacity), push/pop, indexing vs .get() (returns Option), slices, .iter()/.iter_mut()/.into_iter(), sorting.",
+          "prerequisites": ["L12"],
+          "teaches_concepts": ["vec", "vec-macro", "vec-push", "vec-get", "vec-index", "vec-slice", "vec-iter"],
+          "reinforces_concepts": ["option", "borrow", "ownership-rules"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14],
+          "mini_project": "number_stats — Vec<f64> with functions for mean, median (sorted), min, max"
+        },
+        {
+          "id": "L14",
+          "title": "HashMap<K, V>",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 18,
+          "description": "HashMap creation, insert, get (returns Option<&V>), contains_key, remove, iteration. The entry API: .entry(key).or_insert(0) for safe count-or-create. HashMap ownership rules.",
+          "prerequisites": ["L13"],
+          "teaches_concepts": ["hashmap", "hashmap-insert", "hashmap-get", "entry-api", "hashmap-iter"],
+          "reinforces_concepts": ["option", "ownership-rules"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14],
+          "mini_project": "word_frequency — count word occurrences in a hardcoded string using HashMap and entry API"
+        },
+        {
+          "id": "L15",
+          "title": "String Operations",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 15,
+          "description": "String is a Vec<u8> with UTF-8 guarantee. push_str, push (char), +, format!, len vs chars().count(), split, trim, contains, starts_with, to_uppercase/lowercase. Why String indexing with [] is disabled.",
+          "prerequisites": ["L14"],
+          "teaches_concepts": ["string-push-str", "string-format", "string-chars", "string-split", "string-trim", "utf8"],
+          "reinforces_concepts": ["string", "str-slice"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14],
+          "mini_project": "word_frequency_complete — extend L14's word counter to normalize (trim, to_lowercase), print top-5 words sorted by count"
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M06",
+      "title": "Error Handling",
+      "strata_theme": "T9: ? operator is idiomatic; T3: errors in type signature are documentation",
+      "description": "Rust makes errors part of the type signature. Learn the progression from match → expect → ? operator, and when to write custom error types.",
+      "objectives": [
+        "Use Result<T, E> with match to handle recoverable errors explicitly",
+        "Apply the ? operator for ergonomic error propagation",
+        "Distinguish panic (unrecoverable) from Result (recoverable) errors",
+        "Write a custom error type implementing Display and std::error::Error"
+      ],
+      "lessons": [
+        {
+          "id": "L16",
+          "title": "Result<T, E> and Recoverable Errors",
+          "strata_claim": "C5, C4",
+          "type": "core",
+          "estimated_minutes": 20,
+          "description": "Result<T, E> = Ok(T) | Err(E). match on Result. unwrap/expect (panic on Err). unwrap_or, map, map_err. panic! for unrecoverable states. When to panic vs return Err.",
+          "prerequisites": ["L15"],
+          "teaches_concepts": ["result", "ok", "err", "result-match", "result-unwrap", "result-expect", "result-map", "panic"],
+          "reinforces_concepts": ["match", "option"],
+          "mastery_threshold": 0.85,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7],
+          "mini_project": "safe_divide — fn divide(a: f64, b: f64) -> Result<f64, String>; caller handles Err with match"
+        },
+        {
+          "id": "L17",
+          "title": "The ? Operator and Error Propagation",
+          "strata_claim": "C5",
+          "type": "core",
+          "estimated_minutes": 20,
+          "description": "? desugars to match + early return + From::from type conversion. Using ? in main with Box<dyn Error>. Chaining ? operators. The rule: ? can only be used in functions returning Result (or Option).",
+          "prerequisites": ["L16"],
+          "teaches_concepts": ["question-mark-operator", "error-propagation", "box-dyn-error", "from-trait"],
+          "reinforces_concepts": ["result", "result-match"],
+          "mastery_threshold": 0.85,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7],
+          "mini_project": "file_reader — read a file, parse each line as f64, compute sum; all errors propagated with ?"
+        },
+        {
+          "id": "L18",
+          "title": "Custom Error Types",
+          "strata_claim": "C5",
+          "type": "core",
+          "estimated_minutes": 20,
+          "description": "When custom errors are needed (library code, multiple error kinds). enum AppError with variants. Implementing Display and std::error::Error. From<io::Error> for conversion with ?.",
+          "prerequisites": ["L17"],
+          "teaches_concepts": ["custom-error", "error-trait", "from-impl", "error-enum"],
+          "reinforces_concepts": ["enum", "display-trait", "question-mark-operator"],
+          "mastery_threshold": 0.80,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14],
+          "mini_project": "csv_parser — parse CSV rows into structs with a ParseError enum; propagate IO and parse errors via ?"
+        }
+      ],
+      "has_assessment": false
+    },
+    {
+      "id": "M07",
+      "title": "Generics, Traits & Lifetimes",
+      "strata_theme": "T5: Lifetimes are annotation-light; T4: generics → traits → lifetimes ordering",
+      "description": "The Rust type system's most powerful tools. Generics let you write code once for all types. Traits define shared behavior. Lifetimes let the compiler verify memory assumptions.",
+      "objectives": [
+        "Write generic functions and structs with <T> syntax",
+        "Define and implement traits with default methods",
+        "Use trait bounds in function signatures: impl Trait and where T: Trait",
+        "Apply lifetime annotations to functions where the compiler requires them"
+      ],
+      "lessons": [
+        {
+          "id": "L19",
+          "title": "Generics",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 18,
+          "description": "Generic functions, generic structs, generic enums (Option and Result are generic). Monomorphization: zero-cost abstraction — the compiler generates concrete types at compile time.",
+          "prerequisites": ["L18"],
+          "teaches_concepts": ["generic", "generic-function", "generic-struct", "monomorphization", "type-parameter"],
+          "reinforces_concepts": ["option", "result"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14],
+          "mini_project": "generic_stack — Stack<T> with push, pop (returns Option<T>), peek, is_empty"
+        },
+        {
+          "id": "L20",
+          "title": "Traits: Shared Behavior",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 22,
+          "description": "Define traits, implement them on types, default method implementations. impl Trait parameter syntax vs where T: Trait bounds. Orphan rule. Blanket impls. Common stdlib traits: Display, Clone, Iterator, From/Into.",
+          "prerequisites": ["L19"],
+          "teaches_concepts": ["trait", "trait-impl", "trait-default", "impl-trait-param", "where-clause", "orphan-rule", "blanket-impl"],
+          "reinforces_concepts": ["generic", "display-trait", "clone-trait"],
+          "mastery_threshold": 0.85,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7],
+          "mini_project": "shape_area_trait — Area trait with area() -> f64; implement for Circle, Rectangle, Triangle; generic fn print_area<T: Area + Display>(shape: &T)"
+        },
+        {
+          "id": "L21",
+          "title": "Lifetimes",
+          "strata_claim": "C5",
+          "type": "core",
+          "estimated_minutes": 22,
+          "description": "Lifetime elision rules first (most code needs no annotations). When explicit annotations are needed: multi-reference functions, structs holding references. Annotation syntax: 'a. The 'static lifetime. Common mistake: adding 'static to silence errors.",
+          "prerequisites": ["L20"],
+          "teaches_concepts": ["lifetime", "lifetime-annotation", "lifetime-elision", "static-lifetime", "borrow-checker-lifetime"],
+          "reinforces_concepts": ["borrow", "reference", "dangling-reference"],
+          "mastery_threshold": 0.80,
+          "difficulty": 5,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7],
+          "mini_project": "longest_word — fn longest<'a>(x: &'a str, y: &'a str) -> &'a str; demonstrate lifetime error with dangling reference, then fix"
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M08",
+      "title": "Closures & Iterators",
+      "strata_theme": "T6: Iterators are zero-cost and idiomatic over loops",
+      "description": "Closures are anonymous functions that capture their environment. Iterators are lazy sequences. Together they make functional programming idiomatic and zero-cost in Rust.",
+      "objectives": [
+        "Write closures that capture variables by reference and by value (move)",
+        "Use the Fn, FnMut, FnOnce traits to understand closure types",
+        "Chain iterator adapters: map, filter, enumerate, flat_map",
+        "Collect iterator results into Vec, HashMap, and String"
+      ],
+      "lessons": [
+        {
+          "id": "L22",
+          "title": "Closures",
+          "strata_claim": "C6",
+          "type": "core",
+          "estimated_minutes": 18,
+          "description": "Closure syntax |x| x + 1. Environment capture: by reference (&), by mutable reference (&mut), by value (move). Fn/FnMut/FnOnce traits. Closures as function arguments (higher-order functions).",
+          "prerequisites": ["L21"],
+          "teaches_concepts": ["closure", "closure-capture", "move-closure", "fn-trait", "fn-mut-trait", "fn-once-trait", "higher-order"],
+          "reinforces_concepts": ["borrow", "ownership-rules"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14],
+          "mini_project": "sorter — sort Vec<String> by length using a closure; then by reverse alpha; demonstrate move closure capturing a threshold"
+        },
+        {
+          "id": "L23",
+          "title": "The Iterator Trait",
+          "strata_claim": "C6",
+          "type": "core",
+          "estimated_minutes": 18,
+          "description": "Iterator trait: only next() is required. Lazy evaluation: adaptors do nothing until consumed. iter() vs into_iter() vs iter_mut(). Consuming adaptors: sum, count, collect, fold. The for loop desugars to into_iter().",
+          "prerequisites": ["L22"],
+          "teaches_concepts": ["iterator-trait", "next-method", "lazy-iterator", "iter", "into-iter", "iter-mut", "consuming-adaptor"],
+          "reinforces_concepts": ["trait", "ownership-rules"],
+          "mastery_threshold": 0.85,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7],
+          "mini_project": "vector_sum — sum, product, and max of a Vec<i32> using iterator consuming adaptors (no explicit loops)"
+        },
+        {
+          "id": "L24",
+          "title": "Iterator Adapters and Chains",
+          "strata_claim": "C6",
+          "type": "core",
+          "estimated_minutes": 20,
+          "description": "map, filter, enumerate, zip, take, skip, flat_map, chain. Collecting into Vec, HashMap, String. Idiomatic refactor: replace index loops with iterator chains. Zero-cost abstraction proof.",
+          "prerequisites": ["L23"],
+          "teaches_concepts": ["map-adaptor", "filter-adaptor", "enumerate", "zip", "flat-map", "collect", "iterator-chain"],
+          "reinforces_concepts": ["closure", "hashmap", "consuming-adaptor"],
+          "mastery_threshold": 0.85,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7],
+          "mini_project": "log_analyzer — Vec<LogEntry { level: Level, message: String }>; filter by level, map to formatted strings, collect; second pass: rewrite an earlier loop as an iterator chain"
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M09",
+      "title": "Concurrency",
+      "strata_theme": "T7: Concurrency safety is a direct consequence of ownership — fearless concurrency",
+      "description": "Rust's ownership rules prevent data races at compile time. Threads, message passing, and shared state — all enforced by the type system you already know.",
+      "objectives": [
+        "Spawn threads with thread::spawn and collect results with JoinHandle",
+        "Transfer data to threads with move closures",
+        "Use mpsc channels for safe message passing between threads",
+        "Share state safely across threads with Arc<Mutex<T>>"
+      ],
+      "lessons": [
+        {
+          "id": "L25",
+          "title": "Threads and JoinHandle",
+          "strata_claim": "C7",
+          "type": "core",
+          "estimated_minutes": 18,
+          "description": "thread::spawn, JoinHandle::join, move closures for thread ownership transfer. Why the compiler requires move. The Send marker trait. Waiting for multiple threads.",
+          "prerequisites": ["L24"],
+          "teaches_concepts": ["thread-spawn", "join-handle", "move-closure-thread", "send-trait"],
+          "reinforces_concepts": ["move-closure", "ownership-rules"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14],
+          "mini_project": "parallel_squares — spawn 4 threads, each computes squares of its chunk of numbers, join all, print results"
+        },
+        {
+          "id": "L26",
+          "title": "Message Passing with Channels",
+          "strata_claim": "C7",
+          "type": "core",
+          "estimated_minutes": 18,
+          "description": "mpsc::channel() returns (Sender<T>, Receiver<T>). Multiple producers, one consumer. Sender::send, Receiver::recv (blocking) and try_recv (non-blocking). Cloning Sender for multiple producers.",
+          "prerequisites": ["L25"],
+          "teaches_concepts": ["mpsc-channel", "sender", "receiver", "channel-send", "channel-recv", "multiple-producers"],
+          "reinforces_concepts": ["thread-spawn", "ownership-rules"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14],
+          "mini_project": "pipeline — producer thread generates numbers, consumer thread receives and sums them; channel carries ownership"
+        },
+        {
+          "id": "L27",
+          "title": "Shared State with Arc<Mutex<T>>",
+          "strata_claim": "C7",
+          "type": "core",
+          "estimated_minutes": 22,
+          "description": "Rc<T> is not Send — why. Arc<T> is the thread-safe Rc. Mutex<T> for exclusive access at runtime. MutexGuard RAII release. Deadlock avoidance. The connection back to ownership: you already know this.",
+          "prerequisites": ["L26"],
+          "teaches_concepts": ["arc", "mutex", "mutex-lock", "mutex-guard", "sync-trait", "deadlock"],
+          "reinforces_concepts": ["ownership-rules", "raii", "send-trait"],
+          "mastery_threshold": 0.85,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7],
+          "mini_project": "parallel_word_counter — split a text into 4 chunks, spawn 4 threads, each counts words into a shared Arc<Mutex<HashMap>>; merge and print top-10"
+        }
+      ],
+      "has_assessment": true
+    }
+  ]
+}

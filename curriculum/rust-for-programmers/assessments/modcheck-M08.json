@@ -1,0 +1,26 @@
+{
+  "module": "M08",
+  "title": "Closures & Iterators — Quick Check",
+  "questions": [
+    {
+      "id": "MC08-1",
+      "q": "What is the difference between `Fn`, `FnMut`, and `FnOnce`?",
+      "a": "`Fn`: captures by immutable reference; can be called any number of times. `FnMut`: captures by mutable reference; can be called multiple times but requires exclusive access. `FnOnce`: moves captured values out of the closure body; can only be called once because the captured value is consumed."
+    },
+    {
+      "id": "MC08-2",
+      "q": "What does 'lazy evaluation' mean in the context of Rust iterators? Why does it matter?",
+      "a": "Iterator adapters (map, filter, etc.) build a chain of structs but perform no computation until a consuming adaptor (sum, collect, for-loop) drives them by calling `next()`. This means no intermediate collections are allocated and the compiler can fuse the whole chain into a single optimised loop."
+    },
+    {
+      "id": "MC08-3",
+      "q": "What is the difference between `.iter()` and `.into_iter()` on a `Vec<T>`?",
+      "a": "`.iter()` borrows the Vec and yields `&T` references — the Vec is still usable after. `.into_iter()` consumes the Vec, taking ownership, and yields `T` values directly — the Vec cannot be used afterward."
+    },
+    {
+      "id": "MC08-4",
+      "q": "Describe `.filter_map()` in one sentence and give a use case where it is more concise than `.filter().map()`.",
+      "a": "`.filter_map(f)` applies a closure that returns `Option<B>` and keeps only `Some(b)` values, discarding `None` — combining filter and unwrap in one step. Use case: extracting and parsing only the lines in a text file that are valid integers, skipping blank lines and errors."
+    }
+  ]
+}

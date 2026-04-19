@@ -1,0 +1,26 @@
+{
+  "module": "M09",
+  "title": "Concurrency — Quick Check",
+  "questions": [
+    {
+      "id": "MC09-1",
+      "q": "Why do closures passed to `thread::spawn` usually need the `move` keyword?",
+      "a": "The spawned thread may outlive the scope where the closure was created. Without `move`, the closure could hold references to local variables that get dropped — a dangling reference. `move` transfers ownership of captured values into the thread, ensuring they live as long as the thread does."
+    },
+    {
+      "id": "MC09-2",
+      "q": "What does `Arc<Mutex<T>>` provide that a plain `Mutex<T>` cannot?",
+      "a": "`Mutex<T>` alone cannot be shared across threads because it doesn't implement `Clone`. `Arc<T>` provides reference-counted, thread-safe shared ownership via atomic operations (`Arc` implements `Send` and `Sync`). Together, `Arc<Mutex<T>>` allows multiple threads to safely share and mutate the same value."
+    },
+    {
+      "id": "MC09-3",
+      "q": "When would you prefer channels (`mpsc`) over shared state (`Arc<Mutex<T>>`) for inter-thread communication?",
+      "a": "Prefer channels when threads have a clear producer/consumer relationship and data flows one-way — e.g., worker threads producing results for a single aggregator. Prefer `Arc<Mutex<T>>` when multiple threads need concurrent read/write access to the same data structure, such as a shared cache or counter."
+    },
+    {
+      "id": "MC09-4",
+      "q": "What prevents data races at compile time in Rust? Name the two marker traits and what each guarantees.",
+      "a": "`Send`: the type can be safely transferred (moved) to another thread. `Sync`: the type can be safely shared by reference (`&T`) across threads. The compiler checks these at `thread::spawn` call sites. Combined with ownership (no aliased mutable access), these make data races a compile-time error."
+    }
+  ]
+}

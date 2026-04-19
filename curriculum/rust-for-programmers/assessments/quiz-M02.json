@@ -1,0 +1,156 @@
+{
+  "id": "quiz-M02",
+  "type": "module",
+  "module": "M02",
+  "title": "Assessment: Ownership & Borrowing",
+  "generated": "2026-04-19",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What happens when you assign a `String` value to a new variable in Rust?\n\n```rust\nlet s1 = String::from(\"hello\");\nlet s2 = s1;\n```",
+      "options": {
+        "A": "Both s1 and s2 are valid String owners after the assignment",
+        "B": "s1 is copied; both variables are valid and independent",
+        "C": "s1 is moved into s2; s1 is no longer valid",
+        "D": "s2 borrows s1; s1 is still the owner"
+      },
+      "correct": "C",
+      "explanation": "String does not implement Copy, so assignment moves ownership to s2. After the move, s1 is no longer valid and using it is a compile error. This is the ownership rule: each value has exactly one owner.",
+      "lesson_ref": "L04",
+      "claim_ref": "C2",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Which of the following types implements the `Copy` trait?",
+      "options": {
+        "A": "String",
+        "B": "Vec<i32>",
+        "C": "i32",
+        "D": "Box<i32>"
+      },
+      "correct": "C",
+      "explanation": "i32 is a fixed-size scalar stored on the stack, so it implements Copy. String, Vec, and Box own heap data and implement Drop instead of Copy — these are always moved.",
+      "lesson_ref": "L04",
+      "claim_ref": "C2",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "How many mutable references to the same value are allowed to exist simultaneously in Rust?",
+      "options": {
+        "A": "Unlimited, as long as they are in different threads",
+        "B": "Two — one reader, one writer",
+        "C": "One",
+        "D": "Unlimited, as long as they are in the same scope"
+      },
+      "correct": "C",
+      "explanation": "Rust's borrow rule: you may have EITHER one mutable reference OR any number of immutable references, but not both at the same time. This prevents data races at compile time.",
+      "lesson_ref": "L05",
+      "claim_ref": "C2",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "What does this code demonstrate?\n\n```rust\nfn first_word(s: &str) -> &str { ... }\n```\nWhy is `&str` preferred over `&String` as the parameter type?",
+      "options": {
+        "A": "&str is faster to pass than &String",
+        "B": "&String cannot be passed to functions",
+        "C": "&str accepts both string literals and &String via deref coercion, making the function more flexible",
+        "D": "&str owns the data; &String does not"
+      },
+      "correct": "C",
+      "explanation": "A function taking &str can be called with a string literal (&'static str) or with &my_string (Deref coercion converts &String to &str automatically). Taking &String restricts callers unnecessarily.",
+      "lesson_ref": "L06",
+      "claim_ref": "C2",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "What bug does Rust's borrow checker prevent that C and C++ do not?",
+      "options": {
+        "A": "Integer overflow",
+        "B": "Using a reference to data that has already been freed (use-after-free)",
+        "C": "Dividing by zero",
+        "D": "Stack overflow from infinite recursion"
+      },
+      "correct": "B",
+      "explanation": "The borrow checker tracks lifetimes and ensures references never outlive the data they point to. This eliminates use-after-free and dangling pointer bugs entirely at compile time.",
+      "lesson_ref": "L05",
+      "claim_ref": "C4",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "When is RAII (Resource Acquisition Is Initialization) executed for a Rust value?",
+      "options": {
+        "A": "When the garbage collector runs",
+        "B": "When the programmer calls free() or delete",
+        "C": "When the value goes out of scope — the Drop trait is called automatically",
+        "D": "Only when the program exits"
+      },
+      "correct": "C",
+      "explanation": "Rust calls the Drop trait implementation (equivalent to a destructor) automatically when a value leaves its scope. There is no garbage collector and no manual free() — the compiler inserts the cleanup at the exact right point.",
+      "lesson_ref": "L04",
+      "claim_ref": "C2",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "State Rust's three ownership rules and explain why they collectively prevent double-free errors.",
+      "answer_key": {
+        "required_points": [
+          "Rule 1: Each value in Rust has exactly one owner",
+          "Rule 2: There can only be one owner at a time",
+          "Rule 3: When the owner goes out of scope, the value is dropped",
+          "Double-free is prevented because only one owner can trigger Drop"
+        ],
+        "acceptable_variations": "Paraphrasing of the rules is acceptable as long as all three are present.",
+        "full_credit": "All three rules stated correctly with an explanation that single ownership means Drop is called exactly once.",
+        "partial_credit": "Two of three rules correctly stated, or all three without the double-free connection."
+      },
+      "lesson_ref": "L04",
+      "claim_ref": "C2",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "You write a function `fn count_chars(s: &String) -> usize`. A colleague suggests changing the parameter to `&str`. Explain the change and why it is an improvement.",
+      "answer_key": {
+        "required_points": [
+          "Deref coercion: &String automatically coerces to &str",
+          "&str is more general — accepts string literals, slices, and owned Strings",
+          "The function does not need ownership or a mutable reference, so &str is the most flexible borrow type"
+        ],
+        "acceptable_variations": "May phrase deref coercion differently; credit any mention of accepting literals.",
+        "full_credit": "Explains deref coercion and that &str is strictly more flexible with no performance cost.",
+        "partial_credit": "Says &str is 'better' or 'more idiomatic' without explaining why."
+      },
+      "lesson_ref": "L06",
+      "claim_ref": "C2",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "essay",
+      "prompt": "A Java developer says: 'Garbage collection handles memory automatically and safely — why would I want ownership rules that force me to think about memory?' Write a response explaining the trade-offs: what problems GC solves that Rust also solves, and what advantages Rust's ownership model has over GC.",
+      "guidance": "Strong response covers: (1) both GC and ownership prevent use-after-free; (2) GC has runtime overhead and pause times — ownership is zero-cost; (3) ownership prevents data races at compile time, which GC does not; (4) GC doesn't help with lifetimes in systems code (e.g., interrupt handlers, embedded).",
+      "rubric": {
+        "A": "Addresses runtime overhead, data race prevention, and at least one systems programming context with specific examples.",
+        "B": "Addresses overhead and data races but is vague about systems programming.",
+        "C": "Only mentions performance without addressing safety guarantees."
+      },
+      "lesson_ref": "L04-L05",
+      "difficulty": "analysis"
+    }
+  ]
+}

@@ -3,46 +3,58 @@
 **Module**: M07 · Adopt TDD Without Overclaiming It
 **Type**: debate
 **Estimated time**: 14 minutes
-**Claim**: C8 - Empirical evidence on TDD outcomes is mixed and highly context-sensitive
+**Claim**: C8 from Strata synthesis
 
 ---
 
-## The tension
+## The core idea
 
-TDD attracts strong opinions. Some people present it as a near-universal quality and productivity upgrade. Others treat mixed results as proof that the practice is mostly ideology. The research does not support either extreme. After the empirical refresh, the clearest conclusion is narrower: TDD outcome evidence is mixed, and the effects appear highly sensitive to context, team skill, task shape, and what outcome is being measured. Source trail: `vault/research/test-driven-development-in-python/03-synthesis/claims.md`, `vault/research/test-driven-development-in-python/04-output/report.md`, `vault/research/test-driven-development-in-python/01-sources/papers/S018-tosun-2017-industry-experiment.md`, `vault/research/test-driven-development-in-python/01-sources/papers/S019-santos-2021-family-experiments.md`.
+TDD attracts unusually strong opinions for a software practice. Advocates describe it as a near-universal improvement in code quality, design clarity, and long-term maintainability. Skeptics treat mixed experimental results as evidence that TDD is primarily an ideology with a sophisticated vocabulary. The research supports neither position. After examining two peer-reviewed outcome studies and the broader practitioner evidence base, the clearest finding is narrower and more honest: the empirical evidence on TDD outcomes is mixed, and the effects appear highly sensitive to context, team skill, task complexity, and what outcome is being measured [S018](../../research/test-driven-development-in-python/01-sources/papers/S018-tosun-2017-industry-experiment.md) [S019](../../research/test-driven-development-in-python/01-sources/papers/S019-santos-2021-family-experiments.md).
 
-That means a serious engineer should stop asking whether TDD is "proven" in the abstract. The better question is what, under which conditions, for which teams, and at what cost. Some studies suggest quality improvements in certain contexts. Others show productivity tradeoffs or mixed effects depending on participant experience and environment. The sources do not justify blanket claims that TDD always helps, but they also do not justify dismissing it as empty ceremony.
+This is not a weak conclusion. It is a precise one. "The evidence is mixed and context-dependent" is a fundamentally different statement from "there is no evidence." The evidence exists — some studies show quality benefits, others show task-dependent productivity tradeoffs, and the pattern across experiments is that smaller, more controlled tasks tend to produce the most favorable results for TDD, while more complex, realistic tasks produce more heterogeneous outcomes.
 
-## The two sides
+## The two studies in depth
 
-The pro-TDD side often points to code quality, defect reduction, and design clarity. Those are real claimed benefits, and some empirical work partially supports them.
+**Tosun et al. (2017)** was an industry experiment in which professional developers were randomly assigned to TDD or test-last development. The study found no statistically significant difference in code quality between the two groups, and productivity effects were task-sensitive: TDD was associated with slower completion on tasks that participants were less familiar with, and showed no consistent advantage on quality metrics across the sample [S018](../../research/test-driven-development-in-python/01-sources/papers/S018-tosun-2017-industry-experiment.md).
 
-The skeptical side points out that experiments are limited, sometimes small, and often sensitive to training effects, participant level, and task realism. That skepticism is also valid.
+**Santos et al. (2021)** conducted a family-of-experiments meta-analysis aggregating multiple smaller controlled studies. One notable finding: novice programmers slightly favored iterative test-last development on quality outcomes in some contexts, and task characteristics — not the TDD treatment itself — were the dominant factor in predicting outcomes [S019](../../research/test-driven-development-in-python/01-sources/papers/S019-santos-2021-family-experiments.md).
 
-The research synthesis resolves the debate by rejecting absolutes. TDD is best understood as a disciplined design-and-feedback practice that may improve outcomes in some settings, but whose benefits should be validated locally rather than assumed globally.
+What both studies share is this: the headline claims that are commonly made about TDD — "it reliably improves quality," "it consistently improves productivity," "it reduces defect rates by X%" — are not supported by the controlled experimental evidence at a level that would justify treating them as universal.
 
-## What you should actually take from the evidence
+## Why the evidence looks like this
 
-First, do not sell TDD to a team as a guaranteed outcome engine. That claim is not supported cleanly enough.
+There are several reasons the experimental picture is messier than TDD advocates often imply.
 
-Second, do not confuse mixed evidence with evidence of no value. The empirical picture is not empty; it is conditional.
+First, the practice of TDD varies enormously between teams. A team that writes one assertion-heavy test per function, skips refactoring, uses loose mocks throughout, and calls the result "TDD" is not doing the same thing as a team that drives design from a test list, maintains tight isolation, and treats refactoring as a first-class activity. Outcome studies often cannot control for practice quality.
 
-Third, measure the effects that matter in your environment. If a team adopts TDD, track defect rates, change failure patterns, refactoring confidence, test maintenance burden, and delivery speed over a meaningful period.
+Second, TDD's clearest benefits are at the design and feedback level, not purely at the defect level. Fowler argues that the value of TDD is in its effect on design decisions — forcing earlier thinking about interfaces, raising the cost of bad coupling, keeping code change-ready [S006](../../research/test-driven-development-in-python/01-sources/web/S006-fowler-tdd.md). Those benefits are real but hard to capture in a short controlled experiment.
 
-Fourth, separate practice quality from label quality. A team can say it does TDD while skipping refactoring, using weak isolation, or writing giant speculative tests. If the implementation of the practice is poor, outcome studies about TDD will be hard to map onto that team's behavior anyway.
+Third, the studies that exist tend to use student or novice participants, constrained tasks, and academic settings. Generalizing those results to expert practitioners on production systems of realistic complexity is a significant extrapolation.
+
+## What you should actually do with this
+
+First, stop quoting blanket outcome statistics to justify TDD adoption. The evidence does not support that level of confidence.
+
+Second, do not use mixed evidence as a reason to skip the practice. Mixed experimental results are consistent with TDD having real design and feedback value while the quality and productivity effects being context-dependent. The practice is worth evaluating locally on your own codebase and team.
+
+Third, measure what you can when you adopt TDD. Track defect rates, change failure frequency, refactoring confidence, and test maintenance cost over a meaningful period. Use your own data to build a local evidence base rather than importing claims from someone else's.
+
+Fourth, distinguish practice quality from practice label. If the team calls itself TDD but skips refactoring, uses unconstrained mocks, and never revisits the test list discipline — the outcome studies about properly-practiced TDD are not relevant to that team's situation anyway.
 
 ## Key points
 
-- The evidence does not support blanket advocacy or blanket rejection.
-- TDD outcomes appear context-sensitive and depend on how the practice is actually executed.
-- Teams should treat TDD as a disciplined practice to evaluate locally, not a universal promise.
+- The empirical evidence on TDD outcomes is mixed and context-sensitive — not empty, but not uniformly positive [S018](../../research/test-driven-development-in-python/01-sources/papers/S018-tosun-2017-industry-experiment.md) [S019](../../research/test-driven-development-in-python/01-sources/papers/S019-santos-2021-family-experiments.md)
+- Blanket advocacy ("TDD always improves quality") is not supported by controlled experimental evidence
+- Blanket rejection ("TDD has no value") ignores real design and feedback benefits documented in practitioner literature [S006](../../research/test-driven-development-in-python/01-sources/web/S006-fowler-tdd.md)
+- Task characteristics, team skill, and practice quality are more powerful predictors of outcome than the TDD/TLD label alone
+- The right stance is local evaluation with real metrics, not global conviction based on someone else's experiment
 
 ## Go deeper
 
-- `vault/research/test-driven-development-in-python/01-sources/papers/S018-tosun-2017-industry-experiment.md`
-- `vault/research/test-driven-development-in-python/01-sources/papers/S019-santos-2021-family-experiments.md`
-- `vault/research/test-driven-development-in-python/04-output/report.md`
+- [S018](../../research/test-driven-development-in-python/01-sources/papers/S018-tosun-2017-industry-experiment.md) — the Tosun industry experiment: professional developers, random assignment, no significant quality difference
+- [S019](../../research/test-driven-development-in-python/01-sources/papers/S019-santos-2021-family-experiments.md) — Santos meta-analysis: aggregated experiments showing task-driven effects and context sensitivity
+- [S006](../../research/test-driven-development-in-python/01-sources/web/S006-fowler-tdd.md) — Fowler on the design-level value of TDD that controlled quality experiments may not fully capture
 
 ---
 
-*[<- Previous: Advanced Boundary Coverage in Practice](./L12-advanced-boundary-coverage-in-practice.md)* · *[Next lesson: Open Limits: Large Systems, Contract Ambiguity, and Next Evidence ->](./L14-open-limits-large-systems-contract-ambiguity-and-next-evidence.md)*
+*[← Previous lesson](./L12-advanced-boundary-coverage-in-practice.md)* · *[Next lesson →](./L14-open-limits-large-systems-contract-ambiguity-and-next-evidence.md)*

@@ -1,0 +1,172 @@
+{
+  "id": "quiz-M08",
+  "type": "module",
+  "module": "M08",
+  "title": "Assessment: Criticism, Overuse, and Pattern Economics",
+  "generated": "2026-04-17",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What is 'abstraction debt' and how does it differ from technical debt?",
+      "options": {
+        "A": "Abstraction debt is code written with poor algorithms; technical debt is poorly formatted code",
+        "B": "Abstraction debt is indirection added before real pressure exists; technical debt is messy implementation that needs cleanup",
+        "C": "Abstraction debt is incurred by junior developers; technical debt is created by experienced developers",
+        "D": "Abstraction debt applies to patterns; technical debt applies to data models"
+      },
+      "correct": "B",
+      "explanation": "Abstraction debt comes from over-engineering — layers added speculatively. Technical debt comes from under-engineering — messy code that needs cleaning. Both create maintenance cost, but abstraction debt is created by too much structure, not too little.",
+      "lesson_ref": "L22",
+      "claim_ref": "C5",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "An abstraction 'pays rent' when it relieves a present cost. Which of the following abstractions is NOT paying rent?",
+      "options": {
+        "A": "A Repository added because SQL queries are scattered across 15 service methods and cause test failures",
+        "B": "A Plugin architecture added 'in case we need a second payment provider someday'",
+        "C": "A Unit of Work added because 3 objects are being saved in a transaction and partial writes have caused bugs",
+        "D": "A Special Case added because null user checks appear in 10 different places"
+      },
+      "correct": "B",
+      "explanation": "B adds a Plugin for a speculative, non-existent future requirement — the pressure is imagined, not present. A, C, D all have concrete, present costs that justify the abstractions.",
+      "lesson_ref": "L22",
+      "claim_ref": "C5",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "Claim C5 states the central failure mode is applying patterns before real pressure exists. How do you operationally apply the 'rent test' before adding a pattern?",
+      "options": {
+        "A": "Check if the pattern is in the GoF book and commonly used in the industry",
+        "B": "Name the specific cost the pattern relieves, confirm it is present now (not imagined), and verify the indirection cost is less than the relief it provides",
+        "C": "Ask whether the team has used this pattern before in a similar codebase",
+        "D": "Measure if the affected code has more than 100 lines"
+      },
+      "correct": "B",
+      "explanation": "The rent test has three operational steps: (1) name the cost, (2) confirm it's present, (3) confirm the relief exceeds the overhead. Industry use (A), team history (C), and line counts (D) are not operational pressure checks.",
+      "lesson_ref": "L22",
+      "claim_ref": "C5",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "Contradiction 1 states the choice between DI, Service Locator, and explicit passing is unresolved. What makes this particular debate impossible to resolve with a universal rule?",
+      "options": {
+        "A": "All three mechanisms produce identical code at the bytecode level",
+        "B": "The right choice depends on context factors (team size, framework constraints, call-tree depth, testing discipline) that vary too much for a universal answer",
+        "C": "The three mechanisms are equivalent in terms of testability and maintainability",
+        "D": "Different programming languages favor different approaches, making a universal rule language-specific"
+      },
+      "correct": "B",
+      "explanation": "The threshold between acceptable SL and architectural debt depends on context — no study has measured it across the relevant variables. A, C are factually wrong. D is partially true but the research cites broader contextual factors, not just language.",
+      "lesson_ref": "L23",
+      "claim_ref": "C3",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "When does explicit dependency passing win over a DI container?",
+      "options": {
+        "A": "Always — explicit passing is always more readable than any container",
+        "B": "When the call tree is shallow, dependency count is small, and the team values readability over framework leverage",
+        "C": "When the codebase is too small to justify the learning curve of a DI container",
+        "D": "When all dependencies are stateless services"
+      },
+      "correct": "B",
+      "explanation": "Explicit passing wins when the overhead of managing it manually is lower than the overhead of a DI container. Shallow call trees and few dependencies are the operational indicators. A makes it universal — wrong. C and D are plausible proxies but not the accurate characterization.",
+      "lesson_ref": "L23",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "Contradiction 2 states classic pattern forms may become obsolete while the underlying problem persists. Which modern Python example best illustrates this?",
+      "options": {
+        "A": "The Singleton pattern is replaced by module-level variables in Python",
+        "B": "The Iterator pattern's ConcreteIterator class hierarchy is replaced by Python generators while the iteration problem persists",
+        "C": "The Adapter pattern is replaced by Python's duck typing",
+        "D": "The Repository pattern is replaced by Django's ORM QuerySet"
+      },
+      "correct": "B",
+      "explanation": "Python generators solve the iterator problem natively — the GoF class hierarchy is unnecessary, but the problem (lazily traversing a sequence) persists. A is debatable but Singleton isn't the clearest case. C and D overstate the replacement (duck typing doesn't eliminate Adapter; ORM doesn't fully replace Repository).",
+      "lesson_ref": "L24",
+      "claim_ref": "C2",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "YAGNI says 'you aren't gonna need it.' How should this principle be applied without becoming an excuse for no design?",
+      "options": {
+        "A": "Always start with the absolute minimum code and never add structure",
+        "B": "Do not build abstractions for speculative future requirements, but do design cleanly for present requirements",
+        "C": "Apply YAGNI only to features, not to code structure",
+        "D": "Follow YAGNI until the codebase reaches 10,000 lines, then start adding patterns"
+      },
+      "correct": "B",
+      "explanation": "YAGNI targets speculation, not simplicity itself. Clean, present-requirement design and YAGNI are compatible. A collapses YAGNI into no-design. C incorrectly limits its scope. D applies an arbitrary size threshold.",
+      "lesson_ref": "L22",
+      "claim_ref": "C5",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "A tech lead adds a multi-tier caching abstraction 'because we'll need it when traffic grows.' Six months later, traffic has not grown and the cache layer has caused three production bugs. Apply the rent test retroactively: did this abstraction pay rent?",
+      "answer_key": {
+        "required_points": [
+          "Rent test step 1: Name the cost the abstraction was meant to relieve — anticipated performance pressure from future traffic growth",
+          "Rent test step 2: Was the cost present at the time? No — traffic growth was speculative, not a present cost",
+          "Rent test step 3: Did the relief exceed the overhead? No — three production bugs and ongoing maintenance with no performance benefit",
+          "Verdict: The abstraction did not pay rent — it was added for a hypothetical future pressure, not a present one"
+        ],
+        "acceptable_variations": "Can phrase the three steps differently; must reach the correct verdict with all three steps applied",
+        "full_credit": "All three rent test steps applied with correct verdict and reasoning",
+        "partial_credit": "Correct verdict without all three steps applied, or steps applied without clear verdict"
+      },
+      "lesson_ref": "L22",
+      "claim_ref": "C5",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "Explain why the dependency strategy debate (DI vs Service Locator vs explicit passing) is categorized as 'unresolved' rather than 'resolved in favor of DI.' What would a resolution require?",
+      "answer_key": {
+        "required_points": [
+          "Unresolved because the right choice depends on contextual variables that no empirical study has measured: team size, framework constraints, call-tree depth, testing discipline",
+          "Fowler and Nystrom represent different views — neither is empirically falsified",
+          "Resolution would require: controlled studies measuring maintainability, bug rate, or onboarding time under each approach at matched complexity levels"
+        ],
+        "acceptable_variations": "Can phrase contextual variables differently; key is the missing empirical measurement",
+        "full_credit": "Names the contextual variables, explains why they prevent a universal rule, describes what evidence would resolve it",
+        "partial_credit": "Correctly says unresolved without explaining contextual factors or resolution criteria"
+      },
+      "lesson_ref": "L23",
+      "claim_ref": "C3",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "You are reviewing a codebase before merging a PR. The PR adds: a Plugin architecture (no second implementation exists), a Repository (SQL is scattered in 8 service methods), a Unit of Work (3 objects are saved in one transaction and have caused partial write bugs), and an Abstract Factory (only one product family exists with no second planned). Using the rent test and Claim C5, write a structured code review comment that accepts some additions and rejects others, with justification for each.",
+      "guidance": "A strong response accepts Repository (scattered SQL = present cost) and Unit of Work (partial write bugs = present cost), rejects Plugin (speculative, no second implementation) and Abstract Factory (speculative, no second product family). Each verdict should cite the rent test steps: name the cost, confirm it's present, confirm the relief exceeds overhead.",
+      "rubric": {
+        "A": "Correct verdicts on all four, rent test applied explicitly to each, C5 referenced as the governing principle",
+        "B": "Correct verdicts on three of four, rent test partially applied",
+        "C": "Correct verdicts without rent test reasoning, or mixed verdicts"
+      },
+      "lesson_ref": "L22-L24",
+      "difficulty": "analysis"
+    }
+  ]
+}

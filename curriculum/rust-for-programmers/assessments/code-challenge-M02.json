@@ -1,0 +1,128 @@
+{
+  "id": "code-challenge-M02",
+  "type": "module",
+  "module": "M02",
+  "title": "Coding Challenges: Ownership & Borrowing",
+  "challenges": [
+    {
+      "id": "CC04",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a function `first_word(s: &str) -> &str` that returns the first word (the part before the first space) from the input string slice. If there is no space, return the whole string. Do NOT clone or allocate — work with slices only.",
+      "starter_code": "fn first_word(s: &str) -> &str {\n    // Return the portion of s before the first space\n    // If no space exists, return s unchanged\n    s\n}\n",
+      "test_cases": [
+        {
+          "name": "Two words",
+          "input": "\"hello world\"",
+          "expected_output": "hello",
+          "visibility": "visible"
+        },
+        {
+          "name": "No space",
+          "input": "\"rust\"",
+          "expected_output": "rust",
+          "visibility": "visible"
+        },
+        {
+          "name": "Three words",
+          "input": "\"the quick brown\"",
+          "expected_output": "the",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Leading is fine",
+          "input": "\"ownership rules\"",
+          "expected_output": "ownership",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["str-slice", "string-slice", "borrow", "reference"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L06",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L05", "L06"]
+    },
+    {
+      "id": "CC05",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a function `count_vowels(s: &str) -> usize` that counts the number of ASCII vowels (`a e i o u`, case-insensitive) in the given string slice. Iterate over `.chars()`.",
+      "starter_code": "fn count_vowels(s: &str) -> usize {\n    // Count a, e, i, o, u (case-insensitive) in s\n    0\n}\n",
+      "test_cases": [
+        {
+          "name": "hello has 2 vowels",
+          "input": "\"hello\"",
+          "expected_output": "2",
+          "visibility": "visible"
+        },
+        {
+          "name": "rust has 1 vowel",
+          "input": "\"rust\"",
+          "expected_output": "1",
+          "visibility": "visible"
+        },
+        {
+          "name": "UPPER CASE counts",
+          "input": "\"AEIOU\"",
+          "expected_output": "5",
+          "visibility": "hidden"
+        },
+        {
+          "name": "no vowels",
+          "input": "\"grrr\"",
+          "expected_output": "0",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["str-slice", "string-methods", "borrow", "reference"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L06",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L06"]
+    },
+    {
+      "id": "CC06",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a function `append_greeting(s: &mut String) -> usize` that appends `\", world!\"` to the given `String` (in place), then returns the new length of the string.",
+      "starter_code": "fn append_greeting(s: &mut String) -> usize {\n    // Append \", world!\" to s in-place\n    // Return the new length of s\n    0\n}\n",
+      "test_cases": [
+        {
+          "name": "hello -> hello, world!",
+          "input": "\"hello\"",
+          "expected_output": "13",
+          "visibility": "visible"
+        },
+        {
+          "name": "hi -> hi, world!",
+          "input": "\"hi\"",
+          "expected_output": "10",
+          "visibility": "visible"
+        },
+        {
+          "name": "empty -> , world!",
+          "input": "\"\"",
+          "expected_output": "8",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Rust -> Rust, world!",
+          "input": "\"Rust\"",
+          "expected_output": "12",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["mutable-reference", "string", "borrow-rules", "string-methods"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L06",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L05", "L06"]
+    }
+  ]
+}

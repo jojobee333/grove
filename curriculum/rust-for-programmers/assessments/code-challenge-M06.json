@@ -1,0 +1,88 @@
+{
+  "id": "code-challenge-M06",
+  "type": "module",
+  "module": "M06",
+  "title": "Coding Challenges: Error Handling",
+  "challenges": [
+    {
+      "id": "CC14",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a function `parse_positive(s: &str) -> Result<u32, String>` that:\n1. Trims whitespace and parses `s` as a `u32`. If parsing fails, return `Err(\"not a number\".to_string())`.\n2. If the parsed number is 0, return `Err(\"must be positive\".to_string())`.\n3. Otherwise return `Ok(value)`.\n\nWrite an entry function `try_parse(input: &str) -> String` that calls `parse_positive` and returns either `\"ok:N\"` on success or `\"err:message\"` on failure.",
+      "starter_code": "fn parse_positive(s: &str) -> Result<u32, String> {\n    // Trim, parse as u32, validate > 0\n    Err(\"not implemented\".to_string())\n}\n\nfn try_parse(input: &str) -> String {\n    // Return \"ok:N\" or \"err:message\"\n    String::new()\n}\n",
+      "test_cases": [
+        {
+          "name": "Valid number 42",
+          "input": "\"42\"",
+          "expected_output": "ok:42",
+          "visibility": "visible"
+        },
+        {
+          "name": "Not a number",
+          "input": "\"abc\"",
+          "expected_output": "err:not a number",
+          "visibility": "visible"
+        },
+        {
+          "name": "Zero is invalid",
+          "input": "\"0\"",
+          "expected_output": "err:must be positive",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Whitespace trimmed",
+          "input": "\" 7 \"",
+          "expected_output": "ok:7",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["result", "ok", "err", "result-match", "result-unwrap", "result-map"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L16",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L16"]
+    },
+    {
+      "id": "CC15",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a function `parse_and_sum(input: &str) -> Result<i64, String>` that takes a comma-separated string of integers (e.g. `\"1,2,3\"`), parses each, and returns their sum as `Ok(sum)`. If any token fails to parse as `i64`, return `Err(\"parse error: TOKEN\")` where TOKEN is the offending token. Use the `?` operator where possible inside a helper.\n\nWrite an entry function `sum_csv(input: &str) -> String` that returns `\"ok:N\"` or `\"err:parse error: TOKEN\"`.",
+      "starter_code": "fn parse_and_sum(input: &str) -> Result<i64, String> {\n    // Split on commas, parse each as i64, sum them\n    // Return Err(\"parse error: TOKEN\") for bad tokens\n    Ok(0)\n}\n\nfn sum_csv(input: &str) -> String {\n    match parse_and_sum(input) {\n        Ok(n) => format!(\"ok:{}\", n),\n        Err(e) => format!(\"err:{}\", e),\n    }\n}\n",
+      "test_cases": [
+        {
+          "name": "Three valid ints",
+          "input": "\"1,2,3\"",
+          "expected_output": "ok:6",
+          "visibility": "visible"
+        },
+        {
+          "name": "Bad token",
+          "input": "\"1,abc,3\"",
+          "expected_output": "err:parse error: abc",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single value",
+          "input": "\"100\"",
+          "expected_output": "ok:100",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Negatives",
+          "input": "\"-5,10,-3\"",
+          "expected_output": "ok:2",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["result", "question-mark-operator", "error-propagation", "result-match"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 4,
+      "lesson_ref": "L17",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L16", "L17"]
+    }
+  ]
+}

@@ -1,7 +1,7 @@
 {
   "version": "3.0",
   "slug": "coding-algorithms-technical-interviews",
-  "bundled": "2026-04-16T04:49:56.355Z",
+  "bundled": "2026-04-19T04:17:32.058Z",
   "course": {
     "topic": "Coding Algorithms for Technical Interview Mastery",
     "slug": "coding-algorithms-technical-interviews",
@@ -7395,6 +7395,7 @@
       ]
     }
   },
+  "practicalApplications": {},
   "concepts": {
     "slug": "coding-algorithms-technical-interviews",
     "generated": "2026-04-15",

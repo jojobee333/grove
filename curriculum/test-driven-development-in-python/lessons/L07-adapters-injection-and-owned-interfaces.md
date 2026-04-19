@@ -3,72 +3,131 @@
 **Module**: M04 · Design Seams the Tests Can Trust
 **Type**: core
 **Estimated time**: 14 minutes
-**Claim**: C4 - Python test design improves when external boundaries are hidden behind owned seams
+**Claim**: C4 from Strata synthesis
 
 ---
 
 ## The core idea
 
-One of the strongest design lessons in the research is that Python tests improve when your business logic depends on interfaces you own rather than on third-party call shapes you merely happen to use. This is the real point of seams. A seam is not "an abstraction because architecture likes abstractions." It is a boundary that lets you express your own domain behavior without making every test speak the language of an HTTP client, cloud SDK, ORM detail, or vendor response object. Source trail: `vault/research/test-driven-development-in-python/03-synthesis/claims.md`, `vault/research/test-driven-development-in-python/01-sources/web/S010-sandi-metz-testable.md`, `vault/research/test-driven-development-in-python/01-sources/web/S012-obey-the-testing-goat-chapter-20.md`.
+One of the most consistent findings in the research is that Python tests improve when your business logic depends on interfaces you own rather than on third-party call shapes you merely happen to use. A seam is the right word for this boundary: it is not an abstraction added because architecture diagrams say to. It is a boundary that lets you express your own domain behavior without making every test speak the language of an HTTP client, cloud SDK, ORM detail, or vendor response object.
 
-Adapters and dependency injection are useful here because they reduce the amount of foreign detail that leaks into the code under test. An adapter translates from the external system's shape to your application's shape. Injection gives your code a way to receive that collaborator instead of constructing it deep inside a function where the test cannot steer it cleanly. Together they let tests focus on decisions your code owns.
+Why does this matter in Python specifically? Because Python's import system and dynamic dispatch make it very easy to reach directly for external libraries from inside business logic. You can import a third-party client inside a function, call it immediately, and produce working code with minimal ceremony. The cost appears later: every test that touches that function now inherits the vendor API surface, the patch location complexity, the transport behavior, and the response object model. Each change in the vendor library creates test failures that have nothing to do with your application's behavior [S011](../../research/test-driven-development-in-python/01-sources/web/S011-dont-mock-what-you-dont-own.md).
 
-This is especially helpful in Python because the language makes direct access to external libraries very easy. You can import a third-party client inside a function, call it immediately, and ship working code quickly. But that convenience often hides a cost: every test that touches the function now inherits the vendor API surface, patch location, transport behavior, or object model. Seam design reduces that cost by giving the domain code something smaller and more stable to depend on.
+Adapters and dependency injection address this problem by creating a deliberate translation layer. An adapter translates from the external system's shape into your application's shape — it speaks both languages so that the rest of the application only needs to speak one. Dependency injection gives the code a way to receive a collaborator rather than construct it internally, which keeps the test in control of what the code under test actually uses.
 
 ## Why it matters
 
-Without owned seams, tests often become brittle for the wrong reason. A change in the vendor SDK, response wrapper, or import structure breaks tests even though the domain behavior has not changed. Developers then blame mocking, or Python, or the test framework, when the real problem is that the domain logic never got its own boundary.
+Without owned seams, tests become brittle for the wrong reason. A change to a vendor SDK response structure, import path, or argument shape breaks tests even though the domain behavior has not changed. Teams then patch the mock setup and ship a fix that restores green without improving any real behavior.
 
-TDD improves when the next test can name business intent in your vocabulary. "Send a welcome notification" is a better test-level concept than "call client.messages.create with these nested transport options." Owned interfaces make that possible.
+TDD works best when the next test can name business intent in your vocabulary. "Send a welcome notification to the new customer" is a good test-level concept. "Call client.messages.create with a template_id, a `to` address, and these specific nested parameters" is infrastructure detail that belongs inside the adapter, not spread across every domain test.
 
-## A concrete example
+Writing the failing test first helps here too. When you write the test in terms of what the application should do rather than how it will do it, you are forced to design an interface that makes the intention legible. That interface becomes the seam.
 
-Suppose you need a service that creates a customer record and sends a welcome message through a third-party email provider.
+## Example 1 — the coupled starting point
 
-The coupled version might do this directly:
-
-```python
-def onboard_customer(email):
-    provider = ThirdPartyMailer(api_key=...)
-    provider.send(template="welcome", recipient=email)
-```
-
-That works, but it makes your tests care about how the provider is constructed and how it expects arguments.
-
-An owned seam version might look like this:
+A customer onboarding function that calls a mail provider directly:
 
 ```python
-class Mailer:
-    def send_welcome(self, recipient: str) -> None:
-        raise NotImplementedError
-
-
-def onboard_customer(email: str, mailer: Mailer) -> None:
-    mailer.send_welcome(email)
+# tight coupling — the domain function knows the provider's call shape
+def onboard_customer(customer_id: int, email: str, db) -> None:
+    db.execute(
+        "INSERT INTO customers (id, email, status) VALUES (?, ?, ?)",
+        (customer_id, email, "active"),
+    )
+    # ThirdPartyMailer is imported at the top of the file
+    provider = ThirdPartyMailer(api_key=os.environ["MAIL_KEY"])
+    provider.send(
+        template_id="tmpl_welcome",
+        to=email,
+        params={"customer_id": customer_id},
+    )
 ```
 
-Now the application owns the meaning of "send welcome." A real adapter can translate that call to the external provider. The domain test only needs to verify that onboarding triggers the expected business action through an interface the application controls.
+Testing this requires either calling the real mail provider, or carefully patching `ThirdPartyMailer` at exactly the right location with exactly the right attribute path. When the vendor updates their SDK and renames `template_id` to `template`, every test that patches this call breaks immediately — even though the domain behavior (send a welcome message to a new customer) has not changed.
 
-This example is illustrative, but it reflects the seam-design lesson in the source set: hide external boundaries behind application-owned collaborators so tests can stay focused on business behavior. Source trail: `vault/research/test-driven-development-in-python/01-sources/web/S010-sandi-metz-testable.md`, `vault/research/test-driven-development-in-python/01-sources/web/S012-obey-the-testing-goat-chapter-20.md`, `vault/research/test-driven-development-in-python/03-synthesis/narrative.md`.
+## Example 2 — introducing an owned interface
 
-## Recognition cues
+Introduce an owned interface so the domain code no longer knows which mail provider is in use:
 
-- If your test assertions mention vendor-specific request structures, the seam is probably too weak.
-- If code constructs its own external collaborators deep inside business logic, injection is probably missing.
-- If changing providers would require rewriting many domain tests, the interface is probably not owned by your application.
+```python
+# notifications.py — your application's language
+from abc import ABC, abstractmethod
+
+
+class Notifier(ABC):
+    @abstractmethod
+    def send_welcome(self, recipient_email: str, customer_id: int) -> None:
+        """Send a welcome message to a newly onboarded customer."""
+
+
+# domain logic no longer knows about ThirdPartyMailer
+def onboard_customer(
+    customer_id: int,
+    email: str,
+    db,
+    notifier: Notifier,
+) -> None:
+    db.execute(
+        "INSERT INTO customers (id, email, status) VALUES (?, ?, ?)",
+        (customer_id, email, "active"),
+    )
+    notifier.send_welcome(recipient_email=email, customer_id=customer_id)
+```
+
+Now the domain test is clean:
+
+```python
+from unittest.mock import create_autospec
+
+def test_onboarding_sends_welcome(db):
+    notifier = create_autospec(Notifier, instance=True)
+    onboard_customer(1, "alice@example.com", db, notifier)
+    notifier.send_welcome.assert_called_once_with(
+        recipient_email="alice@example.com", customer_id=1
+    )
+```
+
+The test says nothing about `ThirdPartyMailer`, templates, or API keys. If the vendor changes their SDK, only the adapter class changes — the domain test stays green because the seam it depends on has not moved.
+
+## Example 3 — the adapter that does the translation
+
+The adapter is where the vendor detail lives. The rest of the application never sees it:
+
+```python
+# adapters/mail.py
+from notifications import Notifier
+
+
+class ThirdPartyMailAdapter(Notifier):
+    def __init__(self, api_key: str) -> None:
+        self._client = ThirdPartyMailer(api_key=api_key)
+
+    def send_welcome(self, recipient_email: str, customer_id: int) -> None:
+        self._client.send(
+            template_id="tmpl_welcome",
+            to=recipient_email,
+            params={"customer_id": customer_id},
+        )
+```
+
+At startup the real adapter is injected. In tests a strict mock or a hand-rolled fake takes its place. The domain function `onboard_customer` never changes when the vendor changes; only `ThirdPartyMailAdapter` does.
+
+This pattern follows what the research describes as the "don't mock what you don't own" principle [S011](../../research/test-driven-development-in-python/01-sources/web/S011-dont-mock-what-you-dont-own.md): mock the owned interface, not the vendor's call. The adapter is the one place where the translation happens, and it can have its own focused tests against a real or stubbed version of the vendor.
 
 ## Key points
 
-- A seam is valuable when it lets domain behavior depend on application-owned concepts rather than third-party details.
-- Adapters translate external systems; injection makes those collaborators controllable.
-- Better seam design usually produces both clearer code and less brittle tests.
+- A seam is valuable when it lets domain behavior depend on application-owned concepts rather than third-party details [S011](../../research/test-driven-development-in-python/01-sources/web/S011-dont-mock-what-you-dont-own.md)
+- Adapters translate external systems; injection makes collaborators controllable at test time
+- One adapter class can carry all the vendor complexity, leaving domain tests free to stay at the business-intent level
+- Better seam design produces both clearer code and less brittle tests — not as a tradeoff, but as the same outcome
+- Python's ease of direct import access makes seam discipline especially important to establish deliberately
 
 ## Go deeper
 
-- `vault/research/test-driven-development-in-python/01-sources/web/S010-sandi-metz-testable.md`
-- `vault/research/test-driven-development-in-python/01-sources/web/S012-obey-the-testing-goat-chapter-20.md`
-- `vault/research/test-driven-development-in-python/03-synthesis/claims.md`
+- [S011](../../research/test-driven-development-in-python/01-sources/web/S011-dont-mock-what-you-dont-own.md) — the "don't mock what you don't own" principle and why it produces stronger tests
+- [S012](../../research/test-driven-development-in-python/01-sources/web/S012-testing-external-api-calls.md) — adapter-based seam design in the context of external API calls
+- [S002](../../research/test-driven-development-in-python/01-sources/web/S002-unittest-mock.md) — `create_autospec` and how to lock a mock to the real interface it stands in for
 
 ---
 
-*[<- Previous: unittest Fluency and Incremental Migration](./L06-unittest-fluency-and-incremental-migration.md)* · *[Next lesson: Boundary Decisions for APIs, Services, and Persistence ->](./L08-boundary-decisions-for-apis-services-and-persistence.md)*
+*[← Previous lesson](./L06-unittest-fluency-and-incremental-migration.md)* · *[Next lesson →](./L08-boundary-decisions-for-apis-services-and-persistence.md)*

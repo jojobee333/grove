@@ -1,0 +1,128 @@
+{
+  "id": "code-challenge-M02",
+  "type": "module",
+  "module": "M02",
+  "title": "Coding Challenge: Dependency Management",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `count_injection_points(constructor_sig)` that takes a constructor signature string (e.g. `'def __init__(self, logger, db, cache)'`) and returns the number of injected dependencies — all parameters except `self`.\n\nHint: find the content between `(` and `)`, split by commas, strip whitespace, and exclude `'self'`.",
+      "starter_code": "def count_injection_points(constructor_sig):\n    \"\"\"\n    Count parameters in the constructor signature, excluding 'self'.\n    Returns an integer.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Three injected dependencies",
+          "input": "'def __init__(self, logger, db, cache)'",
+          "expected_output": "3",
+          "visibility": "visible"
+        },
+        {
+          "name": "No dependencies — self only",
+          "input": "'def __init__(self)'",
+          "expected_output": "0",
+          "visibility": "visible"
+        },
+        {
+          "name": "One dependency",
+          "input": "'def __init__(self, repo)'",
+          "expected_output": "1",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Five dependencies",
+          "input": "'def __init__(self, a, b, c, d, e)'",
+          "expected_output": "5",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["dependency-injection", "constructor-injection"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L04",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L04"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `resolve_direct_deps(registry_and_service)` that takes a tuple `(registry, service_name)` where `registry` is a dict mapping service names to their direct dependency lists. Return the **sorted** list of direct dependencies for `service_name`. Return an empty list if the service is not in the registry.",
+      "starter_code": "def resolve_direct_deps(registry_and_service):\n    \"\"\"\n    Unpack (registry, service_name) and return sorted direct dependencies.\n    Returns a list of strings.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Service with two dependencies",
+          "input": "({'A': ['C', 'B'], 'B': ['D'], 'C': [], 'D': []}, 'A')",
+          "expected_output": "['B', 'C']",
+          "visibility": "visible"
+        },
+        {
+          "name": "Service with no dependencies",
+          "input": "({'X': [], 'Y': ['X']}, 'X')",
+          "expected_output": "[]",
+          "visibility": "visible"
+        },
+        {
+          "name": "Three dependencies sorted alphabetically",
+          "input": "({'S': ['Logger', 'DB', 'Cache']}, 'S')",
+          "expected_output": "['Cache', 'DB', 'Logger']",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Service not in registry",
+          "input": "({}, 'missing')",
+          "expected_output": "[]",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["dependency-injection", "dependency-graph"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L04",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L04", "L05"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `detect_circular_dep(dep_map)` that takes a dict mapping each service name to its list of direct dependencies. Return `True` if there is any circular dependency (a cycle in the graph), or `False` if the dependency graph is acyclic.\n\nExample: `{'A': ['B'], 'B': ['C'], 'C': ['A']}` → `True` (A→B→C→A forms a cycle).",
+      "starter_code": "def detect_circular_dep(dep_map):\n    \"\"\"\n    Return True if the dependency graph contains a cycle, False otherwise.\n    Uses depth-first search.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Three-node cycle",
+          "input": "{'A': ['B'], 'B': ['C'], 'C': ['A']}",
+          "expected_output": "True",
+          "visibility": "visible"
+        },
+        {
+          "name": "Linear chain — no cycle",
+          "input": "{'A': ['B'], 'B': ['C'], 'C': []}",
+          "expected_output": "False",
+          "visibility": "visible"
+        },
+        {
+          "name": "Self-loop",
+          "input": "{'X': ['X']}",
+          "expected_output": "True",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Three-node chain — no cycle",
+          "input": "{'P': ['Q'], 'Q': ['R'], 'R': []}",
+          "expected_output": "False",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["dependency-injection", "dependency-graph", "coupling-diagnosis"],
+      "cognitive_level": "synthesis",
+      "weight": 1.0,
+      "difficulty": 4,
+      "lesson_ref": "L04",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L04", "L06"]
+    }
+  ]
+}

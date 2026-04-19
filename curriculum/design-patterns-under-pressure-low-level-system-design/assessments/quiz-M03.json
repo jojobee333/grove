@@ -1,0 +1,170 @@
+{
+  "id": "quiz-M03",
+  "type": "module",
+  "module": "M03",
+  "title": "Assessment: Ambient Access and Hidden Dependencies",
+  "generated": "2026-04-17",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "A Registry provides convenience by allowing any object to look up services by name. What is the primary design cost introduced by this convenience?",
+      "options": {
+        "A": "It creates construction coupling because objects must inherit from the registry",
+        "B": "It makes dependencies implicit — callers cannot see what an object depends on without reading its internals",
+        "C": "It introduces a boundary mismatch between the domain model and the registry schema",
+        "D": "It prevents unit testing because registries require real implementations"
+      },
+      "correct": "B",
+      "explanation": "The fundamental Registry cost is hidden dependencies — the dependency graph is invisible from the outside. A is wrong (no inheritance required). C conflates Registry with ORM concerns. D is partly true but the root design cost is the visibility problem, not testability per se.",
+      "lesson_ref": "L07",
+      "claim_ref": "C3",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Under what narrow condition is a Registry legitimately justified over explicit dependency injection?",
+      "options": {
+        "A": "When the team prefers not to refactor the composition root",
+        "B": "When the dependency is genuinely global in scope and passing it through many layers would create significant overhead",
+        "C": "Whenever more than five services need access to the same object",
+        "D": "When the dependency changes at runtime and must be hot-swapped"
+      },
+      "correct": "B",
+      "explanation": "The narrow justification is: genuinely global scope + measurably high injection overhead. Team preference (A) and service count (C) are not design pressures. Hot-swapping (D) is a runtime variation concern addressed by Strategy or Plugin, not Registry.",
+      "lesson_ref": "L07",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "Service Locator is sometimes called a legitimate tool. In which context is its use most defensible?",
+      "options": {
+        "A": "Any application where the team wants to avoid writing a composition root",
+        "B": "A framework or plugin host where the caller does not control object construction",
+        "C": "Large codebases where there are more than 50 injectable services",
+        "D": "Systems where all services have the same lifecycle (request-scoped)"
+      },
+      "correct": "B",
+      "explanation": "Service Locator is most defensible when the caller genuinely cannot receive the dependency by injection — e.g., a framework instantiates the object and the developer has no access to the constructor call. The other options describe situations where DI is typically still viable.",
+      "lesson_ref": "L08",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "Contradiction 1 states the threshold between acceptable Service Locator and architectural debt is unresolved. What makes this particular contradiction unresolvable by the research reviewed in this course?",
+      "options": {
+        "A": "Service Locator was deprecated after GoF published their book",
+        "B": "The threshold depends on context factors (team size, framework, call-tree depth) that no study has empirically measured",
+        "C": "Fowler and Nystrom use different definitions of Service Locator, making comparison impossible",
+        "D": "There are no real-world codebases that use Service Locator anymore"
+      },
+      "correct": "B",
+      "explanation": "The research surveyed by this course found no empirical measurement of the point where SL transitions from acceptable convenience to architectural debt. The contextual factors vary too much for a universal rule. A, C, D are factually incorrect.",
+      "lesson_ref": "L08",
+      "claim_ref": "C3",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "What is the most concrete indicator that a Singleton is being used as ambient global state rather than as a legitimate single-instance controller?",
+      "options": {
+        "A": "The singleton class has more than one method",
+        "B": "The singleton is referenced in more than 10 places",
+        "C": "Test isolation breaks — state leaks from one test to the next unless explicitly reset",
+        "D": "The singleton was created before DI containers were available"
+      },
+      "correct": "C",
+      "explanation": "State leaking between tests is the most concrete operational signal that the singleton is carrying global mutable state rather than controlling a genuine single-instance lifecycle. Reference count (B) and method count (A) are not indicators. Historical origin (D) is irrelevant.",
+      "lesson_ref": "L09",
+      "claim_ref": "C5",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "Distinguish a legitimate Singleton from Singleton-as-global-access-point.",
+      "options": {
+        "A": "Legitimate Singleton is thread-safe; global access point is not",
+        "B": "Legitimate Singleton enforces a genuine single-instance domain requirement; global access point exists only for convenience of avoiding injection",
+        "C": "Legitimate Singleton is created at startup; global access point is created lazily",
+        "D": "Legitimate Singleton implements an interface; global access point returns a concrete class"
+      },
+      "correct": "B",
+      "explanation": "The distinction is whether the 'single instance' constraint is a genuine domain requirement (e.g., one printer spooler) or just a convenience for avoiding DI overhead. Thread safety (A) and creation timing (C) are implementation details, not the distinguishing criterion. Interface usage (D) is unrelated.",
+      "lesson_ref": "L09",
+      "claim_ref": "C5",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "Claim C5 identifies the central failure mode for patterns as applying them before real pressure exists. Which of the following best applies this claim to the Singleton pattern?",
+      "options": {
+        "A": "Using Singleton for a configuration store that is genuinely read-only and process-global",
+        "B": "Using Singleton for every service class to ensure one instance per application",
+        "C": "Using Singleton to enforce that a connection pool has exactly one instance managing thread-safe access",
+        "D": "Using Singleton for a hardware interface driver where one physical device must map to one software object"
+      },
+      "correct": "B",
+      "explanation": "Applying Singleton to every service 'for consistency' is using it before any single-instance pressure is real — it's cargo-cult architecture. A, C, and D all have genuine single-instance requirements that justify the pattern.",
+      "lesson_ref": "L09",
+      "claim_ref": "C5",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "Explain why dependency visibility is described as a 'first-class design concern' in this module. Give one example where low visibility created a concrete problem.",
+      "answer_key": {
+        "required_points": [
+          "Dependency visibility means the set of things an object depends on is declared and visible to callers — not hidden inside the implementation",
+          "Low visibility means callers cannot reason about what an object needs without reading its source, which makes testing, debugging, and refactoring harder",
+          "Concrete example: e.g., an object using a Registry internally — a test can call the method without knowing it needs a DB connection until a runtime error occurs"
+        ],
+        "acceptable_variations": "Example can involve Singleton or Service Locator as the hidden-dependency mechanism",
+        "full_credit": "Defines visibility, explains why it matters, gives a concrete failure-mode example",
+        "partial_credit": "Correct definition or correct example but not both with the causal link"
+      },
+      "lesson_ref": "L08",
+      "claim_ref": "C3",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "Describe the test isolation problem caused by Singleton global state and explain one way to resolve it without eliminating the Singleton.",
+      "answer_key": {
+        "required_points": [
+          "Problem: singleton carries mutable state across test boundaries — test A modifies the singleton and test B inherits that modification, making tests order-dependent",
+          "Resolution without elimination: provide a reset/clear method that tests call in setUp/tearDown, OR scope the singleton to the test context, OR use a DI approach that injects the singleton as an interface (tests inject a fresh instance)"
+        ],
+        "acceptable_variations": "Any valid test isolation strategy that addresses singleton state leakage",
+        "full_credit": "Correct diagnosis of the test-isolation failure mode and one concrete resolution strategy",
+        "partial_credit": "Correct diagnosis without a resolution strategy"
+      },
+      "lesson_ref": "L09",
+      "claim_ref": "C5",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "A senior developer on your team argues: 'Service Locator, Registry, and Singleton are all just convenient global access — they're all bad and should be eliminated.' A junior developer argues they're all perfectly fine and easier than DI. Using Contradiction 1 and the ambient access analysis from Module 3, write a nuanced position that neither fully agrees with either developer.",
+      "guidance": "A strong response acknowledges the legitimate use cases for all three (framework constraints, genuine single-instance requirements, genuinely global infrastructure objects) while explaining their shared visibility cost and the specific conditions that justify them. It should cite the unresolved threshold in Contradiction 1 and avoid universal rules in either direction.",
+      "rubric": {
+        "A": "Acknowledges legitimate use cases for all three, articulates the shared visibility cost, cites the unresolved threshold, gives specific contextual factors that shift the judgment",
+        "B": "Correct on the visibility cost and at least one legitimate use case, limited on contextual nuance or Contradiction 1",
+        "C": "Picks a side (agrees with senior or junior) without contextual differentiation"
+      },
+      "lesson_ref": "L07-L09",
+      "difficulty": "analysis"
+    }
+  ]
+}

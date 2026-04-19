@@ -1,0 +1,128 @@
+{
+  "id": "code-challenge-M04",
+  "type": "module",
+  "module": "M04",
+  "title": "Coding Challenges: Enums, Pattern Matching & Option",
+  "challenges": [
+    {
+      "id": "CC09",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Define an enum `Direction` with variants `North`, `South`, `East`, `West`. Write a function `opposite(d: Direction) -> Direction` that returns the opposite direction, and a function `direction_name(d: Direction) -> String` that returns the lowercase name string (\"north\", \"south\", \"east\", \"west\"). Write an entry function `direction_info(name: &str) -> String` that parses name into a Direction (matching \"north\"/\"south\"/\"east\"/\"west\"), then returns `\"opposite of north is south\"` format.",
+      "starter_code": "#[derive(Debug)]\nenum Direction { North, South, East, West }\n\nfn opposite(d: Direction) -> Direction {\n    match d {\n        Direction::North => Direction::North, // TODO: fix this\n        _ => Direction::North,\n    }\n}\n\nfn direction_name(d: Direction) -> String {\n    String::new()\n}\n\nfn direction_info(name: &str) -> String {\n    // Parse name to Direction, return \"opposite of {name} is {opposite_name}\"\n    String::new()\n}\n",
+      "test_cases": [
+        {
+          "name": "north -> south",
+          "input": "\"north\"",
+          "expected_output": "opposite of north is south",
+          "visibility": "visible"
+        },
+        {
+          "name": "east -> west",
+          "input": "\"east\"",
+          "expected_output": "opposite of east is west",
+          "visibility": "visible"
+        },
+        {
+          "name": "south -> north",
+          "input": "\"south\"",
+          "expected_output": "opposite of south is north",
+          "visibility": "hidden"
+        },
+        {
+          "name": "west -> east",
+          "input": "\"west\"",
+          "expected_output": "opposite of west is east",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["enum", "enum-variant", "match", "exhaustive-match", "enum-method"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L11",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L10", "L11"]
+    },
+    {
+      "id": "CC10",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a function `safe_divide(a: f64, b: f64) -> Option<f64>` that returns `None` if `b` is zero and `Some(a / b)` otherwise. Then write `divide_or_default(a: f64, b: f64, default: f64) -> f64` that calls `safe_divide` and uses `.unwrap_or` to return the default on `None`. Round the result to 2 decimal places (`(v * 100.0).round() / 100.0`). Write an entry function `compute(input: &str) -> String` that parses `\"a b default\"` (three space-separated f64s) and returns the result as a string.",
+      "starter_code": "fn safe_divide(a: f64, b: f64) -> Option<f64> {\n    // Return None if b == 0.0, else Some(a / b)\n    None\n}\n\nfn divide_or_default(a: f64, b: f64, default: f64) -> f64 {\n    // Use safe_divide and unwrap_or, round result to 2 decimals\n    0.0\n}\n\nfn compute(input: &str) -> String {\n    // Parse \"a b default\" then call divide_or_default\n    String::new()\n}\n",
+      "test_cases": [
+        {
+          "name": "10 / 2 = 5",
+          "input": "\"10.0 2.0 0.0\"",
+          "expected_output": "5",
+          "visibility": "visible"
+        },
+        {
+          "name": "divide by zero uses default",
+          "input": "\"10.0 0.0 -1.0\"",
+          "expected_output": "-1",
+          "visibility": "visible"
+        },
+        {
+          "name": "7 / 4 = 1.75",
+          "input": "\"7.0 4.0 0.0\"",
+          "expected_output": "1.75",
+          "visibility": "hidden"
+        },
+        {
+          "name": "divide by zero, default 99",
+          "input": "\"5.0 0.0 99.0\"",
+          "expected_output": "99",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["option", "some", "none", "option-unwrap", "option-map", "match"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L12",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L11", "L12"]
+    },
+    {
+      "id": "CC11",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a function `classify_number(n: i64) -> String` that uses `match` to return:\n- `\"negative\"` for any n < 0\n- `\"zero\"` for n == 0\n- `\"small\"` for 1..=9\n- `\"teen\"` for 10..=19\n- `\"large\"` for anything else\n\nUse match with range patterns (`n if n < 0`, `1..=9`, etc.).",
+      "starter_code": "fn classify_number(n: i64) -> String {\n    // Use match with range patterns to classify n\n    String::new()\n}\n",
+      "test_cases": [
+        {
+          "name": "-5 is negative",
+          "input": "-5",
+          "expected_output": "negative",
+          "visibility": "visible"
+        },
+        {
+          "name": "0 is zero",
+          "input": "0",
+          "expected_output": "zero",
+          "visibility": "visible"
+        },
+        {
+          "name": "7 is small",
+          "input": "7",
+          "expected_output": "small",
+          "visibility": "hidden"
+        },
+        {
+          "name": "15 is teen",
+          "input": "15",
+          "expected_output": "teen",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["match", "exhaustive-match", "pattern-binding", "catch-all"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L11",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L11"]
+    }
+  ]
+}

@@ -1,0 +1,88 @@
+{
+  "id": "code-challenge-M07",
+  "type": "module",
+  "module": "M07",
+  "title": "Coding Challenge: Domain Logic Patterns",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `choose_domain_approach(entity_and_interactions)` that takes a tuple `(entity_count, interaction_count)`. Return `'domain_model'` if the ratio of interactions per entity exceeds `3.0`, otherwise return `'transaction_script'`.\n\nThis models the core heuristic from L19/L20: Transaction Script fits simple, low-interaction logic; Domain Model justifies its overhead only when entities have rich, cross-cutting behaviour.",
+      "starter_code": "def choose_domain_approach(entity_and_interactions):\n    \"\"\"\n    Unpack (entity_count, interaction_count).\n    Return 'domain_model' if interaction_count / entity_count > 3.0,\n    else return 'transaction_script'.\n    If entity_count is 0, return 'transaction_script'.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Low ratio — transaction script",
+          "input": "(5, 10)",
+          "expected_output": "transaction_script",
+          "visibility": "visible"
+        },
+        {
+          "name": "High ratio — domain model",
+          "input": "(3, 15)",
+          "expected_output": "domain_model",
+          "visibility": "visible"
+        },
+        {
+          "name": "Ratio exactly 3.0 — transaction script (not strictly greater)",
+          "input": "(1, 3)",
+          "expected_output": "transaction_script",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Ratio 4.5 — domain model",
+          "input": "(2, 9)",
+          "expected_output": "domain_model",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["transaction-script", "domain-model", "domain-complexity"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L19",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L19", "L20"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `detect_anemic_model(class_info)` that takes a dict with keys `'methods'` (list of method names) and `'data_fields'` (list of field names). Return `True` if the number of methods is **strictly less than** the number of data fields — a heuristic for the Anemic Domain Model anti-pattern (data class with no real behaviour).",
+      "starter_code": "def detect_anemic_model(class_info):\n    \"\"\"\n    Return True if len(methods) < len(data_fields).\n    Returns a boolean.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "2 methods vs 4 fields — anemic",
+          "input": "{'methods': ['get_id', 'get_name'], 'data_fields': ['id', 'name', 'email', 'status']}",
+          "expected_output": "True",
+          "visibility": "visible"
+        },
+        {
+          "name": "4 methods vs 2 fields — not anemic",
+          "input": "{'methods': ['validate', 'calculate', 'apply', 'get_id'], 'data_fields': ['id', 'price']}",
+          "expected_output": "False",
+          "visibility": "visible"
+        },
+        {
+          "name": "No methods and one field — anemic",
+          "input": "{'methods': [], 'data_fields': ['x']}",
+          "expected_output": "True",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Equal counts — not anemic (not strictly less)",
+          "input": "{'methods': ['a', 'b', 'c'], 'data_fields': ['a', 'b', 'c']}",
+          "expected_output": "False",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["anemic-domain-model", "domain-design", "rich-domain"],
+      "cognitive_level": "analysis",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L21",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L20", "L21"]
+    }
+  ]
+}

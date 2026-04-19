@@ -2,7 +2,7 @@
   "slug": "test-driven-development-in-python",
   "phase": "complete",
   "created": "2026-04-15",
-  "updated": "2026-04-16",
+  "updated": "2026-04-19",
   "steps_completed": ["validate", "learner", "course-map", "lessons", "cards", "assessments", "v3-artifacts"],
   "course_map": {
     "modules": 7,

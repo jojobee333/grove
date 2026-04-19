@@ -1,0 +1,17 @@
+{
+    "slug":  "design-patterns-under-pressure-low-level-system-design",
+    "created":  "2026-04-16",
+    "last_updated":  "2026-04-19",
+    "phase":  "complete",
+    "last_completed_step":  6,
+    "sub_skills_complete":  [
+                                "grove-map",
+                                "grove-lessons",
+                                "grove-cards",
+                                "grove-code-challenges",
+                                "grove-assess",
+                                "bundle"
+                            ],
+    "strata_source":  "vault/research/design-patterns-under-pressure-low-level-system-design/",
+    "curriculum_root":  "curriculum/design-patterns-under-pressure-low-level-system-design/"
+}

@@ -1,0 +1,26 @@
+{
+  "module": "M03",
+  "title": "Ambient Access and Hidden Dependencies — Quick Check",
+  "questions": [
+    {
+      "id": "MC03-1",
+      "q": "What convenience does a Registry provide, and what hidden cost comes with it?",
+      "a": "A registry provides centralized lookup so callers don't need explicit references to dependencies. The hidden cost is that any component can silently become a dependency by querying the registry, widening the dependency web without making it visible in signatures."
+    },
+    {
+      "id": "MC03-2",
+      "q": "Under what narrow conditions is Service Locator acceptable rather than an anti-pattern?",
+      "a": "When the framework itself manages object lifecycles and explicit DI is impractical (e.g., plugin hosts, legacy systems), and when the team applies discipline to limit locator use to the wiring layer. It becomes a problem when service classes use it to hide dependencies."
+    },
+    {
+      "id": "MC03-3",
+      "q": "What distinguishes a legitimate Singleton from global-state abuse?",
+      "a": "A legitimate Singleton controls one genuinely unique resource (e.g., a thread pool, a config object) where multiple instances would cause correctness problems. Global-state abuse uses Singleton as convenient ambient access for objects that have no technical reason to be unique."
+    },
+    {
+      "id": "MC03-4",
+      "q": "Why is dependency visibility a first-class design concern?",
+      "a": "When dependencies are visible (in constructor signatures or method parameters), readers can understand what a component needs without tracing runtime calls. Hidden dependencies via ambient access make code harder to test, reason about, and safely change."
+    }
+  ]
+}

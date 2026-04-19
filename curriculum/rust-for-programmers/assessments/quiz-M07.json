@@ -1,0 +1,155 @@
+{
+  "id": "quiz-M07",
+  "type": "module",
+  "module": "M07",
+  "title": "Assessment: Generics, Traits & Lifetimes",
+  "generated": "2026-04-19",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What is monomorphization in Rust?",
+      "options": {
+        "A": "Generating a single runtime dispatch table for all generic types",
+        "B": "The compiler generating a concrete function for each type used with a generic",
+        "C": "A technique for converting trait objects to concrete types at runtime",
+        "D": "The process of boxing generic values to send them across threads"
+      },
+      "correct": "B",
+      "explanation": "Monomorphization means the Rust compiler creates a separate, concrete copy of each generic function or struct for every type it is instantiated with. The result is zero runtime overhead — no boxing, no dispatch table.",
+      "lesson_ref": "L19",
+      "claim_ref": "C1",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "What does the orphan rule prevent?",
+      "options": {
+        "A": "Using the same trait in two different files",
+        "B": "Implementing a trait from an external crate on a type from another external crate",
+        "C": "Defining a trait and its implementation in the same module",
+        "D": "Using default trait methods alongside custom implementations"
+      },
+      "correct": "B",
+      "explanation": "The orphan rule states: you can implement a trait for a type only if either the trait or the type is defined in your crate. This prevents two crates from providing conflicting implementations of the same trait for the same type.",
+      "lesson_ref": "L20",
+      "claim_ref": "C1",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "When must you write explicit lifetime annotations on a function?",
+      "options": {
+        "A": "Whenever the function takes more than one parameter",
+        "B": "Only when the function returns a reference and the compiler cannot determine which input reference the output borrows from",
+        "C": "Whenever the function takes a &str parameter",
+        "D": "Only in unsafe functions"
+      },
+      "correct": "B",
+      "explanation": "Rust applies lifetime elision rules automatically in most cases. Explicit annotations are needed when the compiler cannot determine the relationship between input and output reference lifetimes — typically when there are multiple reference inputs and the output reference could come from any of them.",
+      "lesson_ref": "L21",
+      "claim_ref": "C5",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "What is the key difference between `impl Trait` parameter syntax and `dyn Trait` (a trait object)?",
+      "options": {
+        "A": "impl Trait uses runtime dispatch; dyn Trait uses compile-time dispatch",
+        "B": "impl Trait resolves the concrete type at compile time (static dispatch); dyn Trait dispatches at runtime through a vtable",
+        "C": "impl Trait and dyn Trait are identical — one is just newer syntax",
+        "D": "dyn Trait is only for return types; impl Trait is only for parameters"
+      },
+      "correct": "B",
+      "explanation": "`impl Trait` (static dispatch) is monomorphized: the compiler generates concrete code per type, which is faster. `dyn Trait` stores a fat pointer (data pointer + vtable pointer) and dispatches method calls at runtime — slower but allows heterogeneous collections.",
+      "lesson_ref": "L20",
+      "claim_ref": "C1",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "What does the `'static` lifetime bound mean on a reference?",
+      "options": {
+        "A": "The referenced data is stored in static (global) memory and lives for the entire program",
+        "B": "The reference cannot be passed to functions",
+        "C": "The reference has been declared with the static keyword",
+        "D": "The referenced type implements the Copy trait"
+      },
+      "correct": "A",
+      "explanation": "'static means the reference is valid for the entire duration of the program. String literals have 'static lifetime because they are embedded in the binary. A common mistake is adding 'static to silence borrow errors — this is almost always wrong.",
+      "lesson_ref": "L21",
+      "claim_ref": "C5",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "You want a function that accepts any type implementing both `Debug` and `Clone`. Which signature is correct?",
+      "options": {
+        "A": "fn process(x: T) where Debug + Clone",
+        "B": "fn process<T: Debug + Clone>(x: T)",
+        "C": "fn process(x: impl Debug | Clone)",
+        "D": "fn process(x: dyn Debug + dyn Clone)"
+      },
+      "correct": "B",
+      "explanation": "Multiple trait bounds are written with `+`: `T: Debug + Clone`. The where clause equivalent is `where T: Debug + Clone`. Option C uses | which is not valid for trait bounds. Option D creates two separate trait objects, which is invalid syntax.",
+      "lesson_ref": "L20",
+      "claim_ref": "C1",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "State Rust's three lifetime elision rules. For each rule, give a one-sentence example of when it applies.",
+      "answer_key": {
+        "required_points": [
+          "Rule 1: Each reference parameter gets its own lifetime — fn foo(x: &i32) becomes fn foo<'a>(x: &'a i32)",
+          "Rule 2: If there is exactly one input lifetime, it is assigned to all output lifetimes — fn first(s: &str) -> &str",
+          "Rule 3: If one input is &self or &mut self, its lifetime is assigned to all outputs — method with self returning a reference"
+        ],
+        "acceptable_variations": "Paraphrasing acceptable; examples may differ.",
+        "full_credit": "All three rules with correct examples.",
+        "partial_credit": "Two of three rules correctly stated."
+      },
+      "lesson_ref": "L21",
+      "claim_ref": "C5",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "Define a trait `Summary` with a required method `summarize(&self) -> String` and a default method `preview(&self) -> String` that returns the first 100 characters of summarize(). Write the trait definition only (not the implementation).",
+      "answer_key": {
+        "required_points": [
+          "Correct trait keyword and name",
+          "summarize declared without a body (required method)",
+          "preview implemented with a default body calling self.summarize()"
+        ],
+        "acceptable_variations": "Exact character count cutoff may vary; &self[..100] or chars().take(100) both acceptable.",
+        "full_credit": "```rust\ntrait Summary {\n    fn summarize(&self) -> String;\n    fn preview(&self) -> String {\n        self.summarize().chars().take(100).collect()\n    }\n}```",
+        "partial_credit": "Correct structure but missing default implementation or incorrect syntax."
+      },
+      "lesson_ref": "L20",
+      "claim_ref": "C1",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "essay",
+      "prompt": "Explain how generics, traits, and lifetimes work together in Rust to achieve code reuse without runtime cost. Use a concrete example — such as a generic sorting function with a trait bound — to illustrate each concept's role.",
+      "guidance": "Strong response: (1) generics = write once, compile to concrete types (no boxing); (2) trait bounds = constrain what operations T supports (compile-time checked); (3) lifetimes = guarantee references are valid as long as the algorithm runs; (4) concrete example tying all three together.",
+      "rubric": {
+        "A": "Covers all three concepts with correct roles, concrete example tying them together, and mentions zero-cost.",
+        "B": "Covers generics and traits correctly with an example; lifetime explanation vague.",
+        "C": "Describes generics only; traits and lifetimes are absent or incorrect."
+      },
+      "lesson_ref": "L19-L21",
+      "difficulty": "analysis"
+    }
+  ]
+}

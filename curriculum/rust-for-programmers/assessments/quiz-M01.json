@@ -1,0 +1,154 @@
+{
+  "id": "quiz-M01",
+  "type": "module",
+  "module": "M01",
+  "title": "Assessment: Setup & Rust Fundamentals",
+  "generated": "2026-04-19",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What does the command `cargo new my_project` produce?",
+      "options": {
+        "A": "A single main.rs file in the current directory",
+        "B": "A directory with src/main.rs and Cargo.toml",
+        "C": "A compiled binary called my_project",
+        "D": "A Cargo.toml with an empty dependencies section only"
+      },
+      "correct": "B",
+      "explanation": "cargo new creates a named project directory containing src/main.rs (a hello-world entry point) and Cargo.toml (the manifest). It also initialises a git repository by default.",
+      "lesson_ref": "L01",
+      "claim_ref": "C1",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Which of the following correctly demonstrates variable shadowing in Rust?",
+      "options": {
+        "A": "let mut x = 5; x = x + 1;",
+        "B": "let x = 5; let x = x + 1;",
+        "C": "var x = 5; var x = x + 1;",
+        "D": "const x = 5; x = x + 1;"
+      },
+      "correct": "B",
+      "explanation": "Shadowing re-declares the same name with `let`. Option A uses mutation (mut), not shadowing. Options C and D are not valid Rust syntax.",
+      "lesson_ref": "L02",
+      "claim_ref": "C1",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "What is the type of the tuple `(1, 'a', true)` in Rust?",
+      "options": {
+        "A": "tuple",
+        "B": "(i32, char, bool)",
+        "C": "[i32, char, bool]",
+        "D": "Vec<any>"
+      },
+      "correct": "B",
+      "explanation": "Rust tuple types are written as a parenthesised list of the element types: (i32, char, bool). Option C is array syntax, which requires a single element type.",
+      "lesson_ref": "L02",
+      "claim_ref": "C1",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "In Rust, what value does this function return?\n\n```rust\nfn add(x: i32, y: i32) -> i32 {\n    x + y\n}\n```",
+      "options": {
+        "A": "Nothing — there is no return statement",
+        "B": "A compile error — the return keyword is missing",
+        "C": "x + y — the last expression without a semicolon is the implicit return",
+        "D": "0 — Rust initialises integers to zero by default"
+      },
+      "correct": "C",
+      "explanation": "Rust functions return the value of the last expression when there is no trailing semicolon. The explicit `return` keyword is optional and typically only used for early returns.",
+      "lesson_ref": "L03",
+      "claim_ref": "C1",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "Which loop construct is the only one that can return a value from a loop body?",
+      "options": {
+        "A": "while",
+        "B": "for",
+        "C": "loop",
+        "D": "All loop types can return values"
+      },
+      "correct": "C",
+      "explanation": "`loop` is Rust's infinite loop and the only one that can return a value via `break value`. `while` and `for` loops always evaluate to `()` (unit).",
+      "lesson_ref": "L03",
+      "claim_ref": "C1",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "What is the key difference between `mut` and shadowing when changing a variable's value?",
+      "options": {
+        "A": "mut is faster; shadowing is safer",
+        "B": "Shadowing can change the type; mut cannot",
+        "C": "mut only works on integers; shadowing works on all types",
+        "D": "There is no practical difference"
+      },
+      "correct": "B",
+      "explanation": "Shadowing with `let` creates a new binding, so you can change the type (e.g., from &str to usize). `mut` only lets you change the value — the type is fixed at first binding.",
+      "lesson_ref": "L02",
+      "claim_ref": "C1",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "Explain the difference between an expression and a statement in Rust. Give one example of each.",
+      "answer_key": {
+        "required_points": [
+          "Expressions evaluate to a value",
+          "Statements perform an action and do not return a value (they return unit ())",
+          "A let binding is a statement; an arithmetic operation like x + 1 is an expression"
+        ],
+        "acceptable_variations": "Any valid Rust expression and statement pair is acceptable.",
+        "full_credit": "Expressions return a value (e.g., 5 + 3 evaluates to 8). Statements perform an action but return () — e.g., `let x = 5;` is a statement and cannot be used on the right-hand side of another let.",
+        "partial_credit": "Correctly defines one of the two terms without the other."
+      },
+      "lesson_ref": "L03",
+      "claim_ref": "C1",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "You have a variable `let x = 5;`. Without changing this declaration, write two lines of Rust that shadow it with the value 10 and then print it.",
+      "answer_key": {
+        "required_points": [
+          "Uses `let x = 10;` to shadow (not `x = 10;` which would be a mutation error)",
+          "Uses println! to print x"
+        ],
+        "acceptable_variations": "`let x = x * 2;` is also valid shadowing since 5 * 2 = 10.",
+        "full_credit": "`let x = 10; println!(\"{}\", x);` or any expression that produces 10 via shadowing.",
+        "partial_credit": "Correctly describes the concept but has minor syntax errors."
+      },
+      "lesson_ref": "L02",
+      "claim_ref": "C1",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "essay",
+      "prompt": "You are helping a Python developer learn Rust. They are confused because their first Rust variable is immutable by default. Explain Rust's design decision to make variables immutable by default, how shadowing provides a safe alternative to mutation, and one situation where `mut` is genuinely the right choice.",
+      "guidance": "A strong response covers: (1) safety rationale — prevents accidental mutation; (2) shadowing as a way to transform values without mutation; (3) a concrete use case for mut such as a loop counter or accumulator.",
+      "rubric": {
+        "A": "Explains the safety rationale, demonstrates shadowing with a type change, and gives a concrete justified use case for mut.",
+        "B": "Explains immutability and shadowing correctly but the mut use case is vague.",
+        "C": "Mentions immutability but confuses shadowing with mutation."
+      },
+      "lesson_ref": "L02-L03",
+      "difficulty": "analysis"
+    }
+  ]
+}

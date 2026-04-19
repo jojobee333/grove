@@ -1,0 +1,26 @@
+{
+  "module": "M01",
+  "title": "Pressure-First Foundations — Quick Check",
+  "questions": [
+    {
+      "id": "MC01-1",
+      "q": "Name the five recurring design pressures that patterns exist to answer.",
+      "a": "Coupling, volatility, coordination, boundary mismatch, and duplication. Patterns become useful when these recurring forces make simple designs too costly to change or reason about."
+    },
+    {
+      "id": "MC01-2",
+      "q": "What is the pressure-first method and why apply it before selecting a pattern?",
+      "a": "The pressure-first method means identifying the specific design pain causing the problem before choosing a structural response. Applying it prevents adding patterns speculatively, which creates abstraction debt."
+    },
+    {
+      "id": "MC01-3",
+      "q": "How does a pattern language differ from a pattern catalog?",
+      "a": "A catalog is a list of named solutions. A language is a vocabulary of related design moves that can be combined to describe and solve problems — patterns in a language refer to each other and compose coherently."
+    },
+    {
+      "id": "MC01-4",
+      "q": "What test should you apply before adding any design structure to a codebase?",
+      "a": "Name the specific cost the structure would relieve, confirm that cost is present now (not speculative), and verify the indirection the structure adds is smaller than the pain it removes."
+    }
+  ]
+}

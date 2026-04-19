@@ -1,0 +1,88 @@
+{
+  "id": "code-challenge-M05",
+  "type": "module",
+  "module": "M05",
+  "title": "Coding Challenges: Collections",
+  "challenges": [
+    {
+      "id": "CC12",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a function `vec_stats(numbers: Vec<f64>) -> String` that computes the minimum, maximum, and mean of the vector, then returns them as `\"min=N max=N mean=N\"`. All three values should be rounded to 1 decimal place using `(v * 10.0).round() / 10.0`. Write an entry function `stats(input: &str) -> String` that parses a space-separated list of floats and calls `vec_stats`.",
+      "starter_code": "fn vec_stats(numbers: Vec<f64>) -> String {\n    // Compute min, max, mean — rounded to 1 decimal\n    // Return \"min=N max=N mean=N\"\n    String::new()\n}\n\nfn stats(input: &str) -> String {\n    let numbers: Vec<f64> = input.split_whitespace()\n        .filter_map(|s| s.parse().ok())\n        .collect();\n    vec_stats(numbers)\n}\n",
+      "test_cases": [
+        {
+          "name": "Three numbers",
+          "input": "\"1.0 2.0 3.0\"",
+          "expected_output": "min=1 max=3 mean=2",
+          "visibility": "visible"
+        },
+        {
+          "name": "Five numbers",
+          "input": "\"10.0 20.0 30.0 40.0 50.0\"",
+          "expected_output": "min=10 max=50 mean=30",
+          "visibility": "visible"
+        },
+        {
+          "name": "Uneven values",
+          "input": "\"5.0 1.0 9.0\"",
+          "expected_output": "min=1 max=9 mean=5",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Decimals",
+          "input": "\"1.5 2.5 3.0\"",
+          "expected_output": "min=1.5 max=3 mean=2.3",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["vec", "vec-iter", "vec-get", "vec-slice"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L13",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L13"]
+    },
+    {
+      "id": "CC13",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a function `word_count(text: &str) -> String` that counts the frequency of each word in the input (split on whitespace, case-insensitive), then returns the counts as a sorted comma-separated string in the format `\"word:count,word:count\"` sorted alphabetically by word. Use a `HashMap`. Write an entry function `count_words(input: &str) -> String`.",
+      "starter_code": "use std::collections::HashMap;\n\nfn word_count(text: &str) -> String {\n    let mut counts: HashMap<String, u32> = HashMap::new();\n    // Count words (lowercase), then sort and format as \"word:count,...\"\n    String::new()\n}\n\nfn count_words(input: &str) -> String {\n    word_count(input)\n}\n",
+      "test_cases": [
+        {
+          "name": "Two distinct words",
+          "input": "\"hello world\"",
+          "expected_output": "hello:1,world:1",
+          "visibility": "visible"
+        },
+        {
+          "name": "Repeated word",
+          "input": "\"rust rust go\"",
+          "expected_output": "go:1,rust:2",
+          "visibility": "visible"
+        },
+        {
+          "name": "Case-insensitive",
+          "input": "\"Hello hello HELLO\"",
+          "expected_output": "hello:3",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Three unique words",
+          "input": "\"apple banana cherry\"",
+          "expected_output": "apple:1,banana:1,cherry:1",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["hashmap", "entry-api", "vec-iter", "string-methods"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 4,
+      "lesson_ref": "L14",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L13", "L14"]
+    }
+  ]
+}

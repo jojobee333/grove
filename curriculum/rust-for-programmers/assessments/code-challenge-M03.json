@@ -1,0 +1,88 @@
+{
+  "id": "code-challenge-M03",
+  "type": "module",
+  "module": "M03",
+  "title": "Coding Challenges: Structs & Methods",
+  "challenges": [
+    {
+      "id": "CC07",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Implement a `Rectangle` struct with `width: f64` and `height: f64` fields. Add an `impl` block with:\n- `new(width: f64, height: f64) -> Rectangle` — constructor\n- `area(&self) -> f64` — returns width × height\n- `is_square(&self) -> bool` — returns true if width == height\n\nWrite a function `describe_rectangle(width: f64, height: f64) -> String` that returns a string like `\"area=12, square=false\"` (area as integer if whole number, otherwise one decimal).",
+      "starter_code": "struct Rectangle {\n    width: f64,\n    height: f64,\n}\n\nimpl Rectangle {\n    fn new(width: f64, height: f64) -> Rectangle {\n        Rectangle { width, height }\n    }\n\n    fn area(&self) -> f64 {\n        0.0\n    }\n\n    fn is_square(&self) -> bool {\n        false\n    }\n}\n\nfn describe_rectangle(width: f64, height: f64) -> String {\n    // Return \"area=N, square=true/false\"\n    // Use area() as integer (e.g. 12) if .fract() == 0, else 1 decimal\n    String::new()\n}\n",
+      "test_cases": [
+        {
+          "name": "3x4 rectangle",
+          "input": "\"3.0 4.0\"",
+          "expected_output": "area=12, square=false",
+          "visibility": "visible"
+        },
+        {
+          "name": "5x5 square",
+          "input": "\"5.0 5.0\"",
+          "expected_output": "area=25, square=true",
+          "visibility": "visible"
+        },
+        {
+          "name": "2x6 rectangle",
+          "input": "\"2.0 6.0\"",
+          "expected_output": "area=12, square=false",
+          "visibility": "hidden"
+        },
+        {
+          "name": "7x7 square",
+          "input": "\"7.0 7.0\"",
+          "expected_output": "area=49, square=true",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["struct", "impl", "method", "self", "associated-function"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L08",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L07", "L08"]
+    },
+    {
+      "id": "CC08",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Implement a `Student` struct with fields `name: String` and `grades: Vec<f64>`. Add:\n- `new(name: &str) -> Student`\n- `add_grade(&mut self, grade: f64)` — appends to grades\n- `average(&self) -> f64` — mean of grades, or 0.0 if empty\n\nWrite a function `student_average(name: &str, grades_csv: &str) -> f64` that parses a comma-separated list of grades (e.g. `\"85.0,90.5,78.0\"`), builds a Student, adds each grade, and returns the average rounded to 1 decimal place (`(avg * 10.0).round() / 10.0`).",
+      "starter_code": "struct Student {\n    name: String,\n    grades: Vec<f64>,\n}\n\nimpl Student {\n    fn new(name: &str) -> Student {\n        Student { name: name.to_string(), grades: Vec::new() }\n    }\n\n    fn add_grade(&mut self, grade: f64) {\n        // Append grade to self.grades\n    }\n\n    fn average(&self) -> f64 {\n        // Return mean, or 0.0 if empty\n        0.0\n    }\n}\n\nfn student_average(name: &str, grades_csv: &str) -> f64 {\n    // Parse CSV grades, add to Student, return average (1 decimal)\n    0.0\n}\n",
+      "test_cases": [
+        {
+          "name": "Three grades",
+          "input": "\"Alice 90.0,80.0,70.0\"",
+          "expected_output": "80",
+          "visibility": "visible"
+        },
+        {
+          "name": "Two grades with decimal",
+          "input": "\"Bob 85.0,90.0\"",
+          "expected_output": "87.5",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single grade",
+          "input": "\"Cara 95.0\"",
+          "expected_output": "95",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Four grades",
+          "input": "\"Dan 60.0,70.0,80.0,90.0\"",
+          "expected_output": "75",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["struct", "impl", "mut-self", "method", "associated-function", "vec"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L09",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L08", "L09"]
+    }
+  ]
+}

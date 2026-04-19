@@ -34,10 +34,12 @@
       const s = document.createElement('script');
       s.src = `${base}/lib/codemirror.min.js`;
       s.onload = () => {
+        const modes = ['mode/python/python.min.js', 'mode/javascript/javascript.min.js', 'mode/rust/rust.min.js'];
         let loaded = 0;
-        const done = () => { if (++loaded === 2) resolve(window.CodeMirror); };
-        const fail = () => reject(new Error('CodeMirror mode load failed'));
-        ['mode/python/python.min.js', 'mode/javascript/javascript.min.js'].forEach(path => {
+        // Rust mode is optional — fall back gracefully if CDN doesn't have it
+        const done = () => { if (++loaded === modes.length) resolve(window.CodeMirror); };
+        const fail = () => { ++loaded; if (loaded === modes.length) resolve(window.CodeMirror); };
+        modes.forEach(path => {
           const m = document.createElement('script');
           m.src = `${base}/${path}`; m.onload = done; m.onerror = fail;
           document.head.appendChild(m);
@@ -47,6 +49,33 @@
       document.head.appendChild(s);
     });
     return window._cmPromise;
+  }
+</script>
+<!-- Highlight.js: read-only syntax highlighting for lesson code blocks (lazy-loaded) -->
+<script>
+  window._hlPromise = null;
+  function loadHighlightJs() {
+    if (window._hlPromise) return window._hlPromise;
+    window._hlPromise = new Promise((resolve, reject) => {
+      const base = 'https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build';
+      const link = document.createElement('link');
+      link.rel = 'stylesheet';
+      link.href = `${base}/styles/github-dark.min.css`;
+      document.head.appendChild(link);
+      const s = document.createElement('script');
+      s.src = `${base}/highlight.min.js`;
+      s.onload = () => resolve(window.hljs);
+      s.onerror = () => reject(new Error('Highlight.js failed to load'));
+      document.head.appendChild(s);
+    });
+    return window._hlPromise;
+  }
+  // Called after lesson HTML is injected into the DOM.
+  // Highlights all <code> blocks with a language- class.
+  function highlightLessonCode() {
+    loadHighlightJs().then(hljs => {
+      document.querySelectorAll('pre code[class^="language-"]').forEach(el => hljs.highlightElement(el));
+    }).catch(() => { /* graceful degradation — plain text remains readable */ });
   }
 </script>
 </head>

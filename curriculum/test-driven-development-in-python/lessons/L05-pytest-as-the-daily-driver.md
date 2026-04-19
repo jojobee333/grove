@@ -3,73 +3,119 @@
 **Module**: M03 · Choose the Right Python Testing Surface
 **Type**: core
 **Estimated time**: 12 minutes
-**Claim**: C3 - pytest is the most ergonomic default for modern Python TDD, while unittest remains the baseline framework and an important migration path
+**Claim**: C3 — pytest is the most ergonomic default for modern Python TDD, while unittest remains the baseline framework and an important migration path
 
 ---
 
 ## The core idea
 
-The research supports a pragmatic default: for modern Python TDD, `pytest` is usually the best day-to-day working surface. That conclusion is not based on fashion. It comes from the way pytest packages the mechanics that matter most during fast feedback cycles: plain test functions, flexible fixture injection, parametrization, clearer failure output, and a project structure that encourages explicit configuration instead of ad hoc behavior. Source trail: `vault/research/test-driven-development-in-python/03-synthesis/claims.md`, `vault/research/test-driven-development-in-python/01-sources/web/S003-pytest-good-practices.md`, `vault/research/test-driven-development-in-python/01-sources/web/S005-pytest-parametrize.md`.
+The choice of testing framework is not neutral. Friction in expressing the next test directly affects whether you actually write it. For modern Python TDD, the research supports a pragmatic default: `pytest` is the framework that reduces friction most consistently across the common TDD workflow — plain test functions, fixture injection, parametrization, and clear failure output for fast feedback [S003](../../research/test-driven-development-in-python/01-sources/web/S003-pytest-good-practices.md).
 
-What makes pytest especially strong for TDD is not that it changes the underlying logic of red-green-refactor. It reduces friction around expressing examples, arranging state, and extending a suite as the design grows. A test can begin as a plain function, evolve to use fixtures, and later broaden with parametrization, all without forcing a lot of class structure or assertion ceremony around the behavior you are trying to drive.
+This is not a brand preference. It is a consequence of how pytest packages the mechanics that matter most during tight red-green-refactor cycles. A test can begin as a plain function requiring no class hierarchy. Fixtures are injected by name without requiring `self.` prefixes or explicit setup assignments. Parametrization broadens behavioral coverage with a single decorator. Assertion failures are described in readable diffs rather than generic `AssertionError` messages.
 
-This matters for someone with some prior exposure because many developers inherit test habits from whichever framework they first saw. If the lesson is only "pytest has nicer syntax," that is too shallow. The stronger lesson is that pytest lowers the cost of writing the next useful test, which is exactly where TDD lives or dies.
+The practical value of these features is that they lower the cost of writing the *next* test. TDD lives or dies at the moment when a developer decides whether to write a new test for an edge case or to skip it. The more expensive that decision is — syntactically, structurally, or cognitively — the more often developers will skip tests that would have driven better design.
 
 ## Why it matters
 
-Tool friction changes design behavior. If every test needs more scaffolding than the behavior itself, developers start batching changes or postponing tests. If setting up a variation is awkward, they skip useful cases that would have clarified the design. If failure output is harder to read than it needs to be, they lose time decoding the test infrastructure rather than improving the code.
+The research explicitly links tool ergonomics to TDD success. Developers who use `pytest` can often express a new behavioral test in fewer lines, with less structural ceremony, and with clearer failure output than the equivalent `unittest` test. That difference adds up across a day of TDD work [S003](../../research/test-driven-development-in-python/01-sources/web/S003-pytest-good-practices.md).
 
-Pytest helps here because its common path is lightweight. That does not make it superior in every abstract sense. It makes it a better default for the kind of short-cycle, behavior-by-behavior iteration that practical TDD requires.
+Critically, `pytest` also runs existing `unittest.TestCase` suites without code changes. This means the choice of `pytest` as a runner does not require abandoning existing investments. Teams can adopt `pytest` for new work and improve existing suites incrementally, which is the migration path the next lesson covers.
 
 ## A concrete example
 
-Suppose you are driving a function that classifies login attempts by outcome.
+**Example 1 — Simple function test with no ceremony**
 
-With pytest, an initial TDD step can stay extremely small:
+One of `pytest`'s most useful properties is that a test is just a function. There is no required class, no import of an assertion library, and no ritual setup:
 
 ```python
-def test_successful_login_returns_ok():
-    assert classify_login(True, False) == "ok"
+# test_formatter.py
+
+def test_positive_temperature_formats_with_degree_symbol():
+    assert format_temperature(25) == "25°C"
+
+def test_zero_temperature_formats_correctly():
+    assert format_temperature(0) == "0°C"
+
+def test_negative_temperature_formats_correctly():
+    assert format_temperature(-10) == "-10°C"
 ```
 
-As the design grows, you can extend the same idea naturally:
+Each function is independently runnable: `pytest test_formatter.py::test_negative_temperature_formats_correctly`. When one fails, the output shows the exact expression that failed, the left-hand value, and the right-hand value without additional configuration.
+
+**Example 2 — Parametrize to cover a behavioral family**
+
+When a behavior applies to a family of cases, `pytest.mark.parametrize` expresses the whole family without duplicating the test body [S003](../../research/test-driven-development-in-python/01-sources/web/S003-pytest-good-practices.md):
 
 ```python
 import pytest
 
-
 @pytest.mark.parametrize(
-    ("authenticated", "locked", "expected"),
+    ("value", "unit", "expected"),
     [
-        (True, False, "ok"),
-        (False, False, "retry"),
-        (False, True, "locked"),
+        (25,  "C", "25°C"),
+        (77,  "F", "77°F"),
+        (-10, "C", "-10°C"),
+        (0,   "C", "0°C"),
     ],
 )
-def test_login_classification(authenticated, locked, expected):
-    assert classify_login(authenticated, locked) == expected
+def test_temperature_formatting(value, unit, expected):
+    assert format_temperature(value, unit=unit) == expected
 ```
 
-The example is illustrative, but it shows why pytest fits TDD well. The test can begin concrete, then broaden when the behavior suggests a family of cases rather than one isolated example. That is exactly the kind of low-friction expansion the source set ties to expert Python testing practice. Source trail: `vault/research/test-driven-development-in-python/01-sources/web/S003-pytest-good-practices.md`, `vault/research/test-driven-development-in-python/01-sources/web/S005-pytest-parametrize.md`.
+This expresses four cases with one test body. In TDD terms, it is often the right move when a third or fourth test adds a case that is structurally identical to earlier cases but with different inputs. The alternative — four separate functions — is not wrong, but parametrization makes the family relationship explicit and keeps the test file readable as the case list grows.
 
-## Recognition cues
+## Project layout and configuration
 
-- pytest is usually the right default when you want fast behavior expression with minimal ceremony.
-- It becomes especially valuable when fixtures and parametrization start doing real work in the suite.
-- If your TDD steps feel heavier than the behavior under test, the framework surface may be contributing to that friction.
+The `pytest` maintainers recommend an explicit project layout that avoids discovery surprises. For a typical Python TDD project [S003](../../research/test-driven-development-in-python/01-sources/web/S003-pytest-good-practices.md):
+
+```
+project/
+├── pyproject.toml
+├── src/
+│   └── mypackage/
+│       ├── __init__.py
+│       └── formatter.py
+└── tests/
+    ├── __init__.py
+    └── test_formatter.py
+```
+
+The `pyproject.toml` should configure `pytest` explicitly:
+
+```toml
+[tool.pytest.ini_options]
+addopts = "--import-mode=importlib"
+testpaths = ["tests"]
+```
+
+`importlib` import mode avoids a class of confusing failures where `sys.path` manipulation or missing `__init__.py` files cause test discovery to import the wrong version of a module. Making this explicit in configuration reduces the chance of "works on my machine, fails in CI" behavior.
+
+The `src/` layout separates installed source from test code. This prevents tests from accidentally importing the uninstalled package from the project root instead of the installed one, which can cause tests to pass locally but fail after packaging [S003](../../research/test-driven-development-in-python/01-sources/web/S003-pytest-good-practices.md).
+
+## Running unittest suites through pytest
+
+One of `pytest`'s practical strengths for teams with existing code is that it can run `unittest.TestCase` test files without modification. The test discovery finds `unittest` tests and executes them, providing `pytest`'s better error output and test selection capabilities.
+
+This means adopting `pytest` as the runner is typically a zero-cost first step. The team gains selection, filtering, and output improvements before rewriting a single test. The structural migration — from `TestCase` to plain functions and fixtures — can happen incrementally as sections of the suite are actively maintained [S009](../../research/test-driven-development-in-python/01-sources/web/S009-pytest-unittest.md).
+
+## Limitations
+
+Advanced `pytest` features — fixture argument injection into test functions, `@pytest.mark.parametrize`, and fixture dependency graphs — do not work directly inside `unittest.TestCase` methods. `usefixtures` and `autouse` provide a partial bridge, but the architectural difference between `TestCase`'s setup/teardown model and `pytest`'s injection model means some migration steps still require structural changes. This is not a criticism of either framework; it is a consequence of the design choices each made. The caveat from the research is explicit: "Advanced pytest features such as fixture argument injection and parametrization do not map directly into unittest.TestCase methods" [C3].
 
 ## Key points
 
-- pytest is the practical default because it reduces friction in the feedback loop, not because TDD requires a specific brand.
-- Plain functions, fixture injection, and parametrization align well with small-step design work.
-- The value of pytest is clearest when it helps you write the next useful behavior check with less structural overhead.
+- `pytest` is the practical default for modern Python TDD because it reduces friction at the test-writing step where TDD success is most fragile.
+- Plain test functions, fixture injection, and parametrization are the features that make `pytest` especially well-matched to red-green-refactor cycles.
+- `pytest` runs existing `unittest` suites transparently, making framework adoption a low-risk incremental step.
+- Project layout and configuration (`importlib` mode, explicit `testpaths`, `src/` layout) reduce discovery surprises in CI and team environments.
+- Fixture injection and parametrization do not work directly inside `unittest.TestCase` methods — full migration to pytest-native style requires structural changes.
 
 ## Go deeper
 
-- `vault/research/test-driven-development-in-python/01-sources/web/S003-pytest-good-practices.md`
-- `vault/research/test-driven-development-in-python/01-sources/web/S005-pytest-parametrize.md`
-- `vault/research/test-driven-development-in-python/03-synthesis/claims.md`
+- [S003](../../research/test-driven-development-in-python/01-sources/web/S003-pytest-good-practices.md) — pytest maintainers' recommended project structure, import mode, configuration, and ergonomics for modern Python testing
+- [S009](../../research/test-driven-development-in-python/01-sources/web/S009-pytest-unittest.md) — how pytest runs unittest suites and what capabilities are available before and after structural migration
+- [S001](../../research/test-driven-development-in-python/01-sources/web/S001-unittest.md) — the standard-library baseline that pytest can execute and that the next lesson covers in depth
 
 ---
 
-*[<- Previous: Async Loops and Transaction Rollbacks in Real Test Suites](./L04-async-loops-and-transaction-rollbacks-in-real-test-suites.md)* · *[Next lesson: unittest Fluency and Incremental Migration ->](./L06-unittest-fluency-and-incremental-migration.md)*
+*← [Previous lesson](./L04-async-loops-and-transaction-rollbacks-in-real-test-suites.md)* · *[Next lesson](./L06-unittest-fluency-and-incremental-migration.md) →*

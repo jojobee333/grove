@@ -291,8 +291,8 @@ for (const application of applicationsData.applications ?? []) {
   for (const [key, challengeSet] of Object.entries(codeChallenges)) {
     for (const challenge of challengeSet.challenges ?? []) {
       if (!challenge.id) { errs.push(`${key}: challenge missing id`); continue; }
-      if (challenge.language && !['python', 'javascript'].includes(challenge.language))
-        errs.push(`${key}/${challenge.id}: language must be "python" or "javascript"`);
+      if (challenge.language && !['python', 'javascript', 'rust'].includes(challenge.language))
+        errs.push(`${key}/${challenge.id}: language must be "python", "javascript", or "rust"`);
       if (!Array.isArray(challenge.test_cases) || challenge.test_cases.length === 0)
         errs.push(`${key}/${challenge.id}: must have at least one test case`);
       for (const tc of challenge.test_cases ?? []) {

@@ -38,7 +38,7 @@
     padding: 2rem 2.5rem 1.5rem;
     border-bottom: 1px solid var(--border);
     display: flex;
-    align-items: baseline;
+    align-items: center;
     gap: 12px;
   }
   .brand { font-size: 24px; font-weight: 700; color: var(--accent); letter-spacing: -0.5px; }
@@ -101,6 +101,10 @@
 <header class="header">
   <span class="brand">Grove</span>
   <span class="tagline">Structured learning from research</span>
+  <div style="margin-left:auto">
+    <button class="btn" onclick="document.getElementById('global-bundle-input').click()">Load bundle</button>
+    <input type="file" id="global-bundle-input" accept=".json" onchange="loadBundle(event)">
+  </div>
 </header>
 
 <div class="content">
@@ -164,10 +168,6 @@ async function init() {
         <button class="btn btn-primary" onclick="openCourse('${c.slug}')">
           ${hasProgress ? 'Continue' : 'Start'}
         </button>
-        <button class="btn" onclick="document.getElementById('bundle-input-${c.slug}').click()">
-          Load bundle
-        </button>
-        <input type="file" id="bundle-input-${c.slug}" accept=".json" onchange="loadBundle(event, '${c.slug}')">
         ${hasProgress ? `<button class="btn" style="margin-left:auto;color:var(--muted)" onclick="resetProgress('${c.slug}', this)">Reset</button>` : ''}
       </div>
     `;
@@ -179,18 +179,20 @@ function openCourse(slug) {
   window.location.href = `/app?course=${slug}`;
 }
 
-function loadBundle(event, slug) {
+function loadBundle(event) {
   const file = event.target.files[0];
   if (!file) return;
+  // Reset so the same file can be loaded again if needed
+  event.target.value = '';
   const reader = new FileReader();
   reader.onload = e => {
     try {
       const data = JSON.parse(e.target.result);
-      if (!data.version || !data.course) {
-        alert('âš ï¸ This does not look like a valid bundle.json.\n\nBuild one with: node build-bundle.mjs ' + slug);
+      if (!data.version || !data.course || !data.slug) {
+        alert('⚠️ This does not look like a valid bundle.json.\n\nBuild one with: node build-bundle.mjs <slug>');
         return;
       }
-      // Store bundle slug hint then navigate
+      const slug = data.slug;
       sessionStorage.setItem('grove_pending_bundle_' + slug, e.target.result);
       window.location.href = `/app?course=${slug}&from=home`;
     } catch(err) {

@@ -1,0 +1,192 @@
+{
+  "id": "quiz-M01",
+  "type": "module",
+  "module": "M01",
+  "title": "Assessment: Pressure-First Foundations",
+  "generated": "2026-04-17",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "A developer notices that three different services all construct their own database connections inside their constructors. Which design pressure category best describes the root cause?",
+      "options": {
+        "A": "Coordination pressure — the services need to share state",
+        "B": "Construction coupling — objects manage their own dependency acquisition",
+        "C": "Boundary mismatch — the database schema doesn't match the domain model",
+        "D": "Volatility pressure — the database changes frequently"
+      },
+      "correct": "B",
+      "explanation": "Construction coupling occurs when objects reach out and acquire their own dependencies rather than receiving them. This is not a schema mismatch (C), shared state issue (A), or change-frequency problem (D).",
+      "lesson_ref": "L01",
+      "claim_ref": "C1",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Which statement best captures the pressure-first design principle?",
+      "options": {
+        "A": "Always select a pattern from the GoF catalog before writing any code",
+        "B": "Identify and confirm a recurring design force before introducing any structural response",
+        "C": "Refactor code once it exceeds 200 lines, regardless of symptom",
+        "D": "Apply patterns preemptively to avoid future pain"
+      },
+      "correct": "B",
+      "explanation": "Pressure-first means confirming a recurring force exists before adding structure. Speculative or line-count-based application (A, C, D) leads to abstraction debt.",
+      "lesson_ref": "L02",
+      "claim_ref": "C1",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "A team argues whether to add an Adapter before a third-party library exists. What is the pressure-first question they should ask?",
+      "options": {
+        "A": "How many lines of code will the Adapter save?",
+        "B": "Is the boundary mismatch real and present, or only imagined?",
+        "C": "Does the team know the Adapter pattern well enough to implement it?",
+        "D": "Has the library been used in other projects before?"
+      },
+      "correct": "B",
+      "explanation": "The pressure-first check is whether the force (boundary mismatch) is present now and recurring. Team skill (C) and prior usage (D) are irrelevant to whether the pressure is real. Line counts (A) miss the point entirely.",
+      "lesson_ref": "L02",
+      "claim_ref": "C1",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "What distinguishes a pattern language from a pattern catalog?",
+      "options": {
+        "A": "A catalog is more comprehensive; a pattern language only covers common patterns",
+        "B": "A pattern language includes UML diagrams; a catalog does not",
+        "C": "A pattern language shows how patterns relate and compose; a catalog lists them independently",
+        "D": "A catalog is used by beginners; a pattern language is for experts"
+      },
+      "correct": "C",
+      "explanation": "A pattern language is a vocabulary of related moves with compositional grammar — patterns know their natural neighbors. A catalog is an independent list without relational structure, encouraging pick-and-apply rather than composition.",
+      "lesson_ref": "L03",
+      "claim_ref": "C6",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "A codebase uses Service Layer + Repository + Unit of Work. A new developer says this is 'over-engineered pattern stacking.' What is the correct counter-argument?",
+      "options": {
+        "A": "All three are required by enterprise frameworks so they must be kept",
+        "B": "Each pattern addresses a distinct pressure; removing any one reintroduces that pressure",
+        "C": "The patterns came from the same book, so they naturally belong together",
+        "D": "Pattern stacking is fine as long as each pattern is well-documented"
+      },
+      "correct": "B",
+      "explanation": "Coherent composition means each pattern owns a distinct force. If removing a layer reintroduces a real cost, the layer is justified. The origins of the patterns (C) or their documentation (D) are irrelevant to whether they earn their presence.",
+      "lesson_ref": "L03",
+      "claim_ref": "C6",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "Which of the five pressure categories best describes the situation where a class has ten if-elif branches checking deployment environment?",
+      "options": {
+        "A": "Coordination pressure",
+        "B": "Boundary mismatch",
+        "C": "Volatility pressure",
+        "D": "Coupling pressure",
+        "E": "Duplication pressure"
+      },
+      "correct": "C",
+      "explanation": "Volatility pressure arises when configuration or environment-specific variation is scattered rather than isolated. The class changes whenever a new environment is added — that's volatility, not coordination (A), mismatch (B), coupling (D), or duplication (E).",
+      "lesson_ref": "L01",
+      "claim_ref": "C1",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "What is the primary risk of skipping tradeoff triage after identifying a real design pressure?",
+      "options": {
+        "A": "You may select the wrong pressure category",
+        "B": "The pattern you choose may cost more indirection than the pressure it relieves",
+        "C": "The pattern may not have a name in the GoF catalog",
+        "D": "Other developers may not recognize the pattern"
+      },
+      "correct": "B",
+      "explanation": "Tradeoff triage compares what a structural response costs (indirection, new abstractions, onboarding) against what it relieves. Skipping it risks choosing a pattern whose overhead exceeds the problem's cost. Naming concerns (C, D) and pressure classification (A) are separate from this economic check.",
+      "lesson_ref": "L02",
+      "claim_ref": "C1",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "Explain the difference between a 'symptom' and a 'pressure' in pressure-first design diagnostics. Give one example of each.",
+      "answer_key": {
+        "required_points": [
+          "Symptom is an observable problem (slow tests, hard-to-change code, duplicated logic)",
+          "Pressure is the underlying recurring force causing the symptom (coupling, volatility, coordination failure, boundary mismatch)",
+          "At least one concrete example of a symptom",
+          "At least one concrete example of the underlying pressure behind it"
+        ],
+        "acceptable_variations": "Examples can vary; the key is the symptom-to-pressure causal relationship",
+        "full_credit": "Clear distinction, correct causal relationship, concrete examples for both",
+        "partial_credit": "Correct distinction without examples, or examples without the causal link explained"
+      },
+      "lesson_ref": "L02",
+      "claim_ref": "C1",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "What is 'coherent composition' and how is it different from 'pattern stacking'? Give one example of a coherent composition.",
+      "answer_key": {
+        "required_points": [
+          "Coherent composition: each pattern addresses a distinct, traceable pressure; every layer is justified",
+          "Pattern stacking: patterns accumulate without pressure assignment; some patterns solve the same concern or exist with no force behind them",
+          "Example must name at least two patterns and identify the different pressures each addresses (e.g., Repository = query abstraction; Unit of Work = transaction coordination)"
+        ],
+        "acceptable_variations": "Any valid combination of two patterns with distinct pressures is acceptable",
+        "full_credit": "Clear distinction, correct characterization of both, concrete example with pressure mapping",
+        "partial_credit": "Correct distinction without example, or example without pressure mapping"
+      },
+      "lesson_ref": "L03",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q10",
+      "type": "short_answer",
+      "question": "A teammate proposes adding a Registry to 'make services easier to find.' What pressure-first questions would you ask before agreeing?",
+      "answer_key": {
+        "required_points": [
+          "Is the difficulty of finding services causing a real, recurring cost now?",
+          "Is explicit injection (passing dependencies) not feasible due to call-tree depth or framework constraints?",
+          "Does the convenience of a Registry outweigh the hidden-dependency cost it introduces?",
+          "Is there more than one place where this lookup difficulty actually exists?"
+        ],
+        "acceptable_variations": "Questions can be phrased differently; must address present reality vs. speculation, and the visibility tradeoff",
+        "full_credit": "At least two substantive pressure-first checks with a tradeoff consideration",
+        "partial_credit": "One check without the tradeoff dimension"
+      },
+      "lesson_ref": "L02",
+      "claim_ref": "C1",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q11",
+      "type": "essay",
+      "prompt": "A developer joins a codebase and finds five patterns they can name by GoF category. They conclude the system is 'well-designed.' Another developer says none of those patterns are paying rent. Using pressure-first reasoning and the concept of coherent composition, explain what evidence each developer should gather to settle the debate.",
+      "guidance": "A strong response explains what 'paying rent' means operationally, identifies the evidence needed to confirm each pattern is relieving a present pressure, and explains how coherent composition differs from pattern presence. Bonus: discusses what removing one layer would reveal.",
+      "rubric": {
+        "A": "Defines rent payment operationally, maps each pattern to a pressure question, explains coherent composition vs. presence, and uses at least one concrete example of how to test whether a pattern is justified",
+        "B": "Defines rent payment, discusses pressure-pattern relationship, limited on evidence methodology or composition distinction",
+        "C": "Names the relevant concepts (pressure, rent) without operational definition or evidence methodology"
+      },
+      "lesson_ref": "L01-L03",
+      "difficulty": "analysis"
+    }
+  ]
+}

@@ -12,9 +12,12 @@ export function simpleMarkdown(md) {
 
   const blocks = [];
 
-  // Extract fenced code blocks before any other transform
-  md = md.replace(/```[\w]*\n?([\s\S]*?)```/g, (_, code) => {
-    const html = '<pre><code>' +
+  // Extract fenced code blocks before any other transform.
+  // Captures optional language identifier (e.g. ```python) and emits
+  // class="language-<lang>" so Highlight.js can auto-highlight the block.
+  md = md.replace(/```([\w]*)\n?([\s\S]*?)```/g, (_, lang, code) => {
+    const classAttr = lang ? ` class="language-${lang}"` : '';
+    const html = `<pre><code${classAttr}>` +
       code.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') +
       '</code></pre>';
     blocks.push(html);

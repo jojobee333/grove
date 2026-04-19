@@ -3,66 +3,73 @@
 **Module**: M04 · Forward Secrecy, KDFs, and PKI
 **Type**: applied
 **Estimated time**: 15 minutes
-**Claim**: C13 — KDFs required for password storage; C14 — PKI requires four-check chain validation; C16 — SHA-2 standard, SHA-1 deprecated
+**Claim**: C13 from Strata synthesis
 
 ---
 
 ## The situation
 
-Three applied cryptography problems that come up constantly: which hash function to use for passwords, how browsers validate certificates, and when SHA-256 is appropriate vs a dedicated KDF. These are practical decisions with specific correct answers.
+Two applied cryptography problems appear in every production security deployment: choosing how to store user passwords and validating certificate chains correctly. Both are misimplemented far more often than they should be, both have well-specified correct solutions, and both have a common failure mode — applying a general-purpose cryptographic primitive in a context it was not designed for.
 
 ---
 
-## Passwords: why SHA-256 is wrong and bcrypt/Argon2id is right
+## Part 1: Password hashing with purpose-built KDFs
 
-**The problem with fast hashes**: SHA-256 was designed to be fast. A modern GPU can compute roughly 10 billion SHA-256 operations per second. A database breach of SHA-256 hashed passwords can be brute-forced at ~10 billion guesses per second — a cracking rig will exhaust the entire `rockyou.txt` wordlist plus common mangling rules in under a second.
+### Why general-purpose hash functions are wrong for passwords
 
-**KDFs (Key Derivation Functions) are intentionally slow**: bcrypt and Argon2id are designed to take tens or hundreds of milliseconds per hash operation, regardless of hardware improvements.
+SHA-256 processes over 100 million hashes per second on a single consumer GPU. MD5 processes over 1 billion. These are design features: hash functions are engineered to be fast for bulk computation. Fast is the opposite of what password storage requires.
 
-**bcrypt parameters**: cost factor 12 is the current minimum recommended by OWASP. Cost factor is a power of 2 — cost 12 means 2^12 iterations. Each increment doubles computation time. Cost factor 12 takes roughly 250ms on typical server hardware — acceptable for login but prohibitively slow for brute-force at scale. (S018)
+NIST FIPS 180-4 specifies SHA-256 for integrity verification, digital signatures, and key derivation in protocols. It does not address password storage, and no current standard recommends SHA-256 for passwords [S021](../../research/security-foundations/01-sources/web/S021-nist-fips180-4-sha.md). NTLM, Microsoft's legacy authentication protocol, stores passwords as unsalted MD4 hashes. MD4 is a general-purpose hash function from 1990. An attacker who extracts an NTLM hash from Active Directory can run it through a GPU cluster at billions of candidates per second, crack common passwords in seconds, and replay the recovered hash for authentication without needing the plaintext — this is the Pass-the-Hash attack [S016](../../research/security-foundations/01-sources/web/S016-ad-security-best-practices.md).
 
-**The bcrypt 72-byte truncation caveat**: bcrypt silently truncates input at 72 bytes. A user with a password longer than 72 bytes gets the same stored hash as if their password were the first 72 bytes. This is a spec-level limitation. For systems that need to support passwords longer than 72 bytes: HMAC-SHA256 the password first (using a server-side secret as the HMAC key), then feed the 32-byte output to bcrypt. The truncation issue disappears and server-side HMAC adds key stretching. (S018)
+### OWASP password storage recommendations
 
-**Argon2id parameters** (OWASP recommended minimum): `m=19456` (19 MB memory), `t=2` (2 iterations), `p=1` (1 thread). The memory parameter defeats GPU-based cracking because modern GPUs have limited per-core memory — a high-memory KDF brings cracking speed down to CPU-rate even on GPU arrays.
+OWASP Password Storage Cheat Sheet specifies three current password hashing algorithms in preference order [S018](../../research/security-foundations/01-sources/web/S018-owasp-password-storage.md):
+
+| Algorithm | Recommended parameters | Notes |
+|---|---|---|
+| **Argon2id** | m=19456 KiB, t=2 iterations, p=1 | First choice for all new deployments |
+| **scrypt** | N=2^17, r=8, p=1 | Acceptable where Argon2id is unavailable |
+| **bcrypt** | cost factor ≥10 | Legacy compatibility only; see limitation below |
+
+All three are slow by design. They can be tuned to take 100-300ms on server hardware, making GPU cracking approximately 10,000x slower than SHA-256 cracking without changing the user experience. All three are salted automatically — rainbow table attacks are not applicable.
+
+OWASP explicitly prohibits MD5, SHA-1, SHA-256, SHA-512, and all unsalted hashes for password storage, regardless of iteration count [S018](../../research/security-foundations/01-sources/web/S018-owasp-password-storage.md).
+
+### Limitations
+
+**bcrypt silently truncates inputs at 72 bytes.** This is a known limitation inherited from bcrypt's Blowfish key scheduling algorithm. If a user sets a password longer than 72 bytes, only the first 72 bytes are hashed. Two passwords that share identical first 72 bytes authenticate as the same credential, regardless of what follows. For systems that accept arbitrary passphrases or API key-style passwords, the truncation creates silent authentication equivalence that bypasses uniqueness assumptions.
+
+The mitigation: HMAC-SHA256 prehash the password before passing to bcrypt. `bcrypt(HMAC-SHA256(password, pepper), cost)` produces a 256-bit input to bcrypt regardless of original password length, eliminating the truncation boundary and adding a server-side pepper factor. Store the pepper separately from the database — in an environment variable or hardware security module — so that a database dump alone is insufficient to begin cracking [S018](../../research/security-foundations/01-sources/web/S018-owasp-password-storage.md).
 
 ---
 
-## Hashing for data integrity: SHA-2 is correct; SHA-1 is deprecated
+## Part 2: Certificate chain validation
 
-**SHA-1** is deprecated. Researchers demonstrated a practical SHA-1 collision in 2017 (SHAttered) costing roughly $100K in cloud compute. Modern collision attacks cost less. SHA-1 must not be used for: digital signatures, certificate fingerprints, or file integrity. (S021)
+RFC 5280 defines four verification steps that every TLS implementation must perform when validating a certificate chain. Omitting any step creates a specific exploitable weakness.
 
-**SHA-2** (SHA-256, SHA-384, SHA-512) is current for all integrity and signature applications. SHA-256 is standard for HMAC-based signatures. SHA-512 is preferred where larger output provides additional security margin (e.g., signing keys). (S021, S012, S020)
+**Step 1 — Signature at each level**: verify the cryptographic signature on each certificate using the public key of the certificate immediately above it in the chain. A leaf certificate is signed by an intermediate CA; the intermediate is signed by the root CA; the root is self-signed and must match a trusted root in the trust store. Any broken signature invalidates the chain.
 
-**Do not use SHA-256 directly for passwords** — use it only as input to a KDF or as the HMAC key in the bcrypt prehash pattern above.
+**Step 2 — Validity period**: verify that the current time is between `notBefore` and `notAfter` for every certificate in the chain. An expired certificate — even one with a valid signature — must be rejected. This step prevents continued use of keys after certificate expiry.
 
----
+**Step 3 — Revocation via CRL or OCSP**: check whether any certificate in the chain has been revoked by its issuing CA. Revocation can occur if the certificate's private key is compromised, if the subject's identity changes, or at CA request. A certificate that passes signature and expiry checks but is on the CRL must still be rejected. Many implementations have historically made revocation checking optional or fail-open (accepting the certificate if the CRL cannot be fetched) — this means a compromised key can remain trusted until certificate expiry unless revocation is enforced.
 
-## Certificate chain validation: RFC 5280's four checks
+**Step 4 — Basic constraints CA flag**: verify that each non-leaf certificate in the chain has the `cA` basic constraint set to `TRUE`. This prevents a leaf (end-entity) certificate from being used to sign other certificates. Without this check, an attacker who obtains a leaf certificate could use it to issue fraudulent certificates for any domain, constructing a chain that validates signature checks but violates issuance hierarchy.
 
-When a browser connects to `https://example.com`, it does not simply check "is there a certificate?" It performs a chain validation following RFC 5280 (S020). The four required checks:
-
-1. **Signature validation**: each certificate in the chain must be signed by the certificate above it. The root CA's certificate is self-signed and must appear in the OS/browser trust store. Any broken link in the chain = validation failure.
-
-2. **Validity period**: each certificate has `notBefore` and `notAfter` fields. Any certificate outside its valid period causes validation to fail, even if everything else checks out.
-
-3. **Revocation status**: each certificate must not appear in a Certificate Revocation List (CRL) or return an OCSP (Online Certificate Status Protocol) stapled response indicating revocation. If a private key is compromised, the certificate is revoked — a still-validly-signed certificate that is revoked must be rejected. OCSP stapling allows servers to attach fresh revocation proofs to the handshake rather than forcing clients to make a separate revocation lookup.
-
-4. **Path length constraint**: CA certificates include a `pathLenConstraint` field specifying how many intermediate CAs may appear below them. This limits how deeply a sub-CA can delegate trust — preventing a compromised intermediate from issuing unlimited sub-CAs that the root CA never intended.
-
-Any one of these checks failing terminates the handshake with a certificate error.
+A TLS implementation that performs all four steps correctly is resistant to forged chains, expired credentials, compromised CA keys (via revocation), and unauthorized intermediate CA certificates.
 
 ## Key points
 
-- Use bcrypt (cost ≥ 12) or Argon2id (m=19456, t=2, p=1) for passwords — never SHA-256 alone; SHA-256 is for data integrity, not password storage
-- bcrypt truncates at 72 bytes — use HMAC-SHA256 prehash for longer passwords
-- RFC 5280 chain validation has four required checks: signature, validity period, revocation, and path length — all four must pass
+- SHA-256 and MD5 are wrong for password storage because they are designed to be fast; GPU cracking at >100M hashes/second makes them inadequate; use Argon2id, scrypt, or bcrypt
+- bcrypt silently truncates at 72 bytes; use HMAC-SHA256 prehashing with a server-side pepper before bcrypt for systems accepting arbitrary-length passwords
+- RFC 5280 requires four chain validation steps: signature, validity period, revocation, and basic constraints CA flag; omitting any one creates a specific exploitable weakness
+- Revocation checking (Step 3) is the most commonly omitted step; a fail-open implementation means a compromised certificate remains trusted until expiry
 
 ## Go deeper
 
-- [S018 — OWASP Password Storage](https://cheatsheetseries.owasp.org/cheatsheets/Password_Storage_Cheat_Sheet.html) — bcrypt, Argon2id parameters and the 72-byte issue
-- [S020 — RFC 5280 X.509 PKI](https://tools.ietf.org/html/rfc5280) — Certificate chain validation rules in full
-- [S021 — NIST FIPS 180-4 SHA](https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.180-4.pdf) — SHA-2 standards and SHA-1 deprecation timeline
+- [S018 — OWASP Password Storage](../../research/security-foundations/01-sources/web/S018-owasp-password-storage.md) — Argon2id/scrypt/bcrypt parameters, the 72-byte truncation problem, and pepper guidance
+- [S021 — NIST FIPS 180-4 SHA](../../research/security-foundations/01-sources/web/S021-nist-fips180-4-sha.md) — SHA design goals; why SHA speed is a feature for integrity but a liability for passwords
+- [S016 — AD Security Best Practices](../../research/security-foundations/01-sources/web/S016-ad-security-best-practices.md) — NTLM/MD4 as the canonical example of wrong hash algorithm; Pass-the-Hash mechanics
 
 ---
 
-*← [Previous: Ephemeral Keys and Forward Secrecy](./L07-forward-secrecy.md)* · *[Next: The Linux Permission Model](./L09-linux-permissions.md) →*
+*← [Previous lesson](./L07-forward-secrecy.md)* · *[Next lesson →](./L09-linux-permissions.md)*

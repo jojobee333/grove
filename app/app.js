@@ -7,6 +7,8 @@ import { moduleProgress as _moduleProgress, isLessonLocked as _isLessonLocked } 
 import { computeNextSteps as _computeNextSteps }                from './modules/planner.js';
 import { buildCardModuleSummaries, getReviewableCards }         from './modules/cards.js';
 import { flattenPracticalApplications, getPracticalApplicationsForModule, summarizePracticalApplications } from './modules/practical-applications.js';
+import { mapKeyToCardAction }                                       from './modules/keyboard.js';
+import { parseClozeText, renderClozeQuestion, renderClozeAnswer, scoreClozeAnswer } from './modules/cloze.js';
 
 // ── STATE ──────────────────────────────────────────────────
 let course = null;
@@ -714,6 +716,7 @@ function showLesson(lessonId, moduleId) {
       </div>
     </div>
   `;
+  if (bundle?.lessons?.[lessonId]) highlightLessonCode();
 }
 
 function loadLessonFile(event, lessonId, moduleId) {
@@ -722,7 +725,10 @@ function loadLessonFile(event, lessonId, moduleId) {
   const reader = new FileReader();
   reader.onload = e => {
     const body = document.getElementById('lesson-body');
-    if (body) body.innerHTML = simpleMarkdown(e.target.result);
+    if (body) {
+      body.innerHTML = simpleMarkdown(e.target.result);
+      highlightLessonCode();
+    }
   };
   reader.readAsText(file);
 }
@@ -1151,6 +1157,40 @@ function renderCard() {
   }
 
   const card = queue[current];
+
+  if (card.type === 'cloze') {
+    const blanks = parseClozeText(card.front);
+    const inputs = blanks.map((_, i) =>
+      `<input id="cloze-input-${i}" class="cloze-input" placeholder="blank ${i + 1}" autocomplete="off" spellcheck="false">`
+    ).join('');
+    main.innerHTML = `
+      <h1>Flashcards</h1>
+      <p class="text-muted" style="margin-bottom:0.75rem">${cardSession.label}</p>
+      <div class="fc-progress">${current + 1} of ${queue.length} due in this module</div>
+      <div class="flashcard-wrap">
+        <div class="flashcard" id="fc" style="cursor:default">
+          <div class="fc-face" style="display:flex">
+            <div class="fc-label">Fill in the blank${blanks.length !== 1 ? 's' : ''}</div>
+            <div class="fc-text">${renderClozeQuestion(card.front)}</div>
+            <div class="cloze-inputs" style="margin-top:1rem;display:flex;flex-direction:column;gap:8px">${inputs}</div>
+            <div class="fc-source">${card.module} · cloze</div>
+          </div>
+        </div>
+      </div>
+      <div class="rating-row" style="margin-top:0.75rem">
+        <button class="btn btn-primary" id="cloze-check-btn" onclick="flipCard()">Check answers · Space</button>
+      </div>
+      <div id="rating-row" style="display:none" class="rating-row">
+        <button class="rating-btn hard" onclick="rateCard(1)">Hard</button>
+        <button class="rating-btn okay" onclick="rateCard(3)">Okay</button>
+        <button class="rating-btn easy" onclick="rateCard(5)">Easy</button>
+      </div>
+    `;
+    // Focus first input
+    requestAnimationFrame(() => document.getElementById('cloze-input-0')?.focus());
+    return;
+  }
+
   main.innerHTML = `
     <h1>Flashcards</h1>
     <p class="text-muted" style="margin-bottom:0.75rem">${cardSession.label}</p>
@@ -1178,6 +1218,46 @@ function renderCard() {
 }
 
 function flipCard() {
+  const card = cardSession.queue[cardSession.current];
+
+  // Cloze: score inputs, replace UI with answer feedback
+  if (card?.type === 'cloze') {
+    if (cardSession.flipped) return; // already scored
+    const blanks = parseClozeText(card.front);
+    const userAnswers = blanks.map((_, i) => {
+      const el = document.getElementById(`cloze-input-${i}`);
+      return el ? el.value : '';
+    });
+    const results = blanks.map((expected, i) => scoreClozeAnswer(userAnswers[i], expected));
+    const allCorrect = results.every(Boolean);
+
+    // Replace card face with scored answer view
+    const fc = document.getElementById('fc');
+    if (fc) {
+      const answered = renderClozeAnswer(card.front).replace(/\[\[([^\]]*)\]\]/g, (_, ans, offset, full) => {
+        const idx = (full.slice(0, offset).match(/\[\[/g) || []).length;
+        const ok = results[idx] ?? false;
+        return `<span style="color:${ok ? 'var(--accent)' : 'var(--danger)'}">[[${ans}]]</span>`;
+      });
+      fc.innerHTML = `
+        <div class="fc-face fc-back" style="display:flex">
+          <div class="fc-label">${allCorrect ? '✓ All correct' : 'Review the blanks'}</div>
+          <div class="fc-text">${answered}</div>
+          <div class="fc-source">${card.source_ref}</div>
+        </div>
+      `;
+    }
+
+    // Hide check button, show rating row
+    const checkBtn = document.getElementById('cloze-check-btn');
+    if (checkBtn) checkBtn.closest('.rating-row').style.display = 'none';
+    const rr = document.getElementById('rating-row');
+    if (rr) rr.style.display = 'flex';
+    cardSession.flipped = true;
+    return;
+  }
+
+  // Standard card flip
   const fc = document.getElementById('fc');
   const rr = document.getElementById('rating-row');
   if (fc) fc.classList.toggle('flipped');
@@ -1222,7 +1302,7 @@ function renderCodeView() {
   }
 
   const totalDone = allChallenges.filter(x => x.done).length;
-  const langBadge = lang => `<span class="badge ${lang === 'python' ? 'badge-green' : 'badge-amber'}">${lang}</span>`;
+  const langBadge = lang => `<span class="badge ${lang === 'python' ? 'badge-green' : lang === 'rust' ? 'badge-orange' : 'badge-amber'}">${lang}</span>`;
 
   const challengeCards = allChallenges.map(({ moduleId, moduleTitle, challenge, done, testsPassed, testsTotal }) => {
     const statusIcon = done ? '✓' : '○';
@@ -1284,7 +1364,7 @@ function showChallenge(moduleId, challengeId) {
   main.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">
       <button class="btn" onclick="renderCodeView()" style="font-size:12px;padding:5px 10px">← All challenges</button>
-      <span class="badge badge-${challenge.language === 'python' ? 'green' : 'amber'}">${challenge.language}</span>
+      <span class="badge badge-${challenge.language === 'python' ? 'green' : challenge.language === 'rust' ? 'orange' : 'amber'}">${challenge.language}</span>
     </div>
     <h1 style="font-size:20px;margin-bottom:0.5rem">${challengeId}</h1>
     ${statusBanner}
@@ -1319,10 +1399,10 @@ async function initCodeEditor(challengeId, language, code) {
     if (!el) return;
     el.style.display = '';
     const cm = CM.fromTextArea(el, {
-      mode: language === 'python' ? 'python' : 'javascript',
+      mode: language === 'python' ? 'python' : language === 'rust' ? 'rust' : 'javascript',
       lineNumbers: true,
-      indentUnit: language === 'python' ? 4 : 2,
-      tabSize:    language === 'python' ? 4 : 2,
+      indentUnit: language === 'python' ? 4 : 4,
+      tabSize:    language === 'python' ? 4 : 4,
       indentWithTabs: false,
       lineWrapping: false,
       autofocus: true,
@@ -1364,14 +1444,17 @@ async function runChallengeTests(moduleId, challengeId) {
   }
 
   resultsEl.style.display = 'block';
-  resultsEl.innerHTML = `<div style="color:var(--muted);font-size:13px">⏳ Running ${challenge.language === 'python' ? 'Python (loading WASM…)' : 'JavaScript'} tests…</div>`;
+  const langLabel = challenge.language === 'python' ? 'Python (loading WASM…)' : challenge.language === 'rust' ? 'Rust (via Playground API…)' : 'JavaScript';
+  resultsEl.innerHTML = `<div style="color:var(--muted);font-size:13px">⏳ Running ${langLabel} tests…</div>`;
   if (btn) btn.disabled = true;
 
   try {
     const visibleTests = challenge.test_cases.filter(t => t.visibility === 'visible');
     const results = challenge.language === 'python'
       ? await evalPython(code, visibleTests, fnName)
-      : await evalJavaScript(code, visibleTests, fnName);
+      : challenge.language === 'rust'
+        ? await evalRust(code, visibleTests, fnName)
+        : await evalJavaScript(code, visibleTests, fnName);
     resultsEl.innerHTML = renderTestResults(results, challengeId);
     quizState.answers[challengeId] = { code, language: challenge.language, fnName };
   } catch (err) {
@@ -1402,7 +1485,9 @@ async function submitChallenge(moduleId, challengeId) {
   try {
     const results = challenge.language === 'python'
       ? await evalPython(code, challenge.test_cases, fnName)
-      : await evalJavaScript(code, challenge.test_cases, fnName);
+      : challenge.language === 'rust'
+        ? await evalRust(code, challenge.test_cases, fnName)
+        : await evalJavaScript(code, challenge.test_cases, fnName);
 
     if (resultsEl) resultsEl.innerHTML = renderTestResults(results, challengeId);
 
@@ -1576,7 +1661,9 @@ function submitQuiz(moduleId) {
 function detectFunctionName(code, language) {
   const pattern = language === 'python'
     ? /^def\s+([a-zA-Z_]\w*)\s*\(/m
-    : /^(?:function\s+([a-zA-Z_]\w*)|(?:const|let|var)\s+([a-zA-Z_]\w*)\s*=\s*(?:function|\())/m;
+    : language === 'rust'
+      ? /^(?:pub\s+)?fn\s+([a-zA-Z_]\w*)\s*\(/m
+      : /^(?:function\s+([a-zA-Z_]\w*)|(?:const|let|var)\s+([a-zA-Z_]\w*)\s*=\s*(?:function|\())/m;
   const m = code.match(pattern);
   return m ? (m[1] || m[2]) : null;
 }
@@ -1618,6 +1705,60 @@ async function evalPython(code, testCases, fnName) {
   return results;
 }
 
+async function evalRust(code, testCases, fnName) {
+  // Build a main() that calls the function for each test case and prints the result.
+  // Each output lands on its own line so we can match by index.
+  const testCalls = testCases
+    .map(tc => `println!("{}", ${fnName}(${tc.input}));`)
+    .join('\n    ');
+  const wrapped = `${code}\n\nfn main() {\n    ${testCalls}\n}`;
+
+  let stdout;
+  try {
+    const resp = await fetch('https://play.rust-lang.org/execute', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        channel: 'stable',
+        edition: '2021',
+        mode: 'debug',
+        crateType: 'bin',
+        tests: false,
+        code: wrapped,
+      }),
+    });
+    if (!resp.ok) throw new Error(`Playground returned HTTP ${resp.status}`);
+    const json = await resp.json();
+    if (!json.success) {
+      // Surface the last compiler error line to keep the message readable
+      const errLine = (json.stderr ?? '')
+        .split('\nerror')
+        .pop()
+        ?.trim()
+        .split('\n')[0] ?? json.stderr ?? 'Compile error';
+      return testCases.map(tc => ({
+        name: tc.name, passed: false,
+        actual: `Compile error: ${errLine}`,
+        expected: tc.expected_output, visibility: tc.visibility,
+      }));
+    }
+    stdout = json.stdout ?? '';
+  } catch (e) {
+    return testCases.map(tc => ({
+      name: tc.name, passed: false,
+      actual: `Network error: ${e.message}`,
+      expected: tc.expected_output, visibility: tc.visibility,
+    }));
+  }
+
+  const lines = stdout.trimEnd().split('\n');
+  return testCases.map((tc, i) => {
+    const actual = (lines[i] ?? '').trim();
+    const passed = actual === String(tc.expected_output).trim();
+    return { name: tc.name, passed, actual, expected: tc.expected_output, visibility: tc.visibility };
+  });
+}
+
 function renderTestResults(results, challengeId) {
   const passed = results.filter(r => r.passed).length;
   const total  = results.length;
@@ -1650,6 +1791,20 @@ Object.assign(window, {
   runChallengeTests, submitChallenge, renderCards, startCardSession,
   resetCardSession, restartCardSession, flipCard,
   rateCard, selectPath, loadCards, loadQuiz, loadLessonFile,
+});
+
+// ── KEYBOARD SHORTCUTS ───────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target.tagName) || e.target.isContentEditable) return;
+  const inCardsView = document.getElementById('nav-cards')?.classList.contains('active');
+  const view = inCardsView ? 'cards' : 'other';
+  const action = mapKeyToCardAction(e.key, { view, flipped: cardSession.flipped });
+  if (!action) return;
+  e.preventDefault();
+  if (action === 'flip') flipCard();
+  else if (action === 'rate-hard') rateCard(1);
+  else if (action === 'rate-okay') rateCard(3);
+  else if (action === 'rate-easy') rateCard(5);
 });
 
 // ── STARTUP: auto-load from home page ─────────────────────

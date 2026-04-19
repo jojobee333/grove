@@ -1,0 +1,26 @@
+{
+  "module": "M02",
+  "title": "Ownership & Borrowing — Quick Check",
+  "questions": [
+    {
+      "id": "MC02-1",
+      "q": "State Rust's three ownership rules.",
+      "a": "(1) Each value in Rust has exactly one owner. (2) There can only be one owner at a time. (3) When the owner goes out of scope, the value is dropped (Drop is called)."
+    },
+    {
+      "id": "MC02-2",
+      "q": "What is the difference between a move and a copy in Rust? Name one type that is copied and one that is moved on assignment.",
+      "a": "A copy duplicates the value on the stack; both bindings remain valid. A move transfers ownership; the original is no longer accessible. `i32` is copied; `String` is moved."
+    },
+    {
+      "id": "MC02-3",
+      "q": "State Rust's two borrow rules and explain how they prevent data races.",
+      "a": "Rule 1: You can have any number of immutable references (&T) at a time. Rule 2: You can have at most one mutable reference (&mut T), and no immutable references at the same time. Together, these ensure no two threads can read-and-write the same location concurrently."
+    },
+    {
+      "id": "MC02-4",
+      "q": "When should a function parameter be `&str` instead of `&String`, and why?",
+      "a": "`&str` is preferred because deref coercion allows it to accept both string literals (`&'static str`) and references to owned Strings (`&String` → `&str` automatically). Using `&String` unnecessarily restricts callers to only owned Strings."
+    }
+  ]
+}

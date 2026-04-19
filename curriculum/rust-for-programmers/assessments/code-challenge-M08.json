@@ -1,0 +1,128 @@
+{
+  "id": "code-challenge-M08",
+  "type": "module",
+  "module": "M08",
+  "title": "Coding Challenges: Closures & Iterators",
+  "challenges": [
+    {
+      "id": "CC19",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a function `apply_twice<F: Fn(i64) -> i64>(f: F, x: i64) -> i64` that applies the closure `f` to `x` twice (i.e. `f(f(x))`). Write an entry function `double_twice(input: &str) -> i64` that parses `input` as an `i64` and calls `apply_twice` with a doubling closure (`|x| x * 2`).",
+      "starter_code": "fn apply_twice<F: Fn(i64) -> i64>(f: F, x: i64) -> i64 {\n    // Apply f to x, then apply f again to the result\n    x\n}\n\nfn double_twice(input: &str) -> i64 {\n    let x: i64 = input.trim().parse().unwrap_or(0);\n    apply_twice(|n| n * 2, x)\n}\n",
+      "test_cases": [
+        {
+          "name": "3 doubled twice is 12",
+          "input": "3",
+          "expected_output": "12",
+          "visibility": "visible"
+        },
+        {
+          "name": "1 doubled twice is 4",
+          "input": "1",
+          "expected_output": "4",
+          "visibility": "visible"
+        },
+        {
+          "name": "5 doubled twice is 20",
+          "input": "5",
+          "expected_output": "20",
+          "visibility": "hidden"
+        },
+        {
+          "name": "0 doubled twice is 0",
+          "input": "0",
+          "expected_output": "0",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["closure", "fn-trait", "higher-order", "closure-capture"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L22",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L22"]
+    },
+    {
+      "id": "CC20",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a function `even_squares(n: u32) -> Vec<u32>` that returns the squares of even numbers in the range 1..=n using iterator adapters (no `for` loops). Then write an entry function `even_squares_sum(input: &str) -> u64` that parses `input` as a `u32` and returns the sum of the even squares.",
+      "starter_code": "fn even_squares(n: u32) -> Vec<u32> {\n    // Use (1..=n).filter(...).map(...).collect()\n    vec![]\n}\n\nfn even_squares_sum(input: &str) -> u64 {\n    let n: u32 = input.trim().parse().unwrap_or(0);\n    even_squares(n).iter().map(|&x| x as u64).sum()\n}\n",
+      "test_cases": [
+        {
+          "name": "n=4: 4+16=20",
+          "input": "4",
+          "expected_output": "20",
+          "visibility": "visible"
+        },
+        {
+          "name": "n=6: 4+16+36=56",
+          "input": "6",
+          "expected_output": "56",
+          "visibility": "visible"
+        },
+        {
+          "name": "n=2: only 4",
+          "input": "2",
+          "expected_output": "4",
+          "visibility": "hidden"
+        },
+        {
+          "name": "n=10: 4+16+36+64+100=220",
+          "input": "10",
+          "expected_output": "220",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["iterator-trait", "map-adaptor", "filter-adaptor", "collect", "consuming-adaptor"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L23",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L22", "L23"]
+    },
+    {
+      "id": "CC21",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a function `top_n_words(text: &str, n: usize) -> Vec<String>` that:\n1. Splits `text` on whitespace\n2. Counts word frequencies (lowercase) using a HashMap\n3. Returns the top `n` words sorted by frequency descending, then alphabetically on ties\n\nWrite an entry function `top_words(input: &str) -> String` that parses `\"N words...\"` (first token is the integer n, rest is text), calls `top_n_words`, and joins the result with commas.",
+      "starter_code": "use std::collections::HashMap;\n\nfn top_n_words(text: &str, n: usize) -> Vec<String> {\n    let mut counts: HashMap<String, usize> = HashMap::new();\n    for word in text.split_whitespace() {\n        *counts.entry(word.to_lowercase()).or_insert(0) += 1;\n    }\n    let mut pairs: Vec<(String, usize)> = counts.into_iter().collect();\n    pairs.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));\n    pairs.into_iter().take(n).map(|(w, _)| w).collect()\n}\n\nfn top_words(input: &str) -> String {\n    // Parse first token as n, rest as text\n    let mut parts = input.splitn(2, ' ');\n    let n: usize = parts.next().unwrap_or(\"0\").parse().unwrap_or(0);\n    let text = parts.next().unwrap_or(\"\");\n    top_n_words(text, n).join(\",\")\n}\n",
+      "test_cases": [
+        {
+          "name": "Top 1 word",
+          "input": "\"1 rust rust go\"",
+          "expected_output": "rust",
+          "visibility": "visible"
+        },
+        {
+          "name": "Top 2 words",
+          "input": "\"2 a b a c b a\"",
+          "expected_output": "a,b",
+          "visibility": "visible"
+        },
+        {
+          "name": "Alphabetical tiebreak",
+          "input": "\"2 cat bat cat bat dog\"",
+          "expected_output": "bat,cat",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Top 1 from many",
+          "input": "\"1 the the the a b c\"",
+          "expected_output": "the",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["map-adaptor", "filter-adaptor", "collect", "iterator-chain", "closure", "hashmap"],
+      "cognitive_level": "synthesis",
+      "weight": 1.0,
+      "difficulty": 4,
+      "lesson_ref": "L24",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L23", "L24"]
+    }
+  ]
+}

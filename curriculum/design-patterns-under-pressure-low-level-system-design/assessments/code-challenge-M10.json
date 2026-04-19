@@ -1,0 +1,88 @@
+{
+  "id": "code-challenge-M10",
+  "type": "module",
+  "module": "M10",
+  "title": "Coding Challenge: Research Gaps & Evidence Evaluation",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `classify_claim_strength(claim)` that takes a dict with keys `'evidence_count'` (int) and `'contradictions'` (int). Return:\n- `'contested'` if `contradictions > 0` (takes priority)\n- `'strong'` if `evidence_count >= 3` and no contradictions\n- `'weak'` otherwise\n\nThis implements the evidence-classification logic from L28: contested claims are the ones where smart people disagree, regardless of how much raw evidence exists.",
+      "starter_code": "def classify_claim_strength(claim):\n    \"\"\"\n    Return 'contested', 'strong', or 'weak' based on evidence_count and contradictions.\n    Contradictions take priority over evidence count.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "High evidence, no contradictions — strong",
+          "input": "{'evidence_count': 4, 'contradictions': 0}",
+          "expected_output": "strong",
+          "visibility": "visible"
+        },
+        {
+          "name": "Any contradiction makes it contested",
+          "input": "{'evidence_count': 2, 'contradictions': 1}",
+          "expected_output": "contested",
+          "visibility": "visible"
+        },
+        {
+          "name": "Low evidence, no contradictions — weak",
+          "input": "{'evidence_count': 1, 'contradictions': 0}",
+          "expected_output": "weak",
+          "visibility": "hidden"
+        },
+        {
+          "name": "High evidence but contradictions — still contested",
+          "input": "{'evidence_count': 5, 'contradictions': 2}",
+          "expected_output": "contested",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["research-gaps", "evidence-evaluation"],
+      "cognitive_level": "analysis",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L28",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L28"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `identify_resolvable_gaps(gaps)` that takes a list of gap dicts, each with keys `'id'` (string), `'type'` (string), and `'has_data'` (boolean). Return a **sorted** list of IDs for gaps that are resolvable — defined as: `type == 'empirical'` **and** `has_data == True`.\n\nEmpirical gaps with data available can be closed by analysis. Theoretical and practical gaps without data cannot.",
+      "starter_code": "def identify_resolvable_gaps(gaps):\n    \"\"\"\n    Return sorted IDs of gaps where type == 'empirical' and has_data is True.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "One empirical with data, one theoretical — only empirical returned",
+          "input": "[{'id': 'G1', 'type': 'empirical', 'has_data': True}, {'id': 'G2', 'type': 'theoretical', 'has_data': True}]",
+          "expected_output": "['G1']",
+          "visibility": "visible"
+        },
+        {
+          "name": "Empirical but no data — not resolvable",
+          "input": "[{'id': 'G1', 'type': 'empirical', 'has_data': False}]",
+          "expected_output": "[]",
+          "visibility": "visible"
+        },
+        {
+          "name": "Empty list",
+          "input": "[]",
+          "expected_output": "[]",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Two resolvable empirical gaps — sorted",
+          "input": "[{'id': 'G3', 'type': 'empirical', 'has_data': True}, {'id': 'G1', 'type': 'empirical', 'has_data': True}]",
+          "expected_output": "['G1', 'G3']",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["research-gaps", "evidence-evaluation"],
+      "cognitive_level": "analysis",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L28",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L28"]
+    }
+  ]
+}

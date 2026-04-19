@@ -3,101 +3,132 @@
 **Module**: M07 · Windows Telemetry — Seeing the Full Picture
 **Type**: applied
 **Estimated time**: 15 minutes
-**Claim**: C10 — The registry has seven security-critical areas; combined with telemetry correlation, it enables full lateral movement detection
+**Claim**: C10 from Strata synthesis
 
 ---
 
 ## The situation
 
-An attacker is moving laterally through your network. They authenticated with stolen credentials (Event 4624), ran a command on a remote host (Sysmon Event 1), connected to a C2 server (Sysmon Event 3), and issued a Kerberos service ticket (AD Event 4769). Each event appears in a different log on a different host. You need to connect them.
+An attacker is moving laterally through your network. They authenticated with stolen credentials (Event 4624), ran a command on a remote host (Sysmon Event 1), connected to a C2 server (Sysmon Event 3), and issued a Kerberos service ticket (AD Event 4769). Each event appears in a different log on a different host. You need to connect them into a single timeline that tells a coherent story. This lesson shows exactly how.
 
 ---
 
 ## The correlation chain: four sources, one story
 
-**Step 1 — Sysmon Event 1 (process PsExec launched)**:
+**Step 1 — Sysmon Event 1 on the source host (process launched)**:
+
 ```
+EventID: 1 (Process Create)
 Image: C:\Windows\Temp\psexec64.exe
-CommandLine: psexec64.exe \\192.168.1.50 -u CORP\admin cmd.exe
-ProcessGUID: {AAAAAAAA-0001-...}
-ParentImage: cmd.exe
-SHA256: [known PsExec hash or suspicious hash]
+CommandLine: psexec64.exe \\192.168.1.50 cmd.exe
+ProcessGUID: {AAAA-0001-...}
+ParentImage: C:\Windows\System32\cmd.exe
+Hashes: SHA256=abc123...
 ```
 
-**Step 2 — Sysmon Event 3 (network connection from PsExec)**:
+The `ProcessGUID` is the stable identifier. Every subsequent Sysmon event from this process carries the same GUID [S015](../../research/security-foundations/01-sources/web/S015-sysmon-v15.md).
+
+**Step 2 — Sysmon Event 3 on the same host (network connection)**:
+
 ```
-Image: [same psexec64.exe]
-ProcessGUID: {AAAAAAAA-0001-...}   ← matches Event 1 ProcessGUID
+EventID: 3 (Network Connection)
+Image: C:\Windows\Temp\psexec64.exe
+ProcessGUID: {AAAA-0001-...}    ← same as Event 1
 DestinationIp: 192.168.1.50
 DestinationPort: 445
+Initiated: true
 ```
 
+ProcessGUID links this connection definitively to the process from Event 1. The destination is the lateral movement target.
+
 **Step 3 — Event 4624 on the TARGET host (192.168.1.50)**:
+
 ```
+EventID: 4624 (Logon)
 LogonType: 3 (network)
 SubjectUserName: CORP\admin
-LmPackageName: NTLM V2           ← NTLM lateral movement signature
-IpAddress: 192.168.1.20           ← source matches the PsExec host
+LmPackageName: NTLM V2          ← lateral movement signal; Kerberos expected here
+IpAddress: 192.168.1.20          ← matches Sysmon Event 3 DestinationIp (source)
 TargetLogonId: 0x3F0A1
 ```
 
-**Step 4 — AD Event 4769 (Kerberos ticket, or Event 4624 NTLM if no Kerberos)**:
+The `IpAddress` in Event 4624 on the target matches `DestinationIp` in Sysmon Event 3 on the source — confirming the same lateral movement event. The `TargetLogonId` identifies all subsequent events in this session on the target host [S011](../../research/security-foundations/01-sources/web/S011-windows-event-4624.md).
+
+**Step 4 — AD Event 4769 on the domain controller (Kerberos ticket)**:
+
 ```
-ServiceName: cifs/192.168.1.50   ← SMB access to target
-TicketEncryptionType: 0x17       ← RC4 (not AES) — NTLM-adjacent environment
+EventID: 4769 (Kerberos Service Ticket Requested)
+ServiceName: cifs/192.168.1.50
+TicketEncryptionType: 0x17       ← RC4 (NTLM cipher) — AES-256 (0x12) expected
 ClientAddress: 192.168.1.20
 ```
 
-The ProcessGUID from Sysmon steps 1 and 2 chains process to network. The source IP from Sysmon Event 3 matches the IpAddress in Event 4624 on the target. The TargetLogonId from Event 4624 can be used to find all Sysmon events occurring in that session context. This is the four-source kill chain. (S011, S015, S016)
+RC4 encryption type (`0x17`) for an internal CIFS ticket is a Kerberoasting-environment signal. If the environment is properly configured for AES Kerberos, seeing `0x17` here is anomalous and indicates either a legacy account configuration or an active Kerberoasting request [S016](../../research/security-foundations/01-sources/web/S016-ad-security-best-practices.md).
 
 ---
 
-## Windows registry: seven security-critical areas
+## The Windows Registry: seven security-critical paths
 
-The registry is a persistence and configuration store. Sysmon Events 12/13 should monitor these paths specifically (S022, S015):
+Sysmon Events 12 and 13 should monitor these registry paths. Each represents an attacker-usable persistence or configuration manipulation surface [S022](../../research/security-foundations/01-sources/web/S022-windows-registry.md):
 
 | Registry path | Attacker purpose |
 |---|---|
-| `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run` | Boot persistence (all users) |
-| `HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run` | Boot persistence (this user) |
-| `HKLM\SYSTEM\CurrentControlSet\Services` | Service installation (SYSTEM-level persistence) |
-| `HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon` | Hijack Winlogon (e.g., modifying Userinit) |
-| `HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options` | Debugger hijacking — attacker sets Debugger value for a legit process binary |
-| `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders` | Shell folder redirection for persistence |
+| `HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Run` | Boot persistence, all users; requires admin |
+| `HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run` | Boot persistence, current user; no admin required |
+| `HKLM\SYSTEM\CurrentControlSet\Services` | Service installation at SYSTEM-level persistence |
+| `HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon` | Userinit/Shell hijacking; runs on every logon |
+| `HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options` | Debugger hijacking; attacker's binary executes instead of the legitimate target |
+| `HKLM\SYSTEM\CurrentControlSet\Control\LSA` | Kerberos encryption type setting; also LSA protection flags |
 | `HKCU\Environment\UserInitMprLogonScript` | Logon script execution without admin |
 
-Any modification to these paths during non-maintenance windows should trigger investigation.
+Sysmon Event 13 (value set) on any of these paths during non-maintenance windows should trigger an alert. Most persistence techniques write new values rather than creating new keys, so Event 13 is the higher-priority signal of the two [S015](../../research/security-foundations/01-sources/web/S015-sysmon-v15.md).
 
 ---
 
-## Example detection rule (pseudocode for SIEM)
+## SIEM detection rule for lateral movement
+
+A detection rule in pseudocode that connects the four-source chain:
 
 ```
-Alert: Lateral Movement via PsExec Pattern
-Condition:
-  Sysmon Event 1 (process created)
-    AND SHA256 matches known PsExec hash
-    OR commandline contains "\\\\[IP address]"  
-  WITHIN 60 seconds of:
-  Sysmon Event 3 from same ProcessGUID
-    AND DestinationPort = 445
-  CORRELATED WITH:
-  Event 4624 Type 3 on DestinationIp
-    AND LmPackageName = "NTLM V2"
+ALERT: Lateral Movement — NTLM Type 3 + Preceding PsExec Pattern
+
+Trigger:
+  Event 4624 on HOST_B
+    LogonType = 3
+    LmPackageName = "NTLM V2"
+    IpAddress = HOST_A_IP
+
+Corroboration (within 120 seconds before trigger):
+  Sysmon Event 1 on HOST_A
+    Image MATCHES *psexec* OR *wmiexec* OR *smbexec*
+    ProcessGUID = X
+  Sysmon Event 3 on HOST_A
+    ProcessGUID = X
+    DestinationIp = HOST_B_IP
+    DestinationPort = 445
+
+Action: Create incident; link all four events; assign to Tier 2
 ```
+
+The key design principle: never rely on a single event as the trigger. Each event in isolation may be legitimate. The combination of process launch + SMB connection + NTLM network logon on the target is the pattern.
+
+## Limitations
+
+Registry ACLs restrict write access to most HKLM paths — an attacker without admin privileges cannot write to `HKLM\...\Run` or Services. However, `HKCU\...\Run` is writable by any user without elevation. This means user-level persistence via HKCU is accessible to a non-admin compromised user, while HKLM persistence requires privilege escalation first. Factor this into alert severity: HKCU Run key writes are lower-privilege; HKLM writes imply prior admin access [S022](../../research/security-foundations/01-sources/web/S022-windows-registry.md).
 
 ## Key points
 
-- ProcessGUID is Sysmon's correlation key: it links Event 1 (process) to Event 3 (network), enabling "this process made this connection"
-- NTLM lateral movement is identifiable by Event 4624 Type 3 + LmPackageName=NTLM — normal Kerberos environments should see minimal NTLM on internal lateral paths
-- The seven registy areas in this lesson are the Sysmon Event 12/13 include targets; any write outside maintenance windows is investigation-worthy
+- ProcessGUID is Sysmon's correlation key: it links Event 1 (process creation) to Event 3 (network connection), enabling "this process made this connection to this destination"
+- `TargetLogonId` in Event 4624 identifies the session context for all subsequent events on the target host in that session
+- NTLM lateral movement is identifiable by Event 4624 Type 3 + `LmPackageName=NTLM V2` from an unexpected source IP; expected behavior on a Kerberos-configured network is `LmPackageName=Kerberos`
+- HKCU Run key writes require no admin privileges; treat them differently from HKLM writes in alert triage
 
 ## Go deeper
 
-- [S015 — Sysmon v15](https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon) — ProcessGUID and SessionGUID correlation model
-- [S022 — Windows Registry](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry) — Registry hive structure and security-critical paths
-- [S011 — Windows Event 4624](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4624) — TargetLogonId for session-level event correlation
+- [S015 — Sysmon v15](../../research/security-foundations/01-sources/web/S015-sysmon-v15.md) — ProcessGUID and SessionGUID correlation model; Events 1, 3, 10, 12, 13 field reference
+- [S022 — Windows Registry](../../research/security-foundations/01-sources/web/S022-windows-registry.md) — Registry hive structure, HKCU vs HKLM ACL differences, security-critical paths
+- [S011 — Windows Event 4624](../../research/security-foundations/01-sources/web/S011-windows-event-4624.md) — TargetLogonId for session-level event correlation across log sources
 
 ---
 
-*← [Previous: Windows Event Sources](./L13-windows-telemetry.md)* · *[Next: NTLM, Pass-the-Hash, and Kerberoasting](./L15-ntlm-kerberoasting.md) →*
+*← [Previous lesson](./L13-windows-telemetry.md)* · *[Next lesson →](./L15-ntlm-kerberoasting.md)*

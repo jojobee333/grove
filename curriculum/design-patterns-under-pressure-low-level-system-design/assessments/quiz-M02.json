@@ -1,0 +1,172 @@
+{
+  "id": "quiz-M02",
+  "type": "module",
+  "module": "M02",
+  "title": "Assessment: Construction and Runtime Variation",
+  "generated": "2026-04-17",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "A `ReportService` opens a new database connection in its `__init__` method. What construction pressure is present and what does dependency injection resolve?",
+      "options": {
+        "A": "Volatility pressure; DI removes the need for a database entirely",
+        "B": "Construction coupling; DI moves dependency acquisition to an external caller",
+        "C": "Coordination pressure; DI ensures all services share the same connection",
+        "D": "Boundary mismatch; DI normalizes the database interface"
+      },
+      "correct": "B",
+      "explanation": "The object is acquiring its own dependency — construction coupling. DI resolves this by pushing the dependency in from outside rather than letting the object pull it. DI doesn't remove databases (A), fix coordination (C), or normalize interfaces (D).",
+      "lesson_ref": "L04",
+      "claim_ref": "C2",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "What is the 'composition root' and why should there be exactly one in a DI-based system?",
+      "options": {
+        "A": "The base class all services inherit from; one ensures a consistent interface",
+        "B": "The single place where all real implementations are assembled and wired; one prevents environment-specific decisions from scattering",
+        "C": "The main function that starts the application; one per process is a technical requirement",
+        "D": "The configuration file that lists all dependencies; one prevents duplication"
+      },
+      "correct": "B",
+      "explanation": "The composition root is the one place where the specific implementations are wired together. Scattering configuration logic across many classes reintroduces construction coupling even when DI interfaces are used. A, C, D describe adjacent but different concepts.",
+      "lesson_ref": "L04",
+      "claim_ref": "C2",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "What runtime pressure does the Plugin pattern address that DI alone does not?",
+      "options": {
+        "A": "Plugin removes the need for interfaces by using direct instantiation",
+        "B": "Plugin centralizes environment-based implementation selection that would otherwise scatter as conditionals",
+        "C": "Plugin eliminates the need for a composition root by selecting dependencies automatically",
+        "D": "Plugin handles thread safety in multi-environment deployments"
+      },
+      "correct": "B",
+      "explanation": "Plugin's distinct value is confining 'which implementation for this environment' to one extension boundary. DI handles construction wiring but does not prevent environment selection logic from leaking into many classes. A, C, D are incorrect characterizations.",
+      "lesson_ref": "L05",
+      "claim_ref": "C2",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "How does Plugin differ from Strategy as a variation mechanism?",
+      "options": {
+        "A": "Plugin selects behavior at runtime based on application logic; Strategy selects at startup from config",
+        "B": "Plugin selects implementation at deployment/startup from external config; Strategy selects algorithm at runtime based on logic",
+        "C": "Plugin and Strategy are synonymous; Strategy is the GoF name for the same pattern",
+        "D": "Plugin applies only to external libraries; Strategy applies to internal logic"
+      },
+      "correct": "B",
+      "explanation": "Plugin is deployment-time variation (environment config determines which implementation loads). Strategy is runtime behavioral variation (logic within the running application selects the algorithm). A has them reversed. C and D are incorrect.",
+      "lesson_ref": "L05",
+      "claim_ref": "C2",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "When does the Prototype pattern earn its keep over direct construction?",
+      "options": {
+        "A": "When you have more than three subclasses to instantiate",
+        "B": "When an object's complex configured state is more expensive to rebuild than to clone",
+        "C": "When the language does not support constructors with multiple parameters",
+        "D": "When objects must be created in parallel across multiple threads"
+      },
+      "correct": "B",
+      "explanation": "Prototype is justified when constructing from scratch is expensive and the configured state of an existing instance is the valuable part. Subclass count (A), language features (C), and threading (D) are not the relevant pressure.",
+      "lesson_ref": "L06",
+      "claim_ref": "C2",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "Claim C2 states creational patterns can be over-applied. Which scenario is the clearest example of this?",
+      "options": {
+        "A": "Using DI when a service creates its own database connection in production",
+        "B": "Adding a Plugin architecture for a payment service that currently has one implementation and no second planned",
+        "C": "Using Repository to centralize SQL queries scattered across 12 service methods",
+        "D": "Adding Unit of Work when a service modifies 6 objects in a single transaction"
+      },
+      "correct": "B",
+      "explanation": "Adding Plugin infrastructure before any second implementation exists or is concretely planned is the clearest case of paying indirection cost before pressure is real. A, C, D all have clear present pressures justifying the patterns.",
+      "lesson_ref": "L05",
+      "claim_ref": "C2",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "Contradiction 2 in this course says classic pattern forms may not endure even when the underlying problem does. Which example best illustrates this?",
+      "options": {
+        "A": "The Service Layer pattern is no longer needed because microservices handle orchestration",
+        "B": "Observer's GoF class hierarchy is often unnecessary in languages with first-class functions, yet the fan-out notification problem persists",
+        "C": "Singleton is outdated because modern frameworks always use DI containers",
+        "D": "Data Mapper is obsolete now that ORMs handle object-relational translation automatically"
+      },
+      "correct": "B",
+      "explanation": "Contradiction 2 is specifically about form vs. problem: the notification fan-out problem persists, but modern languages can solve it with callbacks/event emitters without a ConcreteObserver class hierarchy. A, C, D either overstate obsolescence or misidentify the pattern.",
+      "lesson_ref": "L06",
+      "claim_ref": "C2",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "A service has `if env == 'prod': mailer = SMTPMailer(); elif env == 'staging': mailer = FakeMailer()` in 8 different methods. Explain which pattern addresses this and why DI alone is insufficient.",
+      "answer_key": {
+        "required_points": [
+          "Pattern: Plugin (or plugin-style extension boundary)",
+          "DI addresses construction coupling — the object receives the dependency rather than constructing it",
+          "But DI does not prevent the env selection logic from repeating in 8 places — it only moves construction",
+          "Plugin confines the env-based selection to one extension boundary; the service methods become unaware of which mailer was selected"
+        ],
+        "acceptable_variations": "May phrase Plugin as 'a factory that reads from config at startup' — that is the plugin mechanism",
+        "full_credit": "Names Plugin, explains DI limitation clearly, explains Plugin's unique value (single selection point)",
+        "partial_credit": "Correctly identifies the problem with DI or the role of Plugin but not both"
+      },
+      "lesson_ref": "L05",
+      "claim_ref": "C2",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "Distinguish Dependency Injection from the Service Locator pattern at the point of dependency acquisition. Why does the distinction matter for testability?",
+      "answer_key": {
+        "required_points": [
+          "DI: dependency is pushed in at construction time by an external caller — explicit, visible in signature",
+          "Service Locator: object pulls the dependency from a shared registry at runtime — implicit, hidden inside implementation",
+          "Testability: DI allows a test to pass a mock/fake via the constructor without any setup of a registry; SL requires tests to configure the registry before the object under test can run"
+        ],
+        "acceptable_variations": "May phrase the push/pull distinction differently",
+        "full_credit": "Correct push/pull distinction, visibility difference, and testability implication",
+        "partial_credit": "Correct push/pull without testability, or correct testability implication without explaining why"
+      },
+      "lesson_ref": "L04",
+      "claim_ref": "C2",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "A team is building a data processing pipeline that needs to support three execution environments: local development, CI test, and production cloud. They are debating DI, Plugin, and explicit parameter passing. Using the concepts from Module 2, explain how each mechanism addresses the construction/runtime variation pressure differently, when each is most appropriate, and which combination you would recommend for this scenario.",
+      "guidance": "A strong response maps each mechanism to its pressure: explicit passing (simple, no container), DI (construction coupling when call trees are shallow), Plugin (deployment-time environment selection when multiple implementations exist). A strong answer recommends a specific combination with reasoning and acknowledges the tradeoffs.",
+      "rubric": {
+        "A": "Correctly maps all three mechanisms to their pressures, recommends Plugin + DI with clear reasoning about the environment selection problem, acknowledges composition root and tradeoffs",
+        "B": "Correctly maps two of three, makes a justified recommendation with partial reasoning",
+        "C": "Names all three mechanisms without pressure mapping or recommendation justification"
+      },
+      "lesson_ref": "L04-L06",
+      "difficulty": "analysis"
+    }
+  ]
+}

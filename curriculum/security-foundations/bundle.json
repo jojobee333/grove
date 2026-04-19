@@ -1,7 +1,7 @@
 {
   "version": "3.0",
   "slug": "security-foundations",
-  "bundled": "2026-04-15T01:12:15.571Z",
+  "bundled": "2026-04-19T04:17:13.105Z",
   "course": {
     "topic": "Security Foundations",
     "slug": "security-foundations",
@@ -4371,6 +4371,7 @@
       ]
     }
   },
+  "practicalApplications": {},
   "concepts": {
     "slug": "security-foundations",
     "generated": "2026-04-13",

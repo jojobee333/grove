@@ -1,7 +1,7 @@
 {
   "version": "3.0",
   "slug": "github-copilot-agentic-workflows-governance",
-  "bundled": "2026-04-16T01:45:52.113Z",
+  "bundled": "2026-04-19T04:17:20.852Z",
   "course": {
     "topic": "GitHub Copilot Agentic Workflows and Governance",
     "slug": "github-copilot-agentic-workflows-governance",
@@ -3231,6 +3231,7 @@
     }
   },
   "codeChallenges": {},
+  "practicalApplications": {},
   "concepts": {
     "slug": "github-copilot-agentic-workflows-governance",
     "generated": "2026-04-15",

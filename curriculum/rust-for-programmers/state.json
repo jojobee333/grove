@@ -1,0 +1,10 @@
+{
+  "slug": "rust-for-programmers",
+  "created": "2026-04-19",
+  "last_updated": "2026-04-19",
+  "phase": "complete",
+  "last_completed_step": 6,
+  "sub_skills_complete": ["grove-map", "grove-lessons", "grove-cards"],
+  "strata_source": "research/rust-for-programmers/",
+  "curriculum_root": "curriculum/rust-for-programmers/"
+}

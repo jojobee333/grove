@@ -1,0 +1,88 @@
+{
+  "id": "code-challenge-M01",
+  "type": "module",
+  "module": "M01",
+  "title": "Coding Challenge: Pattern Foundations",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `count_direct_instantiations(code_lines)` that takes a list of code-line strings and returns the number of lines containing `'new '` (the word 'new' followed by a space). This is a heuristic for detecting direct-instantiation coupling — the problem L01 argues you should eliminate via patterns.",
+      "starter_code": "def count_direct_instantiations(code_lines):\n    \"\"\"\n    Count how many lines contain the substring 'new ' (with trailing space).\n    Returns an integer.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Two direct instantiations",
+          "input": "['x = new Foo()', 'y = bar()', 'z = new Baz()']",
+          "expected_output": "2",
+          "visibility": "visible"
+        },
+        {
+          "name": "No direct instantiations — injected code",
+          "input": "['a = inject(Foo)', 'b = inject(Bar)']",
+          "expected_output": "0",
+          "visibility": "visible"
+        },
+        {
+          "name": "Empty list",
+          "input": "[]",
+          "expected_output": "0",
+          "visibility": "hidden"
+        },
+        {
+          "name": "All lines instantiate",
+          "input": "['new A()', 'new B()', 'new C()', 'return result']",
+          "expected_output": "3",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["design-pressure", "coupling-diagnosis"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 1,
+      "lesson_ref": "L01",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L01"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `categorize_pattern(name)` that takes a pattern name string and returns its category: `'creational'`, `'structural'`, `'behavioral'`, or `'architectural'`.\n\nUse this mapping:\n- **creational**: Singleton, Prototype, Factory, Builder, AbstractFactory\n- **structural**: Facade, Adapter, Decorator, Bridge, Composite, Proxy, Flyweight\n- **behavioral**: Observer, Command, State, Strategy, ChainOfResponsibility, Iterator, Template, Mediator, Memento\n- **architectural**: ServiceLayer, Repository, DataMapper, UnitOfWork, Registry, ServiceLocator, Plugin, DependencyInjection\n\nReturn `'unknown'` if the name is not in any category.",
+      "starter_code": "def categorize_pattern(name):\n    \"\"\"\n    Return the GoF or architectural category for the given pattern name.\n    One of: 'creational', 'structural', 'behavioral', 'architectural', or 'unknown'.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Singleton is creational",
+          "input": "'Singleton'",
+          "expected_output": "creational",
+          "visibility": "visible"
+        },
+        {
+          "name": "Observer is behavioral",
+          "input": "'Observer'",
+          "expected_output": "behavioral",
+          "visibility": "visible"
+        },
+        {
+          "name": "Repository is architectural",
+          "input": "'Repository'",
+          "expected_output": "architectural",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Adapter is structural",
+          "input": "'Adapter'",
+          "expected_output": "structural",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["pattern-language", "pattern-classification"],
+      "cognitive_level": "knowledge",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L03",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L03"]
+    }
+  ]
+}

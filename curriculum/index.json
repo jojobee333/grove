@@ -8,7 +8,7 @@
       "total_lessons": 13,
       "total_cards": 69,
       "total_questions": 53,
-      "total_practical_applications": 0,
+      "total_practical_applications": 7,
       "generated": "2026-04-12",
       "adaptive": true,
       "bundle_version": "3.0"
@@ -34,6 +34,7 @@
       "total_lessons": 16,
       "total_cards": 50,
       "total_questions": 57,
+      "total_practical_applications": 0,
       "generated": "2026-04-13",
       "adaptive": true,
       "bundle_version": "3.0"
@@ -46,6 +47,7 @@
       "total_lessons": 36,
       "total_cards": 68,
       "total_questions": 100,
+      "total_practical_applications": 0,
       "generated": "2026-04-15",
       "adaptive": true,
       "bundle_version": "3.0"
@@ -58,6 +60,7 @@
       "total_lessons": 14,
       "total_cards": 42,
       "total_questions": 43,
+      "total_practical_applications": 0,
       "generated": "2026-04-15",
       "adaptive": true,
       "bundle_version": "3.0"
@@ -72,6 +75,32 @@
       "total_questions": 43,
       "total_practical_applications": 7,
       "generated": "2026-04-15",
+      "adaptive": true,
+      "bundle_version": "3.0"
+    },
+    {
+      "slug": "design-patterns-under-pressure-low-level-system-design",
+      "title": "Design Patterns Under Pressure for Low-Level System Design",
+      "description": "A 28-lesson deep-study course that teaches a beginner to evaluate, apply, criticize, and combine major low-level design patterns one pattern at a time, using de",
+      "total_modules": 10,
+      "total_lessons": 28,
+      "total_cards": 115,
+      "total_questions": 91,
+      "total_practical_applications": 0,
+      "generated": "2026-04-16",
+      "adaptive": true,
+      "bundle_version": "3.0"
+    },
+    {
+      "slug": "rust-for-programmers",
+      "title": "Rust for Programmers",
+      "description": "A hands-on, project-driven Rust course for developers who know Python, JavaScript, or Java. 9 modules, 27 lessons, one runnable mini-project per lesson — coveri",
+      "total_modules": 9,
+      "total_lessons": 27,
+      "total_cards": 81,
+      "total_questions": 63,
+      "total_practical_applications": 9,
+      "generated": "2026-04-19",
       "adaptive": true,
       "bundle_version": "3.0"
     }

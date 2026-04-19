@@ -1,0 +1,34 @@
+{
+  "slug": "design-patterns-under-pressure-low-level-system-design",
+  "generated": "2026-04-17",
+  "paths": [
+    {
+      "id": "default-path",
+      "title": "Complete Course",
+      "description": "All 28 lessons in recommended order, covering foundations through full pattern composition.",
+      "lessons": ["L01","L02","L03","L04","L05","L06","L07","L08","L09","L10","L11","L12","L13","L14","L15","L16","L17","L18","L19","L20","L21","L22","L23","L24","L25","L26","L27","L28"],
+      "focus_areas": []
+    },
+    {
+      "id": "practical-application-path",
+      "title": "Practical Application Fast-Track",
+      "description": "For learners who want to apply patterns to real code quickly. Skips the deep debate and gap lessons; focuses on core pressures and applied selection.",
+      "lessons": ["L01","L02","L03","L04","L05","L07","L10","L11","L12","L13","L14","L15","L16","L17","L18","L19","L20","L22","L25","L26","L27"],
+      "focus_areas": ["applied", "core"]
+    },
+    {
+      "id": "anti-pattern-path",
+      "title": "Overuse and Economics Focus",
+      "description": "For learners who want to sharpen their ability to detect and prevent pattern overuse before studying the positive application cases.",
+      "lessons": ["L01","L02","L03","L09","L22","L23","L24","L21","L19","L04","L05","L07","L08","L10","L14","L15","L20","L25","L27","L28"],
+      "focus_areas": ["debate", "applied"]
+    },
+    {
+      "id": "system-design-prep-path",
+      "title": "System Design Interview Prep",
+      "description": "Optimized for learners preparing for low-level system design interviews. Emphasizes composition, boundary selection, and pressure-based justification.",
+      "lessons": ["L01","L02","L03","L04","L10","L12","L13","L14","L15","L16","L17","L18","L20","L22","L25","L26","L27"],
+      "focus_areas": ["core", "applied"]
+    }
+  ]
+}

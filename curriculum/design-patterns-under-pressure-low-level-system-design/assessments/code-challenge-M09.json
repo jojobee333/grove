@@ -1,0 +1,88 @@
+{
+  "id": "code-challenge-M09",
+  "type": "module",
+  "module": "M09",
+  "title": "Coding Challenge: Composing Real Stacks",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `build_unique_stack(patterns)` that takes a list of pattern name strings (possibly containing duplicates) and returns a **sorted** list of unique pattern names. This simulates deduplicating the patterns active in a composed enterprise stack — each pattern should appear exactly once regardless of how many layers reference it.",
+      "starter_code": "def build_unique_stack(patterns):\n    \"\"\"\n    Return a sorted list of unique pattern names from the input list.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Three names with two duplicates — three unique sorted",
+          "input": "['DI', 'Repository', 'DI', 'ServiceLayer', 'Repository']",
+          "expected_output": "['DI', 'Repository', 'ServiceLayer']",
+          "visibility": "visible"
+        },
+        {
+          "name": "Empty input",
+          "input": "[]",
+          "expected_output": "[]",
+          "visibility": "visible"
+        },
+        {
+          "name": "Duplicate Observer and Command",
+          "input": "['Observer', 'Command', 'Observer']",
+          "expected_output": "['Command', 'Observer']",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Single item — no duplicates",
+          "input": "['Singleton']",
+          "expected_output": "['Singleton']",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["architectural-composition", "pattern-language"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 1,
+      "lesson_ref": "L25",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L25"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `validate_layer_order(stack)` that takes a list of layer names and returns `True` if they appear in valid top-down dependency order (higher layers first), or `False` otherwise.\n\nUse this level map: `UI=4`, `Service=3`, `Repository=2`, `Database=1`. Any layer not in the map has level `0`. A valid order means each layer's level is **greater than or equal to** the next layer's level (non-increasing).",
+      "starter_code": "def validate_layer_order(stack):\n    \"\"\"\n    Return True if layer levels are non-increasing (high to low).\n    Levels: UI=4, Service=3, Repository=2, Database=1, unknown=0.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Correct top-down order",
+          "input": "['UI', 'Service', 'Repository', 'Database']",
+          "expected_output": "True",
+          "visibility": "visible"
+        },
+        {
+          "name": "Repository before UI — invalid",
+          "input": "['Repository', 'UI', 'Database']",
+          "expected_output": "False",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single layer — trivially valid",
+          "input": "['UI']",
+          "expected_output": "True",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Database before Service — invalid",
+          "input": "['Database', 'Service']",
+          "expected_output": "False",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["layer-ordering", "architectural-composition"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L27",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L25", "L27"]
+    }
+  ]
+}

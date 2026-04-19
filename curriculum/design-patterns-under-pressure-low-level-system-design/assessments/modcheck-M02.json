@@ -1,0 +1,26 @@
+{
+  "module": "M02",
+  "title": "Construction and Runtime Variation — Quick Check",
+  "questions": [
+    {
+      "id": "MC02-1",
+      "q": "What specific coupling problem does dependency injection solve?",
+      "a": "DI separates configuration (where a dependency comes from) from use (what calls it). It solves construction coupling — when an object creates its own dependencies, changing those dependencies requires changing the object itself."
+    },
+    {
+      "id": "MC02-2",
+      "q": "When is a plugin architecture justified over a simpler conditional or factory?",
+      "a": "When runtime variation is real and multiple implementations need to coexist or be swapped without modifying the calling code. If only one implementation ever exists, the plugin indirection is premature."
+    },
+    {
+      "id": "MC02-3",
+      "q": "How has language evolution affected the prototype pattern's implementation?",
+      "a": "The original GoF Prototype relied on explicit clone() methods and class hierarchies. Modern languages (Python copy, JavaScript Object.create) often handle cloning natively, making the class-heavy form unnecessary while the problem — copying complex object graphs — persists."
+    },
+    {
+      "id": "MC02-4",
+      "q": "What is the composition root and why does it matter for dependency injection?",
+      "a": "The composition root is the single location in the application where all object graphs are wired together. It matters because it concentrates construction decisions in one place, preventing DI from leaking into domain logic."
+    }
+  ]
+}

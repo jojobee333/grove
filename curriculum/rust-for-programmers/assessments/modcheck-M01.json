@@ -1,0 +1,26 @@
+{
+  "module": "M01",
+  "title": "Setup & Rust Fundamentals — Quick Check",
+  "questions": [
+    {
+      "id": "MC01-1",
+      "q": "What command creates a new Rust project, and what two files does it generate inside the project directory?",
+      "a": "`cargo new <name>` creates `src/main.rs` (the entry point with a hello-world stub) and `Cargo.toml` (the project manifest that lists metadata and dependencies)."
+    },
+    {
+      "id": "MC01-2",
+      "q": "What is variable shadowing in Rust, and how does it differ from declaring a variable with `mut`?",
+      "a": "Shadowing re-declares a name with a new `let` binding, allowing a type change and creating a fresh immutable binding. `mut` allows in-place value mutation but cannot change the type."
+    },
+    {
+      "id": "MC01-3",
+      "q": "What is the difference between an expression and a statement in Rust? Give one example of each.",
+      "a": "An expression evaluates to a value (e.g., `5 + 3` evaluates to `8`). A statement performs an action and returns `()` — e.g., `let x = 5;` is a statement and cannot appear on the right side of another `let`."
+    },
+    {
+      "id": "MC01-4",
+      "q": "Why does this Rust function return a value without the `return` keyword?\n\n```rust\nfn double(n: i32) -> i32 { n * 2 }\n```",
+      "a": "Rust functions return the value of the last expression in their body when there is no trailing semicolon. Adding a semicolon turns it into a statement returning `()`, which would be a type error here."
+    }
+  ]
+}

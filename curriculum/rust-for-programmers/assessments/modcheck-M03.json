@@ -1,0 +1,26 @@
+{
+  "module": "M03",
+  "title": "Structs & Methods — Quick Check",
+  "questions": [
+    {
+      "id": "MC03-1",
+      "q": "What is the difference between a method with `&self`, `&mut self`, and `self` as the first parameter?",
+      "a": "`&self` borrows the struct immutably — the method can read but not modify. `&mut self` borrows mutably — the method can modify fields. `self` takes ownership — the struct is consumed and cannot be used after the call."
+    },
+    {
+      "id": "MC03-2",
+      "q": "What is an associated function in Rust, and how is it different from a method? Give an example.",
+      "a": "An associated function has no `self` parameter — it is called on the type with `::` syntax rather than on an instance. Example: `String::from(\"hello\")` or a custom `Point::new(x, y)` constructor."
+    },
+    {
+      "id": "MC03-3",
+      "q": "What does `#[derive(Debug)]` enable on a struct, and how do you use it in a println?",
+      "a": "`#[derive(Debug)]` automatically implements the `Debug` trait, which provides a developer-friendly string representation. Use it with the `{:?}` or `{:#?}` (pretty-print) format specifiers: `println!(\"{:?}\", my_struct);`"
+    },
+    {
+      "id": "MC03-4",
+      "q": "Why does Rust recommend using owned types like `String` (not `&str`) inside structs until you have learned lifetimes?",
+      "a": "Struct fields that are references require lifetime annotations to tell the compiler how long the referenced data must live. Owned types like `String` don't need annotations because the struct owns the data — it's simpler until lifetimes are understood."
+    }
+  ]
+}

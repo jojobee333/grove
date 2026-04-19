@@ -1,0 +1,88 @@
+{
+  "id": "code-challenge-M08",
+  "type": "module",
+  "module": "M08",
+  "title": "Coding Challenge: Trade-off Reasoning",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `is_yagni_violation(feature)` that takes a dict with keys `'uses_today'` (int) and `'speculative_uses'` (int). Return `True` if the speculative uses are **strictly greater than** three times the current uses — indicating the feature is being over-engineered for hypothetical futures.\n\nThis operationalises the YAGNI principle from L22: you should not build for futures that are more than 3× hypothetical relative to today's needs.",
+      "starter_code": "def is_yagni_violation(feature):\n    \"\"\"\n    Return True if feature['speculative_uses'] > feature['uses_today'] * 3.\n    Returns a boolean.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "5 speculative vs 1 today — violation",
+          "input": "{'uses_today': 1, 'speculative_uses': 5}",
+          "expected_output": "True",
+          "visibility": "visible"
+        },
+        {
+          "name": "4 speculative vs 2 today — not a violation",
+          "input": "{'uses_today': 2, 'speculative_uses': 4}",
+          "expected_output": "False",
+          "visibility": "visible"
+        },
+        {
+          "name": "Any speculative uses when today is zero — violation",
+          "input": "{'uses_today': 0, 'speculative_uses': 1}",
+          "expected_output": "True",
+          "visibility": "hidden"
+        },
+        {
+          "name": "9 speculative vs 3 today — exactly 3x, not strictly greater",
+          "input": "{'uses_today': 3, 'speculative_uses': 9}",
+          "expected_output": "False",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["yagni", "abstraction-debt"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L22",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L22"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `count_abstraction_layers(code_lines)` that takes a list of code-line strings and counts how many contain any of the keywords `'class '`, `'interface '`, or `'abstract '` (each with a trailing space to avoid false matches).\n\nThis simulates a lightweight complexity metric: more abstraction layers in a codebase increases indirection cost. L22 warns about adding indirection without a concrete, present reason.",
+      "starter_code": "def count_abstraction_layers(code_lines):\n    \"\"\"\n    Count lines containing 'class ', 'interface ', or 'abstract '.\n    Returns an integer.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Two class declarations",
+          "input": "['class Logger:', 'def log(self, msg):', 'class FileLogger(Logger):', 'pass']",
+          "expected_output": "2",
+          "visibility": "visible"
+        },
+        {
+          "name": "No abstraction keywords",
+          "input": "['def process():', 'return None']",
+          "expected_output": "0",
+          "visibility": "visible"
+        },
+        {
+          "name": "Empty list",
+          "input": "[]",
+          "expected_output": "0",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Mixed class, abstract, interface",
+          "input": "['abstract class Base:', 'class Impl(Base):', 'interface IRepo:', 'class Repo(IRepo):']",
+          "expected_output": "4",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["yagni", "abstraction-debt", "coupling-diagnosis"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 1,
+      "lesson_ref": "L22",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L22", "L23"]
+    }
+  ]
+}

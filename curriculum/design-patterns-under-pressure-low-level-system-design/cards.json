@@ -1,0 +1,2454 @@
+{
+    "course":  "design-patterns-under-pressure-low-level-system-design",
+    "generated":  "2026-04-19",
+    "total_cards":  115,
+    "cards":  [
+                  {
+                      "id":  "CARD-001",
+                      "front":  "What is a \u0027design pressure\u0027 in the context of software patterns?",
+                      "back":  "A recurring force â€” coupling, volatility, coordination, or boundary mismatch â€” that makes simple designs too costly over time. Patterns exist as responses to these pressures, not as catalog items to collect. (C1, S012, S002)",
+                      "type":  "definition",
+                      "lesson":  "L01",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "claim-C1",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-002",
+                      "front":  "A codebase has 20 places checking `if env == \u0027production\u0027: use_real_payment_gateway()`. What design pressure is present, and what category of pattern addresses it?",
+                      "back":  "Volatility pressure â€” the construction/configuration is scattered at the call sites rather than isolated at a boundary. Creational patterns (e.g., dependency injection, plugin) address this by moving environmental variation to one seam. (C2)",
+                      "type":  "application",
+                      "lesson":  "L01",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "claim-C1",
+                                   "claim-C2",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-003",
+                      "front":  "Claim C1: Under what condition do design patterns become useful, according to the research?",
+                      "back":  "When recurring pressures (coupling, volatility, coordination, boundary mismatch) make naive code too costly to maintain or extend. Patterns are pressure-responses, not proactive decoration. Sources: S012, S002, S013, S014. Confidence: strong.",
+                      "type":  "claim",
+                      "lesson":  "L01",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "claim-C1",
+                                   "type-claim"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-004",
+                      "front":  "Distinguish between a \u0027pattern\u0027 and a \u0027solution\u0027 in software design.",
+                      "back":  "A solution answers one specific problem. A pattern is a reusable response to a *recurring class* of forces â€” it carries the context, the forces, and the tradeoffs, not just the structure. Using pattern vocabulary without understanding its forces turns a pattern into a solution with extra steps.",
+                      "type":  "distinction",
+                      "lesson":  "L01",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "claim-C1",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-005",
+                      "front":  "A class has a constructor that reaches into a global config object, reads the DB URL, and opens its own connection. Which pressure category does this represent?",
+                      "back":  "Construction coupling â€” the object is responsible for locating and assembling its own dependencies. This is a candidate for the creational boundary patterns (DI, plugin) once the cost of this coupling is real and recurring.",
+                      "type":  "application",
+                      "lesson":  "L01",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "claim-C1",
+                                   "claim-C2",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-006",
+                      "front":  "What is \u0027pressure-first design\u0027 and why does it matter before selecting a pattern?",
+                      "back":  "Diagnosing the specific recurring force (coupling, volatility, coordination, mismatch) causing pain before choosing a structural response. It prevents speculative architecture â€” adding indirection layers before any real cost has appeared.",
+                      "type":  "definition",
+                      "lesson":  "L02",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "claim-C1",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-007",
+                      "front":  "A team complains that \u0027this module is hard to test.\u0027 Walk through a pressure-first diagnosis to decide whether a structural pattern is warranted.",
+                      "back":  "1. Identify the symptom (hard to test). 2. Find the pressure (hidden dependencies? global state? construction coupling?). 3. Confirm it recurs â€” one test is not a pattern. 4. Only if a recurring pressure exists, select the lightest structural response (e.g., DI if it\u0027s construction coupling). Avoid reaching for a pattern before step 3.",
+                      "type":  "application",
+                      "lesson":  "L02",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "claim-C1",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-008",
+                      "front":  "Distinguish a \u0027pressure\u0027 from a \u0027symptom\u0027 in design diagnostics.",
+                      "back":  "A symptom is what you observe (slow tests, lots of if-else, hard-to-change code). A pressure is the underlying recurring force causing those symptoms (coupling, volatility, coordination failure). Treating symptoms with patterns without finding the pressure leads to wrong or premature structure.",
+                      "type":  "distinction",
+                      "lesson":  "L02",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "claim-C1",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-009",
+                      "front":  "What is \u0027tradeoff triage\u0027 and when should you apply it?",
+                      "back":  "The process of comparing what a structural change costs (indirection, new abstractions, onboarding complexity) against what pressure it relieves, before committing to a pattern. Apply it once a real pressure is diagnosed to decide whether the structural response actually pays for itself.",
+                      "type":  "definition",
+                      "lesson":  "L02",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "claim-C1",
+                                   "claim-C5",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-010",
+                      "front":  "A codebase has three if-else branches switching on payment provider. The team wants to add an Adapter. What pressure-first check should happen first?",
+                      "back":  "Confirm the pressure is real and recurring: Will a fourth provider actually appear? Are the branches causing concrete change costs now? If only three providers exist and change is rare, the structural overhead of Adapter may not pay rent yet. If extension is a real, imminent pressure â€” proceed.",
+                      "type":  "application",
+                      "lesson":  "L02",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "claim-C1",
+                                   "claim-C5",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-011",
+                      "front":  "What is a \u0027pattern language\u0027 and how does it differ from a pattern catalog?",
+                      "back":  "A pattern language is a vocabulary of related design moves that combine to form coherent solutions. Each pattern knows which others are its natural neighbors. A catalog is a list of named patterns with no relational grammar â€” it encourages pick-and-apply rather than composition. (C1, C6, S012)",
+                      "type":  "definition",
+                      "lesson":  "L03",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "claim-C1",
+                                   "claim-C6",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-012",
+                      "front":  "Distinguish pattern-language thinking from catalog memorization in practice.",
+                      "back":  "Catalog memorization: you know 23 GoF names and apply one when you see a matching shape. Pattern-language thinking: you identify the pressure, find the pattern that relieves it, then ask which adjacent patterns naturally complete the solution â€” e.g., Repository suggests Unit of Work at the persistence boundary.",
+                      "type":  "distinction",
+                      "lesson":  "L03",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "claim-C1",
+                                   "claim-C6",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-013",
+                      "front":  "Claim C6: What does \u0027coherent composition\u0027 mean in a pattern context?",
+                      "back":  "Applying different, complementary patterns to different pressures within one system â€” each pattern owning one responsibility â€” rather than stacking patterns indiscriminately. The result is a design where every abstraction is traceable to a specific force it addresses. Sources: S012, S015, S016, S020â€“S022. Confidence: strong.",
+                      "type":  "claim",
+                      "lesson":  "L03",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "claim-C6",
+                                   "type-claim"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-014",
+                      "front":  "A team uses Service Layer + Repository + Unit of Work together. Is this pattern stacking or coherent composition? How do you tell?",
+                      "back":  "Coherent composition â€” if each pattern addresses a distinct pressure (Service Layer: orchestration boundary; Repository: query abstraction; Unit of Work: transaction scope). Pattern stacking is when two patterns solve the same pressure, or one pattern exists without any pressure behind it. Trace each abstraction to its force.",
+                      "type":  "application",
+                      "lesson":  "L03",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "claim-C6",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-015",
+                      "front":  "Why does composition vocabulary matter for a complete beginner learning patterns?",
+                      "back":  "Because pattern names without relational grammar make patterns feel like isolated choices. Vocabulary reveals which patterns are natural companions (Repository â†” Unit of Work, Command â†” Observer) and which compete (DI vs Service Locator), so you can build coherent designs rather than assemblages of unrelated abstractions.",
+                      "type":  "application",
+                      "lesson":  "L03",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "claim-C1",
+                                   "claim-C6",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-016",
+                      "front":  "What is Dependency Injection and what construction pressure justifies it?",
+                      "back":  "DI separates the creation and configuration of dependencies from their use â€” callers receive dependencies rather than constructing them internally. Justified when construction is a real source of coupling: the object reaches into global state, test isolation is broken, or swapping implementations requires changing internal code.",
+                      "type":  "definition",
+                      "lesson":  "L04",
+                      "module":  "M02",
+                      "tags":  [
+                                   "module-M02",
+                                   "claim-C2",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-017",
+                      "front":  "A `UserService` creates its own `DatabaseConnection` in `__init__`. Tests take 2 seconds because they hit a real DB. What DI change resolves this, and what pressure does it address?",
+                      "back":  "Pass the `DatabaseConnection` as a constructor argument instead. This resolves construction coupling â€” the object no longer decides where its dependencies come from. Tests can now inject a fake/mock DB, and the production wiring stays in a single composition root.",
+                      "type":  "application",
+                      "lesson":  "L04",
+                      "module":  "M02",
+                      "tags":  [
+                                   "module-M02",
+                                   "claim-C2",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-018",
+                      "front":  "Distinguish Dependency Injection from Service Locator at the dependency visibility level.",
+                      "back":  "DI: dependencies are explicit â€” declared in the constructor or method signature, visible to any caller. Service Locator: dependencies are implicit â€” the object pulls them from a registry internally, so callers cannot see what the object depends on without reading its implementation.",
+                      "type":  "distinction",
+                      "lesson":  "L04",
+                      "module":  "M02",
+                      "tags":  [
+                                   "module-M02",
+                                   "claim-C2",
+                                   "claim-C3",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-019",
+                      "front":  "Claim C2: When are creational patterns justified, and what is the risk of applying them prematurely?",
+                      "back":  "Justified when construction or runtime variation has become a real, recurring source of coupling. Premature application adds wiring overhead and indirection before any pressure exists. Risk: more moving parts, harder onboarding, no benefit until the pressure actually arrives. Sources: S001, S003, S011, S014. Confidence: strong.",
+                      "type":  "claim",
+                      "lesson":  "L04",
+                      "module":  "M02",
+                      "tags":  [
+                                   "module-M02",
+                                   "claim-C2",
+                                   "type-claim"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-020",
+                      "front":  "What is the \u0027configuration boundary\u0027 and why should it be a single place in the codebase?",
+                      "back":  "The configuration boundary is the composition root â€” where the real implementations of all dependencies are assembled and wired together. A single boundary means environment-specific decisions live in one place; scattered configuration leads to construction coupling throughout the codebase.",
+                      "type":  "application",
+                      "lesson":  "L04",
+                      "module":  "M02",
+                      "tags":  [
+                                   "module-M02",
+                                   "claim-C2",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-021",
+                      "front":  "What pressure does the Plugin pattern address, and how does it differ from Dependency Injection?",
+                      "back":  "Plugin addresses runtime variation â€” the need to select and swap implementations based on environment or configuration at startup, without scattering conditionals. DI handles construction coupling at a finer grain. Plugin is a higher-level pattern that often uses DI internally to wire the selected implementation.",
+                      "type":  "definition",
+                      "lesson":  "L05",
+                      "module":  "M02",
+                      "tags":  [
+                                   "module-M02",
+                                   "claim-C2",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-022",
+                      "front":  "A billing system has `if env == \u0027test\u0027: use FakeMailer; elif env == \u0027prod\u0027: use SMTPMailer` in 12 service classes. What does Plugin solve that DI alone does not?",
+                      "back":  "Plugin centralizes the environment-based selection at one extension boundary. DI ensures the selected implementation is passed in, but doesn\u0027t stop the selection logic from leaking into every service. Plugin confines \u0027which implementation for this environment\u0027 to one place, then delegates wiring to DI.",
+                      "type":  "application",
+                      "lesson":  "L05",
+                      "module":  "M02",
+                      "tags":  [
+                                   "module-M02",
+                                   "claim-C2",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-023",
+                      "front":  "Distinguish the Plugin pattern from the Strategy pattern.",
+                      "back":  "Plugin: selects and loads an implementation at startup based on external configuration (environment, config file). Strategy: selects an algorithm at runtime based on logic within the application. Plugin is a deployment-time variation mechanism; Strategy is a runtime behavioral variation mechanism.",
+                      "type":  "distinction",
+                      "lesson":  "L05",
+                      "module":  "M02",
+                      "tags":  [
+                                   "module-M02",
+                                   "claim-C2",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-024",
+                      "front":  "What extension boundary risk arises when a Plugin architecture is added prematurely?",
+                      "back":  "Overhead without payoff: you build a plugin loading mechanism, registration protocol, and interface contracts before any second implementation exists. The boundary becomes a maintenance burden with no variation to manage. Pressure-first test: does a second implementation exist or is one concretely planned?",
+                      "type":  "application",
+                      "lesson":  "L05",
+                      "module":  "M02",
+                      "tags":  [
+                                   "module-M02",
+                                   "claim-C2",
+                                   "claim-C5",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-025",
+                      "front":  "What does the Prototype pattern solve, and when does cloning earn its keep?",
+                      "back":  "Prototype solves the cost of constructing a complex object from scratch repeatedly â€” clone an existing configured instance instead. Earns its keep when construction is expensive, configuration is complex, or objects differ only slightly from a base. Not justified when construction is cheap or language idioms (data classes, copy constructors) handle it more directly.",
+                      "type":  "definition",
+                      "lesson":  "L06",
+                      "module":  "M02",
+                      "tags":  [
+                                   "module-M02",
+                                   "claim-C2",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-026",
+                      "front":  "Contradiction 2: Do classic patterns endure as technology evolves, or do they become language workarounds?",
+                      "back":  "RESOLVED: The underlying design problem persists, but the canonical class-heavy implementation form may not. Modern languages (closures, first-class functions, data classes) absorb the implementation burden of patterns like Iterator, Observer, or Command, making the explicit class structure unnecessary while the pressure and principle remain valid. (S010, S016, S018)",
+                      "type":  "contradiction",
+                      "lesson":  "L06",
+                      "module":  "M02",
+                      "tags":  [
+                                   "module-M02",
+                                   "contradiction-2",
+                                   "type-contradiction"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-027",
+                      "front":  "Distinguish the Prototype pattern from a Factory pattern.",
+                      "back":  "Factory: creates new instances by invoking a constructor or factory method â€” suitable when construction logic varies. Prototype: creates new instances by cloning an existing instance â€” suitable when the object\u0027s complex configured state is the expensive part. Prototype is about copying state; Factory is about controlling construction logic.",
+                      "type":  "distinction",
+                      "lesson":  "L06",
+                      "module":  "M02",
+                      "tags":  [
+                                   "module-M02",
+                                   "claim-C2",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-028",
+                      "front":  "A Python codebase uses `copy.deepcopy()` to copy pre-loaded config objects for each request. Is this Prototype? Is it justified?",
+                      "back":  "Yes, this is the Prototype pattern â€” cloning a pre-configured instance rather than rebuilding from scratch. Justified if the object construction (e.g., loading config, parsing schemas) is measurably expensive. If construction is cheap, `deepcopy` adds complexity without payoff and a simpler constructor suffices.",
+                      "type":  "application",
+                      "lesson":  "L06",
+                      "module":  "M02",
+                      "tags":  [
+                                   "module-M02",
+                                   "claim-C2",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-029",
+                      "front":  "What is the Registry pattern, and what convenience does it trade against what cost?",
+                      "back":  "A Registry is a well-known object that other objects can use to find common services or objects. Convenience: removes the need to pass dependencies explicitly through every layer. Cost: dependencies are implicit â€” any object can pull anything from the registry, making the dependency graph invisible and the design harder to test and reason about.",
+                      "type":  "definition",
+                      "lesson":  "L07",
+                      "module":  "M03",
+                      "tags":  [
+                                   "module-M03",
+                                   "claim-C3",
+                                   "claim-C5",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-030",
+                      "front":  "A service resolves its logger, database, and email client from a global Registry inside each method call. What is the design risk and what is the pressure-justified alternative?",
+                      "back":  "Risk: the object has hidden dependencies â€” callers cannot see what it needs without reading its source. The dependency web silently widens. Alternative justified by pressure: if these dependencies are truly static and injection cost is high (e.g., deep call trees), a scoped registry may be acceptable. Otherwise, make them explicit via DI.",
+                      "type":  "application",
+                      "lesson":  "L07",
+                      "module":  "M03",
+                      "tags":  [
+                                   "module-M03",
+                                   "claim-C3",
+                                   "claim-C5",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-031",
+                      "front":  "Distinguish Registry from Dependency Injection at the point of dependency acquisition.",
+                      "back":  "DI: dependencies are pushed into the object at construction time by an external assembler â€” explicit, testable. Registry: the object pulls dependencies from a shared store at runtime â€” implicit, ambient. DI makes the contract visible; Registry hides it inside the implementation.",
+                      "type":  "distinction",
+                      "lesson":  "L07",
+                      "module":  "M03",
+                      "tags":  [
+                                   "module-M03",
+                                   "claim-C3",
+                                   "claim-C5",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-032",
+                      "front":  "Under what narrow condition is a Registry legitimately justified over explicit dependency injection?",
+                      "back":  "When passing the dependency through many layers would create significant call-chain overhead and the dependency is genuinely global in scope (e.g., a logging service, a process-level config store). Even then, limit registry reads to infrastructure-level objects, not domain logic.",
+                      "type":  "application",
+                      "lesson":  "L07",
+                      "module":  "M03",
+                      "tags":  [
+                                   "module-M03",
+                                   "claim-C3",
+                                   "claim-C5",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-033",
+                      "front":  "What is the Service Locator pattern and what environment makes it a legitimate tool?",
+                      "back":  "Service Locator is a central registry that locates and returns services on demand. Legitimate in frameworks and plugin hosts where the caller does not control the construction context (e.g., legacy enterprise containers, OSGi, some game engines). The caller genuinely cannot receive the dependency by injection â€” the framework controls instantiation.",
+                      "type":  "definition",
+                      "lesson":  "L08",
+                      "module":  "M03",
+                      "tags":  [
+                                   "module-M03",
+                                   "claim-C3",
+                                   "claim-C5",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-034",
+                      "front":  "Contradiction 1: Is Service Locator a legitimate tool or an anti-pattern? What does the research say?",
+                      "back":  "UNRESOLVED: Fowler sees both DI and Service Locator as viable with contextual tradeoffs. Nystrom argues ambient access hides dependencies and is always problematic. The threshold between \u0027acceptable convenience in a constrained environment\u0027 and \u0027architectural debt\u0027 is context-dependent and not empirically settled. (S001, S007, S009)",
+                      "type":  "contradiction",
+                      "lesson":  "L08",
+                      "module":  "M03",
+                      "tags":  [
+                                   "module-M03",
+                                   "contradiction-1",
+                                   "type-contradiction"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-035",
+                      "front":  "Distinguish Service Locator from Registry.",
+                      "back":  "Registry: a generic store for any named object, primarily for lookup. Service Locator: specifically designed to locate services by interface/type, often with lazy creation and lifecycle management. Service Locator is a more opinionated, service-oriented Registry. Both hide dependencies, but Service Locator typically provides richer resolution logic.",
+                      "type":  "distinction",
+                      "lesson":  "L08",
+                      "module":  "M03",
+                      "tags":  [
+                                   "module-M03",
+                                   "claim-C3",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-036",
+                      "front":  "Claim C5 (part): What is the main failure mode of Service Locator according to the critical literature?",
+                      "back":  "Applying it before the \u0027caller has no injection context\u0027 constraint is real â€” using it for convenience when DI is available. This masks dependencies, makes tests require full container setup, and turns any object into an implicit client of the entire service graph. Sources: S002, S010, S014. Confidence: strong.",
+                      "type":  "claim",
+                      "lesson":  "L08",
+                      "module":  "M03",
+                      "tags":  [
+                                   "module-M03",
+                                   "claim-C5",
+                                   "type-claim"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-037",
+                      "front":  "What does the Singleton pattern actually solve (the legitimate version), and how does it differ from a global variable?",
+                      "back":  "Legitimate Singleton: guarantees a single instance of an object that controls shared state with real lifecycle semantics (e.g., thread pool, hardware interface). Global variable: a named storage location without encapsulation or access control. Singleton provides controlled access and lazy initialization; a global variable is just ambient state with no contracts.",
+                      "type":  "definition",
+                      "lesson":  "L09",
+                      "module":  "M03",
+                      "tags":  [
+                                   "module-M03",
+                                   "claim-C5",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-038",
+                      "front":  "A `ConfigStore.get_instance()` is called in 40 places across the codebase to read app settings. What risk does this represent, and when is it acceptable?",
+                      "back":  "Risk: the 40 call sites are invisible dependencies â€” any module can read (or worse, mutate) global state without declaring the dependency. Acceptable only if: config is truly read-only, truly global, and the overhead of injecting it everywhere is measurably higher than the debugging cost of ambient access.",
+                      "type":  "application",
+                      "lesson":  "L09",
+                      "module":  "M03",
+                      "tags":  [
+                                   "module-M03",
+                                   "claim-C5",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-039",
+                      "front":  "Distinguish a legitimate Singleton from Singleton-as-global-access-point.",
+                      "back":  "Legitimate: single instance is a genuine domain requirement (one printer spooler, one DB connection pool) and the singleton controls lifecycle and thread safety. Global access point: it\u0027s a single instance purely as a convenience to avoid passing things around â€” the \u0027single instance\u0027 constraint adds no value, only ambient coupling.",
+                      "type":  "distinction",
+                      "lesson":  "L09",
+                      "module":  "M03",
+                      "tags":  [
+                                   "module-M03",
+                                   "claim-C5",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-040",
+                      "front":  "What global-state risk does Singleton introduce in test suites?",
+                      "back":  "Test isolation breaks â€” the singleton carries state from one test into the next unless explicitly reset. Tests become order-dependent and failures become non-reproducible. This is the most concrete indicator that a singleton is being used as ambient global state rather than as a genuine single-instance controller.",
+                      "type":  "application",
+                      "lesson":  "L09",
+                      "module":  "M03",
+                      "tags":  [
+                                   "module-M03",
+                                   "claim-C5",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-041",
+                      "front":  "What is a Service Layer and what orchestration pressure justifies it?",
+                      "back":  "A Service Layer is a set of operations that defines the application\u0027s boundary â€” coordinating domain objects, repositories, and external services to execute use cases. Justified when multiple use cases need the same sequence of domain steps, and that coordination logic would otherwise scatter into controllers, presenters, or the domain itself.",
+                      "type":  "definition",
+                      "lesson":  "L10",
+                      "module":  "M04",
+                      "tags":  [
+                                   "module-M04",
+                                   "claim-C3",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-042",
+                      "front":  "Three different controllers all contain the same five steps: validate, load user, check permissions, update order, send email. What does a Service Layer do, and where does it stop?",
+                      "back":  "Service Layer extracts the five-step sequence into a single service method (e.g., `order_service.place_order()`), called by all three controllers. It stops at orchestration â€” it should not contain business rules (those belong in the domain model) or persistence logic (belongs in repositories). Hollowing the domain into the service layer is the failure mode.",
+                      "type":  "application",
+                      "lesson":  "L10",
+                      "module":  "M04",
+                      "tags":  [
+                                   "module-M04",
+                                   "claim-C3",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-043",
+                      "front":  "Distinguish Service Layer from Domain Model as two places behavior could live.",
+                      "back":  "Service Layer: orchestrates â€” sequences domain operations, calls repositories, invokes external services for a use case. Domain Model: encapsulates â€” holds the invariants, rules, and stateful behavior specific to business concepts (e.g., `Order.add_item()` enforces stock limits). Business rules in the service layer = anemic domain model smell.",
+                      "type":  "distinction",
+                      "lesson":  "L10",
+                      "module":  "M04",
+                      "tags":  [
+                                   "module-M04",
+                                   "claim-C3",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-044",
+                      "front":  "What is the Special Case pattern (Null Object) and what edge-case pressure justifies it?",
+                      "back":  "Special Case is an object that provides default behavior for a degenerate case â€” replacing repeated null checks, sentinel value tests, or defensive branching with a polymorphic object. Justified when the same edge condition is checked in many places and each check adds a branch that must be kept consistent.",
+                      "type":  "definition",
+                      "lesson":  "L11",
+                      "module":  "M04",
+                      "tags":  [
+                                   "module-M04",
+                                   "claim-C3",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-045",
+                      "front":  "A codebase has `if user is None: return \u0027Guest\u0027` in 15 places. How does Special Case resolve this without a major refactor?",
+                      "back":  "Create a `GuestUser` class that implements the same interface as `User` with default behavior (e.g., `name` returns `\u0027Guest\u0027`, `permissions` returns empty set). Return `GuestUser()` instead of `None`. The 15 call sites no longer need the null check â€” the polymorphic object handles the degenerate case locally.",
+                      "type":  "application",
+                      "lesson":  "L11",
+                      "module":  "M04",
+                      "tags":  [
+                                   "module-M04",
+                                   "claim-C3",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-046",
+                      "front":  "Distinguish Special Case from a null check in terms of design responsibility.",
+                      "back":  "Null check: the caller takes responsibility for the edge case every time â€” behavior is duplicated and inconsistency is possible. Special Case: the edge case object takes responsibility once â€” behavior is encapsulated and consistent. Special Case localizes the policy; null checks scatter it.",
+                      "type":  "distinction",
+                      "lesson":  "L11",
+                      "module":  "M04",
+                      "tags":  [
+                                   "module-M04",
+                                   "claim-C3",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-047",
+                      "front":  "A system has unstable third-party API responses (sometimes null, sometimes empty lists, sometimes error objects). Which structural pattern(s) help, and why?",
+                      "back":  "Special Case / Null Object for missing/empty responses â€” wrap degenerate responses in an object with safe default behavior. Adapter at the API boundary to normalize response shapes. Both are justified by boundary mismatch pressure (external system â†” internal domain). Together they localize all mismatch handling at the boundary.",
+                      "type":  "application",
+                      "lesson":  "L12",
+                      "module":  "M04",
+                      "tags":  [
+                                   "module-M04",
+                                   "claim-C3",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-048",
+                      "front":  "Claim C3: When are structural patterns most valuable?",
+                      "back":  "At unstable or mismatched boundaries â€” where an internal domain must interface with an external system, a legacy layer, or a volatile interface. Their main value is selective decoupling: isolating the code that changes from the code that shouldn\u0027t. Sources: S015, S017, S020, S022. Confidence: strong.",
+                      "type":  "claim",
+                      "lesson":  "L12",
+                      "module":  "M04",
+                      "tags":  [
+                                   "module-M04",
+                                   "claim-C3",
+                                   "type-claim"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-049",
+                      "front":  "How do you decide between Service Layer and Registry when selecting a structural pattern for an access boundary problem?",
+                      "back":  "Service Layer: use when the boundary problem is about orchestrating a sequence of operations (use case coordination). Registry: use when the boundary problem is about locating a shared object (lookup without call-tree plumbing). If the objects are different and the need is different, they can coexist â€” one per pressure.",
+                      "type":  "application",
+                      "lesson":  "L12",
+                      "module":  "M04",
+                      "tags":  [
+                                   "module-M04",
+                                   "claim-C3",
+                                   "claim-C6",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-050",
+                      "front":  "What is the Data Mapper pattern and what object-relational mismatch does it address?",
+                      "back":  "Data Mapper is a layer that moves data between domain objects and the database while keeping both independent â€” the domain object has no knowledge of the database schema. Addresses the mismatch between object graphs (inheritance, associations, behavior) and relational tables (flat rows, foreign keys, joins).",
+                      "type":  "definition",
+                      "lesson":  "L13",
+                      "module":  "M05",
+                      "tags":  [
+                                   "module-M05",
+                                   "claim-C3",
+                                   "claim-C6",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-051",
+                      "front":  "A domain `Order` object has a nested `LineItems` collection and derives `total` from a method. How does Data Mapper preserve domain ignorance when saving this to a relational DB?",
+                      "back":  "The mapper translates the `Order` graph into INSERT/UPDATE statements for `orders` and `line_items` tables. The `Order` class has no `save()` method and no SQL knowledge. The mapper reads the reverse â€” assembling the graph from rows. The domain stays a pure behavior model; all relational concern lives in the mapper.",
+                      "type":  "application",
+                      "lesson":  "L13",
+                      "module":  "M05",
+                      "tags":  [
+                                   "module-M05",
+                                   "claim-C3",
+                                   "claim-C6",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-052",
+                      "front":  "Distinguish Data Mapper from Active Record.",
+                      "back":  "Active Record: the object knows how to save itself â€” it contains both domain behavior and SQL/ORM calls. Simple, appropriate for low-complexity CRUD domains. Data Mapper: domain object and persistence are separate â€” the object has no save logic. More complex, appropriate when the domain model would be corrupted by persistence concerns.",
+                      "type":  "distinction",
+                      "lesson":  "L13",
+                      "module":  "M05",
+                      "tags":  [
+                                   "module-M05",
+                                   "claim-C3",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-053",
+                      "front":  "Under what domain complexity threshold does Data Mapper become worth the additional layer?",
+                      "back":  "When domain behavior is dense enough that mixing persistence logic into domain objects corrupts the model â€” typically when domain objects have meaningful invariants, complex relationships, or behavior that should not know about the database. For simple CRUD tables with little domain logic, Active Record is cheaper and sufficient.",
+                      "type":  "application",
+                      "lesson":  "L13",
+                      "module":  "M05",
+                      "tags":  [
+                                   "module-M05",
+                                   "claim-C3",
+                                   "claim-C5",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-054",
+                      "front":  "What is the Repository pattern and how does it feel different from a DAO (Data Access Object)?",
+                      "back":  "Repository: presents a collection-like interface to domain objects â€” callers think in domain terms (`user_repo.find_active_subscribers()`). It centralizes query logic behind a domain-facing boundary. DAO: a thinner data-access wrapper closer to the DB structure â€” callers think in table terms (`user_dao.select_where_active_true()`). Repository abstracts the persistence model more fully.",
+                      "type":  "definition",
+                      "lesson":  "L14",
+                      "module":  "M05",
+                      "tags":  [
+                                   "module-M05",
+                                   "claim-C3",
+                                   "claim-C6",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-055",
+                      "front":  "A `UserService` has 12 different SQL query strings embedded throughout its methods. What Repository change fixes this and what pressure does it address?",
+                      "back":  "Extract all query logic into a `UserRepository` with named methods. Query abstraction pressure: query strings are scattered, inconsistent, and hard to test. Repository centralizes them behind a domain-facing interface. The service now calls `user_repo.find_by_email()` instead of writing SQL â€” the persistence boundary is restored.",
+                      "type":  "application",
+                      "lesson":  "L14",
+                      "module":  "M05",
+                      "tags":  [
+                                   "module-M05",
+                                   "claim-C3",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-056",
+                      "front":  "When does a Repository become needless indirection?",
+                      "back":  "When the \u0027domain-facing\u0027 queries are just pass-throughs to ORM methods with no domain logic or reuse value â€” e.g., `repo.get_by_id(id)` simply calls `Model.objects.get(id=id)`. If the ORM already provides a sufficient collection-like interface and queries are simple, adding a Repository layer is overhead without an abstraction benefit.",
+                      "type":  "application",
+                      "lesson":  "L14",
+                      "module":  "M05",
+                      "tags":  [
+                                   "module-M05",
+                                   "claim-C5",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-057",
+                      "front":  "What is Unit of Work and what transaction-scope coordination problem does it solve?",
+                      "back":  "Unit of Work tracks all objects loaded from the database, detects which have changed, and coordinates writing all changes back in a single transaction. Solves the problem of managing multi-object save consistency: without it, services either call save on every object explicitly or risk partial writes where some changes commit and others don\u0027t.",
+                      "type":  "definition",
+                      "lesson":  "L15",
+                      "module":  "M05",
+                      "tags":  [
+                                   "module-M05",
+                                   "claim-C4",
+                                   "claim-C6",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-058",
+                      "front":  "A service loads an Order and 5 LineItems, modifies all 6 objects, then calls `.save()` on each. What does Unit of Work improve?",
+                      "back":  "UoW removes the 6 explicit save calls. The service modifies objects naturally; UoW tracks the dirty state. At the end of the operation (`uow.commit()`), all 6 changes flush in one transaction. Benefits: no forgotten saves, no partial writes, transaction boundary is explicit and consistent.",
+                      "type":  "application",
+                      "lesson":  "L15",
+                      "module":  "M05",
+                      "tags":  [
+                                   "module-M05",
+                                   "claim-C4",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-059",
+                      "front":  "Distinguish Unit of Work from explicit save calls at the coordination level.",
+                      "back":  "Explicit saves: the service is responsible for knowing which objects changed and calling save on each. Error-prone and order-sensitive. Unit of Work: the pattern is responsible for tracking dirty state. The service only needs to declare a transaction boundary (`commit`/`rollback`) â€” coordination is centralized and consistent.",
+                      "type":  "distinction",
+                      "lesson":  "L15",
+                      "module":  "M05",
+                      "tags":  [
+                                   "module-M05",
+                                   "claim-C4",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-060",
+                      "front":  "How do Repository and Unit of Work complement each other in a persistence layer?",
+                      "back":  "Repository provides the collection-like query boundary â€” objects are loaded from and conceptually stored in repositories. Unit of Work coordinates the write-back â€” it registers objects loaded through repositories and flushes all changes atomically. Repository handles \u0027where do I get/find objects\u0027; UoW handles \u0027when and how do all changes commit together\u0027.",
+                      "type":  "application",
+                      "lesson":  "L15",
+                      "module":  "M05",
+                      "tags":  [
+                                   "module-M05",
+                                   "claim-C4",
+                                   "claim-C6",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-061",
+                      "front":  "What is the Command pattern and what action-reification pressure justifies it?",
+                      "back":  "Command turns a request or action into a first-class object â€” encapsulating the action, its parameters, and optionally its undo logic. Justified when actions need to be deferred, queued, logged, replayed, or undone. Without reification, all of these require the caller to remember and rebuild the action context manually.",
+                      "type":  "definition",
+                      "lesson":  "L16",
+                      "module":  "M06",
+                      "tags":  [
+                                   "module-M06",
+                                   "claim-C4",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-062",
+                      "front":  "A text editor needs undo/redo for 10 different edit operations (insert, delete, bold, indentâ€¦). How does Command enable this without 10 separate undo implementations in the editor core?",
+                      "back":  "Each operation is a Command object with an `execute()` and `undo()` method. The editor maintains a command history stack. Undo pops the last command and calls `undo()`; redo re-executes it. The editor core is agnostic to the specific operation â€” it only pushes and pops commands. New operations are added without touching the editor.",
+                      "type":  "application",
+                      "lesson":  "L16",
+                      "module":  "M06",
+                      "tags":  [
+                                   "module-M06",
+                                   "claim-C4",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-063",
+                      "front":  "Distinguish a Command object from a direct function call.",
+                      "back":  "Function call: action executes immediately, in place, at the call site â€” no identity, no history, no deferral. Command object: the action is packaged as data â€” it can be passed, stored, queued, delayed, logged, serialized, or undone. The tradeoff: Command adds indirection and object creation overhead in exchange for that lifecycle control.",
+                      "type":  "distinction",
+                      "lesson":  "L16",
+                      "module":  "M06",
+                      "tags":  [
+                                   "module-M06",
+                                   "claim-C4",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-064",
+                      "front":  "Claim C4: What do behavioral patterns trade in exchange for coordination control?",
+                      "back":  "They trade directness â€” explicit call chains become implicit subscriptions, command queues, or state machines. Traceability decreases: you cannot follow execution by reading code top-to-bottom. The payoff is that time, sequencing, and coordination are managed in one place rather than scattered. Sources: S007, S008, S009, S021. Confidence: strong.",
+                      "type":  "claim",
+                      "lesson":  "L16",
+                      "module":  "M06",
+                      "tags":  [
+                                   "module-M06",
+                                   "claim-C4",
+                                   "type-claim"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-065",
+                      "front":  "A job queue must retry failed jobs up to 3 times with exponential backoff. What Command property enables this without changing the job\u0027s business logic?",
+                      "back":  "The job is a Command object â€” the queue stores it, inspects its retry count, calls `execute()` again, and manages backoff timing externally. The business logic inside `execute()` is unchanged. Reification enables the queue to treat all jobs uniformly through the Command interface regardless of what the job actually does.",
+                      "type":  "application",
+                      "lesson":  "L16",
+                      "module":  "M06",
+                      "tags":  [
+                                   "module-M06",
+                                   "claim-C4",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-066",
+                      "front":  "What is the Observer pattern and what notification pressure justifies it?",
+                      "back":  "Observer defines a one-to-many dependency â€” when one object changes state, all registered dependents (observers) are notified automatically. Justified when an event producer should not know or enumerate its consumers â€” multiple parts of a system need to react to state changes independently without tight coupling to the source.",
+                      "type":  "definition",
+                      "lesson":  "L17",
+                      "module":  "M06",
+                      "tags":  [
+                                   "module-M06",
+                                   "claim-C4",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-067",
+                      "front":  "An `Order` object currently calls `EmailService.send()`, `InventoryService.reserve()`, and `AnalyticsService.track()` after a successful purchase. What Observer refactor removes these direct calls, and what tradeoff is introduced?",
+                      "back":  "Replace direct calls with an `order_placed` event. Each service subscribes as an observer. `Order` fires the event without knowing who listens. Tradeoff: Order is simpler and extensible, but control flow is now implicit â€” a bug in InventoryService\u0027s subscriber is invisible when reading `Order`\u0027s code. Traceability cost is real.",
+                      "type":  "application",
+                      "lesson":  "L17",
+                      "module":  "M06",
+                      "tags":  [
+                                   "module-M06",
+                                   "claim-C4",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-068",
+                      "front":  "Distinguish Observer from a direct method call in terms of traceability.",
+                      "back":  "Direct call: the flow is explicit â€” `a.notify_b()` is traceable in the call graph. Observer: the flow is implicit â€” the subject fires an event and observers respond; a reader of the subject\u0027s code cannot see which handlers will run. Observer scales better for fan-out but costs debuggability. Both are correct; choose by whether fan-out or traceability matters more.",
+                      "type":  "distinction",
+                      "lesson":  "L17",
+                      "module":  "M06",
+                      "tags":  [
+                                   "module-M06",
+                                   "claim-C4",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-069",
+                      "front":  "What is the State pattern and what condition-sprawl pressure justifies it?",
+                      "back":  "State externalizes an object\u0027s behavioral variation based on its internal state â€” each state is a separate class implementing the same interface. Justified when a class has many conditionals (`if state == X: do A; elif state == Y: do B`) and adding new states requires modifying the class itself each time, spreading state-dependent logic across many methods.",
+                      "type":  "definition",
+                      "lesson":  "L18",
+                      "module":  "M06",
+                      "tags":  [
+                                   "module-M06",
+                                   "claim-C4",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-070",
+                      "front":  "A `Document` class has methods with `if self.status == \u0027draft\u0027: ... elif self.status == \u0027review\u0027: ... elif self.status == \u0027published\u0027: ...` in 8 different methods. How does State resolve this?",
+                      "back":  "Create `DraftState`, `ReviewState`, and `PublishedState` classes, each implementing the document\u0027s state-dependent interface. `Document` delegates method calls to its current state object. Adding a new state (e.g., `ArchivedState`) adds a new class without modifying `Document` or any existing state. The 8 conditionals become 3 state classes.",
+                      "type":  "application",
+                      "lesson":  "L18",
+                      "module":  "M06",
+                      "tags":  [
+                                   "module-M06",
+                                   "claim-C4",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-071",
+                      "front":  "Distinguish State from Strategy.",
+                      "back":  "Strategy: selects an algorithm at the point of use â€” the behavior varies by choice of algorithm, not by internal object state. Behavior is stable once chosen. State: the object transitions between states over its lifetime and its behavior changes automatically with each transition. State is about lifecycle; Strategy is about algorithm selection.",
+                      "type":  "distinction",
+                      "lesson":  "L18",
+                      "module":  "M06",
+                      "tags":  [
+                                   "module-M06",
+                                   "claim-C4",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-072",
+                      "front":  "What is Transaction Script and under what complexity condition is it the correct choice?",
+                      "back":  "Transaction Script organizes business logic as a series of procedural steps â€” one script per transaction (use case). Correct when: the workflow is simple and linear, business rules are few, and the overhead of a rich domain model would exceed the complexity being managed. It is honest simplicity, not a failure to apply OOP.",
+                      "type":  "definition",
+                      "lesson":  "L19",
+                      "module":  "M07",
+                      "tags":  [
+                                   "module-M07",
+                                   "claim-C5",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-073",
+                      "front":  "A billing system processes invoices: load invoice, validate, calculate total, write to DB. No shared business rules, no complex relationships. Transaction Script or Domain Model?",
+                      "back":  "Transaction Script â€” the workflow is linear, rules are local to the script, and no shared domain behavior would be lost by keeping it procedural. Adding a Domain Model here introduces abstractions with nothing meaningful to encapsulate. The complexity curve has not been reached.",
+                      "type":  "application",
+                      "lesson":  "L19",
+                      "module":  "M07",
+                      "tags":  [
+                                   "module-M07",
+                                   "claim-C5",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-074",
+                      "front":  "Contradiction 3: Is Transaction Script or Domain Model the right default? What does the research say?",
+                      "back":  "RESOLVED: they target different regions of the complexity curve â€” not competing universals. Transaction Script is correct for modest workflow complexity. Domain Model becomes valuable when business rules, relationships, and stateful interactions are dense. Neither is the universal default; complexity of the domain decides. (S001, S007, S020)",
+                      "type":  "contradiction",
+                      "lesson":  "L19",
+                      "module":  "M07",
+                      "tags":  [
+                                   "module-M07",
+                                   "contradiction-3",
+                                   "type-contradiction"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-075",
+                      "front":  "Distinguish Transaction Script from Domain Model by where business rules live.",
+                      "back":  "Transaction Script: business rules live inside the script function â€” close to the workflow they belong to. Correct when rules are local to one script. Domain Model: business rules live inside the domain object â€” `Order.add_item()` enforces stock limits. Correct when rules must be shared across many scripts or protect invariants across operations.",
+                      "type":  "distinction",
+                      "lesson":  "L19",
+                      "module":  "M07",
+                      "tags":  [
+                                   "module-M07",
+                                   "claim-C5",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-076",
+                      "front":  "What is the Domain Model pattern and when does it become valuable?",
+                      "back":  "Domain Model is an object model of the domain that incorporates both data and behavior â€” objects enforce invariants, express relationships, and carry business rules. Valuable when business rules are dense, shared across multiple workflows, and would be duplicated or violated if spread into transaction scripts or service methods.",
+                      "type":  "definition",
+                      "lesson":  "L20",
+                      "module":  "M07",
+                      "tags":  [
+                                   "module-M07",
+                                   "claim-C6",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-077",
+                      "front":  "A loan approval system has rules: loan amount â‰¤ 5Ã— income, credit score \u003e 650, no defaults in 3 years. These rules appear in 4 different service methods. What does Domain Model fix here?",
+                      "back":  "The rules move into `Loan.can_approve()` â€” one authoritative place enforcing all invariants. The 4 service methods call `loan.can_approve()` instead of each re-implementing the rules. New rules are added once; no service can bypass them. This is the density threshold where Domain Model earns its complexity.",
+                      "type":  "application",
+                      "lesson":  "L20",
+                      "module":  "M07",
+                      "tags":  [
+                                   "module-M07",
+                                   "claim-C6",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-078",
+                      "front":  "What is the Anemic Domain Model and how do you detect it?",
+                      "back":  "An Anemic Domain Model has domain objects with only data (getters/setters) and no behavior â€” all business logic is in service classes. Detect it when: domain objects are pure data containers, every service method operates on multiple domain objects\u0027 internals, and adding a rule requires changing services not domain objects. The object form exists without the behavioral substance.",
+                      "type":  "definition",
+                      "lesson":  "L21",
+                      "module":  "M07",
+                      "tags":  [
+                                   "module-M07",
+                                   "claim-C5",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-079",
+                      "front":  "A codebase has `Order`, `User`, `Invoice` classes with only getters/setters. All logic is in `OrderService`, `UserService`, `InvoiceService`. What is the diagnosis and what does it imply?",
+                      "back":  "Anemic Domain Model â€” the domain objects are data bags, not behavioral models. Two interpretations: (1) the domain is genuinely simple enough for Transaction Script, in which case drop the class ceremony; or (2) domain complexity is real and behavior belongs on the objects. Either case is a mismatch â€” pick one model and commit.",
+                      "type":  "application",
+                      "lesson":  "L21",
+                      "module":  "M07",
+                      "tags":  [
+                                   "module-M07",
+                                   "claim-C5",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-080",
+                      "front":  "Distinguish Anemic Domain Model from a deliberately procedural Transaction Script design.",
+                      "back":  "Transaction Script: the choice is intentional â€” domain is simple, workflow is linear, class structure would add nothing. Correct for the complexity level. Anemic Domain Model: the choice is a mismatch â€” domain objects exist but hold no behavior, while complex business rules live in services. The form (classes) and the substance (behavior) are split at the wrong boundary.",
+                      "type":  "distinction",
+                      "lesson":  "L21",
+                      "module":  "M07",
+                      "tags":  [
+                                   "module-M07",
+                                   "claim-C5",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-081",
+                      "front":  "What is abstraction debt and how does it differ from technical debt?",
+                      "back":  "Technical debt: the cost of messy, low-quality implementation that needs cleanup. Abstraction debt: the cost of abstractions added too early â€” layers and indirection that exist before the pressure requiring them is real. Abstraction debt makes code harder to understand and change without any problem being solved. It is debt created by over-designing.",
+                      "type":  "definition",
+                      "lesson":  "L22",
+                      "module":  "M08",
+                      "tags":  [
+                                   "module-M08",
+                                   "claim-C5",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-082",
+                      "front":  "What is the \u0027rent test\u0027 for an abstraction, and how do you apply it before introducing a pattern?",
+                      "back":  "An abstraction pays rent if it relieves a present, concrete cost â€” not a hypothetical future one. Apply it: (1) Name the cost the abstraction relieves (e.g., \u0027three classes constructing their own DB connection\u0027). (2) Confirm the cost is present now, not imagined. (3) Verify the indirection cost of the pattern is less than the cost it relieves. If any step fails, skip the pattern.",
+                      "type":  "application",
+                      "lesson":  "L22",
+                      "module":  "M08",
+                      "tags":  [
+                                   "module-M08",
+                                   "claim-C5",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-083",
+                      "front":  "Claim C5: What does the research identify as the central failure mode for design patterns?",
+                      "back":  "Not using patterns, but paying their indirection cost before the pressure is real â€” applying patterns speculatively, adding abstractions that don\u0027t relieve a present cost. The result is unnecessary complexity with none of the flexibility benefits. Sources: S002, S010, S014, S016, S018. Confidence: strong.",
+                      "type":  "claim",
+                      "lesson":  "L22",
+                      "module":  "M08",
+                      "tags":  [
+                                   "module-M08",
+                                   "claim-C5",
+                                   "type-claim"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-084",
+                      "front":  "Distinguish YAGNI from no-design.",
+                      "back":  "YAGNI (You Aren\u0027t Gonna Need It): don\u0027t build abstractions for speculative future requirements â€” but do design clearly for present requirements. The principle targets speculation, not simplicity itself. No-design: writing sloppy, unmaintainable code with no structure. YAGNI and clean simple design are compatible; YAGNI and no-design are not.",
+                      "type":  "distinction",
+                      "lesson":  "L22",
+                      "module":  "M08",
+                      "tags":  [
+                                   "module-M08",
+                                   "claim-C5",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-085",
+                      "front":  "A senior developer adds a Plugin architecture \u0027in case we need to support a second payment provider later.\u0027 The second provider never materializes. What abstraction debt was created?",
+                      "back":  "The team now maintains: a plugin interface, a registration mechanism, a loader, and documentation for a variability point that was never used. New developers must understand the architecture before making simple payment changes. The abstraction\u0027s rent is negative â€” it costs more to maintain than any flexibility it delivered.",
+                      "type":  "application",
+                      "lesson":  "L22",
+                      "module":  "M08",
+                      "tags":  [
+                                   "module-M08",
+                                   "claim-C5",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-086",
+                      "front":  "Contradiction 1 in depth: What are the three dependency access strategies, and what does the research say about which wins?",
+                      "back":  "DI (explicit injection), Service Locator (ambient pull), Explicit Passing (no container). Research says: UNRESOLVED. Fowler: both DI and SL are viable with contextual tradeoffs. Nystrom: ambient access always hides deps. No study measures the threshold. Context factors: call-tree depth, framework constraints, team size. No universal winner. (S001, S007, S009)",
+                      "type":  "contradiction",
+                      "lesson":  "L23",
+                      "module":  "M08",
+                      "tags":  [
+                                   "module-M08",
+                                   "contradiction-1",
+                                   "type-contradiction"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-087",
+                      "front":  "When does explicit dependency passing win over both DI containers and Service Locator?",
+                      "back":  "When the call tree is shallow (â‰¤ 2â€“3 levels deep), the dependency count is small (1â€“3), and the team values readability over framework leverage. Explicit passing makes all dependencies visible in function signatures â€” no infrastructure needed. DI containers justify themselves only when the wiring complexity exceeds what manual passing can manage.",
+                      "type":  "application",
+                      "lesson":  "L23",
+                      "module":  "M08",
+                      "tags":  [
+                                   "module-M08",
+                                   "contradiction-1",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-088",
+                      "front":  "Distinguish the dependency strategy debate (DI vs SL vs explicit) from other pattern choices: what makes this one unresolved?",
+                      "back":  "Most pattern choices have clear pressure thresholds. The dependency strategy debate is unresolved because the right threshold depends on: team culture, framework constraints, call-tree depth, and testing discipline â€” none of which are universal. The debate is contextual, not technical, so no single study can resolve it.",
+                      "type":  "distinction",
+                      "lesson":  "L23",
+                      "module":  "M08",
+                      "tags":  [
+                                   "module-M08",
+                                   "contradiction-1",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-089",
+                      "front":  "Contradiction 2 in depth: How do you apply a classic pattern when its canonical form has been absorbed by the language?",
+                      "back":  "Identify the problem the pattern solves (e.g., Command = reified action for deferred/undoable execution). Use the language\u0027s native form if it covers the problem (closures, first-class functions). Keep the named pattern when the lifecycle semantics (undo, replay, serialization) require more than a closure can express. Problem endures; class-heavy form may not.",
+                      "type":  "contradiction",
+                      "lesson":  "L24",
+                      "module":  "M08",
+                      "tags":  [
+                                   "module-M08",
+                                   "contradiction-2",
+                                   "type-contradiction"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-090",
+                      "front":  "Python has first-class functions and closures. Does the Observer pattern still apply, or has the language made it obsolete?",
+                      "back":  "The problem persists (fan-out notification without tight coupling). The canonical class-heavy form (ConcreteObserver classes with an `update()` method) may be unnecessary â€” a list of callbacks or a simple event emitter achieves the same thing. Use the language-native form unless you need typed subscription contracts or complex lifecycle management.",
+                      "type":  "application",
+                      "lesson":  "L24",
+                      "module":  "M08",
+                      "tags":  [
+                                   "module-M08",
+                                   "contradiction-2",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-091",
+                      "front":  "Distinguish \u0027the pattern problem endures\u0027 from \u0027the pattern implementation endures\u0027 as language evolves.",
+                      "back":  "Problem endures: the design force (fan-out, action reification, behavioral switching) still exists regardless of language. Implementation endures: the specific class structure (GoF ConcreteObserver, ConcreteCommand) is still the best way to solve it. These are independent â€” the problem may persist while the canonical class form becomes unnecessary overhead in modern languages.",
+                      "type":  "distinction",
+                      "lesson":  "L24",
+                      "module":  "M08",
+                      "tags":  [
+                                   "module-M08",
+                                   "contradiction-2",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-092",
+                      "front":  "In a full enterprise stack, which pattern owns which pressure? Assign: Service Layer, Domain Model, Data Mapper, Repository, Unit of Work.",
+                      "back":  "Service Layer â†’ orchestration boundary (use case sequencing). Domain Model â†’ behavior and invariants (business rules). Data Mapper â†’ object-relational isolation (domain stays DB-ignorant). Repository â†’ query abstraction (domain-facing collection interface). Unit of Work â†’ transaction scope (multi-object commit coordination). Each one owns exactly one pressure. (C6)",
+                      "type":  "application",
+                      "lesson":  "L25",
+                      "module":  "M09",
+                      "tags":  [
+                                   "module-M09",
+                                   "claim-C6",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-093",
+                      "front":  "What is \u0027responsibility layering\u0027 and how does it prevent pattern stacking in the enterprise stack?",
+                      "back":  "Responsibility layering assigns one pattern per one design pressure â€” no two patterns own the same concern. When building the enterprise stack, you check: does a pattern here address a pressure not yet owned by any other pattern? If two patterns solve the same pressure, one is redundant. Layering is coherence; stacking is accumulation without assignment.",
+                      "type":  "definition",
+                      "lesson":  "L25",
+                      "module":  "M09",
+                      "tags":  [
+                                   "module-M09",
+                                   "claim-C6",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-094",
+                      "front":  "A system has Service Layer + Repository + Unit of Work, but no real domain behavior â€” all rules live in the service methods. What is wrong and what is the fix?",
+                      "back":  "This is Anemic Domain Model â€” the enterprise stack is structurally present but Domain Model is missing or hollow. Fix: either enrich domain objects with the business rules currently in services (if domain complexity justifies it), or remove the Domain Model layer and acknowledge this is a Transaction Script system with persistence infrastructure.",
+                      "type":  "application",
+                      "lesson":  "L25",
+                      "module":  "M09",
+                      "tags":  [
+                                   "module-M09",
+                                   "claim-C6",
+                                   "claim-C5",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-095",
+                      "front":  "How do Command, Observer, and State compose in a text editor to form a coherent pattern stack?",
+                      "back":  "Command: every edit action is a command â€” enabling undo/redo history. Observer: the document notifies the UI (and other components) when content changes â€” decoupled rendering. State: the editor transitions between modes (insert, select, read-only) and delegates behavior to the current state object. Each pattern owns one pressure; no overlap.",
+                      "type":  "application",
+                      "lesson":  "L26",
+                      "module":  "M09",
+                      "tags":  [
+                                   "module-M09",
+                                   "claim-C6",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-096",
+                      "front":  "Distinguish an editor/workflow pattern stack from a backend persistence stack â€” what forces differ?",
+                      "back":  "Editor/workflow stack: Command (action lifecycle), Observer (reactive UI updates), State (mode switching) â€” forces are around time, user interaction, and behavioral transitions. Backend persistence stack: Service Layer, Domain Model, Data Mapper, Repository, UoW â€” forces are around orchestration, invariants, O-R mismatch, query boundaries, and transaction scope. Different forces â†’ different patterns.",
+                      "type":  "distinction",
+                      "lesson":  "L26",
+                      "module":  "M09",
+                      "tags":  [
+                                   "module-M09",
+                                   "claim-C6",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-097",
+                      "front":  "What is accidental complexity in a system with too many patterns, and how do you detect it?",
+                      "back":  "Accidental complexity is difficulty introduced by the design itself (not by the problem). Detect it: new developers need to understand 4+ pattern layers before making a simple change; abstractions exist without a traceable pressure; removing a layer doesn\u0027t break any behavior. If patterns can be removed without cost, they were accidental structure.",
+                      "type":  "definition",
+                      "lesson":  "L27",
+                      "module":  "M09",
+                      "tags":  [
+                                   "module-M09",
+                                   "claim-C6",
+                                   "claim-C5",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-098",
+                      "front":  "What is the composition heuristic for adding patterns to a growing codebase?",
+                      "back":  "Add one pattern only when a concrete pressure appears that no existing pattern already owns. The sequence: (1) Start with the simplest design that works. (2) When a specific pressure (coupling, volatility, coordination, mismatch) makes the simple design costly, introduce the one pattern that relieves it. (3) Repeat only when the next pressure appears. Never preemptively.",
+                      "type":  "application",
+                      "lesson":  "L27",
+                      "module":  "M09",
+                      "tags":  [
+                                   "module-M09",
+                                   "claim-C6",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-099",
+                      "front":  "Distinguish \u0027coherent pattern stack\u0027 from \u0027pattern dump\u0027.",
+                      "back":  "Coherent stack: each pattern is traceable to a specific pressure it relieves; removing any one would reintroduce that pressure. Pattern dump: patterns are present because they seemed appropriate or fashionable; multiple patterns share overlapping concerns; removing several would have no observable impact on the system\u0027s behavior.",
+                      "type":  "distinction",
+                      "lesson":  "L27",
+                      "module":  "M09",
+                      "tags":  [
+                                   "module-M09",
+                                   "claim-C6",
+                                   "type-distinction"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-100",
+                      "front":  "A naive design starts as a single Python function. Sketch the pressure-triggered pattern additions as the system grows.",
+                      "back":  "Step 0: one function. â†’ Coupling pressure (DB hardcoded): add DI. â†’ Query scattering: add Repository. â†’ Multi-table writes: add Unit of Work. â†’ Shared business rules across scripts: add Domain Model. â†’ Different runtime environments: add Plugin. Each addition is triggered by a specific cost, not planned upfront. The stack is coherent because every layer has a traceable origin.",
+                      "type":  "application",
+                      "lesson":  "L27",
+                      "module":  "M09",
+                      "tags":  [
+                                   "module-M09",
+                                   "claim-C6",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-101",
+                      "front":  "What is research gap G005 in this course\u0027s evidence base?",
+                      "back":  "Missing GoF primary source â€” the course\u0027s research did not have direct access to the original Design Patterns (GoF) text. Claims about original GoF intent rely on secondary sources and widely cited summaries. This limits confidence about what the GoF authors actually intended versus how their patterns have been interpreted over time.",
+                      "type":  "definition",
+                      "lesson":  "L28",
+                      "module":  "M10",
+                      "tags":  [
+                                   "module-M10",
+                                   "research-gap",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-102",
+                      "front":  "What is research gap G006 in this course\u0027s evidence base?",
+                      "back":  "Context-dependent indirection threshold â€” no empirical study measures at what team size, codebase size, or domain complexity a specific pattern starts paying rent. The thresholds given in this course are synthesized from practitioner sources, not experimental data. They are good heuristics but not validated rules.",
+                      "type":  "definition",
+                      "lesson":  "L28",
+                      "module":  "M10",
+                      "tags":  [
+                                   "module-M10",
+                                   "research-gap",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-103",
+                      "front":  "What is research gap G007 in this course\u0027s evidence base?",
+                      "back":  "Thinner editor and interactive system case studies â€” the research base is richer for backend/enterprise patterns (Fowler\u0027s PoEAA territory) than for editor, game, or UI interaction patterns. Claims about Command/Observer/State composition in interactive systems are supported by fewer sources and should be held with lower confidence.",
+                      "type":  "definition",
+                      "lesson":  "L28",
+                      "module":  "M10",
+                      "tags":  [
+                                   "module-M10",
+                                   "research-gap",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "low",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-104",
+                      "front":  "How should a learner calibrate confidence when applying this course\u0027s pattern thresholds, given G006?",
+                      "back":  "Treat all pressure thresholds as practitioner heuristics, not validated rules. Apply them as a starting check, not a definitive gate. When in doubt, start without the pattern and add it when concrete costs appear â€” this strategy is safe under uncertainty about where the threshold is. Research cannot tell you the exact number; your codebase feedback can.",
+                      "type":  "application",
+                      "lesson":  "L28",
+                      "module":  "M10",
+                      "tags":  [
+                                   "module-M10",
+                                   "research-gap",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-105",
+                      "front":  "What evidence would resolve gap G006 (indirection threshold) and make it a settled claim?",
+                      "back":  "Controlled studies or large-scale retrospective analyses measuring: (a) codebase change frequency before vs. after adding a pattern, (b) bug rates in pattern-absent vs. pattern-present codebases at matched complexity levels, (c) developer onboarding time as a function of pattern layer count. Currently no such data exists in the literature surveyed.",
+                      "type":  "application",
+                      "lesson":  "L28",
+                      "module":  "M10",
+                      "tags":  [
+                                   "module-M10",
+                                   "research-gap",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-17",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-106",
+                      "front":  "List the four diagnostic questions that signal **coupling pressure** is active in a system.",
+                      "back":  "1. Does changing one component force unrelated components to change? 2. Do unit tests fail because the class under test cannot be isolated? 3. Does adding or swapping a dependency require edits in more than one unrelated place? 4. Does the code know how to locate or construct its own dependencies at runtime?",
+                      "type":  "definition",
+                      "lesson":  "L02",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "pressure-diagnosis",
+                                   "coupling",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-18",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-107",
+                      "front":  "List the four diagnostic questions that signal **volatility pressure** is active in a system.",
+                      "back":  "1. Does code branch on environment, mode, or feature flag? 2. Would adding a new variant require editing existing logic rather than extending it? 3. Is the same construction or binding choice repeated at multiple call sites? 4. Would deploying a different implementation require changes inside business logic?",
+                      "type":  "definition",
+                      "lesson":  "L02",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "pressure-diagnosis",
+                                   "volatility",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-18",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-108",
+                      "front":  "List the four diagnostic questions that signal **coordination pressure** is active in a system.",
+                      "back":  "1. Does a multi-step operation need to succeed or fail as a single unit? 2. Is retry, undo, or rollback code scattered at individual call sites? 3. Can the current design queue, replay, or reverse the operation without rewriting it? 4. Does the operation need to be observed or audited at a distance from where it executes?",
+                      "type":  "definition",
+                      "lesson":  "L02",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "pressure-diagnosis",
+                                   "coordination",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-18",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-109",
+                      "front":  "List the four diagnostic questions that signal **boundary mismatch pressure** is active in a system.",
+                      "back":  "1. Are you translating between two domain models at every crossing point? 2. Is external-system vocabulary leaking into your internal model? 3. Is null-checking, type coercion, or field-mapping code spread across the codebase? 4. Does changing the external service require hunting down translation logic in multiple files?",
+                      "type":  "definition",
+                      "lesson":  "L02",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "pressure-diagnosis",
+                                   "boundary-mismatch",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-18",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-110",
+                      "front":  "List the four diagnostic questions that signal **duplication pressure** is active in a system.",
+                      "back":  "1. Is the same business rule implemented in more than one place? 2. When the rule changes, must you update multiple files to stay consistent? 3. Has a bug been caused by one copy of a rule being updated but not another? 4. Is computed logic repeated rather than extracted to a single authoritative location?",
+                      "type":  "definition",
+                      "lesson":  "L02",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "pressure-diagnosis",
+                                   "duplication",
+                                   "type-definition"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-18",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-111",
+                      "front":  "A service has `if mode == \u0027test\u0027: return mock_response()` in three different methods. Which pressure does the diagnostic checklist point to, and why?",
+                      "back":  "Volatility pressure â€” the binding of implementation to environment is scattered at the call sites rather than isolated at a construction boundary. Diagnostic signals: code branches on mode/environment (Q1), and the same binding choice repeats at multiple call sites (Q3). Pattern response: dependency injection or plugin to move the variation to one seam.",
+                      "type":  "application",
+                      "lesson":  "L02",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "pressure-diagnosis",
+                                   "volatility",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-18",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-112",
+                      "front":  "A checkout flow saves an order, charges a card, and sends a confirmation email â€” each in separate try/catch blocks with independent rollback logic. Which pressure is active, and which diagnostic question most clearly exposes it?",
+                      "back":  "Coordination pressure. Most diagnostic signal: retry, undo, and rollback code is scattered at individual call sites (Q2) rather than managed as a unit. A secondary signal: the operation needs to succeed or fail as a whole (Q1). Pattern response: Command + Unit of Work or Saga pattern to treat the multi-step flow as a single reversible operation.",
+                      "type":  "application",
+                      "lesson":  "L02",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "pressure-diagnosis",
+                                   "coordination",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-18",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-113",
+                      "front":  "Two pressure diagnoses score equally. How do you break the tie?",
+                      "back":  "Choose the pressure that reflects the *change trigger* â€” the event most likely to reintroduce cost soonest. Ask: \u0027What will happen in the next sprint, release, or integration that will hurt most?\u0027 The pressure tied to that event is the primary one to address first.",
+                      "type":  "application",
+                      "lesson":  "L02",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "pressure-diagnosis",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "medium",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-18",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-114",
+                      "front":  "A discount calculation rule appears in `CartService`, `InvoiceService`, and an API validation handler. The bug tracker shows two incidents of rules diverging after a pricing change. Which pressure category fits, and what evidence from the diagnostic checklist confirms it?",
+                      "back":  "Duplication pressure. Confirming signals: the same business rule is in more than one place (Q1); a bug was caused by one copy being updated but not others (Q3); changing the rule requires updating multiple files (Q2). Pattern response: extract to a single `DiscountPolicy` authoritative location (Value Object or Domain Service).",
+                      "type":  "application",
+                      "lesson":  "L02",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "pressure-diagnosis",
+                                   "duplication",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-18",
+                                 "lapses":  0
+                             }
+                  },
+                  {
+                      "id":  "CARD-115",
+                      "front":  "An `OrderProcessor` class imports `StripeClient`, `SendGridClient`, and `PostgresRepository` directly, instantiates them in its constructor, and calls them inline. Which diagnostic questions fire, and what pressure class do they point to?",
+                      "back":  "Coupling pressure. Firing signals: swapping or mocking any dependency requires editing `OrderProcessor` directly (Q3); the class locates and constructs its own dependencies at runtime (Q4); unit tests cannot isolate `OrderProcessor` without hitting real services (Q2). Pattern response: constructor injection or a DI container to push construction responsibility to the caller.",
+                      "type":  "application",
+                      "lesson":  "L02",
+                      "module":  "M01",
+                      "tags":  [
+                                   "module-M01",
+                                   "pressure-diagnosis",
+                                   "coupling",
+                                   "type-application"
+                               ],
+                      "confidence_required":  "high",
+                      "sr":  {
+                                 "interval":  1,
+                                 "ease":  2.5,
+                                 "reviews":  0,
+                                 "next_review":  "2026-04-18",
+                                 "lapses":  0
+                             }
+                  }
+              ]
+}

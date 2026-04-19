@@ -1,0 +1,26 @@
+{
+  "module": "M09",
+  "title": "Composition Studios — Quick Check",
+  "questions": [
+    {
+      "id": "MC09-1",
+      "q": "What is the enterprise pattern stack and what pressure does each of the five patterns own?",
+      "a": "Service Layer (orchestration), Domain Model (invariants and business rules), Data Mapper (object-relational isolation), Repository (query abstraction), Unit of Work (transaction-scope coordination). Each owns one pressure; none overlap."
+    },
+    {
+      "id": "MC09-2",
+      "q": "How do Command, Observer, and State compose without overlapping responsibilities in an editor?",
+      "a": "Command owns action lifecycle (execute/undo/redo). Observer owns notification fan-out after a change. State owns current mode behavior. Each fires in sequence — Command executes, Observer notifies, State governs what behavior is valid — with no pattern owning another's concern."
+    },
+    {
+      "id": "MC09-3",
+      "q": "What is accidental complexity, and what test detects it in a pattern-heavy codebase?",
+      "a": "Accidental complexity is difficulty introduced by the design itself rather than the problem it solves. The test: attempt to remove the pattern and check if any behavior breaks or any present cost reappears. If removal changes nothing, the pattern was accidental structure."
+    },
+    {
+      "id": "MC09-4",
+      "q": "State the composition heuristic for adding patterns to a growing codebase.",
+      "a": "Add one pattern per one concrete pressure — only when that pressure actually appears in the code. Do not plan the full stack upfront. Each new pattern should own a distinct force that no existing pattern already addresses."
+    }
+  ]
+}

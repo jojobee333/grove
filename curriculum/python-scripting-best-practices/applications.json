@@ -1,0 +1,218 @@
+{
+  "slug": "python-scripting-best-practices",
+  "generated": "2026-04-19",
+  "applications": [
+    {
+      "id": "APP-M01-01",
+      "module": "M01",
+      "type": "project",
+      "title": "Bootstrap a Fully Enforced Python Project",
+      "summary": "Move from theory to muscle memory by scaffolding a real Python project where ruff, mypy, and pytest all run on every save — and explaining every line to an imaginary junior developer.",
+      "prompt": "Create a new Python project called `scorecard` (a tiny grade-averaging CLI) from scratch. Configure ruff (with at least the E, F, and I rule sets), mypy (strict mode), and pytest all inside a single `pyproject.toml`. Write one real function, make it fail at least one ruff rule and one mypy check deliberately, fix both, then add one passing unit test. Record exactly which ruff rule fired and why mypy objected.",
+      "deliverable": "A runnable project where `ruff check .`, `mypy .`, and `pytest` all exit 0, plus a short `NOTES.md` documenting the two errors you deliberately introduced and what fixed them.",
+      "estimated_minutes": 60,
+      "difficulty": 2,
+      "lesson_refs": ["L01", "L02"],
+      "tools": ["python", "ruff", "mypy", "pytest", "pyproject.toml"],
+      "steps": [
+        "Create the project with `mkdir scorecard && cd scorecard && python -m venv .venv`.",
+        "Write a minimal `pyproject.toml` with `[tool.ruff]`, `[tool.mypy]`, and `[tool.pytest.ini_options]` sections.",
+        "Write `scorecard/grades.py` with an `average(scores: list[float]) -> float` function — intentionally leave out a type annotation or use an incompatible type.",
+        "Run `ruff check .` and `mypy .` — document each error message in `NOTES.md`.",
+        "Fix both issues and confirm all three tools exit 0.",
+        "Write one `pytest` test for `average` covering both a normal list and an empty list."
+      ],
+      "success_criteria": [
+        "`ruff check .`, `mypy .`, and `pytest` all exit 0 without warnings.",
+        "`pyproject.toml` contains configuration for all three tools — no separate `.mypy.ini` or `setup.cfg`.",
+        "`NOTES.md` names the specific ruff rule code (e.g. `E501`) and the mypy error message for the intentional mistakes.",
+        "The `average` function has a complete, mypy-valid type signature."
+      ],
+      "extension_ideas": [
+        "Add a pre-commit hook that runs ruff and mypy automatically on every commit.",
+        "Extend `pyproject.toml` to include a `[project]` table and make the project pip-installable."
+      ]
+    },
+    {
+      "id": "APP-M02-01",
+      "module": "M02",
+      "type": "implementation",
+      "title": "Refactor a print()-Driven Script into a Production Skeleton",
+      "summary": "Apply the universal script skeleton by taking a messy `print()`-riddled script and making it testable, observable, and argument-driven — then teach the transformation to someone else.",
+      "prompt": "Start with this deliberately bad script (recreate it yourself):\n\n```python\nimport sys\ndata = open(sys.argv[1]).read().splitlines()\nfor line in data:\n    print('Processing:', line)\nprint('Done,', len(data), 'lines')\n```\n\nRefactor it to use `main()`, `argparse` (with `--input`, `--log-level`), module-level `logger = logging.getLogger(__name__)`, and the full parse→log→validate→dispatch sequence. Make `main()` importable and unit-testable without side effects.",
+      "deliverable": "The refactored script with `if __name__ == '__main__'` guard, at least two pytest tests that import and call `main()` directly, and a one-paragraph comment at the top explaining each structural decision for a junior developer.",
+      "estimated_minutes": 55,
+      "difficulty": 2,
+      "lesson_refs": ["L03", "L04"],
+      "tools": ["python", "pytest", "argparse", "logging"],
+      "steps": [
+        "Copy the bad script verbatim, then list every problem it has (global state, no logging, untestable, no argument validation).",
+        "Add `argparse` to read `--input PATH` and `--log-level` with a sensible default.",
+        "Replace every `print()` with the correct log level (`logger.info`, `logger.debug`, `logger.error`).",
+        "Move all logic into `main(args)` and add `if __name__ == '__main__': main(parse_args())`.",
+        "Write tests: one for a valid input file, one that asserts logging output via `caplog`."
+      ],
+      "success_criteria": [
+        "The script is fully importable — no side effects on import.",
+        "All `print()` calls are replaced by `logger.*` calls at appropriate levels.",
+        "`argparse` handles `--log-level` and wires it to `logging.basicConfig()`.",
+        "Both tests pass with `pytest` and at least one uses `caplog` to assert a log message."
+      ],
+      "extension_ideas": [
+        "Add `--dry-run` mode that logs what it would do without writing anything.",
+        "Write a test that captures stderr output when `--log-level DEBUG` is set."
+      ]
+    },
+    {
+      "id": "APP-M03-01",
+      "module": "M03",
+      "type": "workflow",
+      "title": "Type-Annotate a Real-World Function Set",
+      "summary": "Encounter the type annotation debates in concrete form by taking an un-annotated utility module and making mypy strict-mode happy — then justify every decision in writing.",
+      "prompt": "Take this un-annotated module (or a similar one from your own work):\n\n```python\ndef load_records(path, default=None):\n    import json\n    try:\n        return json.loads(open(path).read())\n    except Exception:\n        return default\n\ndef filter_by_key(records, key, value):\n    return [r for r in records if r.get(key) == value]\n\ndef summarize(records):\n    return {\"count\": len(records), \"keys\": list(records[0].keys()) if records else []}\n```\n\nAdd full PEP 257 Google-style docstrings and Python 3.10+ type annotations to all three functions. Pass `mypy --strict`. Define a `TypedDict` for a record if needed.",
+      "deliverable": "The fully annotated module passing `mypy --strict`, a PEP 257-compliant docstring on each function, and a `TYPING_NOTES.md` that explains: why you chose each type, where you used `TypedDict` or `Protocol` and why, and what the Google Style Guide says about the `default=None` parameter annotation.",
+      "estimated_minutes": 50,
+      "difficulty": 3,
+      "lesson_refs": ["L05", "L06"],
+      "tools": ["python", "mypy", "ruff"],
+      "steps": [
+        "Run `mypy --strict` on the original module and document every error.",
+        "Define a `Record = TypedDict('Record', {...})` or use `dict[str, object]` — justify your choice.",
+        "Annotate all three functions with return types and parameter types.",
+        "Add Google-style docstrings with `Args`, `Returns`, and `Raises` sections.",
+        "Run `mypy --strict` again — all errors must be gone.",
+        "Write `TYPING_NOTES.md` addressing the three questions."
+      ],
+      "success_criteria": [
+        "`mypy --strict` exits 0 with no errors.",
+        "Every function has a PEP 257 Google-style docstring.",
+        "`TYPING_NOTES.md` explicitly discusses `TypedDict` vs `dict[str, object]`, the `default` parameter, and the `records[0].keys()` branch.",
+        "`ruff check .` exits 0 — no docstring lint violations."
+      ],
+      "extension_ideas": [
+        "Introduce a `Protocol` to describe what a 'filterable record' must look like, and update `filter_by_key` to use it.",
+        "Use `Final` to make a module-level schema constant and verify mypy enforces it."
+      ]
+    },
+    {
+      "id": "APP-M04-01",
+      "module": "M04",
+      "type": "project",
+      "title": "Config-Driven File Processor",
+      "summary": "Build a script that reads its configuration from three sources in priority order, uses pathlib throughout, and never touches a resource outside a context manager.",
+      "prompt": "Write a script `process_files.py` that processes `.txt` files in an input directory: reads each file with a context manager, applies a transformation (e.g. word-count), writes results to an output directory using `pathlib.Path`, and reads its configuration (input dir, output dir, log level) from a TOML file via `tomllib`, overridable by environment variables, overridable by CLI flags — in that priority order.",
+      "deliverable": "A runnable script with a `config.toml`, a `README` listing the three config layers, and pytest tests that use `tmp_path` for file I/O and `monkeypatch.setenv` for environment variable overrides.",
+      "estimated_minutes": 75,
+      "difficulty": 3,
+      "lesson_refs": ["L07", "L08"],
+      "tools": ["python", "pathlib", "tomllib", "pytest"],
+      "steps": [
+        "Define a `load_config(cli_args)` function that reads `config.toml` with `tomllib.open()`, then overlays `os.environ.get(...)` values, then overlays parsed CLI args.",
+        "Use `pathlib.Path` for every file operation — no `os.path` or string concatenation.",
+        "Wrap every `open()` in a `with` statement — include `TemporaryDirectory` for any scratch space.",
+        "Write a test that creates fake input files in `tmp_path`, sets env vars with `monkeypatch.setenv`, and asserts the output files exist with correct content.",
+        "Write a second test that overrides config via CLI flags and asserts CLI takes priority."
+      ],
+      "success_criteria": [
+        "CLI flags override env vars, which override TOML — verified by tests.",
+        "Every file operation uses `pathlib.Path` — grep confirms zero `os.path` calls.",
+        "Every resource is opened inside a `with` block — no bare `open()` calls.",
+        "Tests use `tmp_path` and `monkeypatch` — no hardcoded file paths in tests."
+      ],
+      "extension_ideas": [
+        "Add a `--dry-run` flag that logs what it would process without writing output.",
+        "Support `.json` output alongside `.txt` using a `--format` flag, validated with a Literal type annotation."
+      ]
+    },
+    {
+      "id": "APP-M05-01",
+      "module": "M05",
+      "type": "workflow",
+      "title": "Serialization Format Audit",
+      "summary": "Turn the trust-level decision matrix into hands-on experience by writing the same data pipeline four ways — then articulate to a colleague exactly which format to use and why.",
+      "prompt": "Take a dataset of 20 fictional employee records `{name, department, salary}`. Implement four functions that each save and reload the same dataset: `save_json`/`load_json`, `save_csv`/`load_csv`, `save_toml`/`load_toml`, and `save_pickle`/`load_pickle`. Add a `--format` CLI argument that chooses which function pair to use. Add a deliberate security note as a docstring on `load_pickle` explaining when it is and is not safe.",
+      "deliverable": "A working script where all four format pairs produce identical round-tripped data (verified by assertion), plus a written `SERIALIZATION_GUIDE.md` answering: which format you'd use for external API input, internal developer config, a trusted ML model cache, and a shared export file — with one-sentence justifications.",
+      "estimated_minutes": 60,
+      "difficulty": 2,
+      "lesson_refs": ["L09"],
+      "tools": ["python", "json", "csv", "tomllib", "pickle", "pytest"],
+      "steps": [
+        "Create a `records.py` module with the four save/load function pairs, each fully typed and with Google-style docstrings.",
+        "Add the security docstring to `load_pickle` explicitly stating the trusted-source-only requirement.",
+        "Write a `pytest.mark.parametrize` test that runs all four format pairs through a round-trip assertion.",
+        "Add the `--format` CLI argument to a `main()` function.",
+        "Write `SERIALIZATION_GUIDE.md` with the four scenario answers."
+      ],
+      "success_criteria": [
+        "All four round-trip tests pass — deserialized data equals original data.",
+        "`load_pickle` has a docstring containing the word 'trusted' and explaining the attack vector.",
+        "`SERIALIZATION_GUIDE.md` gives a different format for each of the four scenarios with a justification.",
+        "The `--format` flag rejects unknown values with a helpful error message."
+      ],
+      "extension_ideas": [
+        "Add a fifth format using `tomllib` for reading and `tomli-w` for writing, and compare the round-trip fidelity for nested structures.",
+        "Write a function that detects the format from the file extension and dispatches automatically."
+      ]
+    },
+    {
+      "id": "APP-M06-01",
+      "module": "M06",
+      "type": "project",
+      "title": "Concurrent File Fetcher with Graceful Shutdown",
+      "summary": "Apply the concurrency decision matrix by building an IO-bound URL fetcher that shuts down cleanly on Ctrl-C — and explain every architectural decision to a colleague in a code review comment.",
+      "prompt": "Write a script `fetch_urls.py` that reads a list of URLs from a file and fetches each with `urllib.request.urlopen` (no third-party HTTP libraries). Use `asyncio.TaskGroup` (Python 3.11+) or `asyncio.gather` to fetch concurrently via `asyncio.to_thread`. Register a `SIGINT`/`SIGTERM` handler that cancels all running tasks, waits for them to finish their `finally` blocks, and then exits with code 0. Log each fetch at `DEBUG` level and each failure at `ERROR`.",
+      "deliverable": "A runnable script that fetches a provided list of URLs concurrently, handles cancellation cleanly, and exits 0 on SIGTERM. Include a `CONCURRENCY_NOTES.md` explaining why `asyncio.to_thread` was used instead of `ProcessPoolExecutor` or bare threads.",
+      "estimated_minutes": 80,
+      "difficulty": 4,
+      "lesson_refs": ["L10", "L11"],
+      "tools": ["python", "asyncio", "logging", "signal"],
+      "steps": [
+        "Write `async def fetch(url: str) -> str` that calls `await asyncio.to_thread(urlopen_and_read, url)` — keep the sync `urlopen` in a helper.",
+        "Use `async with asyncio.TaskGroup() as tg:` to launch all fetches concurrently.",
+        "Register a SIGTERM handler that calls `loop.stop()` or cancels a root task.",
+        "Add `try/finally` in each task coroutine so cancellation is logged cleanly.",
+        "Write `CONCURRENCY_NOTES.md` justifying `asyncio.to_thread` for IO-bound synchronous code."
+      ],
+      "success_criteria": [
+        "All URLs are fetched concurrently — `DEBUG` logs show overlapping timestamps.",
+        "Ctrl-C / SIGTERM causes a clean exit with code 0 and a log message, not a traceback.",
+        "Individual URL failures are caught, logged at `ERROR`, and do not abort other fetches.",
+        "`CONCURRENCY_NOTES.md` names the decision matrix criterion that led to `asyncio.to_thread`."
+      ],
+      "extension_ideas": [
+        "Add a `--concurrency N` flag to limit the number of simultaneous fetches using a semaphore.",
+        "Retry failed URLs up to 3 times with exponential backoff before logging the final error."
+      ]
+    },
+    {
+      "id": "APP-M07-01",
+      "module": "M07",
+      "type": "workflow",
+      "title": "Teach the Type Annotation Debate to a Team",
+      "summary": "Consolidate the whole course by preparing a short internal tech talk that presents the PEP 484 vs Google Style Guide debate honestly — and identifies the three open research gaps your audience should explore next.",
+      "prompt": "Prepare a 10-minute internal tech talk (as a written script or slide notes, not slides themselves) on 'Python Type Annotations: When Are They Mandatory?'. The talk must: accurately represent both PEP 484's position and Google's, explain the historical resolution, give a concrete recommendation for a team incrementally adopting types, and name the three open gaps from the course (dataclasses, packaging, pre-commit) with a pointer to one external resource per gap.",
+      "deliverable": "A `TALK_SCRIPT.md` with four sections: PEP 484 position (2–3 sentences), Google Style Guide position (2–3 sentences), recommended team policy (3–5 sentences with rationale), and open gaps table (3 rows: gap name, why out of scope, next resource).",
+      "estimated_minutes": 45,
+      "difficulty": 2,
+      "lesson_refs": ["L12", "L13"],
+      "tools": ["markdown"],
+      "steps": [
+        "Summarize PEP 484's 'annotations are optional' position in your own words without dismissing it.",
+        "Summarize the Google Style Guide's 'mandatory for all new public code' position with its rationale.",
+        "Explain the practical resolution: progressive adoption — annotate new code and hot paths first.",
+        "Write the recommended team policy as three concrete rules (e.g. 'All new public functions must be annotated before merging').",
+        "Fill in the gaps table with a real link for each gap (dataclasses: PEP 557, packaging: packaging.python.org, pre-commit: pre-commit.com)."
+      ],
+      "success_criteria": [
+        "The PEP 484 section does not frame the optional position as wrong — it explains why it exists.",
+        "The Google Style Guide section gives the specific scope ('public APIs, new code') not a blanket claim.",
+        "The team policy section has at least three actionable rules a team lead could paste into a PR template.",
+        "All three gaps have a real URL that resolves."
+      ],
+      "extension_ideas": [
+        "Add a fourth section on `dataclasses` that covers `@dataclass` vs `TypedDict` vs `NamedTuple` for simple data containers.",
+        "Turn the script into a real 5-slide deck and give the talk to a colleague — then update the script based on their questions."
+      ]
+    }
+  ]
+}

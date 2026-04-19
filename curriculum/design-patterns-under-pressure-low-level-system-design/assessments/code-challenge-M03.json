@@ -1,0 +1,128 @@
+{
+  "id": "code-challenge-M03",
+  "type": "module",
+  "module": "M03",
+  "title": "Coding Challenge: Service Registry & Locator",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `registry_lookup(registry_and_key)` that takes a tuple `(registry, key)` where `registry` is a dict. Return the value for `key`, or the string `'NOT_FOUND'` if the key does not exist.\n\nThis simulates a service registry — a central map from service names to implementations.",
+      "starter_code": "def registry_lookup(registry_and_key):\n    \"\"\"\n    Unpack (registry, key) and return registry[key] or 'NOT_FOUND'.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Key exists — returns value",
+          "input": "({'logger': 'FileLogger', 'db': 'PostgresDB'}, 'logger')",
+          "expected_output": "FileLogger",
+          "visibility": "visible"
+        },
+        {
+          "name": "Key missing — returns NOT_FOUND",
+          "input": "({'logger': 'FileLogger'}, 'cache')",
+          "expected_output": "NOT_FOUND",
+          "visibility": "visible"
+        },
+        {
+          "name": "Empty registry",
+          "input": "({}, 'anything')",
+          "expected_output": "NOT_FOUND",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Fetches second key correctly",
+          "input": "({'a': 'A', 'b': 'B'}, 'b')",
+          "expected_output": "B",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["service-registry", "registry-pattern"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 1,
+      "lesson_ref": "L07",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L07"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `count_ambient_accesses(code_lines)` that takes a list of code-line strings and counts how many lines contain the substring `'ServiceLocator.get('`. This is the ambient-access pattern Nystrom warns hides coupling — you should be able to measure how deeply it has penetrated a codebase.",
+      "starter_code": "def count_ambient_accesses(code_lines):\n    \"\"\"\n    Count lines containing 'ServiceLocator.get('.\n    Returns an integer.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Two ambient accesses in three lines",
+          "input": "['ServiceLocator.get(ILogger)', 'self.logger = logger', 'ServiceLocator.get(ICache)']",
+          "expected_output": "2",
+          "visibility": "visible"
+        },
+        {
+          "name": "Zero — injected style, no locator calls",
+          "input": "['self.logger = self.logger', 'result = self.process()']",
+          "expected_output": "0",
+          "visibility": "visible"
+        },
+        {
+          "name": "Empty list",
+          "input": "[]",
+          "expected_output": "0",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Three ambient calls",
+          "input": "['ServiceLocator.get(X)', 'ServiceLocator.get(Y)', 'ServiceLocator.get(Z)', 'pass']",
+          "expected_output": "3",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["service-locator", "ambient-access", "coupling-diagnosis"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 1,
+      "lesson_ref": "L08",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L08"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `is_singleton_violated(instance_ids)` that takes a list of instance IDs that were all supposedly created from a Singleton class. Return `True` if more than one **distinct** ID appears (i.e., the singleton was violated and multiple real instances exist), or `False` if all IDs are the same object.",
+      "starter_code": "def is_singleton_violated(instance_ids):\n    \"\"\"\n    Return True if the list contains more than one distinct instance ID.\n    Returns a boolean.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "All same ID — singleton holds",
+          "input": "[1, 1, 1]",
+          "expected_output": "False",
+          "visibility": "visible"
+        },
+        {
+          "name": "Two distinct IDs — singleton violated",
+          "input": "[1, 2, 1]",
+          "expected_output": "True",
+          "visibility": "visible"
+        },
+        {
+          "name": "Empty list — no violation",
+          "input": "[]",
+          "expected_output": "False",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Single entry — no violation",
+          "input": "[42]",
+          "expected_output": "False",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["singleton-pattern", "global-state"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L09",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L09"]
+    }
+  ]
+}

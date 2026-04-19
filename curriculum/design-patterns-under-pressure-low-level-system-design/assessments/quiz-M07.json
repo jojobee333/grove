@@ -1,0 +1,171 @@
+{
+  "id": "quiz-M07",
+  "type": "module",
+  "module": "M07",
+  "title": "Assessment: Modeling Business Complexity",
+  "generated": "2026-04-17",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "Transaction Script is sometimes criticized as 'bad OOP.' According to this module, when is Transaction Script the correct choice?",
+      "options": {
+        "A": "When the team does not know how to write domain objects",
+        "B": "When domain complexity is modest, workflow is linear, and richer modeling would add unnecessary indirection",
+        "C": "When the application has fewer than 500 users and doesn't need to scale",
+        "D": "When a tight deadline makes Domain Model impractical"
+      },
+      "correct": "B",
+      "explanation": "Transaction Script is correct when the domain is genuinely simple — not as a fallback for skill gaps (A), scale concerns (C), or timeline pressure (D). Choosing it for the right reasons is honest simplicity; choosing it for the wrong reasons is technical debt.",
+      "lesson_ref": "L19",
+      "claim_ref": "C5",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Contradiction 3 states Transaction Script and Domain Model are not competing universals but target different regions of the complexity curve. What determines which region a system is in?",
+      "options": {
+        "A": "The number of database tables in the schema",
+        "B": "The density of business rules, shared invariants, and stateful interactions in the domain",
+        "C": "Whether the team uses an ORM or raw SQL",
+        "D": "The number of developers on the project"
+      },
+      "correct": "B",
+      "explanation": "The complexity curve is determined by domain richness — how many business rules exist, whether they are shared across workflows, and whether objects have meaningful stateful interactions. Table count (A), ORM choice (C), and team size (D) are not proxies for domain complexity.",
+      "lesson_ref": "L19",
+      "claim_ref": "C5",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "A loan approval system has 5 business rules checked in 4 different service methods. When does Domain Model become justified for this system?",
+      "options": {
+        "A": "When the team decides to adopt DDD",
+        "B": "When the rules are shared across workflows and violating one would cause inconsistency that a single script cannot protect against",
+        "C": "When the application is deployed to production and performance becomes critical",
+        "D": "When the loan objects need to be serialized to JSON"
+      },
+      "correct": "B",
+      "explanation": "Domain Model becomes justified when rules are shared, must be enforced consistently, and putting them in a domain object is the only way to prevent duplication or violation. A is a team decision proxy. C and D are irrelevant to the domain complexity question.",
+      "lesson_ref": "L20",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "What is the Anemic Domain Model and how is it detected in code?",
+      "options": {
+        "A": "A domain model with too few domain objects; detected when there are fewer than 5 classes",
+        "B": "Domain objects that are pure data containers with no behavior; detected when all business logic lives in service classes and objects only have getters/setters",
+        "C": "A domain model that uses inheritance instead of composition; detected by deep class hierarchies",
+        "D": "A domain model that doesn't use an ORM; detected when SQL appears in domain objects"
+      },
+      "correct": "B",
+      "explanation": "Anemic Domain Model: the object form exists but the behavioral substance is elsewhere. Objects are data bags; services do all the work. A conflates quantity with anemia. C is about design style. D describes Active Record, not anemia.",
+      "lesson_ref": "L21",
+      "claim_ref": "C5",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "A codebase has Order, Product, and Customer classes with only getters and setters. All discount, validation, and fulfillment logic lives in OrderService. Which two interpretations are both valid responses to this situation?",
+      "options": {
+        "A": "Add more classes, or refactor to use static methods",
+        "B": "The domain is genuinely simple enough for Transaction Script (drop the class ceremony) OR domain complexity is real and behavior belongs on the objects (enrich the domain model)",
+        "C": "Use Service Layer to absorb the remaining logic, or add a Registry for lookup",
+        "D": "Switch from ORM to raw SQL, or add Unit of Work"
+      },
+      "correct": "B",
+      "explanation": "The Anemic Domain Model either means (1) the domain is really simple — commit to Transaction Script and remove the class ceremony — or (2) domain complexity is real — enrich the domain objects. Both are honest resolutions. The mismatch is having the object form without the behavioral substance.",
+      "lesson_ref": "L21",
+      "claim_ref": "C5",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "Domain Model adds complexity over Transaction Script. What specific pressure makes that complexity worth paying?",
+      "options": {
+        "A": "The team wants to practice OOP principles",
+        "B": "Business rules are dense, shared across multiple workflows, and must be enforced as invariants on domain objects",
+        "C": "The application has a microservices architecture that requires objects",
+        "D": "Performance requirements demand that logic run inside database transactions"
+      },
+      "correct": "B",
+      "explanation": "Domain Model earns its complexity when rules must be centralized in objects to prevent duplication and ensure invariant enforcement. Team preference (A), architecture style (C), and performance (D) are not the relevant domain-complexity pressure.",
+      "lesson_ref": "L20",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "Distinguish the Anemic Domain Model from a deliberately simple Transaction Script design. What is the key difference?",
+      "options": {
+        "A": "Anemic Domain Model uses Java; Transaction Script uses Python",
+        "B": "Anemic Domain Model is a mismatch — object form without behavioral substance at non-trivial domain complexity; Transaction Script is a deliberate choice at genuinely modest complexity",
+        "C": "Transaction Script is only valid for batch processing; Anemic Domain Model is for web applications",
+        "D": "Anemic Domain Model uses an ORM; Transaction Script uses raw SQL"
+      },
+      "correct": "B",
+      "explanation": "The distinction is intentionality and complexity fit. Transaction Script chosen because the domain is genuinely simple = correct. Classes-with-no-behavior when domain complexity is real = Anemic Domain Model mismatch. A, C, D apply irrelevant criteria.",
+      "lesson_ref": "L21",
+      "claim_ref": "C5",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "A billing system processes a single workflow: load invoice, apply flat 10% discount, write to DB. Should this use Transaction Script or Domain Model? Justify using Contradiction 3.",
+      "answer_key": {
+        "required_points": [
+          "Transaction Script — the workflow is linear, rule is local (10% discount applies to everything), no shared invariants, no other workflows need this rule",
+          "Contradiction 3: TS and DM target different complexity regions — this is clearly in TS territory",
+          "Domain Model would add class overhead with nothing meaningful to encapsulate — the rule has no need for invariant protection or cross-workflow sharing"
+        ],
+        "acceptable_variations": "May note that if more discount types or eligibility rules appeared, the answer could change",
+        "full_credit": "Correct recommendation, Contradiction 3 reasoning applied, explanation of why DM is overkill",
+        "partial_credit": "Correct recommendation without Contradiction 3 reasoning"
+      },
+      "lesson_ref": "L19",
+      "claim_ref": "C5",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "Describe what 'behavior belongs on the object' means in practice. Give one concrete example of a business rule that belongs inside a domain object rather than a service method.",
+      "answer_key": {
+        "required_points": [
+          "'Behavior belongs on the object' means the rule that validates or transforms an object's state should be a method on that object, not an external procedure",
+          "This protects invariants — no service can bypass the rule by skipping a service method call",
+          "Concrete example: Order.add_item(item) checks that the item is in stock before adding it — the invariant cannot be violated because the only way to add an item is through the method"
+        ],
+        "acceptable_variations": "Any example where the domain object method enforces an invariant that would be duplicated or bypassable if it lived in a service",
+        "full_credit": "Correct principle, invariant protection explained, concrete example with a method that enforces a rule",
+        "partial_credit": "Correct example without the invariant protection explanation"
+      },
+      "lesson_ref": "L20",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "You are joining a codebase that has Order, Customer, and Product classes with only __init__ and property methods. All business rules live in OrderService, CustomerService, and ProductService. The business logic includes: discount eligibility based on customer tier and order total, out-of-stock prevention, and loyalty points calculation shared across 4 different workflows. Using the complexity curve from Module 7, evaluate whether this is (a) correctly using Transaction Script with unnecessary classes, or (b) an Anemic Domain Model that needs enrichment. Recommend a direction and explain what would change.",
+      "guidance": "A strong response identifies the shared-rule signal (loyalty points across 4 workflows, discount rules appearing in multiple services) as the indicator that Domain Model territory has been reached. It recommends enrichment: move the shared rules onto domain objects. It explains that if rules were all local and non-shared, removing the classes and committing to Transaction Script would be equally valid.",
+      "rubric": {
+        "A": "Correctly identifies the shared-rule signal, diagnoses Anemic Domain Model not Transaction Script, recommends enrichment with specific example of a rule that moves to a domain object, acknowledges the alternative (pure TS) would be valid if rules were local",
+        "B": "Correct diagnosis, recommends enrichment, limited on the specific example or alternative consideration",
+        "C": "Picks a direction without using the complexity curve or shared-rule signal as evidence"
+      },
+      "lesson_ref": "L19-L21",
+      "difficulty": "analysis"
+    }
+  ]
+}

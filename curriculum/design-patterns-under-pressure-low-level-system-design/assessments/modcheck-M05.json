@@ -1,0 +1,26 @@
+{
+  "module": "M05",
+  "title": "Persistence Boundaries in Depth — Quick Check",
+  "questions": [
+    {
+      "id": "MC05-1",
+      "q": "What specific problem does Data Mapper solve that Active Record cannot?",
+      "a": "Data Mapper separates the domain model completely from the relational model — domain objects have no SQL or schema knowledge. Active Record couples persistence to the domain object, making the domain model dependent on the database structure."
+    },
+    {
+      "id": "MC05-2",
+      "q": "When does a Repository become needless indirection rather than useful abstraction?",
+      "a": "When the application has simple, stable queries that never need to be tested in isolation and there is no domain model complexity worth protecting. If the repository wrapper adds ceremony without protecting any real query-scattering or testability concern, it is not paying rent."
+    },
+    {
+      "id": "MC05-3",
+      "q": "What coordination problem does Unit of Work solve?",
+      "a": "Unit of Work tracks all domain objects changed during a use-case and writes them back in one atomic commit. It solves the problem of partial writes and scattered save() calls that can leave the database in an inconsistent state."
+    },
+    {
+      "id": "MC05-4",
+      "q": "What are the three distinct pressures that Data Mapper, Repository, and Unit of Work each own?",
+      "a": "Data Mapper owns object-relational isolation (keeping domain objects ignorant of the schema). Repository owns query abstraction (centralizing data access behind a collection-like interface). Unit of Work owns transaction-scope coordination (committing multi-object changes atomically)."
+    }
+  ]
+}

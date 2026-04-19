@@ -3,62 +3,180 @@
 **Module**: M06 · Broaden Specification Beyond Single Examples
 **Type**: synthesis
 **Estimated time**: 17 minutes
-**Claim**: C7 - Advanced Python TDD expertise includes using broader specification techniques than single example-based unit tests
+**Claim**: C7 from Strata synthesis
 
 ---
 
-## The synthesis
+## The core idea
 
-By this point, the course has built several separate ideas: fixture isolation, async loop control, transactional persistence testing, seam design, strict mocks, verified fakes, contract-style checks, parametrization, and property-based testing. The synthesis challenge is knowing how to combine them without turning the suite into a pile of overlapping rituals. The research offers a practical answer: choose coverage layers by the kind of truth you need from each boundary. Source trail: `vault/research/test-driven-development-in-python/03-synthesis/narrative.md`, `vault/research/test-driven-development-in-python/01-sources/web/S015-pytest-asyncio-concepts.md`, `vault/research/test-driven-development-in-python/01-sources/web/S016-sqlalchemy-test-transactions.md`, `vault/research/test-driven-development-in-python/01-sources/web/S017-pact-how-it-works.md`.
+The previous five lessons built separate ideas: fixture isolation, async loop control, transactional persistence testing, seam design, strict mocks, verified fakes, contract checks, parametrization, and property-based testing. The synthesis challenge is knowing when to apply each. A practitioner who reaches for Hypothesis on every function is doing unnecessary work. One who only writes happy-path unit tests is leaving real coverage gaps. Advanced coverage is about deliberate layering, not exhaustive application of every technique [S015](../../research/test-driven-development-in-python/01-sources/web/S015-pytest-asyncio-concepts.md) [S016](../../research/test-driven-development-in-python/01-sources/web/S016-sqlalchemy-test-transactions.md).
 
-That means advanced coverage is not "more of every kind of test." It is deliberate layering. Unit-level tests answer whether domain logic makes correct decisions. Boundary-level tests answer whether translations to persistence, async runtimes, or external services are still truthful. Broader specification tools answer whether the behavioral space is wider than your hand-written examples suggest. Each layer earns its place by answering a different question.
+The research suggests a practical framing: choose each test type by the kind of learning it provides. Unit tests with strict mocks tell you whether domain logic makes correct decisions. Parametrized and property-based tests tell you whether the specification holds across a broader input space. Async loop or transaction fixture tests tell you whether runtime lifecycle boundaries preserve isolation. Real boundary tests — integration, contract, or verified-fake — tell you whether translations to external systems are still honest. Each layer earns its place by answering a different question about the system.
 
-## A practical model
+## Why it matters
 
-Use this decision model when a Python component stops being trivial.
+Advanced coverage is not about having more tests. It is about having the right tests for the right concerns. A suite that overlaps heavily — unit tests, integration tests, and contract tests all covering the same assertion — is expensive to maintain and provides diminishing feedback. A suite with strategic layering provides fast feedback on domain decisions and honest feedback on boundary translations, at a sustainable maintenance cost.
 
-Start with small example-driven tests around domain logic. These keep the design loop tight.
+The other risk is coverage theatre: a suite that is large and green but doesn't actually catch the regressions it implies it will catch. Parametrization applied to the wrong granularity, Hypothesis invariants that are too easy to satisfy, mocks that don't resemble the real interfaces — all of these produce test count without test value. The advanced skill is not running every tool, but knowing which tool answers the question you actually have.
 
-Add parametrization when the same behavior clearly has a family of cases.
+## Example 1 — a complete suite for a domain service with boundaries
 
-Add Hypothesis when you can state a meaningful invariant and want the suite to search for counterexamples you did not think to write manually.
+A `SubscriptionRenewalService` that renews subscriptions: validate eligibility, charge via a payment gateway, update the database, emit a domain event.
 
-Add strict mocks where owned collaborators coordinate behavior and speed matters.
+The ideal suite has distinct layers, each with a clear purpose:
 
-Add verified fakes, contract checks, or focused integration tests where the real boundary's shape or semantics are what you need to learn from.
+```python
+# Layer 1 — unit tests for domain logic (strict mocks, fast)
+def test_ineligible_subscription_is_rejected(mock_gateway, mock_repo, mock_bus):
+    repo  = create_autospec(SubscriptionRepo, instance=True)
+    sub   = Subscription(id="sub-1", status="cancelled", expires_at=past_date())
+    repo.find.return_value = sub
 
-Add explicit async-loop or transaction strategies where runtime lifecycle itself can leak between tests or distort realism.
+    service = SubscriptionRenewalService(repo, mock_gateway, mock_bus)
+    with pytest.raises(IneligibleSubscriptionError):
+        service.renew("sub-1")
 
-Notice what this model avoids. It does not start from tooling categories. It starts from learning goals.
+    mock_gateway.charge.assert_not_called()
+    mock_bus.publish.assert_not_called()
 
-## A worked scenario
 
-Imagine a background job that receives a message, validates payload fields, stores a record, and calls an external fulfillment service.
+def test_successful_renewal_emits_event():
+    repo    = create_autospec(SubscriptionRepo, instance=True)
+    gateway = create_autospec(PaymentGateway, instance=True)
+    bus     = create_autospec(EventBus, instance=True)
 
-One healthy suite might look like this:
+    sub = Subscription(id="sub-1", status="active", expires_at=tomorrow())
+    repo.find.return_value = sub
+    gateway.charge.return_value = ChargeResult(status="ok", charge_id="ch-99")
 
-- small unit tests drive validation and branching logic
-- parametrized tests cover families of payload cases
-- a Hypothesis property checks that invalid required fields never produce a persisted record
-- a strict mock verifies that the domain service asks an owned fulfillment adapter for the correct business action
-- a transactional database test verifies that persistence logic behaves correctly with real session semantics
-- a contract or integration-style check verifies that the fulfillment adapter still speaks correctly to the external service
+    service = SubscriptionRenewalService(repo, gateway, bus)
+    service.renew("sub-1")
 
-That is not redundancy. Each test type is protecting a different source of error. The domain tests protect logic. The persistence test protects realism. The contract or integration check protects translation. The property-based test protects broader invariants.
+    bus.publish.assert_called_once_with(SubscriptionRenewed(subscription_id="sub-1"))
+```
+
+```python
+# Layer 2 — parametrized cases for eligibility rules
+@pytest.mark.parametrize(
+    ("status", "days_until_expiry", "should_renew"),
+    [
+        ("active",    5,    True),
+        ("active",    0,    True),
+        ("cancelled", 5,    False),
+        ("suspended", 5,    False),
+        ("active",   -1,    False),   # already expired
+    ],
+)
+def test_renewal_eligibility(status, days_until_expiry, should_renew):
+    sub = Subscription(
+        id="sub-1",
+        status=status,
+        expires_at=date.today() + timedelta(days=days_until_expiry),
+    )
+    assert sub.is_eligible_for_renewal() == should_renew
+```
+
+```python
+# Layer 3 — real database test for persistence (transaction fixture)
+def test_renewal_updates_expiry_in_database(db):
+    sub = Subscription(id="sub-1", status="active", expires_at=tomorrow())
+    db.add(sub)
+    db.flush()
+
+    repo    = SQLAlchemySubscriptionRepo(db)
+    gateway = create_autospec(PaymentGateway, instance=True)
+    gateway.charge.return_value = ChargeResult(status="ok", charge_id="ch-1")
+    bus     = create_autospec(EventBus, instance=True)
+
+    service = SubscriptionRenewalService(repo, gateway, bus)
+    service.renew("sub-1")
+
+    refreshed = db.query(Subscription).filter_by(id="sub-1").one()
+    assert refreshed.expires_at > tomorrow()   # expiry was extended
+```
+
+Each layer is doing different work. The unit tests verify logic. The parametrized cases cover the eligibility space. The database test verifies that the repository correctly persists the renewal outcome under real session semantics [S016](../../research/test-driven-development-in-python/01-sources/web/S016-sqlalchemy-test-transactions.md).
+
+## Example 2 — adding a Hypothesis invariant
+
+Once the unit tests and parametrized cases are in place, a property-based test can guard a broader invariant across the renewal logic: a renewal should never produce an expiry date in the past, regardless of the input state.
+
+```python
+from hypothesis import given, strategies as st, assume
+
+
+@given(
+    status         = st.sampled_from(["active"]),
+    days_remaining = st.integers(min_value=0, max_value=365),
+    renewal_days   = st.integers(min_value=1, max_value=365),
+)
+def test_renewal_always_extends_expiry_into_future(status, days_remaining, renewal_days):
+    sub = Subscription(
+        id="sub-1",
+        status=status,
+        expires_at=date.today() + timedelta(days=days_remaining),
+    )
+    new_expiry = sub.calculate_renewal_expiry(renewal_days)
+    assert new_expiry > date.today()
+```
+
+This test does not replace the specific parametrized cases. It adds a different kind of assurance: that across any combination of remaining days and renewal period, the extension logic never produces a nonsensical past date [S010](../../research/test-driven-development-in-python/01-sources/web/S010-hypothesis-quickstart.md).
+
+## Example 3 — async layer with per-test loop scope
+
+If the service has an async notification path — say, an HTTP call to a webhook endpoint — the suite extends into async territory with an explicit per-test event loop to keep tests independent [S015](../../research/test-driven-development-in-python/01-sources/web/S015-pytest-asyncio-concepts.md).
+
+```python
+import pytest
+import pytest_asyncio
+
+
+@pytest_asyncio.fixture()
+async def async_notifier():
+    """Fresh async notifier per test — no shared event loop state."""
+    notifier = AsyncWebhookNotifier(endpoint="http://localhost:9999/hook")
+    yield notifier
+    await notifier.close()
+
+
+@pytest.mark.asyncio
+async def test_renewal_webhook_fires_on_success(async_notifier, httpx_mock):
+    httpx_mock.add_response(url="http://localhost:9999/hook", status_code=200)
+
+    await async_notifier.notify_renewal("sub-1")
+
+    requests = httpx_mock.get_requests()
+    assert len(requests) == 1
+    assert requests[0].method == "POST"
+```
+
+The per-test fixture scope ensures each async test starts with a fresh loop. The mock HTTP response keeps the test fast and isolated. Real integration-level checks against the actual webhook endpoint run in a separate CI stage, not on every local test run.
+
+## Decision model
+
+| Concern | Tool |
+|---|---|
+| Domain logic decisions | Unit test with strict mock (autospec) |
+| Input case families | Parametrized test |
+| Broad invariants | Hypothesis property test |
+| Real persistence semantics | Transaction-wrapped integration test |
+| External service interaction shape | Contract test or verified fake |
+| Async runtime isolation | Per-test event loop scope |
 
 ## Key points
 
-- Advanced coverage is a strategy for combining layers, not a mandate to use every tool everywhere.
-- Each layer should answer a distinct question about logic, invariants, lifecycle, or boundary truth.
-- The right suite for a non-trivial Python system is chosen by learning goals, not by attachment to one test style.
+- Advanced coverage is strategic layering, not exhaustive application of every tool [S016](../../research/test-driven-development-in-python/01-sources/web/S016-sqlalchemy-test-transactions.md)
+- Each layer earns its place by answering a question the other layers cannot answer
+- Unit tests protect logic; parametrization broadens cases; Hypothesis guards invariants; integration tests verify boundary truth [S010](../../research/test-driven-development-in-python/01-sources/web/S010-hypothesis-quickstart.md)
+- Per-test async event loop scope prevents lifecycle state from leaking across test runs [S015](../../research/test-driven-development-in-python/01-sources/web/S015-pytest-asyncio-concepts.md)
+- The right suite for a non-trivial Python system is chosen by learning goals, not by attachment to one test style
 
 ## Go deeper
 
-- `vault/research/test-driven-development-in-python/03-synthesis/narrative.md`
-- `vault/research/test-driven-development-in-python/01-sources/web/S015-pytest-asyncio-concepts.md`
-- `vault/research/test-driven-development-in-python/01-sources/web/S016-sqlalchemy-test-transactions.md`
-- `vault/research/test-driven-development-in-python/01-sources/web/S017-pact-how-it-works.md`
+- [S015](../../research/test-driven-development-in-python/01-sources/web/S015-pytest-asyncio-concepts.md) — async loop scope, per-test vs session-scope event loops
+- [S016](../../research/test-driven-development-in-python/01-sources/web/S016-sqlalchemy-test-transactions.md) — transactional test isolation for realistic persistence tests
+- [S010](../../research/test-driven-development-in-python/01-sources/web/S010-hypothesis-quickstart.md) — Hypothesis in context: combining with example-based tests rather than replacing them
 
 ---
 
-*[<- Previous: Parametrization and Property-Based Testing](./L11-parametrization-and-property-based-testing.md)* · *[Next lesson: What the Empirical Evidence Actually Supports ->](./L13-what-the-empirical-evidence-actually-supports.md)*
+*[← Previous lesson](./L11-parametrization-and-property-based-testing.md)* · *[Next lesson →](./L13-what-the-empirical-evidence-actually-supports.md)*

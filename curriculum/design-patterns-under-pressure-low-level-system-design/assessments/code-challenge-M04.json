@@ -1,0 +1,88 @@
+{
+  "id": "code-challenge-M04",
+  "type": "module",
+  "module": "M04",
+  "title": "Coding Challenge: Service Layer",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `classify_operation(op_name)` that takes an operation name string and classifies it as `'read'` or `'write'` based on its prefix.\n\n- **read** prefixes: `get`, `find`, `list`, `search`, `fetch`, `load`, `query`\n- **write** prefixes: `create`, `update`, `delete`, `save`, `remove`, `insert`, `add`\n\nReturn `'unknown'` if no prefix matches. Matching should be case-insensitive.",
+      "starter_code": "def classify_operation(op_name):\n    \"\"\"\n    Classify op_name as 'read', 'write', or 'unknown' based on its prefix.\n    Returns a string.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "get prefix is a read",
+          "input": "'getUserById'",
+          "expected_output": "read",
+          "visibility": "visible"
+        },
+        {
+          "name": "create prefix is a write",
+          "input": "'createOrder'",
+          "expected_output": "write",
+          "visibility": "visible"
+        },
+        {
+          "name": "find prefix is a read",
+          "input": "'findByEmail'",
+          "expected_output": "read",
+          "visibility": "hidden"
+        },
+        {
+          "name": "delete prefix is a write",
+          "input": "'deleteAccount'",
+          "expected_output": "write",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["service-layer", "operation-routing"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L10",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L10"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "python",
+      "prompt": "Write a function `apply_null_object(value)` that implements the Special Case / Null Object pattern: if `value` is `None`, return the string `'DEFAULT'`; otherwise return the value unchanged.\n\nNote: `0`, `''` (empty string), and `False` are **not** None — return them as-is.",
+      "starter_code": "def apply_null_object(value):\n    \"\"\"\n    Return value if it is not None, otherwise return 'DEFAULT'.\n    \"\"\"\n    pass\n",
+      "test_cases": [
+        {
+          "name": "Non-None string returned as-is",
+          "input": "'active'",
+          "expected_output": "active",
+          "visibility": "visible"
+        },
+        {
+          "name": "None returns DEFAULT",
+          "input": "None",
+          "expected_output": "DEFAULT",
+          "visibility": "visible"
+        },
+        {
+          "name": "Zero is not None — returned as-is",
+          "input": "0",
+          "expected_output": "0",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Empty string is not None — returned as-is",
+          "input": "''",
+          "expected_output": "''",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["null-object", "special-case-pattern"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 1,
+      "lesson_ref": "L11",
+      "pass_criteria": 1.0,
+      "remediation_lesson_ids": ["L11"]
+    }
+  ]
+}

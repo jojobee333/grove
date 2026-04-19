@@ -1,0 +1,176 @@
+{
+  "id": "quiz-M09",
+  "type": "module",
+  "module": "M09",
+  "title": "Assessment: Composition Studios",
+  "generated": "2026-04-17",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "In the enterprise pattern stack, which pattern owns the orchestration pressure and which owns the invariant-enforcement pressure?",
+      "options": {
+        "A": "Repository owns orchestration; Unit of Work owns invariants",
+        "B": "Service Layer owns orchestration; Domain Model owns invariants",
+        "C": "Data Mapper owns orchestration; Repository owns invariants",
+        "D": "Unit of Work owns orchestration; Service Layer owns invariants"
+      },
+      "correct": "B",
+      "explanation": "Service Layer = use case coordination (orchestration). Domain Model = business rules and invariants. Repository and Data Mapper address query abstraction and object-relational separation respectively. UoW handles transaction scope.",
+      "lesson_ref": "L25",
+      "claim_ref": "C6",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "What is 'responsibility layering' and how does it prevent pattern stacking?",
+      "options": {
+        "A": "Organizing code by technical layer (controller, service, model) rather than by business domain",
+        "B": "Assigning one pattern per one design pressure so no two patterns own the same concern",
+        "C": "Limiting each layer of the architecture to a maximum number of classes",
+        "D": "Using inheritance to layer behavior across parent and child classes"
+      },
+      "correct": "B",
+      "explanation": "Responsibility layering means each pattern addresses a distinct force with no overlap. It prevents stacking because the test is 'which pressure does this pattern own?' — if another pattern already owns that pressure, one of them is redundant. A, C, D describe different concepts.",
+      "lesson_ref": "L25",
+      "claim_ref": "C6",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "A system uses Service Layer + Repository + Unit of Work, but domain objects have no behavior — all rules are in the service. What is missing and what symptom indicates it?",
+      "options": {
+        "A": "Data Mapper is missing; symptom is SQL appearing in domain objects",
+        "B": "Domain Model is hollow; symptom is business rules duplicated across service methods and no invariant enforcement on domain objects",
+        "C": "Unit of Work is unnecessary; symptom is too many explicit save() calls",
+        "D": "Observer is missing; symptom is UI not updating after service calls"
+      },
+      "correct": "B",
+      "explanation": "A structural enterprise stack without Domain Model richness is an Anemic Domain Model pattern — objects exist but hold no behavior. The symptom is rule duplication across services and no invariant protection. A, C, D describe different missing elements.",
+      "lesson_ref": "L25",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "In an editor/workflow composition (Command, Observer, State), which pattern owns the 'user can undo their last 10 actions' requirement?",
+      "options": {
+        "A": "Observer — by storing state snapshots on each notification",
+        "B": "State — by tracking historical states in the state machine",
+        "C": "Command — by storing executed command objects in a history stack and calling their undo() methods",
+        "D": "A combination of all three is required"
+      },
+      "correct": "C",
+      "explanation": "Undo/redo is Command's core lifecycle feature — execute() creates the action, undo() reverses it, a history stack manages the sequence. Observer handles notification fan-out; State handles mode transitions. No combination is needed for undo specifically.",
+      "lesson_ref": "L26",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "How do Command and Observer interact in a text editor without overlapping responsibilities?",
+      "options": {
+        "A": "They don't interact — they address completely independent parts of the system",
+        "B": "Command executes the edit action (and makes it undoable); after execution, Observer notifies all components that the document has changed",
+        "C": "Observer triggers Command execution by forwarding events from the UI",
+        "D": "Command stores Observer registrations so it can notify subscribers when undone"
+      },
+      "correct": "B",
+      "explanation": "The sequence is: user triggers a Command (the edit), execute() runs, then an event fires (Observer) to update all components. Command owns the action lifecycle; Observer owns the notification fan-out. No overlap. A is wrong — they naturally sequence. C, D conflate their responsibilities.",
+      "lesson_ref": "L26",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "What is 'accidental complexity' in the context of a pattern-heavy system, and how do you detect it?",
+      "options": {
+        "A": "Complexity introduced by bugs; detected by running the test suite",
+        "B": "Complexity introduced by the design itself rather than the problem; detected when abstractions can be removed without any loss of behavior",
+        "C": "Complexity introduced by third-party libraries; detected by dependency audits",
+        "D": "Complexity from too many developers working on the same module simultaneously"
+      },
+      "correct": "B",
+      "explanation": "Accidental complexity is design-introduced difficulty. The detection test is: can a layer be removed without breaking any behavior? If yes, it is accidental structure. A, C, D describe other sources of complexity unrelated to pattern-over-application.",
+      "lesson_ref": "L27",
+      "claim_ref": "C6",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q07",
+      "type": "mcq",
+      "question": "What is the composition heuristic for when to add the next pattern to a growing codebase?",
+      "options": {
+        "A": "Add patterns proactively every time a new feature is added",
+        "B": "Add a pattern only when a concrete pressure appears that no existing pattern already owns",
+        "C": "Add patterns based on the project's architectural phase (prototype → growth → scale)",
+        "D": "Add patterns when the codebase exceeds 1,000 lines of service-layer code"
+      },
+      "correct": "B",
+      "explanation": "The heuristic is pressure-driven and incremental: one pattern per one new real pressure. Proactive addition (A) and phase-based addition (C) are not pressure-first. Line counts (D) are a proxy, not an indicator of the actual force.",
+      "lesson_ref": "L27",
+      "claim_ref": "C6",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "Trace the pressure-triggered evolution of a Python codebase from a single function to a five-pattern enterprise stack. Name each pattern, the pressure that triggered it, and the order in which pressures appeared.",
+      "answer_key": {
+        "required_points": [
+          "Start: one function (no pattern needed)",
+          "Trigger 1 — construction coupling: add DI (pass the database in rather than creating it internally)",
+          "Trigger 2 — query scattering: add Repository (SQL scattered across service methods)",
+          "Trigger 3 — partial write risk: add Unit of Work (multi-object commits causing inconsistency)",
+          "Trigger 4 — shared business rules: add Domain Model (rules duplicated across scripts)",
+          "Optional Trigger 5 — runtime variation: add Plugin (multiple environments need different implementations)",
+          "Key point: each pattern is added only when a specific pressure appears, not planned upfront"
+        ],
+        "acceptable_variations": "Order of pressures may vary; any consistent sequence where each pattern is traceable to a trigger is correct",
+        "full_credit": "At least four patterns with their triggering pressures in a plausible order, with the incremental principle stated",
+        "partial_credit": "At least three patterns with pressures but no order or incremental principle"
+      },
+      "lesson_ref": "L27",
+      "claim_ref": "C6",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "short_answer",
+      "question": "A team has Service Layer, Domain Model, Data Mapper, Repository, Unit of Work, Plugin, Registry, Command, and Observer all in a 500-line codebase. What test would you apply to find which patterns are 'accidental structure,' and what would a positive result look like?",
+      "answer_key": {
+        "required_points": [
+          "Test: attempt to remove each pattern one at a time and check if any behavior breaks or any present cost reappears",
+          "Positive result for accidental structure: the pattern can be removed and nothing breaks — no behavior is lost, no cost reappears",
+          "For a 500-line codebase, a high pattern density strongly suggests accidental structure — most patterns would not have real pressures behind them at that scale",
+          "Concrete example: Plugin at 500 lines likely means only one implementation exists — the Plugin architecture is structural overhead with no variation to manage"
+        ],
+        "acceptable_variations": "May name different patterns as likely accidental; must describe the removal test and what a positive result looks like",
+        "full_credit": "Describes the removal test, positive-result criterion, and gives a concrete example",
+        "partial_credit": "Describes the test without the positive-result criterion or concrete example"
+      },
+      "lesson_ref": "L27",
+      "claim_ref": "C6",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q10",
+      "type": "essay",
+      "prompt": "You are the tech lead on a new e-commerce platform. The team asks: 'Should we start with the full enterprise stack (Service Layer, Domain Model, Data Mapper, Repository, Unit of Work) or start simple and add patterns as needed?' Using the composition heuristic, the rent test, and at least one example of a pressure-triggered addition, write a recommendation with your reasoning. Address: (1) what starting with the full stack costs, (2) what starting simple costs, (3) at what point a specific pattern becomes justified.",
+      "guidance": "A strong response recommends starting simple (one function or Transaction Script per use case), identifies the full-stack upfront cost (abstraction debt for unpresent pressures), and gives a concrete trigger example (e.g., 'when SQL appears in 8 service methods, add Repository'). A strong response acknowledges that for high-complexity known domains, some patterns may be justified from day one — the principle is pressure-driven, not anti-architecture.",
+      "rubric": {
+        "A": "Correct recommendation (start simple), quantifies full-stack upfront cost, gives concrete pressure-trigger example, acknowledges that known domain complexity can justify some patterns upfront",
+        "B": "Correct recommendation, identifies upfront cost, gives partial trigger example",
+        "C": "Recommends one approach without cost analysis or trigger example"
+      },
+      "lesson_ref": "L25-L27",
+      "difficulty": "analysis"
+    }
+  ]
+}

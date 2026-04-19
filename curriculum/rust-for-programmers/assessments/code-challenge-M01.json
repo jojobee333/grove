@@ -1,0 +1,128 @@
+{
+  "id": "code-challenge-M01",
+  "type": "module",
+  "module": "M01",
+  "title": "Coding Challenges: Setup & Rust Fundamentals",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a function `celsius_to_fahrenheit(c: f64) -> f64` that converts a Celsius temperature to Fahrenheit. The formula is `F = C × 1.8 + 32`. Round to two decimal places by using `(value * 100.0).round() / 100.0`.",
+      "starter_code": "fn celsius_to_fahrenheit(c: f64) -> f64 {\n    // Convert Celsius to Fahrenheit: F = C * 1.8 + 32\n    // Round to 2 decimal places: (value * 100.0).round() / 100.0\n    0.0\n}\n",
+      "test_cases": [
+        {
+          "name": "Freezing point",
+          "input": "0.0",
+          "expected_output": "32",
+          "visibility": "visible"
+        },
+        {
+          "name": "Boiling point",
+          "input": "100.0",
+          "expected_output": "212",
+          "visibility": "visible"
+        },
+        {
+          "name": "Body temperature",
+          "input": "37.0",
+          "expected_output": "98.6",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Negative temperature",
+          "input": "-40.0",
+          "expected_output": "-40",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["fn-signature", "return-type", "scalar-types"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L03",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L03"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a function `fizzbuzz(n: u32) -> String` that returns `\"FizzBuzz\"` if n is divisible by both 3 and 5, `\"Fizz\"` if divisible by 3 only, `\"Buzz\"` if divisible by 5 only, or the number as a string otherwise. Use `if`/`else if`/`else` — **not** `match`.",
+      "starter_code": "fn fizzbuzz(n: u32) -> String {\n    // Return \"FizzBuzz\", \"Fizz\", \"Buzz\", or the number as a String\n    // Use if/else if/else, not match\n    String::new()\n}\n",
+      "test_cases": [
+        {
+          "name": "FizzBuzz (15)",
+          "input": "15",
+          "expected_output": "FizzBuzz",
+          "visibility": "visible"
+        },
+        {
+          "name": "Fizz (9)",
+          "input": "9",
+          "expected_output": "Fizz",
+          "visibility": "visible"
+        },
+        {
+          "name": "Buzz (20)",
+          "input": "20",
+          "expected_output": "Buzz",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Plain number (7)",
+          "input": "7",
+          "expected_output": "7",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["if-expression", "return-type", "fn-signature"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L03",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L02", "L03"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "rust",
+      "prompt": "Write a function `sum_range(n: u32) -> u32` that returns the sum of all integers from 1 to `n` inclusive (i.e. 1 + 2 + … + n). Use a `for` loop with a range.",
+      "starter_code": "fn sum_range(n: u32) -> u32 {\n    // Return the sum 1 + 2 + ... + n using a for loop\n    0\n}\n",
+      "test_cases": [
+        {
+          "name": "Sum 1..=5 is 15",
+          "input": "5",
+          "expected_output": "15",
+          "visibility": "visible"
+        },
+        {
+          "name": "Sum 1..=10 is 55",
+          "input": "10",
+          "expected_output": "55",
+          "visibility": "visible"
+        },
+        {
+          "name": "Sum of 1 is 1",
+          "input": "1",
+          "expected_output": "1",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Sum 1..=100 is 5050",
+          "input": "100",
+          "expected_output": "5050",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["for-range", "range", "fn-signature", "return-type"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L03",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L03"]
+    }
+  ]
+}

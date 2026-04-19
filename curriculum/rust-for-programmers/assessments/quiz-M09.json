@@ -1,0 +1,155 @@
+{
+  "id": "quiz-M09",
+  "type": "module",
+  "module": "M09",
+  "title": "Assessment: Concurrency",
+  "generated": "2026-04-19",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "Why must closures passed to `thread::spawn` typically use the `move` keyword?",
+      "options": {
+        "A": "move is required syntax for all thread closures — it is not optional",
+        "B": "The spawned thread may outlive the current scope; move transfers ownership so the thread doesn't hold dangling references",
+        "C": "move prevents the compiler from optimising the closure",
+        "D": "Without move, the thread cannot access variables from the outer scope"
+      },
+      "correct": "B",
+      "explanation": "The thread::spawn call gives no lifetime guarantee — the spawned thread may run past the end of the enclosing function. Without move, captured references could dangle. Moving ownership into the thread eliminates this risk.",
+      "lesson_ref": "L25",
+      "claim_ref": "C7",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "What does `JoinHandle::join()` return?",
+      "options": {
+        "A": "The thread ID of the finished thread",
+        "B": "() — it only synchronises, not returns a value",
+        "C": "Result<T, Box<dyn Any + Send>> — the thread's return value or panic payload",
+        "D": "Option<T> — Some(value) if the thread completed normally, None if it panicked"
+      },
+      "correct": "C",
+      "explanation": ".join() blocks until the thread finishes and returns a Result: Ok(T) where T is the closure's return value, or Err if the thread panicked (the panic payload is a Box<dyn Any>).",
+      "lesson_ref": "L25",
+      "claim_ref": "C7",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "What does mpsc stand for and what constraint does it describe?",
+      "options": {
+        "A": "Multiple Protocol Synchronised Communication — allows any number of producers and consumers",
+        "B": "Multiple Producer, Single Consumer — many senders, one receiver",
+        "C": "Message Passing Synchronised Channel — describes the blocking behaviour of recv",
+        "D": "Mutex Protected Shared Context — wraps a Mutex around the channel"
+      },
+      "correct": "B",
+      "explanation": "mpsc = Multiple Producer, Single Consumer. The Sender<T> can be cloned to allow multiple producers, but there is only one Receiver<T>. If you need multiple consumers, you need a different channel type (e.g., from the crossbeam crate).",
+      "lesson_ref": "L26",
+      "claim_ref": "C7",
+      "difficulty": "recall"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "Why can't `Rc<T>` be used to share data across threads?",
+      "options": {
+        "A": "Rc<T> is too slow for multi-threaded use",
+        "B": "Rc<T> does not implement the Send trait because its reference counting is not atomic",
+        "C": "Rc<T> is deprecated in favour of Arc<T> even in single-threaded code",
+        "D": "The compiler allows it but panics at runtime if two threads access the counter simultaneously"
+      },
+      "correct": "B",
+      "explanation": "Rc<T> uses non-atomic (non-thread-safe) reference counting, so it doesn't implement Send. The compiler rejects sending Rc<T> to another thread at compile time. Arc<T> uses atomic operations to make reference counting thread-safe.",
+      "lesson_ref": "L27",
+      "claim_ref": "C7",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "What happens when a `MutexGuard<T>` is dropped?",
+      "options": {
+        "A": "The Mutex itself is destroyed",
+        "B": "The lock is automatically released via the Drop trait",
+        "C": "The inner value T is deallocated",
+        "D": "Other threads waiting on the lock receive an error"
+      },
+      "correct": "B",
+      "explanation": "MutexGuard implements Drop — when it goes out of scope, the lock is automatically released. This is RAII: you cannot forget to unlock because the unlock is tied to the guard's lifetime, not a manual call.",
+      "lesson_ref": "L27",
+      "claim_ref": "C7",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "You have a function that takes `Arc<Mutex<Vec<String>>>`. To add an item, what is the correct sequence?",
+      "options": {
+        "A": "arc.push(item) — Arc provides direct access",
+        "B": "arc.lock().unwrap().push(item) — lock the Mutex to get the guard, call push on the guard",
+        "C": "arc.borrow_mut().push(item) — Arc implements RefCell methods",
+        "D": "unsafe { arc.get_mut().push(item) } — Arc requires unsafe for mutation"
+      },
+      "correct": "B",
+      "explanation": "Arc<Mutex<T>> requires calling .lock() to acquire the Mutex guard, which returns a MutexGuard<T> that derefs to T. Then .push() is called on the guard. The lock is released when the guard drops at end of statement.",
+      "lesson_ref": "L27",
+      "claim_ref": "C7",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "Explain how Rust prevents data races at compile time. Name the two marker traits involved and what each guarantees.",
+      "answer_key": {
+        "required_points": [
+          "Send: a type can be moved safely to another thread",
+          "Sync: a type can be shared (referenced) across threads safely (T is Sync if &T is Send)",
+          "The compiler checks Send/Sync at spawn sites; types that don't implement these cannot cross thread boundaries",
+          "Combined with ownership (no aliased mutable access), this eliminates data races statically"
+        ],
+        "acceptable_variations": "May phrase Sync differently; key is that both traits are named and defined.",
+        "full_credit": "Both Send and Sync defined correctly with explanation of how ownership + these traits prevent data races.",
+        "partial_credit": "Names one trait correctly or describes the mechanism without naming the traits."
+      },
+      "lesson_ref": "L25",
+      "claim_ref": "C7",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "When would you choose message passing (mpsc channels) over shared state (Arc<Mutex<T>>) for inter-thread communication? Give one use case for each.",
+      "answer_key": {
+        "required_points": [
+          "Channels: prefer when threads have a producer/consumer relationship and data flows one-way (e.g., worker pool feeding results to aggregator)",
+          "Arc<Mutex>: prefer when multiple threads need to read/write the same shared structure (e.g., a shared cache or counter incremented by many threads)"
+        ],
+        "acceptable_variations": "Any valid and distinct use case for each.",
+        "full_credit": "Clear distinction with a concrete, plausible use case for each.",
+        "partial_credit": "One use case described correctly."
+      },
+      "lesson_ref": "L26",
+      "claim_ref": "C7",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q09",
+      "type": "essay",
+      "prompt": "Rust claims 'fearless concurrency.' Explain how the ownership system — combined with the Send and Sync marker traits, Arc<T>, and Mutex<T> — makes this claim defensible. Compare to how data races are handled in Python (GIL) or Java (synchronized keyword).",
+      "guidance": "Strong response: (1) ownership prevents aliased mutation → the root cause of data races; (2) Send/Sync enforce thread-safety at compile time — not at runtime; (3) Arc + Mutex provide safe shared state; (4) Python GIL is a runtime lock preventing all multi-core parallelism; Java synchronized is runtime, can be forgotten; (5) Rust: the compiler refuses to compile unsafe patterns.",
+      "rubric": {
+        "A": "Explains ownership + Send/Sync mechanism, Arc/Mutex pattern, and meaningfully contrasts with Python or Java with specific examples.",
+        "B": "Covers Rust's mechanism and one comparison language correctly, but comparison lacks specifics.",
+        "C": "Describes Arc/Mutex correctly but doesn't explain Send/Sync or the ownership connection."
+      },
+      "lesson_ref": "L25-L27",
+      "difficulty": "analysis"
+    }
+  ]
+}

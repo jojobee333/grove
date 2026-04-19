@@ -1,0 +1,155 @@
+{
+  "id": "quiz-M04",
+  "type": "module",
+  "module": "M04",
+  "title": "Assessment: Enums, Pattern Matching & Option",
+  "generated": "2026-04-19",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "Q01",
+      "type": "mcq",
+      "question": "What happens if a `match` expression in Rust does not cover all variants of an enum?",
+      "options": {
+        "A": "The unmatched variants are silently ignored",
+        "B": "The program panics at runtime when an unmatched variant is hit",
+        "C": "The code does not compile — match must be exhaustive",
+        "D": "The first arm acts as a default for unmatched variants"
+      },
+      "correct": "C",
+      "explanation": "Rust enforces exhaustive matching at compile time. If any variant is unhandled, the compiler reports an error listing the missing patterns. This is the key safety guarantee: forgotten cases cannot exist in shipped code.",
+      "lesson_ref": "L11",
+      "claim_ref": "C3",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q02",
+      "type": "mcq",
+      "question": "Given:\n```rust\nenum Message {\n    Quit,\n    Move { x: i32, y: i32 },\n    Write(String),\n}\n```\nHow do you access the `x` value from a `Message::Move` variant?",
+      "options": {
+        "A": "msg.x",
+        "B": "Message::Move.x",
+        "C": "if msg == Move { msg.x } else { 0 }",
+        "D": "match msg { Message::Move { x, y } => x, _ => 0 }"
+      },
+      "correct": "D",
+      "explanation": "Enum variant data must be accessed through pattern matching. The struct-like variant `Move { x, y }` is destructured inside the match arm. Options A and B are not valid Rust syntax for enums.",
+      "lesson_ref": "L10",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q03",
+      "type": "mcq",
+      "question": "What does `Option::map(|v| v * 2)` return when called on `None`?",
+      "options": {
+        "A": "0",
+        "B": "None",
+        "C": "Some(0)",
+        "D": "A compile error — map requires a Some value"
+      },
+      "correct": "B",
+      "explanation": "Option::map applies the closure only if the value is Some(v), returning Some(closure(v)). If the Option is None, map short-circuits and returns None without invoking the closure.",
+      "lesson_ref": "L12",
+      "claim_ref": "C3",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q04",
+      "type": "mcq",
+      "question": "Which of the following is true about Rust's `Option<T>` compared to null in Java or JavaScript?",
+      "options": {
+        "A": "Option<T> is slower because it wraps the value in an enum",
+        "B": "The compiler forces you to handle the None case before accessing the inner value",
+        "C": "Option<T> can hold multiple None values simultaneously",
+        "D": "Option<T> is only available in the standard library, not user code"
+      },
+      "correct": "B",
+      "explanation": "The key advantage is compile-time enforcement. To access the inner T, you must handle the None case through match, if let, unwrap_or, map, etc. This eliminates null pointer exceptions entirely.",
+      "lesson_ref": "L12",
+      "claim_ref": "C4",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q05",
+      "type": "mcq",
+      "question": "When is `if let` preferred over `match`?",
+      "options": {
+        "A": "When you need to handle all variants of an enum",
+        "B": "When you only care about one specific pattern and want to ignore the rest",
+        "C": "When matching integers but not enums",
+        "D": "When the enum has more than 5 variants"
+      },
+      "correct": "B",
+      "explanation": "`if let` is syntactic sugar for a match with exactly one handled arm and a `_ => ()` catch-all. Use it when you only need to act on one case — it's more concise than match. If you need all cases, use match.",
+      "lesson_ref": "L11",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q06",
+      "type": "mcq",
+      "question": "What does the `@` binding operator do in a match pattern?",
+      "options": {
+        "A": "It marks a match arm as unreachable",
+        "B": "It tests the value against a range AND binds it to a variable simultaneously",
+        "C": "It calls a function on the matched value",
+        "D": "It is the syntax for matching string patterns"
+      },
+      "correct": "B",
+      "explanation": "The `@` operator lets you test a value against a pattern (e.g., a range) and bind the value to a name in the same arm: `n @ 1..=5 => println!(\"got {n}\")`. Without @, you could test OR bind, but not both.",
+      "lesson_ref": "L11",
+      "claim_ref": "C3",
+      "difficulty": "comprehension"
+    },
+    {
+      "id": "Q07",
+      "type": "short_answer",
+      "question": "Explain how Rust enums with data-carrying variants eliminate the need for certain class hierarchies in object-oriented languages. Give a concrete example.",
+      "answer_key": {
+        "required_points": [
+          "Enum variants can hold different types and amounts of data",
+          "A single type captures all variants; no subclassing needed",
+          "match enforces handling all variants — unlike virtual dispatch where cases can be missed"
+        ],
+        "acceptable_variations": "Any example of replacing an OOP hierarchy with a Rust enum is valid (e.g., Shape, Event, Message).",
+        "full_credit": "Concrete enum example with 2+ variants holding data, explanation of exhaustive match, contrast with inheritance.",
+        "partial_credit": "Describes the concept correctly but without a concrete example."
+      },
+      "lesson_ref": "L10",
+      "claim_ref": "C3",
+      "difficulty": "analysis"
+    },
+    {
+      "id": "Q08",
+      "type": "short_answer",
+      "question": "What is `Option::and_then` and how does it differ from `Option::map`? Show a one-line example.",
+      "answer_key": {
+        "required_points": [
+          "map applies a closure that returns T, wrapping the result in Some",
+          "and_then applies a closure that itself returns Option<T>, avoiding double-wrapping (Some(Some(x)))",
+          "and_then is used for chaining fallible operations"
+        ],
+        "acceptable_variations": "Example: `Some(5).and_then(|v| if v > 3 { Some(v) } else { None })`",
+        "full_credit": "Correct contrast of return types (T vs Option<T>) with a valid example.",
+        "partial_credit": "Describes one correctly but confuses the other."
+      },
+      "lesson_ref": "L12",
+      "claim_ref": "C3",
+      "difficulty": "application"
+    },
+    {
+      "id": "Q09",
+      "type": "essay",
+      "prompt": "Compare Rust's `match` expression with `switch` statements in C or Java. What categories of bugs does Rust's approach prevent? Use at least one concrete code example to illustrate.",
+      "guidance": "Strong responses cover: (1) exhaustiveness — Rust requires all arms; switch falls through or uses default; (2) structural pattern matching — Rust can destructure enums, structs, tuples; switch can only compare primitives; (3) no fallthrough — each arm is isolated; (4) concrete bug example such as an unhandled enum variant in Java/C causing a silent incorrect default.",
+      "rubric": {
+        "A": "Addresses exhaustiveness, structural matching, and no-fallthrough with concrete code examples for at least two points.",
+        "B": "Correctly addresses exhaustiveness and one other point with an example.",
+        "C": "Describes exhaustiveness only without code examples."
+      },
+      "lesson_ref": "L11",
+      "difficulty": "analysis"
+    }
+  ]
+}
