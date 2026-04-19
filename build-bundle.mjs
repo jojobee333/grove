@@ -420,6 +420,13 @@ for (const [k, v] of Object.entries(practicalApplications)) {
 }
 
 // ── Build bundle ─────────────────────────────────────────────────────────────
+// Enrich course with computed summary fields the app reads at runtime
+course.total_lessons = allLessonIds.length;
+course.total_estimated_hours = Math.round(
+  course.modules.flatMap(m => m.lessons ?? [])
+    .reduce((sum, l) => sum + (l.estimated_minutes ?? 0), 0) / 60 * 10
+) / 10;
+
 const bundle = {
   version: '3.0',
   slug,

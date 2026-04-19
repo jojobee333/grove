@@ -1,7 +1,7 @@
 {
   "version": "3.0",
   "slug": "rust-for-programmers",
-  "bundled": "2026-04-19T14:23:53.689Z",
+  "bundled": "2026-04-19T22:14:16.201Z",
   "course": {
     "topic": "Rust for Programmers",
     "slug": "rust-for-programmers",
@@ -27,13 +27,40 @@
         ],
         "lessons": [
           {
+            "id": "L00",
+            "title": "What Is Rust — and Why Does It Exist?",
+            "strata_claim": "C1",
+            "type": "orientation",
+            "estimated_minutes": 20,
+            "description": "An overview of Rust: the problem it was built to solve, its history, strengths, weaknesses, and how it compares to C/C++, Go, Python, and JavaScript. Sets the mental model before any code is written.",
+            "prerequisites": [],
+            "teaches_concepts": [
+              "rust-origin",
+              "ownership-motivation",
+              "zero-cost-abstractions",
+              "memory-safety",
+              "rust-vs-gc-languages"
+            ],
+            "reinforces_concepts": [],
+            "mastery_threshold": 0.75,
+            "difficulty": 1,
+            "unlock_rule": "none",
+            "review_after_days": [
+              3,
+              7
+            ],
+            "mini_project": null
+          },
+          {
             "id": "L01",
             "title": "Installing Rust and Hello, Cargo",
             "strata_claim": "C1",
             "type": "core",
             "estimated_minutes": 15,
             "description": "Install Rust via rustup, understand the role of Cargo, and write your first Rust program. Covers the project structure created by cargo new.",
-            "prerequisites": [],
+            "prerequisites": [
+              "L00"
+            ],
             "teaches_concepts": [
               "cargo",
               "rustup",
@@ -1026,7 +1053,9 @@
         ],
         "has_assessment": true
       }
-    ]
+    ],
+    "total_lessons": 28,
+    "total_estimated_hours": 8.8
   },
   "learner": {
     "goal": "learn",
@@ -1034,6 +1063,7 @@
     "session_time_min": 20
   },
   "lessons": {
+    "L00": "# What Is Rust — and Why Does It Exist?\r\n\r\n**Module**: M01 · Setup & Rust Fundamentals  \r\n**Type**: orientation  \r\n**Estimated time**: 20 minutes\r\n\r\n---\r\n\r\n## The problem Rust was built to solve\r\n\r\nFor decades, software engineers faced an uncomfortable tradeoff:\r\n\r\n- **C and C++** give you raw control over memory and near-zero runtime overhead — but they let you shoot yourself in the foot. Buffer overflows, use-after-free, data races, and null pointer dereferences are not just theoretical bugs; they account for roughly [70% of Microsoft and Google security vulnerabilities](https://www.chromium.org/Home/chromium-security/memory-safety/) year after year.\r\n- **Managed languages** (Java, Python, Go, JavaScript) make you safe by adding a garbage collector and runtime that abstracts memory for you — but that abstraction costs latency, throughput, and predictability.\r\n\r\nRust's founding question: **can a language be both fast and safe?**\r\n\r\nThe answer turned out to be yes — but only by moving the safety guarantees into the *type system and compiler* rather than the runtime.\r\n\r\n---\r\n\r\n## A brief history\r\n\r\n| Year | Event |\r\n|------|-------|\r\n| 2006 | Graydon Hoare starts Rust as a personal project at Mozilla |\r\n| 2009 | Mozilla officially sponsors the project |\r\n| 2015 | Rust 1.0 released — the first stable version |\r\n| 2016–2022 | Voted **#1 \"most loved language\"** on Stack Overflow every single year |\r\n| 2021 | Rust Foundation formed (Amazon, Google, Microsoft, Mozilla, Huawei) |\r\n| 2022 | Linux kernel officially accepts Rust as a second implementation language |\r\n| 2023 | US government (CISA, NSA) names Rust a recommended memory-safe language |\r\n| 2024 | Android, Windows, and Chrome all have production Rust code |\r\n\r\nRust started as a systems language for writing Firefox's browser engine (Servo) — a domain where C++ bugs had real consequences. That origin shapes everything: the defaults are conservative, the compiler is strict, and correctness is not optional.\r\n\r\n---\r\n\r\n## What Rust is good at\r\n\r\n### 1. Systems programming without fear\r\nThe traditional domain of C/C++: operating systems, device drivers, embedded firmware, databases, game engines, web servers, compilers. Rust competes directly here with zero-cost abstractions and no garbage collector.\r\n\r\n### 2. Performance-critical services\r\nWhen you need predictable latency (no GC pauses), low memory footprint, or throughput that saturates hardware — Rust is a first-class choice. Discord replaced Go services with Rust to eliminate latency spikes. Cloudflare uses Rust for edge networking. Amazon Firecracker (the engine behind AWS Lambda) is written entirely in Rust.\r\n\r\n### 3. WebAssembly\r\nRust has the most mature WebAssembly toolchain of any language. You can compile Rust to `.wasm` and run it in browsers, at CDN edges, or in serverless runtimes — at near-native speed with a tiny binary.\r\n\r\n### 4. CLI tools and developer tooling\r\nFast startup, single binary with no runtime dependency, cross-compilation support. Tools like `ripgrep`, `bat`, `fd`, `exa`, `tokei`, and `cargo` itself are Rust. They're typically faster than their C or Python equivalents.\r\n\r\n### 5. Safe concurrent code\r\nThe ownership and borrowing system extends naturally to threads: if your code compiles, data races are statically impossible. The slogan \"fearless concurrency\" is not marketing — it's enforced by the type system.\r\n\r\n---\r\n\r\n## What Rust is not ideal for\r\n\r\n### 1. Rapid prototyping\r\nThe borrow checker and type system require you to be explicit about memory and lifetimes upfront. Scripts, throwaway automation, or \"get something on screen fast\" work is faster in Python, Ruby, or JavaScript.\r\n\r\n### 2. Simple business logic CRUD apps\r\nIf you're building a web API that reads from a database and returns JSON, Rust works but offers little advantage over Go, Node.js, or a typed Python framework. The overhead isn't worth it when the bottleneck is your database or network.\r\n\r\n### 3. Learning to program\r\nRust's error messages are exceptional, but the *concepts* it requires — ownership, borrowing, lifetimes, explicit generics — assume you understand what a pointer is, why memory allocation matters, and how programs actually run. It's a second or third language, not a first.\r\n\r\n### 4. Mature ecosystem for every domain\r\nRust's crate ecosystem (crates.io) has grown enormously but still has gaps. Machine learning, scientific computing, and some enterprise integrations have richer ecosystems in Python, Java, or .NET. Async Rust, while powerful, is more complex than Go's goroutines or Node.js's event loop.\r\n\r\n---\r\n\r\n## How Rust compares to languages you may already know\r\n\r\n### vs. C and C++\r\n\r\n| | C/C++ | Rust |\r\n|---|---|---|\r\n| Memory management | Manual (malloc/free, new/delete) | Ownership — compiler enforced, no GC |\r\n| Memory safety | You are responsible | Guaranteed at compile time |\r\n| Undefined behavior | Pervasive | Eliminated (in safe code) |\r\n| Concurrency safety | Programmer's problem | Enforced by type system |\r\n| Package manager | None (or cmake/vcpkg/conan) | Cargo — excellent |\r\n| Build system | Make, CMake, Bazel... | Cargo — unified |\r\n| Learning curve | High | Higher initially, but safer guardrails |\r\n| When to prefer C/C++ | Existing codebase, bare-metal without std, niche libraries | — |\r\n\r\n**Key insight**: Rust code that compiles is memory-safe. C code that compiles might not be. The compiler is doing work that C leaves to you.\r\n\r\n---\r\n\r\n### vs. Go\r\n\r\n| | Go | Rust |\r\n|---|---|---|\r\n| Garbage collection | Yes — low-latency but present | None |\r\n| Concurrency model | Goroutines + channels (runtime scheduler) | Threads + async/await (zero-cost) |\r\n| Startup time | Fast | Very fast |\r\n| Memory footprint | Moderate (GC overhead) | Minimal |\r\n| Simplicity | Intentionally minimal | Intentionally expressive |\r\n| Generics | Since 1.18 (limited) | Full, powerful, compile-time |\r\n| Compile time | Fast | Slower |\r\n| When to prefer Go | Cloud services, simple concurrency, fast prototyping | Performance-critical or safety-critical systems |\r\n\r\n**Key insight**: Go trades some performance for a dramatically simpler concurrency model. Rust trades simplicity for maximum control and zero runtime surprises.\r\n\r\n---\r\n\r\n### vs. Python\r\n\r\n| | Python | Rust |\r\n|---|---|---|\r\n| Speed | 10–100× slower than Rust typically | Near C speed |\r\n| Memory | GC + interpreter overhead | Minimal, deterministic |\r\n| Type system | Optional type hints (runtime duck typing) | Strict static typing, no `null` |\r\n| Productivity for prototypes | Very high | Lower initially |\r\n| Deployment | Requires Python runtime | Single static binary |\r\n| Where they meet | Python can call Rust via PyO3 (hot paths in Python libs) | — |\r\n\r\n**Key insight**: Python and Rust are more complementary than competitive. Many Python libraries (Pydantic v2, Polars, ruff) are now written in Rust under the hood for performance while keeping a Python API.\r\n\r\n---\r\n\r\n### vs. JavaScript/TypeScript\r\n\r\n| | JS/TS | Rust |\r\n|---|---|---|\r\n| Runtime | V8/Node.js engine | Native binary or WASM |\r\n| Type safety | TypeScript: structural, optional | Full, strict, algebraic types |\r\n| Async model | Event loop, Promises, async/await | async/await (zero-cost, no runtime scheduler) |\r\n| Package manager | npm/pnpm/yarn | Cargo |\r\n| WebAssembly | Can call WASM, awkward to produce | First-class WASM target |\r\n| When they meet | wasm-bindgen lets Rust compile to WASM called from JS | — |\r\n\r\n**Key insight**: If you're writing front-end JavaScript today and want to move computation-heavy code to near-native speed, Rust → WASM is the most production-proven path.\r\n\r\n---\r\n\r\n## Rust's core design pillars\r\n\r\nUnderstanding why Rust works the way it does makes the hard parts make sense.\r\n\r\n### 1. Ownership over garbage collection\r\nEvery value has exactly one *owner*. When the owner goes out of scope, the value is freed — deterministically, with no GC pause. This is the foundation of Rust's memory safety and performance story.\r\n\r\n### 2. Zero-cost abstractions\r\nIterators, closures, generics, traits — these compile down to the same machine code as hand-written loops and function calls. You don't pay a runtime cost to write expressive code.\r\n\r\n### 3. Correctness by default, performance as a result\r\nImmutable by default (`let`). No null (use `Option<T>`). No unchecked errors (use `Result<T, E>`). Pattern matching must be exhaustive. These aren't restrictions — they're a checklist the compiler runs for you.\r\n\r\n### 4. Fearless concurrency\r\nThe ownership and type system extends to threads. The compiler rejects code that could cause data races. If it compiles, the threading is correct.\r\n\r\n---\r\n\r\n## The Rust learning curve — what to expect\r\n\r\n```\r\nDifficulty\r\n    │\r\n  ██│         Rust\r\n  ██│       ░░░░░░░░\r\n  ██│     ░░░░░░░░░░░░░░░\r\n  ██│   ░░░░░░░░░░░░░░░░░░░░░░░░░\r\n  ██│ ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\r\n  ██│░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░\r\n  ──┼──────────────────────────────────────→\r\n    │               Time\r\n    │\r\n    First       Ownership    Lifetimes   Expert\r\n    week        clicks       click\r\n```\r\n\r\nThe **first wall** is ownership and borrowing — usually hit in week 2–3. The borrow checker will reject code that feels correct, especially coming from Python or JavaScript. This is intentional: the compiler is catching real bugs.\r\n\r\nThe **second wall** is lifetimes — when you write functions that return references. Most application code doesn't hit this hard, but library authors do.\r\n\r\nAfter those walls: Rust feels powerful and fluid. Experienced Rust developers describe it as \"the compiler is a pair-programmer who never lets me write a certain class of bug.\"\r\n\r\n**This course is designed to help you reach that point.**\r\n\r\n---\r\n\r\n## What you'll build in this course\r\n\r\nBy the end of M01, you'll have a working CLI temperature converter in Rust. By the end of the course, you'll have written programs that span:\r\n\r\n- Ownership and borrowing patterns that prevent memory bugs\r\n- Custom types with structs, enums, and pattern matching\r\n- Error handling with `Result` — no exceptions, no panics in normal flow\r\n- Generic data structures and trait-based polymorphism\r\n- Concurrent programs that the compiler proves are data-race free\r\n\r\n---\r\n\r\n## Key points\r\n\r\n- Rust solves the safety-vs-performance tradeoff by moving safety checks into the compiler instead of adding a runtime\r\n- It was designed for systems programming but is now used from CLI tools to WebAssembly to cloud infrastructure\r\n- The main tradeoffs: higher initial learning curve, slower compile times, more verbose than scripting languages\r\n- The main strengths: memory safety without GC, fearless concurrency, predictable performance, excellent tooling\r\n- The borrow checker is the hard part — but it's also the entire point\r\n\r\n---\r\n\r\n*Next lesson: [Installing Rust and Hello, Cargo](L01-setup-cargo.md) →*\r\n",
     "L01": "# Installing Rust and Hello, Cargo\r\n\r\n**Module**: M01 · Setup & Rust Fundamentals  \r\n**Type**: core  \r\n**Estimated time**: 15 minutes  \r\n**Claims**: C1 from Strata synthesis\r\n\r\n---\r\n\r\n## The core idea\r\n\r\nEvery Rust project is managed by Cargo — the official build system and package manager. You don't compile Rust files manually; you use `cargo build`, `cargo run`, and `cargo test`. The first step is always `rustup`, which manages Rust toolchain versions.\r\n\r\n## Setting up\r\n\r\nInstall Rust via [rustup.rs](https://rustup.rs). One command installs everything: `rustc` (the compiler), `cargo` (the build tool), and `rustup` (the toolchain manager).\r\n\r\n```bash\r\n# Install (macOS/Linux)\r\ncurl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh\r\n\r\n# Verify\r\nrustc --version\r\ncargo --version\r\n```\r\n\r\nOn Windows: download and run rustup-init.exe from rustup.rs.\r\n\r\n## Your first project\r\n\r\n```bash\r\ncargo new hello_world\r\ncd hello_world\r\n```\r\n\r\nThis creates:\r\n```\r\nhello_world/\r\n├── Cargo.toml   ← project manifest (name, version, dependencies)\r\n└── src/\r\n    └── main.rs  ← entry point\r\n```\r\n\r\nThe default `src/main.rs`:\r\n```rust\r\nfn main() {\r\n    println!(\"Hello, world!\");\r\n}\r\n```\r\n\r\nRun it:\r\n```bash\r\ncargo run\r\n# Compiling hello_world v0.1.0\r\n# Finished dev profile\r\n# Hello, world!\r\n```\r\n\r\n## Key concepts\r\n\r\n**println! is a macro**, not a function — the `!` is the tell. Macros are expanded at compile time and can accept variable argument counts, which regular functions can't.\r\n\r\n**Cargo.toml** is your project's contract with the ecosystem:\r\n```toml\r\n[package]\r\nname = \"hello_world\"\r\nversion = \"0.1.0\"\r\nedition = \"2021\"\r\n\r\n[dependencies]\r\n# add crates here\r\n```\r\n\r\n**cargo commands you'll use daily:**\r\n- `cargo new <name>` — create a project\r\n- `cargo run` — compile and run\r\n- `cargo build` — compile only (debug by default)\r\n- `cargo build --release` — optimized build\r\n- `cargo check` — type-check without producing a binary (fastest feedback loop)\r\n- `cargo test` — run tests\r\n- `cargo clippy` — run the Rust linter\r\n\r\n## Why this matters\r\n\r\nUnlike Python (`python script.py`) or JavaScript (`node script.js`), Rust is always compiled. There is no interpreter. `cargo run` compiles your entire project and runs the binary — errors are always caught before execution.\r\n\r\nThe compilation step is Rust's first line of defense.\r\n\r\n---\r\n\r\n## Mini-project: hello_world\r\n\r\nExtend the default main.rs to:\r\n1. Print a personalized greeting using a `name` variable\r\n2. Print the Rust edition from a constant\r\n3. Use `cargo check` to verify it compiles without running it\r\n\r\n```rust\r\nfn main() {\r\n    let name = \"Rustacean\";\r\n    const EDITION: u32 = 2021;\r\n    println!(\"Hello, {}! Welcome to Rust Edition {}.\", name, EDITION);\r\n}\r\n```\r\n\r\nRun with `cargo run`. Notice the compilation output — this is what Rust does before every execution.\r\n",
     "L02": "# Variables, Types, and Mutability\r\n\r\n**Module**: M01 · Setup & Rust Fundamentals  \r\n**Type**: core  \r\n**Estimated time**: 18 minutes  \r\n**Claims**: C1 from Strata synthesis\r\n\r\n---\r\n\r\n## The core idea\r\n\r\nRust variables are immutable by default. This is a deliberate design choice: it makes code easier to reason about by making mutation explicit and intentional. When you see `let x = 5`, you know x will never change — unless it's `let mut x = 5`.\r\n\r\n**Bug prevented here**: unintended mutation and shared mutable state.\r\n\r\n## let and mut\r\n\r\n```rust\r\nlet x = 5;        // immutable — x is always 5\r\nx = 6;            // compile error: cannot assign twice to immutable variable\r\n\r\nlet mut y = 5;    // mutable — y can change\r\ny = 6;            // fine\r\n```\r\n\r\n## Shadowing\r\n\r\nShadowing is not mutation — it creates a new binding:\r\n\r\n```rust\r\nlet x = 5;\r\nlet x = x + 1;     // new binding — x is now 6\r\nlet x = x * 2;     // new binding — x is now 12\r\nprintln!(\"{x}\");   // 12\r\n\r\nlet spaces = \"   \";          // &str\r\nlet spaces = spaces.len();   // usize — shadowing can change the type\r\n```\r\n\r\nKey difference from mut: shadowing can change the type; mutation cannot.\r\n\r\n## Scalar types\r\n\r\n| Type | Description | Example |\r\n|------|-------------|---------|\r\n| `i32` | 32-bit signed integer (default) | `let n: i32 = -5;` |\r\n| `u64` | 64-bit unsigned integer | `let big: u64 = 1_000_000;` |\r\n| `f64` | 64-bit float (default) | `let pi = 3.14159;` |\r\n| `bool` | true or false | `let flag = true;` |\r\n| `char` | Unicode scalar value | `let c = 'Z';` |\r\n\r\nRust requires explicit casts between numeric types:\r\n```rust\r\nlet x: i32 = 5;\r\nlet y: f64 = x as f64;   // explicit cast\r\n```\r\n\r\n## Compound types\r\n\r\n**Tuple**: fixed-length, heterogeneous:\r\n```rust\r\nlet tup: (i32, f64, bool) = (500, 6.4, true);\r\nlet (x, y, z) = tup;           // destructuring\r\nprintln!(\"{}\", tup.0);         // index access\r\n```\r\n\r\n**Array**: fixed-length, homogeneous (stack-allocated):\r\n```rust\r\nlet a = [1, 2, 3, 4, 5];\r\nlet b = [0; 5];                // [0, 0, 0, 0, 0]\r\nprintln!(\"{}\", a[0]);          // index access\r\n```\r\n\r\nArrays are not growable — use Vec<T> for dynamic arrays (Module 5).\r\n\r\n## Constants\r\n\r\nConstants (`const`) are always immutable, require a type annotation, and can be declared in any scope:\r\n\r\n```rust\r\nconst MAX_SCORE: u32 = 100_000;\r\n```\r\n\r\nUse `1_000_000` not `1000000` for readability — underscores in numeric literals are ignored.\r\n\r\n---\r\n\r\n## Mini-project: type_explorer\r\n\r\n```rust\r\nfn main() {\r\n    // Scalar types\r\n    let age: u8 = 30;\r\n    let temperature: f64 = 98.6;\r\n    let is_active: bool = true;\r\n    let grade: char = 'A';\r\n\r\n    // Shadowing — transform without mut\r\n    let input = \"42\";\r\n    let input: i32 = input.parse().expect(\"not a number\");\r\n\r\n    // Tuple destructuring\r\n    let coords = (40.7128_f64, -74.0060_f64);\r\n    let (lat, lon) = coords;\r\n\r\n    // Constant\r\n    const VERSION: &str = \"1.0.0\";\r\n\r\n    println!(\"Age: {age}, Temp: {temperature}, Active: {is_active}, Grade: {grade}\");\r\n    println!(\"Parsed: {input}\");\r\n    println!(\"Lat: {lat}, Lon: {lon}\");\r\n    println!(\"Version: {VERSION}\");\r\n}\r\n```\r\n\r\nVerify: `cargo run` — all values printed. Then try changing `let age` to `age = 31` and observe the compile error.\r\n",
     "L03": "# Functions and Control Flow\r\n\r\n**Module**: M01 · Setup & Rust Fundamentals  \r\n**Type**: core  \r\n**Estimated time**: 20 minutes  \r\n**Claims**: C1 from Strata synthesis\r\n\r\n---\r\n\r\n## The core idea\r\n\r\nIn Rust, almost everything is an expression — including `if`, `match`, and function bodies. The last expression in a block is its return value. This makes code more composable and eliminates a whole class of uninitialized variable bugs.\r\n\r\n## Functions\r\n\r\n```rust\r\nfn add(a: i32, b: i32) -> i32 {\r\n    a + b    // no semicolon — this is the return expression\r\n}\r\n\r\nfn greet(name: &str) {\r\n    println!(\"Hello, {name}!\");   // implicit return ()\r\n}\r\n```\r\n\r\nRules:\r\n- Parameters always require type annotations (no inference)\r\n- Return type follows `->` — omit if returning `()` (unit, the \"nothing\" type)\r\n- The last expression (without `;`) is returned\r\n- `return` is allowed for early returns only\r\n\r\n```rust\r\nfn first_positive(nums: &[i32]) -> Option<i32> {\r\n    for &n in nums {\r\n        if n > 0 {\r\n            return Some(n);   // early return\r\n        }\r\n    }\r\n    None    // final expression returned\r\n}\r\n```\r\n\r\n## if/else as an expression\r\n\r\n```rust\r\nlet result = if condition { 5 } else { 6 };\r\n// Both arms must return the same type\r\n```\r\n\r\nThis replaces ternary operators from other languages.\r\n\r\n## Loops\r\n\r\n**loop** — infinite loop with explicit break:\r\n```rust\r\nlet mut count = 0;\r\nlet result = loop {\r\n    count += 1;\r\n    if count == 10 {\r\n        break count * 2;   // loop returns a value via break\r\n    }\r\n};\r\n// result == 20\r\n```\r\n\r\n**while** — conditional loop:\r\n```rust\r\nlet mut n = 3;\r\nwhile n > 0 {\r\n    println!(\"{n}\");\r\n    n -= 1;\r\n}\r\n```\r\n\r\n**for** — the preferred loop for collections:\r\n```rust\r\nlet a = [10, 20, 30];\r\nfor element in &a {\r\n    println!(\"{element}\");\r\n}\r\n\r\n// Ranges\r\nfor i in 1..=5 {      // 1, 2, 3, 4, 5 (inclusive)\r\n    println!(\"{i}\");\r\n}\r\nfor i in 0..5 {       // 0, 1, 2, 3, 4 (exclusive end)\r\n    println!(\"{i}\");\r\n}\r\n```\r\n\r\n**match** on values (preview — full match in Module 4):\r\n```rust\r\nlet n = 3;\r\nmatch n {\r\n    1 => println!(\"one\"),\r\n    2 | 3 => println!(\"two or three\"),\r\n    4..=9 => println!(\"four to nine\"),\r\n    _ => println!(\"something else\"),\r\n}\r\n```\r\n\r\n---\r\n\r\n## Mini-project: temperature_converter\r\n\r\n```rust\r\nfn celsius_to_fahrenheit(c: f64) -> f64 {\r\n    c * 9.0 / 5.0 + 32.0\r\n}\r\n\r\nfn fahrenheit_to_celsius(f: f64) -> f64 {\r\n    (f - 32.0) * 5.0 / 9.0\r\n}\r\n\r\nfn kelvin_to_celsius(k: f64) -> f64 {\r\n    k - 273.15\r\n}\r\n\r\nfn convert(value: f64, unit: &str) -> String {\r\n    match unit {\r\n        \"C\" => format!(\"{:.2}°F\", celsius_to_fahrenheit(value)),\r\n        \"F\" => format!(\"{:.2}°C\", fahrenheit_to_celsius(value)),\r\n        \"K\" => format!(\"{:.2}°C\", kelvin_to_celsius(value)),\r\n        _   => String::from(\"Unknown unit\"),\r\n    }\r\n}\r\n\r\nfn main() {\r\n    let conversions = [\r\n        (100.0, \"C\"),\r\n        (212.0, \"F\"),\r\n        (373.15, \"K\"),\r\n        (0.0, \"C\"),\r\n        (32.0, \"F\"),\r\n    ];\r\n\r\n    for (value, unit) in &conversions {\r\n        println!(\"{value}°{unit} → {}\", convert(*value, unit));\r\n    }\r\n}\r\n```\r\n\r\nExpected output:\r\n```\r\n100°C → 212.00°F\r\n212°F → 100.00°C\r\n373.15°K → 100.00°C\r\n0°C → 32.00°F\r\n32°F → 0.00°C\r\n```\r\n",
@@ -7107,6 +7137,84 @@
     "slug": "rust-for-programmers",
     "generated": "2026-04-19",
     "concepts": [
+      {
+        "id": "rust-origin",
+        "title": "Why Rust Was Created",
+        "depends_on": [],
+        "introduced_in": [
+          "L00"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": [
+          "M01"
+        ]
+      },
+      {
+        "id": "ownership-motivation",
+        "title": "The Problem Ownership Solves (Safety vs Performance)",
+        "depends_on": [
+          "rust-origin"
+        ],
+        "introduced_in": [
+          "L00"
+        ],
+        "reinforced_in": [
+          "L04",
+          "L05"
+        ],
+        "assessment_sources": [
+          "M01"
+        ]
+      },
+      {
+        "id": "zero-cost-abstractions",
+        "title": "Zero-Cost Abstractions",
+        "depends_on": [
+          "rust-origin"
+        ],
+        "introduced_in": [
+          "L00"
+        ],
+        "reinforced_in": [
+          "L23",
+          "L24"
+        ],
+        "assessment_sources": [
+          "M09"
+        ]
+      },
+      {
+        "id": "memory-safety",
+        "title": "Memory Safety Guarantees at Compile Time",
+        "depends_on": [
+          "rust-origin"
+        ],
+        "introduced_in": [
+          "L00"
+        ],
+        "reinforced_in": [
+          "L04",
+          "L05"
+        ],
+        "assessment_sources": [
+          "M01",
+          "M02"
+        ]
+      },
+      {
+        "id": "rust-vs-gc-languages",
+        "title": "Rust vs GC Languages (Go, Java, Python, JS)",
+        "depends_on": [
+          "rust-origin"
+        ],
+        "introduced_in": [
+          "L00"
+        ],
+        "reinforced_in": [],
+        "assessment_sources": [
+          "M01"
+        ]
+      },
       {
         "id": "cargo",
         "title": "Cargo Build System",

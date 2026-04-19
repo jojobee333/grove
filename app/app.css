@@ -242,3 +242,68 @@ p { font-size: 14px; line-height: 1.7; color: var(--muted); margin-bottom: 0.75r
 .test-result-summary { font-weight: 500; padding: 12px 0; }
 .test-result-summary.all-passed { color: var(--accent); }
 .test-result-summary.some-failed { color: var(--warn); }
+
+/* ── Pomodoro widget ──────────────────────────────────────────────────────── */
+.pomo-widget {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 1000;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+  min-width: 180px;
+  user-select: none;
+}
+.pomo-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0.75rem 0.35rem;
+  border-bottom: 1px solid var(--border);
+}
+.pomo-title { font-size: 12px; font-weight: 600; letter-spacing: 0.4px; color: var(--muted); text-transform: uppercase; }
+.pomo-icon-btn { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 14px; padding: 2px 4px; border-radius: 4px; line-height: 1; }
+.pomo-icon-btn:hover { background: var(--surface-raised); color: var(--text); }
+.pomo-modes { display: flex; gap: 4px; padding: 0.5rem 0.75rem 0.25rem; }
+.pomo-mode-btn { flex: 1; font-size: 11px; padding: 5px 6px; border: 1px solid var(--border); border-radius: 5px; background: transparent; color: var(--muted); cursor: pointer; white-space: nowrap; }
+.pomo-mode-btn:hover { background: var(--surface-raised); color: var(--text); }
+.pomo-mode-btn.active { background: var(--accent-light); border-color: var(--accent); color: var(--accent-text); font-weight: 600; }
+.pomo-ring-wrap { position: relative; display: flex; align-items: center; justify-content: center; padding: 0.5rem 0 0.25rem; }
+.pomo-time {
+  position: absolute;
+  font-size: 18px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+  letter-spacing: -0.5px;
+}
+.pomo-time-done { color: var(--accent); }
+.pomo-ctrl-btn {
+  display: block;
+  width: calc(100% - 1.5rem);
+  margin: 0.25rem 0.75rem 0.65rem;
+  padding: 8px 12px;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--surface-raised);
+  color: var(--text);
+}
+.pomo-ctrl-btn:hover { opacity: 0.85; }
+.pomo-start-btn { background: var(--accent); color: white; }
+.pomo-done-btn  { background: var(--accent-light); color: var(--accent-text); }
+/* Collapsed pill */
+.pomo-collapsed {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 10px;
+  cursor: pointer;
+  border-radius: var(--radius-lg);
+}
+.pomo-collapsed:hover { background: var(--surface-raised); }
+.pomo-collapsed-time { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text); }

@@ -2,6 +2,11 @@
   "slug": "rust-for-programmers",
   "generated": "2026-04-19",
   "concepts": [
+    { "id": "rust-origin", "title": "Why Rust Was Created", "depends_on": [], "introduced_in": ["L00"], "reinforced_in": [], "assessment_sources": ["M01"] },
+    { "id": "ownership-motivation", "title": "The Problem Ownership Solves (Safety vs Performance)", "depends_on": ["rust-origin"], "introduced_in": ["L00"], "reinforced_in": ["L04","L05"], "assessment_sources": ["M01"] },
+    { "id": "zero-cost-abstractions", "title": "Zero-Cost Abstractions", "depends_on": ["rust-origin"], "introduced_in": ["L00"], "reinforced_in": ["L23","L24"], "assessment_sources": ["M09"] },
+    { "id": "memory-safety", "title": "Memory Safety Guarantees at Compile Time", "depends_on": ["rust-origin"], "introduced_in": ["L00"], "reinforced_in": ["L04","L05"], "assessment_sources": ["M01","M02"] },
+    { "id": "rust-vs-gc-languages", "title": "Rust vs GC Languages (Go, Java, Python, JS)", "depends_on": ["rust-origin"], "introduced_in": ["L00"], "reinforced_in": [], "assessment_sources": ["M01"] },
     { "id": "cargo", "title": "Cargo Build System", "depends_on": [], "introduced_in": ["L01"], "reinforced_in": ["L02","L03"], "assessment_sources": ["M01"] },
     { "id": "rustup", "title": "rustup Toolchain Manager", "depends_on": [], "introduced_in": ["L01"], "reinforced_in": [], "assessment_sources": ["M01"] },
     { "id": "fn-main", "title": "The main() Entry Point", "depends_on": ["cargo"], "introduced_in": ["L01"], "reinforced_in": ["L03"], "assessment_sources": ["M01"] },

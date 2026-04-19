@@ -10,6 +10,7 @@ import { flattenPracticalApplications, getPracticalApplicationsForModule, summar
 import { mapKeyToCardAction }                                       from './modules/keyboard.js';
 import { parseClozeText, renderClozeQuestion, renderClozeAnswer, scoreClozeAnswer } from './modules/cloze.js';
 import { saveNote, loadNote, getAllNotes, getNoteCount, groupNotesByModule, formatNotesAsMarkdown, formatNotesAsJson } from './modules/notes.js';
+import { initPomodoro, pomodoroStart, pomodoroPause, pomodoroReset, pomodoroSetMode, pomodoroToggleCollapse } from './modules/pomodoro.js';
 
 // ── STATE ──────────────────────────────────────────────────
 let course = null;
@@ -1950,6 +1951,7 @@ Object.assign(window, {
   resetCardSession, restartCardSession, flipCard,
   rateCard, selectPath, loadCards, loadQuiz, loadLessonFile,
   exportNotes, filterNotes,
+  pomodoroStart, pomodoroPause, pomodoroReset, pomodoroSetMode, pomodoroToggleCollapse,
 });
 
 // ── KEYBOARD SHORTCUTS ───────────────────────────────────────
@@ -1967,6 +1969,7 @@ document.addEventListener('keydown', e => {
 });
 
 // ── STARTUP: auto-load from home page ─────────────────────
+initPomodoro();
 (function autoLoad() {
   const params = new URLSearchParams(window.location.search);
   const slug   = params.get('course');
