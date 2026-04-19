@@ -9,6 +9,7 @@ import { buildCardModuleSummaries, getReviewableCards }         from './modules/
 import { flattenPracticalApplications, getPracticalApplicationsForModule, summarizePracticalApplications } from './modules/practical-applications.js';
 import { mapKeyToCardAction }                                       from './modules/keyboard.js';
 import { parseClozeText, renderClozeQuestion, renderClozeAnswer, scoreClozeAnswer } from './modules/cloze.js';
+import { saveNote, loadNote, getAllNotes, getNoteCount, groupNotesByModule, formatNotesAsMarkdown, formatNotesAsJson } from './modules/notes.js';
 
 // ── STATE ──────────────────────────────────────────────────
 let course = null;
@@ -96,6 +97,8 @@ function initFromBundle(data) {
   if (ncode) ncode.style.display = hasChallenges ? '' : 'none';
   const hasApplications = Object.values(data.practicalApplications || {}).some(m => m.applications?.length > 0);
   if (napps) napps.style.display = hasApplications ? '' : 'none';
+  const nnotes = document.getElementById('nav-notes');
+  if (nnotes) nnotes.style.display = '';
 }
 
 function loadCards(file) {
@@ -286,7 +289,7 @@ function updateOverallProgress() {
 
 // ── VIEWS ──────────────────────────────────────────────────
 function showView(view) {
-  ['plan','cards','code','applications','progress','paths'].forEach(v => {
+  ['plan','cards','code','applications','notes','progress','paths'].forEach(v => {
     const el = document.getElementById('nav-' + v);
     if (el) el.classList.toggle('active', v === view);
   });
@@ -294,6 +297,7 @@ function showView(view) {
   if (view === 'cards')    renderCards();
   if (view === 'code')     renderCodeView();
   if (view === 'applications') renderApplicationsView();
+  if (view === 'notes')    renderNotesView();
   if (view === 'progress') renderProgress();
   if (view === 'paths')    renderPaths();
 }
@@ -609,6 +613,129 @@ function renderApplicationsView(moduleId = null) {
   `;
 }
 
+function renderNotesView() {
+  const main = document.getElementById('main');
+  if (!bundle || !course) {
+    main.innerHTML = '<div class="card"><p>Load a bundle.json to see your notes.</p></div>';
+    return;
+  }
+
+  const allNotes = getAllNotes(course.slug);
+
+  if (!allNotes.length) {
+    main.innerHTML = `
+      <div class="card" style="text-align:center;padding:2.5rem">
+        <h1 style="margin-bottom:0.5rem">My notes</h1>
+        <p class="text-muted">You haven't taken any notes yet. Open a lesson and start writing in the notes area below the content.</p>
+      </div>
+    `;
+    return;
+  }
+
+  // Build a lookup of lessonId → {lesson, module}
+  const lessonIndex = {};
+  course.modules.forEach(m => {
+    (m.lessons || []).forEach(l => { lessonIndex[l.id] = { lesson: l, module: m }; });
+  });
+
+  // Group notes by module
+  const byModule = {};
+  allNotes.forEach(note => {
+    const entry = lessonIndex[note.lessonId];
+    const moduleId = entry?.module?.id || '__unknown__';
+    const moduleTitle = entry?.module?.title || 'Unknown module';
+    if (!byModule[moduleId]) byModule[moduleId] = { moduleTitle, notes: [] };
+    byModule[moduleId].notes.push({ ...note, lessonTitle: entry?.lesson?.title || note.lessonId });
+  });
+
+  const formatDate = iso => new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
+
+  const groupsHtml = Object.entries(byModule).map(([moduleId, group]) => `
+    <div style="margin-bottom:2rem">
+      <h3 style="font-size:14px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.75rem">${group.moduleTitle}</h3>
+      ${group.notes.map(n => `
+        <div class="card" style="margin-bottom:1rem">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:0.5rem">
+            <button class="btn" style="font-size:12px;padding:4px 10px" onclick="showLesson('${n.lessonId}','${moduleId}')">${n.lessonTitle}</button>
+            <span style="font-size:12px;color:var(--muted)">${formatDate(n.savedAt)}</span>
+          </div>
+          <div id="notes-view-text-${n.lessonId}" style="white-space:pre-wrap;font-size:14px;line-height:1.6">${escapeHtml(n.text)}</div>
+        </div>
+      `).join('')}
+    </div>
+  `).join('');
+
+  main.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:1rem">
+      <div>
+        <h1>My notes</h1>
+        <p class="text-muted">${allNotes.length} note${allNotes.length === 1 ? '' : 's'} across ${Object.keys(byModule).length} module${Object.keys(byModule).length === 1 ? '' : 's'}</p>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <input id="notes-filter" type="search" placeholder="Filter notes…"
+          style="padding:6px 10px;border:1px solid var(--border);border-radius:6px;font-size:13px;background:var(--surface);color:var(--text);width:180px"
+          oninput="filterNotes(this.value)">
+        <button class="btn" style="font-size:12px;padding:5px 10px" onclick="exportNotes('md')">Export .md</button>
+        <button class="btn" style="font-size:12px;padding:5px 10px" onclick="exportNotes('json')">Export .json</button>
+      </div>
+    </div>
+    <div id="notes-groups">${groupsHtml}</div>
+  `;
+}
+
+function exportNotes(format) {
+  if (!course) return;
+  const allNotes = getAllNotes(course.slug);
+  if (!allNotes.length) return;
+
+  const groups = groupNotesByModule(course, allNotes);
+  let content, filename, mime;
+
+  if (format === 'md') {
+    content = formatNotesAsMarkdown(course.title, course.slug, groups);
+    filename = `${course.slug}-notes.md`;
+    mime = 'text/markdown';
+  } else {
+    content = formatNotesAsJson(course.slug, allNotes, groups);
+    filename = `${course.slug}-notes.json`;
+    mime = 'application/json';
+  }
+
+  const blob = new Blob([content], { type: mime });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 100);
+}
+
+function filterNotes(query) {
+  const q = query.toLowerCase();
+  document.querySelectorAll('[id^="notes-view-text-"]').forEach(el => {
+    const card = el.closest('.card');
+    if (!card) return;
+    const text = el.textContent.toLowerCase();
+    const lessonLabel = card.querySelector('button')?.textContent?.toLowerCase() || '';
+    card.style.display = (text.includes(q) || lessonLabel.includes(q)) ? '' : 'none';
+  });
+  // Hide empty module groups
+  document.querySelectorAll('#notes-groups > div').forEach(group => {
+    const visible = [...group.querySelectorAll('.card')].some(c => c.style.display !== 'none');
+    group.style.display = visible ? '' : 'none';
+  });
+}
+
+function escapeHtml(str) {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
 function showPracticalApplication(moduleId, applicationId) {
   const summary = summarizePracticalApplications(course, practicalApplications).find(item => item.moduleId === moduleId);
   const application = summary?.applications.find(item => item.id === applicationId);
@@ -708,6 +835,19 @@ function showLesson(lessonId, moduleId) {
       </div>`}
     </div>
 
+    <div class="lesson-note-section">
+      <div class="lesson-note-header">
+        <span class="lesson-note-label">Notes</span>
+        <span class="lesson-note-saved" id="note-saved-indicator"></span>
+      </div>
+      <textarea
+        id="lesson-note-area"
+        class="lesson-note-area"
+        placeholder="Write notes for this lesson…"
+        rows="5"
+      ></textarea>
+    </div>
+
     <div class="lesson-nav">
       <div>${prev ? `<button class="btn" onclick="showLesson('${prev.id}','${getModuleForLesson(prev.id)}')">← ${prev.title}</button>` : ''}</div>
       <div class="flex gap-8">
@@ -717,6 +857,24 @@ function showLesson(lessonId, moduleId) {
     </div>
   `;
   if (bundle?.lessons?.[lessonId]) highlightLessonCode();
+  // Wire note textarea (must happen after innerHTML is set)
+  const noteArea = document.getElementById('lesson-note-area');
+  const noteIndicator = document.getElementById('note-saved-indicator');
+  if (noteArea) {
+    noteArea.value = loadNote(course.slug, lessonId);
+    let _saveTimer;
+    noteArea.addEventListener('input', () => {
+      saveNote(course.slug, lessonId, noteArea.value);
+      if (noteIndicator) {
+        noteIndicator.textContent = 'Saved';
+        clearTimeout(_saveTimer);
+        _saveTimer = setTimeout(() => { noteIndicator.textContent = ''; }, 1500);
+      }
+      // Refresh notes nav dot if notes view has been visited
+      const nnotes = document.getElementById('nav-notes');
+      if (nnotes) nnotes.style.display = '';
+    });
+  }
 }
 
 function loadLessonFile(event, lessonId, moduleId) {
@@ -1791,6 +1949,7 @@ Object.assign(window, {
   runChallengeTests, submitChallenge, renderCards, startCardSession,
   resetCardSession, restartCardSession, flipCard,
   rateCard, selectPath, loadCards, loadQuiz, loadLessonFile,
+  exportNotes, filterNotes,
 });
 
 // ── KEYBOARD SHORTCUTS ───────────────────────────────────────
