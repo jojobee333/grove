@@ -1,0 +1,169 @@
+{
+  "quiz_id": "quiz-final",
+  "module_id": "final",
+  "title": "Final Assessment — TypeScript & JavaScript for Developers",
+  "passing_score": 75,
+  "questions": [
+    {
+      "id": "q01",
+      "type": "mcq",
+      "prompt": "What is the output of: console.log(typeof null)?",
+      "options": ["\"null\"", "\"object\"", "\"undefined\"", "\"primitive\""],
+      "correct": 1,
+      "explanation": "typeof null === 'object' is a historical JS bug. Check for null with === null."
+    },
+    {
+      "id": "q02",
+      "type": "mcq",
+      "prompt": "What does the Temporal Dead Zone mean for let variables?",
+      "options": [
+        "let is not hoisted",
+        "Accessing let before its declaration throws ReferenceError",
+        "let is initialized to null before declaration",
+        "let variables are garbage collected faster"
+      ],
+      "correct": 1,
+      "explanation": "let is hoisted but not initialized. The TDZ is the period between block entry and the declaration line."
+    },
+    {
+      "id": "q03",
+      "type": "mcq",
+      "prompt": "Why does the following print 3,3,3 instead of 0,1,2?\nfor (var i = 0; i < 3; i++) setTimeout(() => console.log(i), 0)",
+      "options": [
+        "setTimeout batches callbacks",
+        "var creates a single shared binding — all closures reference the same i",
+        "Arrow functions don't close over loop variables",
+        "setTimeout runs synchronously when delay is 0"
+      ],
+      "correct": 1,
+      "explanation": "var i is function-scoped, one binding for all iterations. By the time timers fire, i is 3."
+    },
+    {
+      "id": "q04",
+      "type": "mcq",
+      "prompt": "Which operator should you always use for equality checks?",
+      "options": ["==", "===", "Object.is()", "Either == or ==="],
+      "correct": 1,
+      "explanation": "=== performs no coercion. == has a complex coercion algorithm that produces counterintuitive results."
+    },
+    {
+      "id": "q05",
+      "type": "mcq",
+      "prompt": "A Promise that rejects without a .catch() handler — what happens in Node.js 15+?",
+      "options": [
+        "It is silently ignored",
+        "A warning is logged but execution continues",
+        "The process terminates",
+        "The error becomes a global exception"
+      ],
+      "correct": 2,
+      "explanation": "Node.js 15+ terminates on unhandled rejections. Always handle Promise rejections."
+    },
+    {
+      "id": "q06",
+      "type": "mcq",
+      "prompt": "What does TypeScript's strict: true enable?",
+      "options": [
+        "Only strictNullChecks",
+        "Only noImplicitAny",
+        "All strict checks including strictNullChecks, noImplicitAny, strictFunctionTypes, and more",
+        "Lint rules for code style"
+      ],
+      "correct": 2,
+      "explanation": "strict is a master flag that enables 8 strict checks at once. Always use it."
+    },
+    {
+      "id": "q07",
+      "type": "mcq",
+      "prompt": "Setting element.innerHTML with user input is dangerous because:",
+      "options": ["It's slow", "It causes XSS — browsers execute injected scripts", "It breaks TypeScript types", "It doesn't work in Safari"],
+      "correct": 1,
+      "explanation": "innerHTML parses HTML including scripts. User-controlled content can execute JavaScript. Use textContent for safe text insertion."
+    },
+    {
+      "id": "q08",
+      "type": "mcq",
+      "prompt": "What is type erasure in TypeScript?",
+      "options": [
+        "Removing unused types from tsconfig",
+        "All TypeScript annotations are stripped — only JavaScript runs at runtime",
+        "Narrowing a type to a subtype",
+        "Assigning any to a variable"
+      ],
+      "correct": 1,
+      "explanation": "TypeScript compiles away all type information. Nothing type-related exists at runtime."
+    },
+    {
+      "id": "q09",
+      "type": "mcq",
+      "prompt": "Omit<User, 'id'> vs Pick<User, 'id'> — what does each return?",
+      "options": [
+        "Omit: User without id; Pick: only id",
+        "Omit: only id; Pick: User without id",
+        "Both return the same type",
+        "Omit makes id optional; Pick makes it required"
+      ],
+      "correct": 0,
+      "explanation": "Omit removes the listed keys. Pick keeps only the listed keys. They are complementary."
+    },
+    {
+      "id": "q10",
+      "type": "mcq",
+      "prompt": "How does event bubbling enable event delegation?",
+      "options": [
+        "Child elements share their listener with the parent",
+        "Events fire on ancestors after firing on the target, so a parent listener handles child events",
+        "The browser delegates events to the nearest handler automatically",
+        "Bubbling copies the event to all sibling elements"
+      ],
+      "correct": 1,
+      "explanation": "Events bubble upward through ancestors. A single parent listener can handle clicks on all children, including dynamically added ones."
+    },
+    {
+      "id": "q11",
+      "type": "mcq",
+      "prompt": "Promise.all vs Promise.allSettled: which should you use when partial success is acceptable?",
+      "options": ["Promise.all", "Promise.allSettled", "Promise.race", "Promise.any"],
+      "correct": 1,
+      "explanation": "Promise.allSettled waits for all promises and returns results for each regardless of success/failure. Promise.all fails fast on any rejection."
+    },
+    {
+      "id": "q12",
+      "type": "mcq",
+      "prompt": "fn.call(obj, 1, 2) vs fn.apply(obj, [1, 2]) — what differs?",
+      "options": [
+        "call returns a new function; apply calls immediately",
+        "apply passes args as an array; call passes them individually",
+        "call works only in strict mode; apply works everywhere",
+        "They are identical"
+      ],
+      "correct": 1,
+      "explanation": "Both invoke fn immediately with this = obj. They differ in how args are passed."
+    },
+    {
+      "id": "q13",
+      "type": "short_answer",
+      "prompt": "What is the output order? Explain: A=synchronous, B=Promise.resolve().then(), C=setTimeout(0).",
+      "answer_key": "A, B, C. A runs synchronously first. B is a microtask — the microtask queue drains after the current synchronous task before any macrotask. C is a macrotask (setTimeout) — runs after all microtasks are done."
+    },
+    {
+      "id": "q14",
+      "type": "mcq",
+      "prompt": "A closure retains access to outer variables because:",
+      "options": [
+        "Variables are copied into the closure when it's created",
+        "The function holds a reference to its lexical scope's environment",
+        "JavaScript uses dynamic scope",
+        "The garbage collector never collects outer variables"
+      ],
+      "correct": 1,
+      "explanation": "Closures hold a live reference to their lexical environment. The variables are not copied — they're shared by reference."
+    },
+    {
+      "id": "q15",
+      "type": "short_answer",
+      "prompt": "Write a type-safe generic stack with push, pop, and peek methods in TypeScript.",
+      "answer_key": "class Stack<T> {\n  private items: T[] = [];\n  push(item: T): void { this.items.push(item); }\n  pop(): T | undefined { return this.items.pop(); }\n  peek(): T | undefined { return this.items[this.items.length - 1]; }\n}"
+    }
+  ]
+}

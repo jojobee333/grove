@@ -1,0 +1,33 @@
+{
+  "modcheck_id": "modcheck-M03",
+  "module_id": "M03",
+  "title": "M03 Mastery Check — Collections & Iteration",
+  "description": "Quick applied check. No looking things up. Answer from memory.",
+  "questions": [
+    {
+      "id": "mc01",
+      "type": "short_answer",
+      "prompt": "Write a one-liner: given an array of products, return the total price of all products where inStock is true.",
+      "answer_key": "products.filter(p => p.inStock).reduce((sum, p) => sum + p.price, 0)"
+    },
+    {
+      "id": "mc02",
+      "type": "true_false",
+      "prompt": "for...in is safe to use on arrays.",
+      "correct": false,
+      "explanation": "for...in iterates over property names as strings ('0', '1', '2') and may also iterate inherited properties. Use for...of for arrays."
+    },
+    {
+      "id": "mc03",
+      "type": "short_answer",
+      "prompt": "What method creates a proper deep clone of a nested object in modern JavaScript?",
+      "answer_key": "structuredClone(obj)"
+    },
+    {
+      "id": "mc04",
+      "type": "short_answer",
+      "prompt": "How do you remove a specific key from an object without mutating it?",
+      "answer_key": "const { keyToRemove, ...rest } = original; — rest is a new object without that key."
+    }
+  ]
+}

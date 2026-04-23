@@ -1,0 +1,270 @@
+{
+  "course_slug": "typescript-javascript-course",
+  "concepts": [
+    {
+      "id": "host-environments",
+      "label": "Host Environments",
+      "description": "The runtime container that embeds a JS engine and provides platform-specific APIs (browser: DOM/fetch; Node.js: fs/http)."
+    },
+    {
+      "id": "js-engine",
+      "label": "JavaScript Engine",
+      "description": "The component (e.g. V8) that implements ECMAScript and executes JavaScript code."
+    },
+    {
+      "id": "ts-erased-types",
+      "label": "Type Erasure",
+      "description": "TypeScript types are stripped at compile time; nothing type-related exists at runtime."
+    },
+    {
+      "id": "js-var-hoisting",
+      "label": "var Hoisting",
+      "description": "var declarations are hoisted and initialized to undefined; accessing them before assignment returns undefined, not an error."
+    },
+    {
+      "id": "js-tdz",
+      "label": "Temporal Dead Zone",
+      "description": "The period between entering a block scope and a let/const declaration; accessing the variable throws ReferenceError."
+    },
+    {
+      "id": "js-block-scope",
+      "label": "Block Scope",
+      "description": "let and const are scoped to the nearest enclosing block {}, unlike var which is function-scoped."
+    },
+    {
+      "id": "js-primitive-types",
+      "label": "Primitive Types",
+      "description": "The 8 JavaScript primitives: string, number, bigint, boolean, null, undefined, symbol, object."
+    },
+    {
+      "id": "js-typeof",
+      "label": "typeof Operator",
+      "description": "Returns a string indicating the type of an operand; notable quirk: typeof null === 'object'."
+    },
+    {
+      "id": "js-type-coercion",
+      "label": "Type Coercion",
+      "description": "Implicit conversion between types via ==, + with strings, boolean contexts, and arithmetic operators."
+    },
+    {
+      "id": "js-strict-equality",
+      "label": "Strict Equality (===)",
+      "description": "=== checks type and value without coercion. Always use === over == to avoid implicit conversion bugs."
+    },
+    {
+      "id": "js-array-methods",
+      "label": "Array Methods",
+      "description": "map, filter, reduce, find, findIndex, some, every, flat, flatMap — functional array transformation patterns."
+    },
+    {
+      "id": "js-spread-rest",
+      "label": "Spread & Rest",
+      "description": "... spread expands iterables into function args or array literals; ... rest collects remaining args into an array."
+    },
+    {
+      "id": "js-destructuring",
+      "label": "Destructuring",
+      "description": "Unpack values from arrays or properties from objects into variables, with rename and default syntax."
+    },
+    {
+      "id": "js-object-spread",
+      "label": "Object Spread",
+      "description": "{ ...obj } creates a shallow copy; later properties override earlier ones — the basis for immutable updates."
+    },
+    {
+      "id": "js-function-forms",
+      "label": "Function Forms",
+      "description": "Function declarations vs expressions vs arrow functions — hoisting, this, and appropriate use cases."
+    },
+    {
+      "id": "js-hoisting",
+      "label": "Hoisting",
+      "description": "The JavaScript behavior of moving declarations (var, function) to the top of their scope before execution."
+    },
+    {
+      "id": "js-lexical-scope",
+      "label": "Lexical Scope",
+      "description": "Scope is determined at write-time from the source position of code, not at call-time."
+    },
+    {
+      "id": "js-closures",
+      "label": "Closures",
+      "description": "Functions that retain access to variables from their lexical scope after that scope has exited."
+    },
+    {
+      "id": "js-loop-closure-bug",
+      "label": "Loop Closure Bug",
+      "description": "Using var in a loop creates one shared binding; all closures capture the same variable. Fix with let."
+    },
+    {
+      "id": "js-this-binding",
+      "label": "this Binding",
+      "description": "The value of this is determined by the call site, not the function definition — five binding rules apply."
+    },
+    {
+      "id": "js-this-call-site-rules",
+      "label": "this Call-Site Rules",
+      "description": "Priority order: new > explicit (.call/.apply/.bind) > implicit (obj.method()) > default (undefined/global)."
+    },
+    {
+      "id": "js-explicit-binding",
+      "label": "Explicit Binding",
+      "description": "call(), apply(), and bind() explicitly set the this value. bind() returns a new function; the others invoke immediately."
+    },
+    {
+      "id": "js-arrow-functions",
+      "label": "Arrow Functions",
+      "description": "Arrow functions have no own this — they inherit it lexically from the enclosing scope. Cannot be overridden with call/bind."
+    },
+    {
+      "id": "js-event-loop",
+      "label": "Event Loop",
+      "description": "The mechanism that picks tasks from the task queue and runs them on the call stack one at a time."
+    },
+    {
+      "id": "js-microtask-queue",
+      "label": "Microtask Queue",
+      "description": "Promise callbacks queue as microtasks, which drain entirely after each task before the next macrotask runs."
+    },
+    {
+      "id": "js-promises",
+      "label": "Promises",
+      "description": "Represent the eventual result of an async operation; states: pending, fulfilled, rejected."
+    },
+    {
+      "id": "js-promise-all",
+      "label": "Promise Combinators",
+      "description": "Promise.all (fail-fast parallel), Promise.allSettled (wait-all parallel), Promise.race, Promise.any."
+    },
+    {
+      "id": "js-async-await",
+      "label": "async / await",
+      "description": "Syntactic sugar over Promises. async functions always return a Promise; await pauses until settlement."
+    },
+    {
+      "id": "js-es-modules",
+      "label": "ES Modules",
+      "description": "The standard import/export module system. Static, tree-shakeable, works in browser and Node.js."
+    },
+    {
+      "id": "js-cjs-vs-esm",
+      "label": "CommonJS vs ESM",
+      "description": "CJS uses require/module.exports (dynamic, Node.js legacy). ESM uses import/export (static, modern). They are not directly interoperable."
+    },
+    {
+      "id": "tsconfig",
+      "label": "tsconfig.json",
+      "description": "TypeScript compiler configuration: strict, target, lib, module, moduleResolution, noEmit."
+    },
+    {
+      "id": "ts-type-inference",
+      "label": "Type Inference",
+      "description": "TypeScript infers types from context — literal types for const, widened types for let, parameter types must be explicit."
+    },
+    {
+      "id": "ts-union-types",
+      "label": "Union Types",
+      "description": "string | number — a type that can be one of several types. Requires handling all members for safe use."
+    },
+    {
+      "id": "ts-strict-null-checks",
+      "label": "strictNullChecks",
+      "description": "With strictNullChecks, null and undefined are separate types. Accessing properties on nullable types requires a guard."
+    },
+    {
+      "id": "ts-literal-types",
+      "label": "Literal Types",
+      "description": "Types that accept only specific values: 'pending' | 'complete' | 'failed'. Used for type-safe string constants."
+    },
+    {
+      "id": "ts-structural-typing",
+      "label": "Structural Typing",
+      "description": "Type compatibility is based on shape, not name. A type that has at least the required properties is compatible."
+    },
+    {
+      "id": "ts-interface-vs-type",
+      "label": "Interface vs Type Alias",
+      "description": "interface: object shapes, supports extends and declaration merging. type: unions, intersections, utility type expressions."
+    },
+    {
+      "id": "ts-generics",
+      "label": "Generics",
+      "description": "Type parameters <T> that are filled in at use-site, enabling type-safe reusable functions and classes."
+    },
+    {
+      "id": "ts-keyof",
+      "label": "keyof Operator",
+      "description": "keyof T produces a union of T's property names as string literals. Used with generics for type-safe property access."
+    },
+    {
+      "id": "ts-utility-types",
+      "label": "Utility Types",
+      "description": "Built-in type transformers: Partial, Required, Readonly, Record, Pick, Omit, NonNullable, ReturnType, Parameters."
+    },
+    {
+      "id": "ts-type-narrowing",
+      "label": "Type Narrowing",
+      "description": "TypeScript refines a type within a conditional block based on runtime checks: typeof, instanceof, in, truthiness."
+    },
+    {
+      "id": "ts-discriminated-unions",
+      "label": "Discriminated Unions",
+      "description": "Union types with a shared literal-typed property (discriminant) that enables exhaustive switch/if narrowing."
+    },
+    {
+      "id": "dom-model",
+      "label": "DOM Model",
+      "description": "The tree of nodes representing an HTML document; manipulated via createElement, appendChild, textContent, classList."
+    },
+    {
+      "id": "dom-query-selectors",
+      "label": "DOM Query Selectors",
+      "description": "querySelector, querySelectorAll, getElementById — selecting elements with CSS selectors or IDs."
+    },
+    {
+      "id": "dom-events",
+      "label": "DOM Events",
+      "description": "addEventListener, event object, bubbling, stopPropagation, CustomEvent, and removing listeners."
+    },
+    {
+      "id": "dom-event-delegation",
+      "label": "Event Delegation",
+      "description": "Attaching one listener to a parent to handle events from children via bubbling — efficient and works for dynamic children."
+    },
+    {
+      "id": "node-runtime",
+      "label": "Node.js Runtime",
+      "description": "V8 outside the browser with process, Buffer, and built-in modules (fs, path, os, child_process)."
+    },
+    {
+      "id": "node-built-ins",
+      "label": "Node.js Built-in Modules",
+      "description": "node:fs, node:path, node:url, node:os — core modules available without installation."
+    },
+    {
+      "id": "node-http-server",
+      "label": "Node.js HTTP Server",
+      "description": "http.createServer, request/response streams, routing, body parsing, and res.end()."
+    },
+    {
+      "id": "js-history",
+      "label": "JavaScript History",
+      "description": "Created by Brendan Eich in 10 days (1995), Netscape Navigator, standardized as ECMAScript by ECMA International. Went from toy script language to the world's most deployed runtime."
+    },
+    {
+      "id": "ecmascript-tc39",
+      "label": "ECMAScript & TC39",
+      "description": "ECMAScript is the language spec; TC39 is the committee that evolves it. Yearly releases since ES2015 (ES6). Engines (V8, SpiderMonkey) implement the spec."
+    },
+    {
+      "id": "ts-origin",
+      "label": "TypeScript Origin",
+      "description": "Created by Anders Hejlsberg at Microsoft (2012). TypeScript adds a static type system on top of JavaScript to catch bugs at compile time, then erases types to plain JS."
+    },
+    {
+      "id": "js-strengths-weaknesses",
+      "label": "JS Strengths & Weaknesses",
+      "description": "Strengths: ubiquitous (browser + server), excellent async model, huge ecosystem. Weaknesses: type coercion gotchas, this binding complexity, legacy baggage from the 10-day origin."
+    }
+  ]
+}

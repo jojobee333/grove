@@ -1,0 +1,82 @@
+{
+  "quiz_id": "quiz-M06",
+  "module_id": "M06",
+  "title": "Module 6 Quiz — Async JavaScript",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "q01",
+      "type": "mcq",
+      "prompt": "What is the output order? console.log('A'); setTimeout(()=>console.log('C'),0); Promise.resolve().then(()=>console.log('B'));",
+      "options": ["A, B, C", "A, C, B", "B, A, C", "C, A, B"],
+      "correct": 0,
+      "explanation": "A is synchronous. B is a microtask (Promise.then) — runs before the next macrotask. C is a macrotask (setTimeout)."
+    },
+    {
+      "id": "q02",
+      "type": "mcq",
+      "prompt": "Promise.all vs Promise.allSettled: when does Promise.all reject?",
+      "options": [
+        "When ALL promises reject",
+        "When ANY promise rejects",
+        "Never — it always waits for all",
+        "When more than half reject"
+      ],
+      "correct": 1,
+      "explanation": "Promise.all rejects immediately when any promise rejects. Promise.allSettled waits for all and never rejects."
+    },
+    {
+      "id": "q03",
+      "type": "mcq",
+      "prompt": "Why is `arr.forEach(async item => { await process(item) })` wrong for sequential processing?",
+      "options": [
+        "forEach doesn't support async functions",
+        "forEach doesn't await the async callbacks — all run in parallel without waiting",
+        "forEach returns a Promise that must be awaited",
+        "await is not valid inside forEach"
+      ],
+      "correct": 1,
+      "explanation": "forEach ignores returned Promises. It fires all async callbacks concurrently and moves on. Use for...of with await for sequential execution."
+    },
+    {
+      "id": "q04",
+      "type": "mcq",
+      "prompt": "How do you run two async operations in parallel with async/await?",
+      "options": [
+        "const a = await fn1(); const b = await fn2();",
+        "const [a, b] = await Promise.all([fn1(), fn2()]);",
+        "await fn1(); await fn2();",
+        "They always run in parallel automatically"
+      ],
+      "correct": 1,
+      "explanation": "Awaiting sequentially (option A) runs them in series. Promise.all starts both simultaneously and awaits both results."
+    },
+    {
+      "id": "q05",
+      "type": "mcq",
+      "prompt": "What does the event loop do between each macrotask?",
+      "options": [
+        "Runs garbage collection",
+        "Renders the DOM",
+        "Drains the entire microtask queue",
+        "Processes pending I/O only"
+      ],
+      "correct": 2,
+      "explanation": "After each macrotask completes, the event loop runs ALL pending microtasks before picking up the next macrotask."
+    },
+    {
+      "id": "q06",
+      "type": "short_answer",
+      "prompt": "Write an async function that fetches a user and their posts in parallel and returns both.",
+      "answer_key": "async function getUserWithPosts(id) {\n  const [user, posts] = await Promise.all([fetchUser(id), fetchPosts(id)]);\n  return { user, posts };\n}"
+    },
+    {
+      "id": "q07",
+      "type": "mcq",
+      "prompt": "An async function always returns:",
+      "options": ["The returned value directly", "A Promise", "void", "A generator"],
+      "correct": 1,
+      "explanation": "async functions always return a Promise, even if you return a plain value or never explicitly return."
+    }
+  ]
+}

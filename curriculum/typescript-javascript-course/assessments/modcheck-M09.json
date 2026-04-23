@@ -1,0 +1,33 @@
+{
+  "modcheck_id": "modcheck-M09",
+  "module_id": "M09",
+  "title": "M09 Mastery Check — TypeScript Advanced",
+  "description": "Quick applied check. No looking things up. Answer from memory.",
+  "questions": [
+    {
+      "id": "mc01",
+      "type": "short_answer",
+      "prompt": "Create a type for a PATCH /users/:id endpoint body — all User fields optional.",
+      "answer_key": "type UserPatch = Partial<User>;"
+    },
+    {
+      "id": "mc02",
+      "type": "short_answer",
+      "prompt": "Design a discriminated union for a network request state with loading/success/error states.",
+      "answer_key": "type State<T> = { status: 'loading' } | { status: 'success'; data: T } | { status: 'error'; message: string };"
+    },
+    {
+      "id": "mc03",
+      "type": "true_false",
+      "prompt": "ReturnType<typeof fn> extracts the return type of fn at compile time.",
+      "correct": true,
+      "explanation": "ReturnType<F> uses TypeScript's infer keyword under the hood to extract the return type of function type F."
+    },
+    {
+      "id": "mc04",
+      "type": "short_answer",
+      "prompt": "How do you make TypeScript error if a new shape is added to a discriminated union but not handled in a switch?",
+      "answer_key": "Add default: const _: never = shape; — if any unhandled member reaches default, it's not assignable to never, causing a compile error."
+    }
+  ]
+}

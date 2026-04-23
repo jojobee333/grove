@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Grove</title>
-<link rel="stylesheet" href="app/app.css">
+<link rel="stylesheet" href="/app/app.css">
 <!-- Pyodide: Python in the browser via WebAssembly (lazy-loaded on first Python challenge) -->
 <script>
   window._pyodidePromise = null;
@@ -86,7 +86,7 @@
   <!-- SIDEBAR -->
   <nav class="sidebar">
     <div style="display:flex;align-items:center;justify-content:space-between">
-      <a href="/" style="text-decoration:none"><div class="brand">Grove</div></a>
+      <a href="../index.html" style="text-decoration:none"><div class="brand">Grove</div></a>
       <span id="bundle-badge" style="display:none;font-size:10px;font-weight:600;padding:2px 6px;border-radius:4px;background:var(--accent);color:white;letter-spacing:0.5px">v3</span>
     </div>
 
@@ -114,6 +114,9 @@
       </button>
       <button class="nav-item" onclick="showView('notes')" id="nav-notes" style="display:none">
         <span class="nav-dot" id="dot-notes"></span> My notes
+      </button>
+      <button class="nav-item" onclick="showView('mistakes')" id="nav-mistakes" style="display:none">
+        <span class="nav-dot" id="dot-mistakes"></span> Mistake journal
       </button>
       <button class="nav-item" onclick="showView('progress')" id="nav-progress" style="display:none">
         <span class="nav-dot" id="dot-progress"></span> My progress
@@ -147,7 +150,7 @@
   </main>
 </div>
 
-<script type="module" src="app/app.js"></script>
+<script type="module" src="/app/app.js"></script>
 
 <!-- Pomodoro floating widget -->
 <div id="pomodoro-widget" class="pomo-widget"></div>

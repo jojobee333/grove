@@ -1,0 +1,33 @@
+{
+  "modcheck_id": "modcheck-M07",
+  "module_id": "M07",
+  "title": "M07 Mastery Check — Modules & Tooling",
+  "description": "Quick applied check. No looking things up. Answer from memory.",
+  "questions": [
+    {
+      "id": "mc01",
+      "type": "short_answer",
+      "prompt": "How does Node.js know if a .js file is ESM or CommonJS?",
+      "answer_key": "The 'type' field in package.json: 'module' = ESM, absent or 'commonjs' = CJS. Also: .mjs always ESM, .cjs always CJS."
+    },
+    {
+      "id": "mc02",
+      "type": "true_false",
+      "prompt": "You can require() a pure ESM module from a CommonJS module.",
+      "correct": false,
+      "explanation": "require() is synchronous and cannot load ESM. Use dynamic import() which returns a Promise."
+    },
+    {
+      "id": "mc03",
+      "type": "short_answer",
+      "prompt": "Name the two most critical tsconfig fields for a strict TypeScript project.",
+      "answer_key": "strict: true (enables all type safety checks) and noEmit: true (when using a bundler, keeps tsc for type checking only)"
+    },
+    {
+      "id": "mc04",
+      "type": "short_answer",
+      "prompt": "What does the tsconfig 'target' field control?",
+      "answer_key": "The JavaScript syntax version in the output files. E.g., target: 'ES2022' means tsc outputs ES2022 syntax (const, arrow functions, etc.)."
+    }
+  ]
+}

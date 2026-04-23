@@ -1,0 +1,33 @@
+{
+  "modcheck_id": "modcheck-M04",
+  "module_id": "M04",
+  "title": "M04 Mastery Check — Functions, Scope & Closures",
+  "description": "Quick applied check. No looking things up. Answer from memory.",
+  "questions": [
+    {
+      "id": "mc01",
+      "type": "short_answer",
+      "prompt": "Write a makeAdder(n) factory function that returns a function adding n to any number.",
+      "answer_key": "function makeAdder(n) { return (x) => x + n; }\nconst add5 = makeAdder(5);\nadd5(3); // 8"
+    },
+    {
+      "id": "mc02",
+      "type": "true_false",
+      "prompt": "An outer function can access variables declared inside a nested inner function.",
+      "correct": false,
+      "explanation": "Scope chains flow outward only. Inner functions can access outer scope, but not the reverse."
+    },
+    {
+      "id": "mc03",
+      "type": "short_answer",
+      "prompt": "Which function type is fully hoisted and callable before its declaration line?",
+      "answer_key": "Function declarations — function foo() {}. NOT function expressions or arrow functions."
+    },
+    {
+      "id": "mc04",
+      "type": "short_answer",
+      "prompt": "Explain in one sentence what a closure is.",
+      "answer_key": "A closure is a function that retains access to variables from its lexical scope even after that scope has exited."
+    }
+  ]
+}

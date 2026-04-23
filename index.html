@@ -119,7 +119,7 @@
 async function init() {
   let index;
   try {
-    const res = await fetch('/curriculum/index.json');
+    const res = await fetch(new URL('./curriculum/index.json', window.location.href));
     index = await res.json();
   } catch (e) {
     document.getElementById('course-grid').innerHTML =
@@ -176,7 +176,7 @@ async function init() {
 }
 
 function openCourse(slug) {
-  window.location.href = `/app?course=${slug}`;
+  window.location.href = `./app/index.html?course=${encodeURIComponent(slug)}`;
 }
 
 function loadBundle(event) {
@@ -194,7 +194,7 @@ function loadBundle(event) {
       }
       const slug = data.slug;
       sessionStorage.setItem('grove_pending_bundle_' + slug, e.target.result);
-      window.location.href = `/app?course=${slug}&from=home`;
+      window.location.href = `./app/index.html?course=${encodeURIComponent(slug)}&from=home`;
     } catch(err) {
       alert('Could not parse file: ' + err.message);
     }

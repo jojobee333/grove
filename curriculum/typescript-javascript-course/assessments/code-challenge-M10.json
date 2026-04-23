@@ -1,0 +1,106 @@
+{
+  "id": "code-challenge-M10",
+  "type": "module",
+  "module": "M10",
+  "title": "Coding Challenges: DOM & Browser APIs",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `parseQuerySelector(selector)` that takes a CSS selector string and classifies it as one of: `'id'`, `'class'`, `'attribute'`, `'compound'`, or `'tag'`.\n\nRules (in order):\n1. Starts with `#` → `'id'`\n2. Starts with `.` → `'class'`\n3. Starts with `[` → `'attribute'`\n4. Contains `.`, ` `, `[`, `:`, `>`, `+`, or `~` after the first character → `'compound'`\n5. Otherwise → `'tag'`",
+      "starter_code": "function parseQuerySelector(selector) {\n  // Classify the CSS selector type\n  // Check in order: id, class, attribute, compound, tag\n}\n",
+      "test_cases": [
+        {
+          "name": "ID selector",
+          "input": "'#main'",
+          "expected_output": "id",
+          "visibility": "visible"
+        },
+        {
+          "name": "Class selector",
+          "input": "'.active'",
+          "expected_output": "class",
+          "visibility": "visible"
+        },
+        {
+          "name": "Tag selector",
+          "input": "'button'",
+          "expected_output": "tag",
+          "visibility": "visible"
+        },
+        {
+          "name": "Attribute selector",
+          "input": "'[data-id=\"1\"]'",
+          "expected_output": "attribute",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Compound: tag with class",
+          "input": "'div.container'",
+          "expected_output": "compound",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Compound: descendant combinator",
+          "input": "'ul li'",
+          "expected_output": "compound",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["dom-query-selectors", "dom-model"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L23",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L23"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `simulateEventBubble(config)` that takes `{ tree, clickTarget, stopAt }` and simulates DOM event bubbling:\n\n- `tree`: ordered array of element names from innermost to outermost (e.g. `['button', 'div', 'body']`)\n- `clickTarget`: the element that was clicked (must be in the tree)\n- `stopAt`: if not `null`, the element where `stopPropagation()` was called (bubbling stops here, inclusive)\n\nReturn the elements the event visited as a comma-joined string.",
+      "starter_code": "function simulateEventBubble(config) {\n  // Slice tree starting from clickTarget\n  // If stopAt is set, further slice up to and including stopAt\n  // Return the path as a comma-joined string\n}\n",
+      "test_cases": [
+        {
+          "name": "Bubbles all the way up",
+          "input": "{tree: ['inner', 'middle', 'outer'], clickTarget: 'inner', stopAt: null}",
+          "expected_output": "inner,middle,outer",
+          "visibility": "visible"
+        },
+        {
+          "name": "stopPropagation at middle",
+          "input": "{tree: ['inner', 'middle', 'outer'], clickTarget: 'inner', stopAt: 'middle'}",
+          "expected_output": "inner,middle",
+          "visibility": "visible"
+        },
+        {
+          "name": "Stop at click target — event doesn't bubble",
+          "input": "{tree: ['btn', 'div', 'body'], clickTarget: 'btn', stopAt: 'btn'}",
+          "expected_output": "btn",
+          "visibility": "visible"
+        },
+        {
+          "name": "Click starts mid-tree, bubbles to top",
+          "input": "{tree: ['a', 'b', 'c', 'd'], clickTarget: 'b', stopAt: null}",
+          "expected_output": "b,c,d",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Click starts mid-tree with stop",
+          "input": "{tree: ['a', 'b', 'c', 'd'], clickTarget: 'a', stopAt: 'c'}",
+          "expected_output": "a,b,c",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["dom-events", "dom-event-delegation"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L24",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L24"]
+    }
+  ]
+}

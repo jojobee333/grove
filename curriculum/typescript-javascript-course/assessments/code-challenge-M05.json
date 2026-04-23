@@ -1,0 +1,106 @@
+{
+  "id": "code-challenge-M05",
+  "type": "module",
+  "module": "M05",
+  "title": "Coding Challenges: this Binding",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `applyWithContext(config)` that takes an object `{ values, op, operand }` and applies an arithmetic operation to each element in `values`.\n\nSupported operations (apply `operand` to each value):\n- `'add'`: `value + operand`\n- `'multiply'`: `value * operand`\n- `'subtract'`: `value - operand`\n\nReturn the results as an array (String() on an array joins with commas).\n\nThis simulates binding a context value (`operand`) to a method and mapping it over a collection.",
+      "starter_code": "function applyWithContext(config) {\n  // Use config.values.map() to apply config.op with config.operand\n  // Supported ops: 'add', 'multiply', 'subtract'\n}\n",
+      "test_cases": [
+        {
+          "name": "Add operand to each value",
+          "input": "{values: [1, 2, 3], op: 'add', operand: 10}",
+          "expected_output": "11,12,13",
+          "visibility": "visible"
+        },
+        {
+          "name": "Multiply each value by operand",
+          "input": "{values: [2, 4, 6], op: 'multiply', operand: 3}",
+          "expected_output": "6,12,18",
+          "visibility": "visible"
+        },
+        {
+          "name": "Subtract operand from each value",
+          "input": "{values: [10, 8, 5], op: 'subtract', operand: 3}",
+          "expected_output": "7,5,2",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Multiply by 1 returns original values",
+          "input": "{values: [5, 10, 15], op: 'multiply', operand: 1}",
+          "expected_output": "5,10,15",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Add 0 returns original values",
+          "input": "{values: [3, 6, 9], op: 'add', operand: 0}",
+          "expected_output": "3,6,9",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["js-this-binding", "js-explicit-binding", "js-arrow-functions"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L10",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L10"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `predictThis(scenario)` that takes a scenario name string and returns what `this` would be in that context.\n\nMapping:\n- `'method-call'` → `'object'` (called as `obj.method()`)\n- `'plain-function'` → `'undefined'` (strict mode default binding)\n- `'arrow-function'` → `'outer-scope'` (lexical this from enclosing context)\n- `'new-call'` → `'new-instance'` (called with `new`)\n- `'explicit-bind'` → `'bound-object'` (called via `.call()`, `.apply()`, or `.bind()`)\n- any other string → `'unknown'`",
+      "starter_code": "function predictThis(scenario) {\n  // Return the this-binding result for each named scenario\n  // Use if/else or a lookup object\n}\n",
+      "test_cases": [
+        {
+          "name": "Method call binds to the object",
+          "input": "'method-call'",
+          "expected_output": "object",
+          "visibility": "visible"
+        },
+        {
+          "name": "Plain function call in strict mode is undefined",
+          "input": "'plain-function'",
+          "expected_output": "undefined",
+          "visibility": "visible"
+        },
+        {
+          "name": "Arrow function inherits outer scope",
+          "input": "'arrow-function'",
+          "expected_output": "outer-scope",
+          "visibility": "visible"
+        },
+        {
+          "name": "new call binds to the new instance",
+          "input": "'new-call'",
+          "expected_output": "new-instance",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Explicit bind overrides default",
+          "input": "'explicit-bind'",
+          "expected_output": "bound-object",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Unknown scenario returns 'unknown'",
+          "input": "'callback'",
+          "expected_output": "unknown",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["js-this-binding", "js-this-call-site-rules", "js-arrow-functions"],
+      "cognitive_level": "knowledge",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L10",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L10", "L11"]
+    }
+  ]
+}

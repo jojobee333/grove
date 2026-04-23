@@ -1,0 +1,146 @@
+{
+  "id": "code-challenge-M06",
+  "type": "module",
+  "module": "M06",
+  "title": "Coding Challenges: Async JavaScript",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `processResults(results)` that takes an array of settled promise-like objects, each with `{ status: 'fulfilled' | 'rejected', value?, reason? }`, and simulates `Promise.all` behavior:\n\n- If **any** result has `status: 'rejected'`, return `'rejected: ' + reason` (use the first rejection found)\n- If **all** are fulfilled, return the values joined by commas\n- If the array is empty, return an empty string",
+      "starter_code": "function processResults(results) {\n  // Simulate Promise.all: fail-fast on first rejection\n  // Return comma-joined values if all fulfilled\n}\n",
+      "test_cases": [
+        {
+          "name": "All fulfilled — returns joined values",
+          "input": "[{status: 'fulfilled', value: 'a'}, {status: 'fulfilled', value: 'b'}]",
+          "expected_output": "a,b",
+          "visibility": "visible"
+        },
+        {
+          "name": "First rejection wins (fail-fast)",
+          "input": "[{status: 'fulfilled', value: 'ok'}, {status: 'rejected', reason: 'timeout'}]",
+          "expected_output": "rejected: timeout",
+          "visibility": "visible"
+        },
+        {
+          "name": "Three fulfilled values all joined",
+          "input": "[{status: 'fulfilled', value: 'x'}, {status: 'fulfilled', value: 'y'}, {status: 'fulfilled', value: 'z'}]",
+          "expected_output": "x,y,z",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single fulfilled result",
+          "input": "[{status: 'fulfilled', value: 'data'}]",
+          "expected_output": "data",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Rejection in middle — first one wins",
+          "input": "[{status: 'fulfilled', value: '1'}, {status: 'rejected', reason: 'net-error'}, {status: 'fulfilled', value: '3'}]",
+          "expected_output": "rejected: net-error",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["js-promises", "js-promise-all"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L13",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L13"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `asyncSequence(config)` that takes `{ initial, steps }` and applies a sequence of named operations to `initial`, one at a time (like a chain of `await` calls).\n\nSupported operations:\n- `'double'`: multiply by 2\n- `'addTen'`: add 10\n- `'halve'`: divide by 2\n- `'negate'`: multiply by -1\n- `'square'`: multiply by itself\n\nReturn the final result as a number.",
+      "starter_code": "function asyncSequence(config) {\n  // Apply each step in config.steps to an accumulator starting at config.initial\n  // Use reduce or a for...of loop\n  // Supported steps: 'double', 'addTen', 'halve', 'negate', 'square'\n}\n",
+      "test_cases": [
+        {
+          "name": "Three-step chain",
+          "input": "{initial: 5, steps: ['double', 'addTen', 'halve']}",
+          "expected_output": "10",
+          "visibility": "visible"
+        },
+        {
+          "name": "Two-step chain",
+          "input": "{initial: 0, steps: ['addTen', 'double']}",
+          "expected_output": "20",
+          "visibility": "visible"
+        },
+        {
+          "name": "No steps returns initial value",
+          "input": "{initial: 3, steps: []}",
+          "expected_output": "3",
+          "visibility": "visible"
+        },
+        {
+          "name": "Square then addTen",
+          "input": "{initial: 2, steps: ['square', 'addTen']}",
+          "expected_output": "14",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Negate then double",
+          "input": "{initial: 5, steps: ['negate', 'double']}",
+          "expected_output": "-10",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["js-async-await", "js-promises"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L14",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L13", "L14"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `classifyAsyncPattern(code)` that takes a string snippet of JavaScript code and identifies which async pattern it uses:\n\n- If it contains `await ` → `'async-await'`\n- If it contains `.then(` → `'promise-chain'`\n- If it contains the word `callback` → `'callback'`\n- Otherwise → `'synchronous'`\n\nCheck in the order listed above.",
+      "starter_code": "function classifyAsyncPattern(code) {\n  // Check in this order: async-await, promise-chain, callback, synchronous\n}\n",
+      "test_cases": [
+        {
+          "name": "await keyword → async-await",
+          "input": "'const data = await fetchUser(id)'",
+          "expected_output": "async-await",
+          "visibility": "visible"
+        },
+        {
+          "name": ".then() → promise-chain",
+          "input": "'fetch(url).then(res => res.json())'",
+          "expected_output": "promise-chain",
+          "visibility": "visible"
+        },
+        {
+          "name": "callback word → callback",
+          "input": "'loadData(url, callback)'",
+          "expected_output": "callback",
+          "visibility": "visible"
+        },
+        {
+          "name": "No async indicators → synchronous",
+          "input": "'const result = compute(x)'",
+          "expected_output": "synchronous",
+          "visibility": "hidden"
+        },
+        {
+          "name": "await takes priority over .then",
+          "input": "'await fetchUser(id).then(log)'",
+          "expected_output": "async-await",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["js-async-await", "js-promises"],
+      "cognitive_level": "knowledge",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L14",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L12", "L13", "L14"]
+    }
+  ]
+}

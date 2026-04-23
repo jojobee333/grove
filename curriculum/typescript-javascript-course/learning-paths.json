@@ -1,0 +1,42 @@
+{
+  "course_slug": "typescript-javascript-course",
+  "paths": [
+    {
+      "id": "default",
+      "label": "Full Course",
+      "description": "The complete TypeScript & JavaScript curriculum in recommended sequence. Suitable for developers building a solid foundation.",
+      "module_sequence": ["M01", "M02", "M03", "M04", "M05", "M06", "M07", "M08", "M09", "M10", "M11"]
+    },
+    {
+      "id": "fast-track",
+      "label": "Fast Track — TypeScript Focus",
+      "description": "For developers who already know JavaScript well and want to get productive with TypeScript quickly. Skips JS fundamentals and jumps straight to TypeScript-specific material with just enough JS context.",
+      "module_sequence": ["M01", "M06", "M07", "M08", "M09"],
+      "prerequisites": "Comfortable with closures, async/await, array methods, and the event loop"
+    },
+    {
+      "id": "backend-focus",
+      "label": "Backend Focus — Node.js & TypeScript",
+      "description": "For developers building APIs and server-side applications with Node.js and TypeScript. Emphasizes async patterns, TypeScript for server code, and Node.js runtime specifics.",
+      "module_sequence": ["M01", "M02", "M04", "M06", "M07", "M08", "M09", "M11"],
+      "skipped_modules": ["M03 (light)", "M05", "M10"],
+      "notes": "M03 and M10 can be read quickly for completeness. M05 (this) is less critical in functional/async Node.js code."
+    },
+    {
+      "id": "frontend-focus",
+      "label": "Frontend Focus — DOM & React Prep",
+      "description": "For developers building browser applications. Covers JS fundamentals, async patterns, TypeScript types, and DOM/event APIs needed before learning React or Vue.",
+      "module_sequence": ["M01", "M02", "M03", "M04", "M05", "M06", "M07", "M08", "M09", "M10"],
+      "skipped_modules": ["M11"],
+      "notes": "M11 (Node.js) can be skipped for pure frontend work but is recommended for full-stack developers."
+    },
+    {
+      "id": "js-only",
+      "label": "JavaScript Only",
+      "description": "For developers who need JavaScript proficiency without TypeScript. Covers all JS concepts from variables through Node.js.",
+      "module_sequence": ["M01", "M02", "M03", "M04", "M05", "M06", "M07", "M10", "M11"],
+      "skipped_modules": ["M08", "M09"],
+      "notes": "M16 (tsconfig) in M07 can be skimmed. TypeScript-specific content in other modules is clearly labeled."
+    }
+  ]
+}

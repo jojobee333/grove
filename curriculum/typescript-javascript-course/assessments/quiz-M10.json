@@ -1,0 +1,74 @@
+{
+  "quiz_id": "quiz-M10",
+  "module_id": "M10",
+  "title": "Module 10 Quiz — DOM & Browser APIs",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "q01",
+      "type": "mcq",
+      "prompt": "What is the security risk of setting innerHTML with user-controlled data?",
+      "options": ["Performance overhead", "XSS — the browser executes injected script tags", "DOM reordering", "Memory leak"],
+      "correct": 1,
+      "explanation": "innerHTML parses HTML including <script> tags. User input set via innerHTML can execute arbitrary JavaScript (XSS). Use textContent instead."
+    },
+    {
+      "id": "q02",
+      "type": "mcq",
+      "prompt": "document.querySelector<HTMLInputElement>('#email') — the generic parameter does what?",
+      "options": [
+        "Adds runtime validation",
+        "Tells TypeScript the return type is HTMLInputElement instead of Element",
+        "Filters only input elements in the DOM",
+        "It has no effect — it's just documentation"
+      ],
+      "correct": 1,
+      "explanation": "The generic parameter gives TypeScript the specific type, granting access to input-specific properties like .value without casting."
+    },
+    {
+      "id": "q03",
+      "type": "mcq",
+      "prompt": "How does event delegation work?",
+      "options": [
+        "Each element has one listener delegated to the browser",
+        "One listener on a parent handles events from descendant children via bubbling",
+        "Listeners are shared between sibling elements",
+        "The browser delegates event handling to Web Workers"
+      ],
+      "correct": 1,
+      "explanation": "Events bubble up to parent elements. Attaching one listener to a container handles clicks on all descendants, including dynamically added ones."
+    },
+    {
+      "id": "q04",
+      "type": "mcq",
+      "prompt": "element.removeEventListener('click', handler) — when does this work?",
+      "options": [
+        "Always, for any click handler on the element",
+        "Only when handler is the exact same function reference as the one added",
+        "Only for the first registered listener",
+        "After calling element.clearListeners() first"
+      ],
+      "correct": 1,
+      "explanation": "removeEventListener requires an identical function reference. Anonymous inline functions () => {} cannot be removed."
+    },
+    {
+      "id": "q05",
+      "type": "mcq",
+      "prompt": "element.closest('.container') does what?",
+      "options": [
+        "Returns the first child matching .container",
+        "Returns the next sibling matching .container",
+        "Returns the nearest ancestor (including self) matching .container",
+        "Returns all .container elements in the document"
+      ],
+      "correct": 2,
+      "explanation": "closest() traverses ancestors upward from the element, returning the first match (or null)."
+    },
+    {
+      "id": "q06",
+      "type": "short_answer",
+      "prompt": "Write event delegation code on a #todo-list ul that logs the text content of any clicked li.",
+      "answer_key": "document.getElementById('todo-list').addEventListener('click', (e) => {\n  const li = e.target.closest('li');\n  if (li) console.log(li.textContent);\n});"
+    }
+  ]
+}

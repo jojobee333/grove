@@ -1,0 +1,92 @@
+{
+  "quiz_id": "quiz-M04",
+  "module_id": "M04",
+  "title": "Module 4 Quiz — Functions, Scope & Closures",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "q01",
+      "type": "mcq",
+      "prompt": "What makes arrow functions different from regular functions regarding this?",
+      "options": [
+        "Arrow functions always bind this to window",
+        "Arrow functions do not have their own this — they inherit it lexically",
+        "Arrow functions use strict mode this binding only",
+        "Arrow functions bind this dynamically"
+      ],
+      "correct": 1,
+      "explanation": "Arrow functions capture this from the enclosing lexical scope at creation time. They have no own this."
+    },
+    {
+      "id": "q02",
+      "type": "mcq",
+      "prompt": "A function declaration called BEFORE its line in the file — what happens?",
+      "options": [
+        "ReferenceError",
+        "undefined is returned",
+        "Works fine — function declarations are fully hoisted",
+        "TypeError"
+      ],
+      "correct": 2,
+      "explanation": "Function declarations are fully hoisted, including the function body. They are callable anywhere in their scope."
+    },
+    {
+      "id": "q03",
+      "type": "mcq",
+      "prompt": "Lexical scope means:",
+      "options": [
+        "Scope is determined at runtime based on the call stack",
+        "Scope is determined by where code is written in the source file",
+        "Each function creates a new global scope",
+        "Variables are visible everywhere in the module"
+      ],
+      "correct": 1,
+      "explanation": "Lexical (static) scope is determined at author time — where the code is written, not where it's called."
+    },
+    {
+      "id": "q04",
+      "type": "mcq",
+      "prompt": "What is a closure?",
+      "options": [
+        "A private class method",
+        "A function that retains access to its outer scope after that scope has exited",
+        "A sealed object",
+        "A module pattern"
+      ],
+      "correct": 1,
+      "explanation": "A closure is a function plus its retained reference to the surrounding lexical environment."
+    },
+    {
+      "id": "q05",
+      "type": "short_answer",
+      "prompt": "Write a createMultiplier(factor) factory function that uses a closure.",
+      "answer_key": "function createMultiplier(factor) { return (n) => n * factor; }\nconst double = createMultiplier(2); double(5); // 10"
+    },
+    {
+      "id": "q06",
+      "type": "mcq",
+      "prompt": "Can an outer function access a variable declared inside an inner function?",
+      "options": [
+        "Yes — all variables are shared in closures",
+        "No — the scope chain is one-directional: inner accesses outer, not vice versa",
+        "Only if the inner function returns the variable",
+        "Yes, but only in non-strict mode"
+      ],
+      "correct": 1,
+      "explanation": "Scope chains flow outward only. The outer function cannot see the inner function's variables."
+    },
+    {
+      "id": "q07",
+      "type": "mcq",
+      "prompt": "What TypeScript syntax types a function that takes (id: number, name: string) and returns void?",
+      "options": [
+        "type F = (id: number, name: string) => void",
+        "type F = function(number, string): void",
+        "interface F { (id: number, name: string): void }",
+        "Both A and C"
+      ],
+      "correct": 3,
+      "explanation": "Both type aliases and call-signature interfaces can describe function types in TypeScript."
+    }
+  ]
+}

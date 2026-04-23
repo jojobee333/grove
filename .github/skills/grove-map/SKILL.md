@@ -96,7 +96,7 @@ Read `curriculum/[slug]/learner.json`:
           "reinforces_concepts": [],
           "mastery_threshold": 0.7,
           "unlock_rule": "all_prerequisites_mastered",
-          "review_after_days": 7
+          "review_after_days": [1, 3, 7, 14]
         }
       ],
       "has_assessment": true
@@ -134,11 +134,19 @@ Every lesson in `course.json` must include these adaptive fields (v3 schema):
 | `reinforces_concepts` | string[] | Concept slugs this lesson *revisits* (secondary coverage) |
 | `mastery_threshold` | float 0–1 | Minimum average mastery score before lesson is counted complete (default 0.7) |
 | `unlock_rule` | string | `"all_prerequisites_mastered"` or `"none"` (for the first lessons in a module) |
-| `review_after_days` | integer | Days after completion before app flags this lesson for review (default 7) |
+| `review_after_days` | integer[] | Days after completion before app flags this lesson for review (default [1,3,7,14]) |
 
 **`teaches_concepts` is the most important field.** The bundler (`build-bundle.mjs`) uses it to
 enrich every flashcard and MCQ question in that lesson with `concepts`, `cognitive_level`, and `weight`.
 If a lesson has no `teaches_concepts`, its cards and questions will not have adaptive metadata.
+
+Three app features are also directly gated on `teaches_concepts` being populated:
+
+| Feature | Dependency |
+|---|---|
+| **Feynman Mode** | "Reveal key concepts" button only appears when `teaches_concepts` is non-empty |
+| **Speed Round** | Card weak-concept prioritisation uses concepts inherited from lesson via `teaches_concepts` |
+| **Adaptive Sequencer** | Lessons with no concepts always score 0 and are never promoted to the front of the plan |
 
 Concept slugs must match IDs defined in `curriculum/[slug]/concepts.json`.
 After generating `course.json`, run `node scripts/validate-curriculum.mjs [slug]` to check compliance.

@@ -1,0 +1,146 @@
+{
+  "id": "code-challenge-M04",
+  "type": "module",
+  "module": "M04",
+  "title": "Coding Challenges: Functions, Scope & Closures",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `repeatString(config)` that takes an object `{ str, times }` and returns `str` repeated `times` times. Use `String.prototype.repeat()`.\n\nIf `times` is 0, return an empty string.",
+      "starter_code": "function repeatString(config) {\n  // Return config.str repeated config.times times\n  // Use String.prototype.repeat()\n}\n",
+      "test_cases": [
+        {
+          "name": "Repeats string 3 times",
+          "input": "{str: 'ab', times: 3}",
+          "expected_output": "ababab",
+          "visibility": "visible"
+        },
+        {
+          "name": "Two repetitions",
+          "input": "{str: 'hello', times: 2}",
+          "expected_output": "hellohello",
+          "visibility": "visible"
+        },
+        {
+          "name": "Once returns the original string",
+          "input": "{str: 'go', times: 1}",
+          "expected_output": "go",
+          "visibility": "visible"
+        },
+        {
+          "name": "Longer repetition",
+          "input": "{str: 'ha', times: 5}",
+          "expected_output": "hahahahaha",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Single character repeated",
+          "input": "{str: '-', times: 4}",
+          "expected_output": "----",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["js-function-forms"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 1,
+      "lesson_ref": "L07",
+      "pass_criteria": 1.0,
+      "remediation_lesson_ids": ["L07"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `parsePathParts(config)` that takes an object `{ path, depth }` where `path` is a dot-separated string (e.g. `'user.address.city'`) and `depth` is a zero-based index. Return the segment at that depth.\n\nThis exercises property access and lexical scope: the function creates a local variable for the split result, then accesses it by index.",
+      "starter_code": "function parsePathParts(config) {\n  // Split config.path by '.'\n  // Return the segment at index config.depth\n}\n",
+      "test_cases": [
+        {
+          "name": "Last segment (depth 2)",
+          "input": "{path: 'user.address.city', depth: 2}",
+          "expected_output": "city",
+          "visibility": "visible"
+        },
+        {
+          "name": "First segment (depth 0)",
+          "input": "{path: 'user.address.city', depth: 0}",
+          "expected_output": "user",
+          "visibility": "visible"
+        },
+        {
+          "name": "Middle segment (depth 1)",
+          "input": "{path: 'a.b.c', depth: 1}",
+          "expected_output": "b",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single-segment path at depth 0",
+          "input": "{path: 'config', depth: 0}",
+          "expected_output": "config",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Four-level path at depth 3",
+          "input": "{path: 'app.db.host.port', depth: 3}",
+          "expected_output": "port",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["js-lexical-scope", "js-function-forms"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L08",
+      "pass_criteria": 1.0,
+      "remediation_lesson_ids": ["L08"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `runningTotal(amounts)` that takes an array of numbers and returns an array where each element is the running (cumulative) sum up to that index.\n\nThis is the classic closure pattern: use a variable declared outside the inner function to accumulate state across `map` iterations.\n\nExample: `[10, 5, -3, 2]` → `[10, 15, 12, 14]`",
+      "starter_code": "function runningTotal(amounts) {\n  // Declare an accumulator variable (this is captured by the closure inside map)\n  // Use .map() to return each running sum\n}\n",
+      "test_cases": [
+        {
+          "name": "Mixed values accumulate correctly",
+          "input": "[10, 5, -3, 2]",
+          "expected_output": "10,15,12,14",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single element array",
+          "input": "[1]",
+          "expected_output": "1",
+          "visibility": "visible"
+        },
+        {
+          "name": "Zeroes then one gives running sums",
+          "input": "[0, 0, 0, 1]",
+          "expected_output": "0,0,0,1",
+          "visibility": "hidden"
+        },
+        {
+          "name": "All positives accumulate",
+          "input": "[1, 2, 3, 4]",
+          "expected_output": "1,3,6,10",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Negative values decrease the total",
+          "input": "[5, -2, -1, 3]",
+          "expected_output": "5,3,2,5",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["js-closures", "js-lexical-scope"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L09",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L08", "L09"]
+    }
+  ]
+}

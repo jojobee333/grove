@@ -1,0 +1,100 @@
+{
+  "id": "code-challenge-M07",
+  "type": "module",
+  "module": "M07",
+  "title": "Coding Challenges: Modules & Tooling",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `categorizeModuleSyntax(lines)` that takes an array of code line strings and classifies each line as `'esm'`, `'cjs'`, or `'other'`.\n\nRules:\n- `'esm'` if the line starts with `import` or `export` (after optional whitespace)\n- `'cjs'` if the line contains `require(`, `module.exports`, or `exports.`\n- `'other'` otherwise\n\nReturn the result as an array of labels (String() joins with commas).",
+      "starter_code": "function categorizeModuleSyntax(lines) {\n  // Classify each line as 'esm', 'cjs', or 'other'\n  // Use .map() and regex or string checks\n}\n",
+      "test_cases": [
+        {
+          "name": "ESM import, plain code, CJS export",
+          "input": "['import React from \"react\"', 'const x = 5', 'module.exports = {}']",
+          "expected_output": "esm,other,cjs",
+          "visibility": "visible"
+        },
+        {
+          "name": "Two ESM export lines",
+          "input": "['export default App', 'export const foo = 1']",
+          "expected_output": "esm,esm",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single CJS require line",
+          "input": "['const fs = require(\"fs\")']",
+          "expected_output": "cjs",
+          "visibility": "visible"
+        },
+        {
+          "name": "ESM import followed by CJS require",
+          "input": "['import { useState } from \"react\"', 'require(\"lodash\")']",
+          "expected_output": "esm,cjs",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Plain code lines are 'other'",
+          "input": "['const x = 1', 'function foo() {}']",
+          "expected_output": "other,other",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["js-es-modules", "js-cjs-vs-esm"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L15",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L15"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `strictnessScore(options)` that takes a `tsconfig` options object and returns a score from `0` to `3` counting how many of these three key strict options are enabled (truthy):\n\n- `strict`\n- `noImplicitAny`\n- `strictNullChecks`\n\nReturn the count as a number.",
+      "starter_code": "function strictnessScore(options) {\n  // Count how many of: strict, noImplicitAny, strictNullChecks are truthy\n  // Return the count (0, 1, 2, or 3)\n}\n",
+      "test_cases": [
+        {
+          "name": "All three enabled → 3",
+          "input": "{strict: true, noImplicitAny: true, strictNullChecks: true}",
+          "expected_output": "3",
+          "visibility": "visible"
+        },
+        {
+          "name": "Only strictNullChecks → 1",
+          "input": "{strict: false, noImplicitAny: false, strictNullChecks: true}",
+          "expected_output": "1",
+          "visibility": "visible"
+        },
+        {
+          "name": "None enabled → 0",
+          "input": "{strict: false, noImplicitAny: false, strictNullChecks: false}",
+          "expected_output": "0",
+          "visibility": "visible"
+        },
+        {
+          "name": "Two enabled → 2",
+          "input": "{strict: true, noImplicitAny: false, strictNullChecks: true}",
+          "expected_output": "2",
+          "visibility": "hidden"
+        },
+        {
+          "name": "strict and noImplicitAny → 2",
+          "input": "{strict: true, noImplicitAny: true, strictNullChecks: false}",
+          "expected_output": "2",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["tsconfig", "ts-erased-types"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 1,
+      "lesson_ref": "L16",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L16"]
+    }
+  ]
+}

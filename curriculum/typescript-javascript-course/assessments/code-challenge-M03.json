@@ -1,0 +1,140 @@
+{
+  "id": "code-challenge-M03",
+  "type": "module",
+  "module": "M03",
+  "title": "Coding Challenges: Collections & Iteration",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `sumPositives(numbers)` that takes an array of numbers and returns the sum of all values strictly greater than zero. Use `filter` and `reduce`.",
+      "starter_code": "function sumPositives(numbers) {\n  // Filter for values > 0, then reduce to a sum\n  // Return 0 for an empty array or all-negative input\n}\n",
+      "test_cases": [
+        {
+          "name": "Mixed positive and negative values",
+          "input": "[1, -2, 3, 0, -4, 5]",
+          "expected_output": "9",
+          "visibility": "visible"
+        },
+        {
+          "name": "Empty array returns 0",
+          "input": "[]",
+          "expected_output": "0",
+          "visibility": "visible"
+        },
+        {
+          "name": "All negatives return 0",
+          "input": "[-1, -2, -3]",
+          "expected_output": "0",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single positive value",
+          "input": "[10]",
+          "expected_output": "10",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Zero is not positive",
+          "input": "[0, 0, 5]",
+          "expected_output": "5",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["js-array-methods"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L05",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L05"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `flatDedup(arrays)` that takes an array of arrays, flattens it one level, removes duplicate numbers, and returns the result sorted in ascending order.\n\nUse `Array.flat()`, `Set` for deduplication, and `Array.sort()` with a numeric comparator.",
+      "starter_code": "function flatDedup(arrays) {\n  // 1. Flatten one level with .flat()\n  // 2. Remove duplicates using new Set()\n  // 3. Sort ascending numerically\n  // 4. Return the result array (String() joins with commas automatically)\n}\n",
+      "test_cases": [
+        {
+          "name": "Overlapping subarrays deduplicated and sorted",
+          "input": "[[1, 2, 3], [2, 3, 4], [4, 5]]",
+          "expected_output": "1,2,3,4,5",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single subarray sorted",
+          "input": "[[5, 3, 1]]",
+          "expected_output": "1,3,5",
+          "visibility": "visible"
+        },
+        {
+          "name": "Interleaved values across subarrays",
+          "input": "[[100, 200], [150]]",
+          "expected_output": "100,150,200",
+          "visibility": "hidden"
+        },
+        {
+          "name": "All duplicates collapsed to one",
+          "input": "[[3, 3], [3, 3]]",
+          "expected_output": "3",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Larger spread with negatives sorted correctly",
+          "input": "[[-2, 1], [0, 1, 3], [2]]",
+          "expected_output": "-2,0,1,2,3",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["js-array-methods", "js-spread-rest"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L05",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L05"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `extractValues(configs)` that takes an array of `{ key, value }` objects and returns an array of `value` strings where the `key` starts with `'user_'`. Preserve the original order.",
+      "starter_code": "function extractValues(configs) {\n  // Filter configs where key starts with 'user_'\n  // Return an array of their value strings\n  // (String() on an array joins elements with commas)\n}\n",
+      "test_cases": [
+        {
+          "name": "Filters user_ keys and returns values in order",
+          "input": "[{key: 'user_name', value: 'Alice'}, {key: 'api_key', value: 'xyz'}, {key: 'user_age', value: '25'}]",
+          "expected_output": "Alice,25",
+          "visibility": "visible"
+        },
+        {
+          "name": "Single user_ key returns its value",
+          "input": "[{key: 'user_token', value: 'tok123'}, {key: 'env', value: 'prod'}]",
+          "expected_output": "tok123",
+          "visibility": "visible"
+        },
+        {
+          "name": "Multiple user_ keys in order",
+          "input": "[{key: 'user_id', value: '42'}, {key: 'user_email', value: 'a@b.com'}]",
+          "expected_output": "42,a@b.com",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Interleaved user_ and non-user_ keys in order",
+          "input": "[{key: 'user_score', value: '99'}, {key: 'env', value: 'prod'}, {key: 'user_level', value: '5'}]",
+          "expected_output": "99,5",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["js-array-methods", "js-destructuring"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L06",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L05", "L06"]
+    }
+  ]
+}

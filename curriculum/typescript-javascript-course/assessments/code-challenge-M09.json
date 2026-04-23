@@ -1,0 +1,134 @@
+{
+  "id": "code-challenge-M09",
+  "type": "module",
+  "module": "M09",
+  "title": "Coding Challenges: TypeScript Advanced",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `getObjectProp(config)` that takes `{ obj, key }` and returns `obj[key]`.\n\nThis is the runtime equivalent of TypeScript's `keyof` operator. In TypeScript, this would be typed as `function getObjectProp<T, K extends keyof T>(config: { obj: T, key: K }): T[K]` — but here we test that the runtime behavior is correct.",
+      "starter_code": "function getObjectProp(config) {\n  // Return config.obj[config.key]\n}\n",
+      "test_cases": [
+        {
+          "name": "Returns string property",
+          "input": "{obj: {name: 'Alice', age: 30}, key: 'name'}",
+          "expected_output": "Alice",
+          "visibility": "visible"
+        },
+        {
+          "name": "Returns numeric property",
+          "input": "{obj: {x: 10, y: 20}, key: 'y'}",
+          "expected_output": "20",
+          "visibility": "visible"
+        },
+        {
+          "name": "Returns boolean property",
+          "input": "{obj: {a: true}, key: 'a'}",
+          "expected_output": "true",
+          "visibility": "visible"
+        },
+        {
+          "name": "Returns zero without treating it as falsy",
+          "input": "{obj: {count: 0}, key: 'count'}",
+          "expected_output": "0",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Returns nested object property",
+          "input": "{obj: {status: 'active', role: 'admin'}, key: 'role'}",
+          "expected_output": "admin",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["ts-generics", "ts-keyof"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L20",
+      "pass_criteria": 1.0,
+      "remediation_lesson_ids": ["L20"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `narrowByTag(item)` that computes the area of a shape based on a discriminant `tag` property — this is the runtime implementation of a TypeScript discriminated union.\n\n- `{ tag: 'circle', radius: number }` → area = `Math.PI * radius²`, rounded to 2 decimal places using `toFixed(2)`\n- `{ tag: 'rect', width: number, height: number }` → area = `width * height`\n\nFor the circle, return the `toFixed(2)` string. For the rect, return the raw number.",
+      "starter_code": "function narrowByTag(item) {\n  // Narrow on item.tag: 'circle' or 'rect'\n  // Circle: (Math.PI * r * r).toFixed(2)\n  // Rect: width * height\n}\n",
+      "test_cases": [
+        {
+          "name": "Circle with radius 5",
+          "input": "{tag: 'circle', radius: 5}",
+          "expected_output": "78.54",
+          "visibility": "visible"
+        },
+        {
+          "name": "Rectangle 4×6",
+          "input": "{tag: 'rect', width: 4, height: 6}",
+          "expected_output": "24",
+          "visibility": "visible"
+        },
+        {
+          "name": "Circle with radius 3",
+          "input": "{tag: 'circle', radius: 3}",
+          "expected_output": "28.27",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Rectangle 10×5",
+          "input": "{tag: 'rect', width: 10, height: 5}",
+          "expected_output": "50",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["ts-discriminated-unions", "ts-type-narrowing"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L22",
+      "pass_criteria": 1.0,
+      "remediation_lesson_ids": ["L22"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `applyPartial(config)` that takes `{ defaults, overrides, pick }` and returns the value of `pick` from the merged object — simulating `Partial<T>` and object spreading at runtime.\n\nMerge: `{ ...defaults, ...overrides }`, then return the value at `pick`.",
+      "starter_code": "function applyPartial(config) {\n  // Merge defaults and overrides using spread: { ...config.defaults, ...config.overrides }\n  // Return the value at config.pick\n}\n",
+      "test_cases": [
+        {
+          "name": "Override wins over default",
+          "input": "{defaults: {theme: 'light', size: 14}, overrides: {theme: 'dark'}, pick: 'theme'}",
+          "expected_output": "dark",
+          "visibility": "visible"
+        },
+        {
+          "name": "Default used when no override",
+          "input": "{defaults: {theme: 'light', size: 14}, overrides: {}, pick: 'size'}",
+          "expected_output": "14",
+          "visibility": "visible"
+        },
+        {
+          "name": "Override replaces numeric default",
+          "input": "{defaults: {a: 1, b: 2}, overrides: {a: 99}, pick: 'a'}",
+          "expected_output": "99",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Boolean override",
+          "input": "{defaults: {lang: 'en', debug: false}, overrides: {debug: true}, pick: 'debug'}",
+          "expected_output": "true",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["ts-utility-types", "js-object-spread"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L21",
+      "pass_criteria": 1.0,
+      "remediation_lesson_ids": ["L20", "L21"]
+    }
+  ]
+}

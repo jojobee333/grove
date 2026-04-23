@@ -1,0 +1,56 @@
+{
+  "quiz_id": "quiz-M01",
+  "module_id": "M01",
+  "title": "Module 1 Quiz — The JavaScript Landscape",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "q01",
+      "type": "mcq",
+      "prompt": "What does the TypeScript compiler (tsc) do with type annotations at build time?",
+      "options": [
+        "Converts them to runtime checks",
+        "Strips them entirely — only JavaScript remains",
+        "Embeds them as comments in the output",
+        "Converts them to JSDoc annotations"
+      ],
+      "correct": 1,
+      "explanation": "TypeScript performs type erasure. All annotations, interfaces, and generics are removed. The output is plain JavaScript."
+    },
+    {
+      "id": "q02",
+      "type": "mcq",
+      "prompt": "Which API is available in Node.js 18+ but was browser-only before that?",
+      "options": ["document", "localStorage", "fetch", "navigator"],
+      "correct": 2,
+      "explanation": "fetch became available natively in Node.js 18. The others (document, localStorage, navigator) remain browser-only."
+    },
+    {
+      "id": "q03",
+      "type": "mcq",
+      "prompt": "What command runs TypeScript type-checking without emitting any output files?",
+      "options": ["tsc --dry-run", "tsc --noEmit", "tsc --check-only", "tsc --types"],
+      "correct": 1,
+      "explanation": "tsc --noEmit performs the full type check but writes no files. Standard for CI pipelines."
+    },
+    {
+      "id": "q04",
+      "type": "short_answer",
+      "prompt": "Name TWO APIs that are Node.js-only and not available in a browser.",
+      "answer_key": "Any two of: fs, path, process, http, net, child_process, os, cluster, dgram"
+    },
+    {
+      "id": "q05",
+      "type": "mcq",
+      "prompt": "V8 is best described as:",
+      "options": [
+        "The ECMAScript specification",
+        "A JavaScript framework",
+        "Google's JavaScript engine that implements ECMAScript",
+        "The Node.js standard library"
+      ],
+      "correct": 2,
+      "explanation": "V8 is Google's implementation of the ECMAScript spec. It runs inside Chrome and Node.js."
+    }
+  ]
+}

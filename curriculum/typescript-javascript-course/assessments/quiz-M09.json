@@ -1,0 +1,87 @@
+{
+  "quiz_id": "quiz-M09",
+  "module_id": "M09",
+  "title": "Module 9 Quiz — TypeScript Advanced",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "q01",
+      "type": "mcq",
+      "prompt": "function identity<T>(value: T): T — the T here is called:",
+      "options": ["A type parameter", "A template literal", "A constraint", "A utility type"],
+      "correct": 0,
+      "explanation": "T is a generic type parameter — a placeholder that gets filled with a real type when the function is called."
+    },
+    {
+      "id": "q02",
+      "type": "mcq",
+      "prompt": "Partial<User> produces a type where:",
+      "options": [
+        "All User properties are required",
+        "All User properties are optional",
+        "All User properties are readonly",
+        "User properties become nulls"
+      ],
+      "correct": 1,
+      "explanation": "Partial<T> makes every property in T optional (adds ? to each key)."
+    },
+    {
+      "id": "q03",
+      "type": "mcq",
+      "prompt": "A discriminated union requires:",
+      "options": [
+        "All members to have the same properties",
+        "Each member to have a shared literal-typed discriminant property",
+        "The union to be created with the & operator",
+        "All members to extend a base interface"
+      ],
+      "correct": 1,
+      "explanation": "The discriminant is a shared property with a unique literal type per member (like status: 'loading' | 'success' | 'error')."
+    },
+    {
+      "id": "q04",
+      "type": "mcq",
+      "prompt": "Omit<User, 'id' | 'createdAt'> produces:",
+      "options": [
+        "Only the id and createdAt fields",
+        "User without the id and createdAt fields",
+        "The type of id and createdAt combined",
+        "User where id and createdAt are optional"
+      ],
+      "correct": 1,
+      "explanation": "Omit<T, K> creates a new type with all properties of T except those in K."
+    },
+    {
+      "id": "q05",
+      "type": "mcq",
+      "prompt": "How do you make TypeScript error if a switch/case doesn't handle all union members?",
+      "options": [
+        "Add noImplicitReturns to tsconfig",
+        "In the default case, assign the value to a never-typed variable",
+        "Use exhaustive: true in tsconfig",
+        "TypeScript does this automatically with union types"
+      ],
+      "correct": 1,
+      "explanation": "default: const _: never = value; — if a union member is unhandled, TypeScript errors because it's assignable to the type, not never."
+    },
+    {
+      "id": "q06",
+      "type": "short_answer",
+      "prompt": "What is a type predicate and how is it different from a plain boolean check?",
+      "answer_key": "A type predicate is a return type annotation 'val is User' on a function. It tells TypeScript to narrow val's type in the if-true branch. A plain boolean check doesn't affect TypeScript's type narrowing — it's just a runtime condition."
+    },
+    {
+      "id": "q07",
+      "type": "mcq",
+      "prompt": "What does <T extends { name: string }> mean?",
+      "options": [
+        "T must be a subclass of { name: string }",
+        "T is constrained to only types that have a name: string property",
+        "T defaults to { name: string }",
+        "T is replaced by { name: string } at compile time"
+      ],
+      "correct": 1,
+      "explanation": "extends in a generic constraint limits the allowed types to those that satisfy the given shape (structural typing)."
+    }
+  ]
+}

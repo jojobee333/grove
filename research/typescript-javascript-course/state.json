@@ -1,0 +1,41 @@
+{
+  "topic": "TypeScript & JavaScript for Developers",
+  "slug": "typescript-javascript-course",
+  "created": "2026-04-19",
+  "last_updated": "2026-04-19",
+  "phase": "complete",
+  "progress": {
+    "brief_approved": true,
+    "plan_approved": true,
+    "sourcing_complete": true,
+    "analysis_complete": true,
+    "synthesis_complete": true,
+    "output_complete": true,
+  },
+  "last_action": "Research complete: synthesis + course outline written to 03-synthesis/index.md and 04-output/course-outline.md",
+  "next_action": "Use Grove skill to generate lessons, flashcards, and assessments from course-outline.md",
+  "source_counts": {
+    "total": 11,
+    "active": 11,
+    "discarded": 0,
+    "pending_review": 0
+  },
+  "questions": {
+    "total": 8,
+    "answered": 0,
+    "unanswerable": 0
+  },
+  "open_issues": [],
+  "history": [
+    {
+      "date": "2026-04-19",
+      "session_summary": "Project initialized",
+      "actions": [
+        "Created folder structure",
+        "Wrote 00-intake/brief.md",
+        "Wrote 00-intake/plan.md",
+        "Initialized state.json"
+      ]
+    }
+  ]
+}

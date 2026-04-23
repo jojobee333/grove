@@ -1,0 +1,1099 @@
+{
+  "course_slug": "typescript-javascript-course",
+  "generated_at": "2025-01-01T00:00:00Z",
+  "total_cards": 156,
+  "cards": [
+    {
+      "id": "card-001",
+      "lesson_id": "L01",
+      "type": "definition",
+      "front": "What are the three layers of the JavaScript execution environment?",
+      "back": "1. ECMAScript — the language specification (syntax, types, operators)\n2. The JavaScript engine (e.g., V8) — implements ECMAScript\n3. The host environment (browser or Node.js) — provides platform-specific APIs like the DOM or fs"
+    },
+    {
+      "id": "card-002",
+      "lesson_id": "L01",
+      "type": "claim",
+      "front": "TypeScript types at runtime",
+      "back": "TypeScript types are erased by the compiler. At runtime, only JavaScript runs — no type annotations, no interfaces, no generics. `tsc` removes them all."
+    },
+    {
+      "id": "card-003",
+      "lesson_id": "L01",
+      "type": "distinction",
+      "front": "Browser-only vs Node.js-only APIs",
+      "back": "Browser-only: document, window, localStorage, fetch (before Node 18), navigator\nNode.js-only: fs, path, process, http, child_process, os\nShared (Node 18+): fetch, URL, ReadableStream, crypto"
+    },
+    {
+      "id": "card-004",
+      "lesson_id": "L01",
+      "type": "application",
+      "front": "You want to type-check a TypeScript project without emitting any JavaScript. What command do you run?",
+      "back": "tsc --noEmit\n\nThis runs the type checker and reports all type errors, but produces no output files. Used in CI pipelines."
+    },
+    {
+      "id": "card-005",
+      "lesson_id": "L02",
+      "type": "claim",
+      "front": "var hoisting behavior",
+      "back": "var declarations are hoisted to the top of their containing function and initialized to undefined. Accessing a var before its assignment returns undefined (not ReferenceError)."
+    },
+    {
+      "id": "card-006",
+      "lesson_id": "L02",
+      "type": "definition",
+      "front": "Temporal Dead Zone (TDZ)",
+      "back": "The period between entering a block scope and the let/const declaration. Accessing a let or const variable in its TDZ throws a ReferenceError — unlike var, which returns undefined."
+    },
+    {
+      "id": "card-007",
+      "lesson_id": "L02",
+      "type": "application",
+      "front": "Why does `for (var i = 0; i < 3; i++) { setTimeout(() => console.log(i), 0) }` print 3, 3, 3?",
+      "back": "var i creates a single shared binding. All three closures capture the same i. By the time the timeouts fire, the loop has finished and i is 3.\n\nFix: use let i — it creates a new binding per iteration."
+    },
+    {
+      "id": "card-008",
+      "lesson_id": "L02",
+      "type": "distinction",
+      "front": "const vs immutable",
+      "back": "const prevents re-assignment (rebinding the variable to a new value). It does NOT make the value immutable. Object properties and array elements can still be mutated. Use Object.freeze() for shallow immutability."
+    },
+    {
+      "id": "card-009",
+      "lesson_id": "L02",
+      "type": "claim",
+      "front": "Rule for var usage",
+      "back": "Never use var in modern JavaScript or TypeScript. Use const by default, upgrade to let only when reassignment is needed."
+    },
+    {
+      "id": "card-010",
+      "lesson_id": "L03",
+      "type": "definition",
+      "front": "typeof null === ?",
+      "back": "\"object\" — this is a historical bug in JavaScript. To check for null, use `value === null`, not typeof."
+    },
+    {
+      "id": "card-011",
+      "lesson_id": "L03",
+      "type": "claim",
+      "front": "Number type in JavaScript",
+      "back": "JavaScript has one number type — IEEE 754 double-precision float. There is no int/float distinction. MAX_SAFE_INTEGER is 2^53 - 1. Use BigInt (suffix n) for larger integers."
+    },
+    {
+      "id": "card-012",
+      "lesson_id": "L03",
+      "type": "distinction",
+      "front": "undefined vs null — semantic convention",
+      "back": "undefined = never assigned / property doesn't exist (JS default)\nnull = developer explicitly signaling 'no value here'\n\nWith TypeScript strictNullChecks, they are separate types."
+    },
+    {
+      "id": "card-013",
+      "lesson_id": "L03",
+      "type": "application",
+      "front": "How do you check if a value is a non-null object?",
+      "back": "typeof val === 'object' && val !== null\n\nYou need both conditions because typeof null === 'object'."
+    },
+    {
+      "id": "card-014",
+      "lesson_id": "L04",
+      "type": "claim",
+      "front": "== vs === rule",
+      "back": "Always use === (strict equality). The == operator performs implicit type coercion using a 20-step algorithm. The results are unpredictable without memorizing the full spec."
+    },
+    {
+      "id": "card-015",
+      "lesson_id": "L04",
+      "type": "application",
+      "front": "What does '5' + 3 evaluate to?",
+      "back": "\"53\" — the + operator concatenates when either operand is a string.\n\nOther arithmetic operators (-, *, /) always coerce to number: '5' - 3 === 2."
+    },
+    {
+      "id": "card-016",
+      "lesson_id": "L04",
+      "type": "definition",
+      "front": "The 6 falsy values in JavaScript",
+      "back": "false, 0, 0n (BigInt zero), \"\" (empty string), null, undefined\n\nEverything else is truthy — including [], {}, \"0\", and -1."
+    },
+    {
+      "id": "card-017",
+      "lesson_id": "L04",
+      "type": "application",
+      "front": "An API returns a user's age as a string \"25\". How do you safely add 5 to it?",
+      "back": "parseInt(\"25\", 10) + 5 // 30\n// or\nNumber(\"25\") + 5     // 30\n// or\n+\"25\" + 5            // 30 (unary + converts to number)\n\nDo NOT use '25' + 5 = '255'."
+    },
+    {
+      "id": "card-018",
+      "lesson_id": "L05",
+      "type": "definition",
+      "front": "Array.map() vs Array.filter()",
+      "back": "map: transforms each element, returns new array of same length\nfilter: keeps elements where callback returns true, returns shorter array\n\nNeither mutates the original array."
+    },
+    {
+      "id": "card-019",
+      "lesson_id": "L05",
+      "type": "application",
+      "front": "Calculate total revenue from completed orders",
+      "back": "orders\n  .filter(o => o.status === 'complete')\n  .map(o => o.amount)\n  .reduce((sum, amount) => sum + amount, 0)"
+    },
+    {
+      "id": "card-020",
+      "lesson_id": "L05",
+      "type": "distinction",
+      "front": "for...of vs for...in on arrays",
+      "back": "for...of: iterates over VALUES — use for arrays, strings, Maps, Sets\nfor...in: iterates over PROPERTY NAMES as strings — do NOT use on arrays (gives '0', '1', '2')"
+    },
+    {
+      "id": "card-021",
+      "lesson_id": "L05",
+      "type": "claim",
+      "front": "Array spread creates a shallow copy",
+      "back": "[...arr] creates a new array with the same elements. Primitive values are copied; object references are shared. Mutating an object inside the copy also affects the original."
+    },
+    {
+      "id": "card-022",
+      "lesson_id": "L06",
+      "type": "definition",
+      "front": "Object destructuring with rename and default",
+      "back": "const { originalName: newName = defaultValue } = obj\n\nExample: const { theme: userTheme = 'dark' } = settings"
+    },
+    {
+      "id": "card-023",
+      "lesson_id": "L06",
+      "type": "application",
+      "front": "How do you remove a property from an object without mutation?",
+      "back": "const { propertyToRemove, ...rest } = original\n\nRest collects all remaining properties. 'rest' is a new object without the removed property."
+    },
+    {
+      "id": "card-024",
+      "lesson_id": "L06",
+      "type": "claim",
+      "front": "Object spread precedence",
+      "back": "Later properties win: { ...defaults, ...overrides } means overrides properties replace defaults properties with the same key."
+    },
+    {
+      "id": "card-025",
+      "lesson_id": "L06",
+      "type": "application",
+      "front": "How do you do a deep clone of an object?",
+      "back": "structuredClone(obj) — modern JavaScript/Node.js built-in, handles nested objects, arrays, dates.\n\nSpread and Object.assign are shallow — they share nested object references."
+    },
+    {
+      "id": "card-026",
+      "lesson_id": "L07",
+      "type": "distinction",
+      "front": "Function declaration vs function expression — hoisting",
+      "back": "Function declaration: fully hoisted — callable before the line it appears on\nFunction expression (const fn = function(){}): not hoisted — TDZ until the const declaration\nArrow function (const fn = () => {}): not hoisted — same as const"
+    },
+    {
+      "id": "card-027",
+      "lesson_id": "L07",
+      "type": "claim",
+      "front": "Arrow functions and this",
+      "back": "Arrow functions do not have their own this binding. They inherit this from the enclosing lexical scope. This makes them ideal for callbacks but wrong for object methods."
+    },
+    {
+      "id": "card-028",
+      "lesson_id": "L07",
+      "type": "application",
+      "front": "TypeScript: how do you type a function that takes a string and returns a number?",
+      "back": "function fn(s: string): number { ... }\n// or\nconst fn = (s: string): number => { ... }\n// or as a type:\ntype StringToNumber = (s: string) => number;"
+    },
+    {
+      "id": "card-029",
+      "lesson_id": "L08",
+      "type": "definition",
+      "front": "Lexical scope (static scope)",
+      "back": "Scope is determined by where code is written in the source file, not where it is called. A function can access variables from all outer scopes at the point it was defined."
+    },
+    {
+      "id": "card-030",
+      "lesson_id": "L08",
+      "type": "claim",
+      "front": "JavaScript uses lexical scope, not dynamic scope",
+      "back": "When a function references a variable, it looks up the scope chain from its definition site, not the call site. Calling greet() from within a function that has a local 'name' variable does NOT give greet access to that local name."
+    },
+    {
+      "id": "card-031",
+      "lesson_id": "L08",
+      "type": "claim",
+      "front": "ES module scope",
+      "back": "Variables declared at the top level of an ES module are module-scoped, not global. They are not added to globalThis. They must be explicitly exported to be accessible from other files."
+    },
+    {
+      "id": "card-032",
+      "lesson_id": "L09",
+      "type": "definition",
+      "front": "Closure",
+      "back": "A function that retains access to variables from its lexical scope even after that scope has exited. The function 'closes over' those variables, keeping them alive as long as the function is reachable."
+    },
+    {
+      "id": "card-033",
+      "lesson_id": "L09",
+      "type": "application",
+      "front": "How do you create private state using a closure?",
+      "back": "function createCounter() {\n  let count = 0;    // private\n  return {\n    increment() { count++; },\n    get() { return count; }\n  };\n}\n\ncount is inaccessible from outside — only the returned functions can see it."
+    },
+    {
+      "id": "card-034",
+      "lesson_id": "L09",
+      "type": "application",
+      "front": "The loop closure bug: three functions all log 3 instead of 0, 1, 2. What's the fix?",
+      "back": "Change var to let in the for loop: for (let i = 0; ...). This creates a new binding per iteration, so each closure captures its own copy of i."
+    },
+    {
+      "id": "card-035",
+      "lesson_id": "L09",
+      "type": "claim",
+      "front": "Closures and memory",
+      "back": "Closed-over variables are not garbage-collected while any closure referencing them is reachable. Creating many closures with large closed-over state can cause memory leaks."
+    },
+    {
+      "id": "card-036",
+      "lesson_id": "L10",
+      "type": "definition",
+      "front": "The five this-binding rules (in priority order)",
+      "back": "1. new binding — new Fn() creates a new object as this\n2. Explicit binding — fn.call(obj), fn.apply(obj), fn.bind(obj)\n3. Implicit binding — obj.method() sets this to obj\n4. Default binding — plain fn() → undefined (strict) or globalThis\n5. Arrow functions — inherit this lexically (no own this)"
+    },
+    {
+      "id": "card-037",
+      "lesson_id": "L10",
+      "type": "application",
+      "front": "const fn = obj.method; fn(); — what is this inside fn?",
+      "back": "undefined (strict mode) or globalThis (sloppy mode). Implicit binding is lost when a method is extracted from its object. Fix with fn.bind(obj) or call fn as obj.method()."
+    },
+    {
+      "id": "card-038",
+      "lesson_id": "L10",
+      "type": "distinction",
+      "front": "call vs apply vs bind",
+      "back": "call(thisArg, arg1, arg2) — invokes immediately, args passed individually\napply(thisArg, [arg1, arg2]) — invokes immediately, args as array\nbind(thisArg) — returns NEW function with this permanently bound, does not invoke"
+    },
+    {
+      "id": "card-039",
+      "lesson_id": "L10",
+      "type": "application",
+      "front": "How do you pass an object method as a callback while preserving its this?",
+      "back": "Option 1: btn.addEventListener('click', this.handler.bind(this))\nOption 2: btn.addEventListener('click', () => this.handler())\nOption 3: Define handler as an arrow function class property: handler = () => {...}"
+    },
+    {
+      "id": "card-040",
+      "lesson_id": "L11",
+      "type": "claim",
+      "front": "When to use arrow functions vs regular methods",
+      "back": "Callbacks & transforms: arrow functions (need outer this, or no this needed)\nObject methods: regular functions (need this to be the object)\nClass methods on prototype: regular methods\nClass methods passed as callbacks: arrow function class properties"
+    },
+    {
+      "id": "card-041",
+      "lesson_id": "L11",
+      "type": "application",
+      "front": "Why does const obj = { name: 'Alice', greet: () => console.log(this.name) } fail?",
+      "back": "Arrow functions capture this from the scope where they are defined — the object literal's enclosing scope (module or function). this is not the object itself. Use greet() { ... } (regular method shorthand) instead."
+    },
+    {
+      "id": "card-042",
+      "lesson_id": "L11",
+      "type": "claim",
+      "front": "Arrow function class properties vs prototype methods",
+      "back": "handleClick = () => {} is an instance property — one copy per instance, this is always correct.\nhandleClick() {} is a prototype method — shared across instances, cheaper, but this is lost when passed as callback."
+    },
+    {
+      "id": "card-043",
+      "lesson_id": "L12",
+      "type": "definition",
+      "front": "Event loop task vs microtask",
+      "back": "Task (macrotask): setTimeout, setInterval, I/O events — one task runs per event loop iteration\nMicrotask: Promise .then(), queueMicrotask() — the entire microtask queue drains after each task, before the next task"
+    },
+    {
+      "id": "card-044",
+      "lesson_id": "L12",
+      "type": "application",
+      "front": "What is the output order? console.log('A'); setTimeout(()=>console.log('C'),0); Promise.resolve().then(()=>console.log('B'));",
+      "back": "A, B, C\n\nA: synchronous\nB: microtask (Promise.then) — runs before next macrotask\nC: macrotask (setTimeout) — runs after microtask queue is empty"
+    },
+    {
+      "id": "card-045",
+      "lesson_id": "L12",
+      "type": "claim",
+      "front": "Blocking the event loop",
+      "back": "A synchronous computation that runs for many milliseconds blocks the event loop. No callbacks fire, no timers trigger, no user interactions are processed. Avoid blocking operations in servers and UI threads."
+    },
+    {
+      "id": "card-046",
+      "lesson_id": "L13",
+      "type": "definition",
+      "front": "Promise states",
+      "back": "pending → the promise is waiting for resolution\nfulfilled → resolved with a value (triggers .then())\nrejected → failed with a reason (triggers .catch())\n\nA promise transitions from pending to fulfilled or rejected exactly once. The state never reverts."
+    },
+    {
+      "id": "card-047",
+      "lesson_id": "L13",
+      "type": "distinction",
+      "front": "Promise.all vs Promise.allSettled",
+      "back": "Promise.all: resolves when ALL resolve; rejects immediately if ANY reject\nPromise.allSettled: waits for ALL to settle (resolve or reject); returns array of {status, value/reason} — never rejects"
+    },
+    {
+      "id": "card-048",
+      "lesson_id": "L13",
+      "type": "claim",
+      "front": "Unhandled promise rejections",
+      "back": "A rejected promise without a .catch() (or try/catch around await) is an unhandled rejection. In Node.js 15+, this terminates the process. Always handle rejections."
+    },
+    {
+      "id": "card-049",
+      "lesson_id": "L13",
+      "type": "application",
+      "front": "You need to fetch a user and their posts in parallel. Write the Promise.all call.",
+      "back": "const [user, posts] = await Promise.all([\n  fetchUser(userId),\n  fetchPosts(userId)\n]);"
+    },
+    {
+      "id": "card-050",
+      "lesson_id": "L14",
+      "type": "claim",
+      "front": "async/await and Promises relationship",
+      "back": "async/await is syntactic sugar over Promises. An async function always returns a Promise. await pauses the async function until the awaited Promise settles. All Promise patterns still apply underneath."
+    },
+    {
+      "id": "card-051",
+      "lesson_id": "L14",
+      "type": "application",
+      "front": "Why is `ids.forEach(async id => { await process(id) })` wrong?",
+      "back": "forEach doesn't await async callbacks. It launches all the async calls and moves on. The outer function returns before any processing completes.\n\nFix: for...of (sequential) or Promise.all(ids.map(id => process(id))) (parallel)."
+    },
+    {
+      "id": "card-052",
+      "lesson_id": "L14",
+      "type": "application",
+      "front": "How do you run two async operations in parallel with async/await?",
+      "back": "Option 1 (cleanest):\nconst [a, b] = await Promise.all([fetchA(), fetchB()]);\n\nOption 2 (manual):\nconst pA = fetchA(); // start immediately\nconst pB = fetchB(); // start immediately\nconst a = await pA; const b = await pB;"
+    },
+    {
+      "id": "card-053",
+      "lesson_id": "L14",
+      "type": "definition",
+      "front": "TypeScript return type for async functions",
+      "back": "async function fetchUser(id: number): Promise<User> { ... }\n\nAn async function that returns T always has a return type of Promise<T>. TypeScript infers this automatically, but explicit annotation is good practice."
+    },
+    {
+      "id": "card-054",
+      "lesson_id": "L15",
+      "type": "distinction",
+      "front": "ES Modules vs CommonJS",
+      "back": "ESM: import/export, static (analyzable), tree-shakeable, works in browser and Node.js\nCJS: require/module.exports, dynamic, synchronous, Node.js original format\n\nThey are NOT directly interoperable. CJS cannot require() a pure ESM module."
+    },
+    {
+      "id": "card-055",
+      "lesson_id": "L15",
+      "type": "application",
+      "front": "How does Node.js know if a .js file is ESM or CJS?",
+      "back": "\"type\": \"module\" in package.json → .js files are ESM\nNo \"type\" or \"type\": \"commonjs\" → .js files are CJS\n.mjs extension → always ESM\n.cjs extension → always CJS"
+    },
+    {
+      "id": "card-056",
+      "lesson_id": "L15",
+      "type": "application",
+      "front": "A CJS module needs to use a pure ESM package. What do you do?",
+      "back": "Use dynamic import: const { default: mod } = await import('esm-package')\n\nNote: dynamic import() always returns a Promise, so the CJS function must be async."
+    },
+    {
+      "id": "card-057",
+      "lesson_id": "L16",
+      "type": "claim",
+      "front": "Most important tsconfig setting",
+      "back": "strict: true — enables all strict checks, most importantly strictNullChecks (null/undefined as separate types) and noImplicitAny (variables can't silently become any). Never ship a TypeScript project without strict: true."
+    },
+    {
+      "id": "card-058",
+      "lesson_id": "L16",
+      "type": "distinction",
+      "front": "tsconfig target vs lib",
+      "back": "target: what JS syntax tsc outputs (e.g., ES2022 → uses const, arrow functions)\nlib: what globals TypeScript knows about (e.g., 'DOM' → document/fetch types, 'ES2022' → Array.at() type)"
+    },
+    {
+      "id": "card-059",
+      "lesson_id": "L16",
+      "type": "application",
+      "front": "When should you set noEmit: true in tsconfig?",
+      "back": "When a bundler (Vite, Webpack, esbuild) handles transpilation. Set noEmit: true so tsc is only used for type checking, not for producing output files. Run tsc --noEmit in CI."
+    },
+    {
+      "id": "card-060",
+      "lesson_id": "L17",
+      "type": "claim",
+      "front": "Type erasure rule",
+      "back": "All TypeScript type annotations, interfaces, type aliases, and as assertions are removed during compilation. Nothing type-related exists at runtime. TypeScript cannot validate runtime data — use Zod or similar for that."
+    },
+    {
+      "id": "card-061",
+      "lesson_id": "L17",
+      "type": "application",
+      "front": "When do you need explicit type annotations vs relying on inference?",
+      "back": "Always annotate: function parameters (TypeScript cannot infer)\nAnnotate when needed: empty arrays (inferred as never[]), public function return types (documentation)\nSkip annotation: most variables (const x = 5 is inferred as number), function return types in simple cases"
+    },
+    {
+      "id": "card-062",
+      "lesson_id": "L17",
+      "type": "distinction",
+      "front": "const vs let type inference",
+      "back": "const fixed = 'hello' → type is literal 'hello' (cannot change)\nlet mutable = 'hello' → type is string (widened — can be reassigned to other strings)"
+    },
+    {
+      "id": "card-063",
+      "lesson_id": "L18",
+      "type": "definition",
+      "front": "Union type",
+      "back": "A type that can be one of several types: string | number | boolean\n\nThe compiler requires you to handle all union members — it narrows the type based on runtime checks like typeof."
+    },
+    {
+      "id": "card-064",
+      "lesson_id": "L18",
+      "type": "application",
+      "front": "Model an API status that can only be 'pending', 'complete', or 'failed'",
+      "back": "type Status = 'pending' | 'complete' | 'failed';\n\nThis is a literal union type. TypeScript will error if you assign 'cancelled' or any other string."
+    },
+    {
+      "id": "card-065",
+      "lesson_id": "L18",
+      "type": "distinction",
+      "front": "Optional property (?) vs nullable property (| null)",
+      "back": "email?: string → type is string | undefined (property may be absent from the object)\nemail: string | null → property must be present but its value can be null\n\nBoth require handling the non-string case with strictNullChecks."
+    },
+    {
+      "id": "card-066",
+      "lesson_id": "L18",
+      "type": "distinction",
+      "front": "interface vs type alias — when to use which",
+      "back": "interface: for object shapes that may be extended with extends; supports declaration merging\ntype: for unions, intersections, primitives, computed types (Partial, Record, etc.)\n\nRule of thumb: interface for objects, type for everything else."
+    },
+    {
+      "id": "card-067",
+      "lesson_id": "L19",
+      "type": "definition",
+      "front": "Structural typing (TypeScript's model)",
+      "back": "Type compatibility is based on shape, not name. Two types are compatible if one has at least the same properties as the other, regardless of what they are called. This is unlike Java/C# nominal typing (where you must declare 'implements Interface')."
+    },
+    {
+      "id": "card-068",
+      "lesson_id": "L19",
+      "type": "application",
+      "front": "Why does `const p: Point = { x: 1, y: 2, z: 3 }` fail but `const q = { x:1, y:2, z:3 }; const p: Point = q` succeed?",
+      "back": "TypeScript applies excess property checks on object literals (prevents typos). Variable assignments use structural compatibility — q satisfies Point because it has x and y (extra properties allowed). The asymmetry is intentional."
+    },
+    {
+      "id": "card-069",
+      "lesson_id": "L19",
+      "type": "claim",
+      "front": "readonly in TypeScript",
+      "back": "readonly prevents property reassignment after creation. It's a TypeScript-only check — the property is still writable at runtime in JavaScript. For runtime immutability, use Object.freeze()."
+    },
+    {
+      "id": "card-070",
+      "lesson_id": "L20",
+      "type": "definition",
+      "front": "Generic type parameter",
+      "back": "A placeholder type written as <T> that gets filled in when the function/class is used. Enables writing code once that works correctly for multiple types while preserving type information."
+    },
+    {
+      "id": "card-071",
+      "lesson_id": "L20",
+      "type": "application",
+      "front": "Write a type-safe getProperty function using keyof",
+      "back": "function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {\n  return obj[key];\n}\n\nK extends keyof T ensures key is a valid property name. T[K] is the type of that property."
+    },
+    {
+      "id": "card-072",
+      "lesson_id": "L20",
+      "type": "claim",
+      "front": "Generic type inference",
+      "back": "TypeScript infers type arguments from call arguments in most cases. identity('hello') infers T = string without you writing identity<string>('hello'). Explicit type arguments are rarely needed."
+    },
+    {
+      "id": "card-073",
+      "lesson_id": "L20",
+      "type": "definition",
+      "front": "Generic constraint (extends)",
+      "back": "<T extends { length: number }> restricts T to only types that have a .length property. Inside the function, T is known to have that property. Without the constraint, T is unknown and you can't access .length."
+    },
+    {
+      "id": "card-074",
+      "lesson_id": "L21",
+      "type": "application",
+      "front": "You have a User interface with 8 fields. Create a type for a PATCH endpoint that accepts any subset of those fields.",
+      "back": "type UserPatch = Partial<User>;\n\nPartial<T> makes all properties optional. The PATCH handler receives an object with 0 to 8 of User's properties."
+    },
+    {
+      "id": "card-075",
+      "lesson_id": "L21",
+      "type": "application",
+      "front": "Create a CreateUserInput type from User that excludes id, createdAt, and updatedAt",
+      "back": "type CreateUserInput = Omit<User, 'id' | 'createdAt' | 'updatedAt'>;\n\nThis keeps all User fields except the three server-generated ones. When User gains new fields, CreateUserInput automatically includes them."
+    },
+    {
+      "id": "card-076",
+      "lesson_id": "L21",
+      "type": "definition",
+      "front": "ReturnType<F> utility type",
+      "back": "Extracts the return type of a function type F.\n\ntype R = ReturnType<typeof myFunction>;\n\nUseful for building wrappers or deriving types from existing functions without manually repeating them."
+    },
+    {
+      "id": "card-077",
+      "lesson_id": "L21",
+      "type": "application",
+      "front": "Create a type-safe lookup table mapping country codes US/GB/DE to their full names",
+      "back": "type CountryCode = 'US' | 'GB' | 'DE';\nconst names: Record<CountryCode, string> = {\n  US: 'United States',\n  GB: 'United Kingdom',\n  DE: 'Germany',\n};\n\nTypeScript will error if a key is missing or an invalid code is used."
+    },
+    {
+      "id": "card-078",
+      "lesson_id": "L22",
+      "type": "definition",
+      "front": "Type narrowing",
+      "back": "TypeScript refines a variable's type within a conditional block based on a runtime check. After `if (typeof x === 'string')`, TypeScript knows x is string inside that block. Built-in guards: typeof, instanceof, in, truthiness, equality checks."
+    },
+    {
+      "id": "card-079",
+      "lesson_id": "L22",
+      "type": "definition",
+      "front": "Discriminated union",
+      "back": "A union type where each member has a shared literal-typed property (the discriminant) that uniquely identifies which member it is. TypeScript narrows on the discriminant in switch/if statements."
+    },
+    {
+      "id": "card-080",
+      "lesson_id": "L22",
+      "type": "application",
+      "front": "Design a Result<T> discriminated union for an API call",
+      "back": "type Result<T> =\n  | { status: 'loading' }\n  | { status: 'success'; data: T }\n  | { status: 'error'; message: string };\n\nSwitch on status — TypeScript narrows to the correct member in each case."
+    },
+    {
+      "id": "card-081",
+      "lesson_id": "L22",
+      "type": "application",
+      "front": "How do you make TypeScript error when you add a new shape kind but forget to handle it in the area() function?",
+      "back": "Add a default case that assigns to never:\ndefault:\n  const _: never = shape;\n  throw new Error('Unhandled');\n\nIf a new kind is added but not handled, TypeScript errors: 'X is not assignable to never'."
+    },
+    {
+      "id": "card-082",
+      "lesson_id": "L22",
+      "type": "definition",
+      "front": "Type predicate (user-defined type guard)",
+      "back": "function isUser(val: unknown): val is User { ... }\n\nThe return type 'val is User' tells TypeScript that in the true branch, val is narrowed to User. The implementation performs actual runtime validation."
+    },
+    {
+      "id": "card-083",
+      "lesson_id": "L23",
+      "type": "distinction",
+      "front": "querySelector vs getElementById vs querySelectorAll",
+      "back": "getElementById(id): returns HTMLElement | null — fastest, by ID only\nquerySelector(sel): returns Element | null — CSS selector, first match\nquerySelectorAll(sel): returns NodeList — all matches (static snapshot)\ngetElementsByClassName(): returns HTMLCollection (live — updates with DOM changes)"
+    },
+    {
+      "id": "card-084",
+      "lesson_id": "L23",
+      "type": "application",
+      "front": "How do you get an HTMLInputElement from querySelector with the correct TypeScript type?",
+      "back": "const input = document.querySelector<HTMLInputElement>('#my-input');\nif (input) {\n  input.value; // string — TypeScript knows it's HTMLInputElement\n}"
+    },
+    {
+      "id": "card-085",
+      "lesson_id": "L23",
+      "type": "distinction",
+      "front": "textContent vs innerHTML",
+      "back": "textContent: reads/writes plain text. Setting it HTML-escapes the value — safe against XSS.\ninnerHTML: reads/writes raw HTML. Setting it with user-controlled content is an XSS vulnerability."
+    },
+    {
+      "id": "card-086",
+      "lesson_id": "L24",
+      "type": "definition",
+      "front": "Event bubbling",
+      "back": "After firing on the target element, a DOM event propagates upward through ancestor elements. Unless stopPropagation() is called, every ancestor with a listener for that event type will also receive it."
+    },
+    {
+      "id": "card-087",
+      "lesson_id": "L24",
+      "type": "application",
+      "front": "How does event delegation work? Why use it for a long list?",
+      "back": "Attach ONE listener to the parent (e.g., the <ul>). When a child is clicked, the event bubbles to the parent. Use event.target and .closest() to identify which child triggered it.\n\nAdvantage: one listener instead of N; works for dynamically added children."
+    },
+    {
+      "id": "card-088",
+      "lesson_id": "L24",
+      "type": "claim",
+      "front": "Removing event listeners requires the same function reference",
+      "back": "element.removeEventListener('click', handler) only works if handler is the same function reference used in addEventListener. An anonymous inline () => {} cannot be removed this way — store the function in a variable."
+    },
+    {
+      "id": "card-089",
+      "lesson_id": "L25",
+      "type": "definition",
+      "front": "What is Node.js?",
+      "back": "A server-side JavaScript runtime built on V8 (Google's JS engine) and libuv (async I/O). Uses the same event loop model as browsers but replaces DOM/window APIs with fs, http, net, process, etc."
+    },
+    {
+      "id": "card-090",
+      "lesson_id": "L25",
+      "type": "application",
+      "front": "How do you get __dirname equivalent in an ESM Node.js file?",
+      "back": "import { fileURLToPath } from 'node:url';\nimport path from 'node:path';\nconst __filename = fileURLToPath(import.meta.url);\nconst __dirname = path.dirname(__filename);\n\nimport.meta.url is the file's URL in ESM. __dirname doesn't exist in ESM."
+    },
+    {
+      "id": "card-091",
+      "lesson_id": "L25",
+      "type": "claim",
+      "front": "Reading environment variables safely in TypeScript",
+      "back": "process.env.X is always string | undefined in TypeScript. Always guard:\nconst key = process.env.API_KEY;\nif (!key) throw new Error('API_KEY required');\n\nNever assume an env var exists."
+    },
+    {
+      "id": "card-092",
+      "lesson_id": "L25",
+      "type": "distinction",
+      "front": "fs synchronous vs async (promises)",
+      "back": "readFileSync: blocks the event loop until complete — ok for CLI scripts, dangerous in servers\nreadFile (callback) or fs/promises: non-blocking — correct for servers\n\nImport async: import { readFile } from 'node:fs/promises';"
+    },
+    {
+      "id": "card-093",
+      "lesson_id": "L26",
+      "type": "definition",
+      "front": "http.createServer handler signature",
+      "back": "http.createServer((req: IncomingMessage, res: ServerResponse) => { ... })\n\nreq: incoming request with url, method, headers, body (stream)\nres: response with writeHead(), write(), end() methods"
+    },
+    {
+      "id": "card-094",
+      "lesson_id": "L26",
+      "type": "application",
+      "front": "How do you read the request body in raw Node.js http?",
+      "back": "let body = '';\nreq.on('data', chunk => { body += chunk.toString(); });\nreq.on('end', () => {\n  const data = JSON.parse(body);\n});\nreq.on('error', reject);\n\nThe body arrives as a stream of chunks."
+    },
+    {
+      "id": "card-095",
+      "lesson_id": "L26",
+      "type": "claim",
+      "front": "Why frameworks like Express exist",
+      "back": "Raw Node.js http requires manual URL parsing, body reading, routing, and error handling. Express abstracts these with req.params, req.body (via middleware), route registration (app.get/post), and error middleware."
+    },
+    {
+      "id": "card-096",
+      "lesson_id": "L26",
+      "type": "application",
+      "front": "How do you extract a path parameter from a URL in raw Node.js http?",
+      "back": "const url = new URL(req.url, `http://${req.headers.host}`);\nconst match = url.pathname.match(/^\\/users\\/(\\d+)$/);\nif (match) {\n  const id = parseInt(match[1], 10);\n}"
+    },
+    {
+      "id": "card-097",
+      "lesson_id": "L01",
+      "type": "distinction",
+      "front": "V8 vs the ECMAScript spec",
+      "back": "ECMAScript is the specification (what JavaScript should do). V8 is Google's implementation of that spec. Other engines: SpiderMonkey (Firefox), JavaScriptCore (Safari). TypeScript compiles to JavaScript that any ECMAScript-compliant engine can run."
+    },
+    {
+      "id": "card-098",
+      "lesson_id": "L03",
+      "type": "application",
+      "front": "What does typeof return for functions?",
+      "back": "\"function\" — even though functions are technically objects in JavaScript. Functions get their own typeof result, unlike arrays (which return \"object\")."
+    },
+    {
+      "id": "card-099",
+      "lesson_id": "L05",
+      "type": "application",
+      "front": "Find the first order with amount > 100",
+      "back": "orders.find(o => o.amount > 100)\n\nReturns the first matching element, or undefined if none found. Use findIndex() to get the position instead."
+    },
+    {
+      "id": "card-100",
+      "lesson_id": "L06",
+      "type": "application",
+      "front": "Swap two variables using array destructuring",
+      "back": "[a, b] = [b, a];\n\nNo temporary variable needed. This is idiomatic JavaScript."
+    },
+    {
+      "id": "card-101",
+      "lesson_id": "L08",
+      "type": "application",
+      "front": "Can an outer function access variables declared in an inner function?",
+      "back": "No. The scope chain is one-directional — inner functions can access outer scope, but outer functions cannot see into inner functions. This is enforced by lexical scope."
+    },
+    {
+      "id": "card-102",
+      "lesson_id": "L12",
+      "type": "claim",
+      "front": "setTimeout(fn, 0) — when does fn run?",
+      "back": "fn is scheduled as a macrotask. It runs after the current synchronous code completes AND after all pending microtasks (Promise callbacks) are drained. 0ms delay means 'as soon as possible', not 'immediately'."
+    },
+    {
+      "id": "card-103",
+      "lesson_id": "L13",
+      "type": "application",
+      "front": "How do you get the first successful result from multiple parallel requests?",
+      "back": "Promise.any([p1, p2, p3])\n\nResolves with the first fulfilled value. Only rejects (with AggregateError) if ALL promises reject. Useful for racing multiple servers."
+    },
+    {
+      "id": "card-104",
+      "lesson_id": "L14",
+      "type": "claim",
+      "front": "Top-level await restriction",
+      "back": "Top-level await (await outside of async function) only works in ES modules. It does NOT work in CommonJS modules. TypeScript supports it with module: ESNext or NodeNext."
+    },
+    {
+      "id": "card-105",
+      "lesson_id": "L16",
+      "type": "application",
+      "front": "What tsconfig settings should you use for a Vite/React project?",
+      "back": "{\n  \"module\": \"ESNext\",\n  \"moduleResolution\": \"Bundler\",\n  \"noEmit\": true,\n  \"strict\": true,\n  \"target\": \"ES2022\",\n  \"lib\": [\"ES2022\", \"DOM\"]\n}\n\nnoEmit: true because Vite handles transpilation. Bundler resolution understands package.json exports."
+    },
+    {
+      "id": "card-106",
+      "lesson_id": "L17",
+      "type": "claim",
+      "front": "as type assertion vs type guard — which is safer?",
+      "back": "Type guards are always safer. `as User` just tells TypeScript 'trust me' — it does no runtime check. A type guard like `isUser(val)` actually validates the value at runtime. Use as only when you have strong certainty TypeScript cannot infer."
+    },
+    {
+      "id": "card-107",
+      "lesson_id": "L19",
+      "type": "application",
+      "front": "How do you extend an interface to add new properties?",
+      "back": "interface AdminUser extends User {\n  adminLevel: 1 | 2 | 3;\n  permissions: string[];\n}\n\nAdminUser has all User properties plus the two new ones."
+    },
+    {
+      "id": "card-108",
+      "lesson_id": "L20",
+      "type": "application",
+      "front": "Write a generic identity function and call it with a string",
+      "back": "function identity<T>(value: T): T { return value; }\n\nconst s = identity('hello'); // TypeScript infers T = string\n// s is type string\n\nExplicit: identity<string>('hello') — rarely needed"
+    },
+    {
+      "id": "card-109",
+      "lesson_id": "L21",
+      "type": "distinction",
+      "front": "Partial<T> vs Required<T>",
+      "back": "Partial<T>: all properties become optional (T → T | undefined for each key)\nRequired<T>: all optional properties become required (removes the ?)\n\nPartial is used for PATCH endpoints; Required for ensuring config is fully resolved."
+    },
+    {
+      "id": "card-110",
+      "lesson_id": "L22",
+      "type": "application",
+      "front": "How do you use the in operator to narrow a union of Cat | Dog?",
+      "back": "if ('meow' in animal) {\n  // TypeScript narrows: animal is Cat\n} else {\n  // TypeScript narrows: animal is Dog\n}\n\nThe in operator checks for a property's existence, enabling structural narrowing."
+    },
+    {
+      "id": "card-111",
+      "lesson_id": "L23",
+      "type": "application",
+      "front": "Add and remove a CSS class from an element",
+      "back": "element.classList.add('active');\nelement.classList.remove('inactive');\nelement.classList.toggle('expanded');\nelement.classList.contains('active'); // boolean"
+    },
+    {
+      "id": "card-112",
+      "lesson_id": "L24",
+      "type": "application",
+      "front": "Stop a click event from bubbling to parent elements",
+      "back": "element.addEventListener('click', (e) => {\n  e.stopPropagation(); // stops bubbling\n  // handle click\n});\n\nNote: does not prevent the default browser action. Use e.preventDefault() for that."
+    },
+    {
+      "id": "card-113",
+      "lesson_id": "L25",
+      "type": "application",
+      "front": "Read a JSON file asynchronously in Node.js",
+      "back": "import { readFile } from 'node:fs/promises';\nconst raw = await readFile('./data.json', 'utf-8');\nconst data = JSON.parse(raw);"
+    },
+    {
+      "id": "card-114",
+      "lesson_id": "L26",
+      "type": "application",
+      "front": "Send a 404 JSON response in a raw Node.js http server",
+      "back": "res.writeHead(404, { 'Content-Type': 'application/json' });\nres.end(JSON.stringify({ error: 'Not found' }));\n\nAlways call res.end() — if you don't, the connection hangs."
+    },
+    {
+      "id": "card-115",
+      "lesson_id": "L02",
+      "type": "application",
+      "front": "What is the output of: console.log(x); var x = 5;",
+      "back": "undefined — not a ReferenceError.\n\nvar is hoisted and initialized to undefined. The assignment (x = 5) is not hoisted, only the declaration."
+    },
+    {
+      "id": "card-116",
+      "lesson_id": "L04",
+      "type": "application",
+      "front": "Is [] == false true or false?",
+      "back": "true — both coerce to 0. [] → '' → 0; false → 0. This is == coercion.\n\nWith ===: [] === false is false. Always use ===."
+    },
+    {
+      "id": "card-117",
+      "lesson_id": "L07",
+      "type": "application",
+      "front": "When is it valid to call a function before its declaration?",
+      "back": "Only for function declarations (function foo() {}). These are fully hoisted.\n\nFunction expressions and arrow functions are not hoisted — calling them before the const/let declaration throws ReferenceError."
+    },
+    {
+      "id": "card-118",
+      "lesson_id": "L09",
+      "type": "claim",
+      "front": "Every callback is a closure",
+      "back": "Any function defined inside another function that references an outer variable is a closure — even trivial callbacks like array.map(x => x * 2) where no outer variable is referenced (but it still closes over the surrounding scope)."
+    },
+    {
+      "id": "card-119",
+      "lesson_id": "L11",
+      "type": "claim",
+      "front": "call/apply/bind on arrow functions",
+      "back": "call(), apply(), and bind() cannot change the this of an arrow function. The this is baked in at the time the arrow function is created. Any this argument passed to these methods is silently ignored."
+    },
+    {
+      "id": "card-120",
+      "lesson_id": "L13",
+      "type": "application",
+      "front": "You need to run 3 requests in parallel but want ALL results even if some fail. What combinator do you use?",
+      "back": "Promise.allSettled([p1, p2, p3])\n\nReturns [{status:'fulfilled', value:...}, {status:'rejected', reason:...}, ...] for all promises — never rejects itself. Use when partial success is acceptable."
+    },
+    {
+      "id": "card-121",
+      "lesson_id": "L15",
+      "type": "application",
+      "front": "Import all named exports from a module as a namespace object",
+      "back": "import * as MathUtils from './math.js';\nMathUtils.add(1, 2);\nMathUtils.PI;"
+    },
+    {
+      "id": "card-122",
+      "lesson_id": "L18",
+      "type": "application",
+      "front": "Handle a value that is string | null — call toUpperCase() safely",
+      "back": "// Option 1: if guard\nif (value !== null) { value.toUpperCase(); }\n\n// Option 2: optional chaining\nvalue?.toUpperCase(); // string | undefined\n\n// Option 3: nullish coalescing\n(value ?? '').toUpperCase();"
+    },
+    {
+      "id": "card-123",
+      "lesson_id": "L20",
+      "type": "application",
+      "front": "Constrain a generic T to only accept types with a .name property of type string",
+      "back": "function greet<T extends { name: string }>(item: T): string {\n  return `Hello, ${item.name}`;\n}\n\nThis accepts any object with a .name: string, not just a specific class."
+    },
+    {
+      "id": "card-124",
+      "lesson_id": "L21",
+      "type": "application",
+      "front": "Remove null and undefined from a union type",
+      "back": "type MaybeUser = User | null | undefined;\ntype DefiniteUser = NonNullable<MaybeUser>; // User\n\nNonNullable<T> = Exclude<T, null | undefined>"
+    },
+    {
+      "id": "card-125",
+      "lesson_id": "L22",
+      "type": "claim",
+      "front": "TypeScript narrowing in switch/case",
+      "back": "In a switch on a discriminated union's literal property (e.g., status), TypeScript narrows the type in each case block. The default case receives never if all variants are handled — enabling exhaustiveness checking."
+    },
+    {
+      "id": "card-126",
+      "lesson_id": "L23",
+      "type": "application",
+      "front": "Create an element, add content, and append it to a list",
+      "back": "const li = document.createElement('li');\nli.textContent = 'New item'; // safe — no XSS risk\nli.classList.add('todo');\ndocument.querySelector('#list')?.appendChild(li);"
+    },
+    {
+      "id": "card-127",
+      "lesson_id": "L24",
+      "type": "application",
+      "front": "Get the value of an input on every keystroke",
+      "back": "input.addEventListener('input', (e) => {\n  const value = (e.target as HTMLInputElement).value;\n  // or: input.value directly if input is in scope\n});"
+    },
+    {
+      "id": "card-128",
+      "lesson_id": "L25",
+      "type": "application",
+      "front": "Read command-line arguments in a Node.js script",
+      "back": "process.argv\n// [0] = path to node, [1] = path to script, [2+] = your args\n\nconst args = process.argv.slice(2);\nconst filename = args[0];"
+    },
+    {
+      "id": "card-129",
+      "lesson_id": "L10",
+      "type": "claim",
+      "front": "Default binding in strict mode",
+      "back": "In strict mode (which TypeScript always uses), calling a function without an object prefix gives this = undefined, not the global object. Accessing this.anything on undefined throws TypeError."
+    },
+    {
+      "id": "card-130",
+      "lesson_id": "L14",
+      "type": "application",
+      "front": "Handle errors from multiple async operations in one try/catch",
+      "back": "try {\n  const user  = await fetchUser(id);\n  const posts = await fetchPosts(id);\n  return { user, posts };\n} catch (err) {\n  // catches rejection from either fetchUser OR fetchPosts\n  console.error(err);\n  throw err;\n}"
+    },
+    {
+      "id": "card-131",
+      "lesson_id": "L17",
+      "type": "application",
+      "front": "A JSON.parse result needs to be validated as a User. What should you do — as assertion or type guard?",
+      "back": "Type guard — runtime validation is needed because JSON.parse returns unknown and the actual shape must be verified.\n\nfunction isUser(val: unknown): val is User { ... }\n\nNever use `JSON.parse(...) as User` — that trusts unvalidated external data."
+    },
+    {
+      "id": "card-132",
+      "lesson_id": "L19",
+      "type": "application",
+      "front": "Create a type that is User plus an adminLevel field, using intersection",
+      "back": "type AdminUser = User & { adminLevel: 1 | 2 | 3 };\n\nIntersection combines all properties of both types. Equivalent to interface AdminUser extends User { adminLevel: 1 | 2 | 3 }"
+    },
+    {
+      "id": "card-133",
+      "lesson_id": "L05",
+      "type": "application",
+      "front": "Check if every item in a cart has a price > 0",
+      "back": "cart.every(item => item.price > 0)\n// Returns boolean — true only if ALL items satisfy the condition\n// Short-circuits on first false"
+    },
+    {
+      "id": "card-134",
+      "lesson_id": "L06",
+      "type": "application",
+      "front": "Extract only the city from: const user = { name: 'Alice', address: { city: 'London', zip: 'EC1' } }",
+      "back": "const { address: { city } } = user;\n// city === 'London'\n\n// Or with rename:\nconst { address: { city: userCity } } = user;"
+    },
+    {
+      "id": "card-135",
+      "lesson_id": "L15",
+      "type": "claim",
+      "front": "ESM file extension requirement with module: NodeNext",
+      "back": "TypeScript with module: NodeNext requires explicit .js extensions in import statements, even for .ts files:\nimport { foo } from './bar.js'; // TypeScript resolves this to bar.ts\n\nThis mirrors how Node.js ESM handles imports."
+    },
+    {
+      "id": "card-136",
+      "lesson_id": "L11",
+      "type": "distinction",
+      "front": "Arrow function class property vs method in a class",
+      "back": "Method (handleClick() {}): on the prototype, shared by all instances, loses this when passed as callback\nArrow property (handleClick = () => {}): own property of each instance, always bound to instance, costs more memory\n\nUse arrow properties when passing methods as event handlers."
+    },
+    {
+      "id": "card-137",
+      "lesson_id": "L12",
+      "type": "claim",
+      "front": "requestAnimationFrame and rendering",
+      "back": "Rendering (painting) is a browser macrotask. requestAnimationFrame(fn) schedules fn to run just before the next render. DOM mutations are batched — the browser renders once, not after every change."
+    },
+    {
+      "id": "card-138",
+      "lesson_id": "L16",
+      "type": "definition",
+      "front": "strict: true — what it bundles",
+      "back": "Enables: strictNullChecks, noImplicitAny, strictFunctionTypes, strictBindCallApply, strictPropertyInitialization, noImplicitThis, alwaysStrict, useUnknownInCatchVariables\n\nAll 8 checks are important — don't disable individual ones without strong reason."
+    },
+    {
+      "id": "card-139",
+      "lesson_id": "L18",
+      "type": "application",
+      "front": "TypeScript: a function that accepts only the string 'left', 'center', or 'right'",
+      "back": "function setAlign(align: 'left' | 'center' | 'right'): void { ... }\n\nsetAlign('center'); // ✓\nsetAlign('middle'); // Error at compile time"
+    },
+    {
+      "id": "card-140",
+      "lesson_id": "L21",
+      "type": "application",
+      "front": "Extract the type of a function's first parameter",
+      "back": "type FirstParam = Parameters<typeof myFunction>[0];\n\nParameters<F> returns a tuple of all parameter types.\nIndex [0] gets the first parameter's type."
+    },
+    {
+      "id": "card-141",
+      "lesson_id": "L23",
+      "type": "application",
+      "front": "Find the closest ancestor element matching a CSS selector",
+      "back": "const container = element.closest('.card-container');\n// Returns the nearest ancestor (including self) that matches, or null\n// Useful in event delegation to find the relevant parent"
+    },
+    {
+      "id": "card-142",
+      "lesson_id": "L24",
+      "type": "application",
+      "front": "Dispatch a custom event with data attached",
+      "back": "const event = new CustomEvent('userAction', {\n  detail: { userId: 42 },\n  bubbles: true,\n});\nelement.dispatchEvent(event);\n\n// Listening:\nelement.addEventListener('userAction', (e: CustomEvent) => {\n  console.log(e.detail.userId);\n});"
+    },
+    {
+      "id": "card-143",
+      "lesson_id": "L26",
+      "type": "claim",
+      "front": "Always call res.end()",
+      "back": "In Node.js http, if you don't call res.end() (or res.write() + res.end()), the connection hangs until the client times out. Every code path in a request handler must call res.end()."
+    },
+    {
+      "id": "card-144",
+      "lesson_id": "L03",
+      "type": "claim",
+      "front": "8 JavaScript primitive types",
+      "back": "string, number, bigint, boolean, null, undefined, symbol, object\n\nEverything that is not one of the first 7 is an object — including arrays, functions, dates, maps."
+    },
+    {
+      "id": "card-145",
+      "lesson_id": "L09",
+      "type": "application",
+      "front": "Implement a memoize function using a closure",
+      "back": "function memoize<T extends (...args: any[]) => any>(fn: T): T {\n  const cache = new Map();\n  return ((...args: any[]) => {\n    const key = JSON.stringify(args);\n    if (!cache.has(key)) cache.set(key, fn(...args));\n    return cache.get(key);\n  }) as T;\n}"
+    },
+    {
+      "id": "card-146",
+      "lesson_id": "L10",
+      "type": "application",
+      "front": "What is this in: const obj = { fn() { return this; } }; const { fn } = obj; fn();",
+      "back": "undefined (strict mode) — implicit binding is lost when fn is destructured from obj. The function is now called without an object prefix (plain call = default binding).\n\nFix: obj.fn() keeps the binding."
+    },
+    {
+      "id": "card-147",
+      "lesson_id": "L20",
+      "type": "application",
+      "front": "Type a function that accepts an array of any type and returns its first element",
+      "back": "function first<T>(arr: T[]): T | undefined {\n  return arr[0];\n}\n\nfirst([1,2,3]) → number | undefined\nfirst(['a','b']) → string | undefined"
+    },
+    {
+      "id": "card-148",
+      "lesson_id": "L22",
+      "type": "application",
+      "front": "Why is `val as User` dangerous for API response data?",
+      "back": "as User tells TypeScript 'trust me' but does no runtime check. If the API returns data with missing or wrong-typed fields, you'll get runtime errors that TypeScript didn't warn about.\n\nAlways validate external data with a type guard or Zod schema."
+    },
+    {
+      "id": "card-149",
+      "lesson_id": "L08",
+      "type": "application",
+      "front": "Demonstrate that two calls to makeCounter() are independent",
+      "back": "const c1 = makeCounter(0);\nconst c2 = makeCounter(0);\nc1.increment();\nc1.increment();\nc1.get(); // 2\nc2.get(); // 0 — each call creates its own count variable in its own closure scope"
+    },
+    {
+      "id": "card-150",
+      "lesson_id": "L14",
+      "type": "claim",
+      "front": "Async function always returns a Promise",
+      "back": "Even `async function noReturn() {}` returns Promise<void>. A thrown error rejects the promise. A returned value resolves it. You cannot make an async function return a non-Promise."
+    },
+    {
+      "id": "card-151",
+      "lesson_id": "L16",
+      "type": "application",
+      "front": "Run TypeScript type checking in CI without emitting files",
+      "back": "tsc --noEmit\n\nThis runs the full type checker, reports all errors, but writes no output files. Exit code is 0 if no errors, 1 if errors — suitable for CI gates."
+    },
+    {
+      "id": "card-152",
+      "lesson_id": "L04",
+      "type": "application",
+      "front": "What does null == undefined evaluate to with ==?",
+      "back": "true — this is a special rule in the == algorithm. null and undefined are only == to each other and nothing else.\n\nPractical use: `if (val == null)` catches both null and undefined."
+    },
+    {
+      "id": "card-153",
+      "lesson_id": "L19",
+      "type": "claim",
+      "front": "Structural typing — extra properties allowed on variables",
+      "back": "TypeScript allows assigning an object with extra properties to a narrower type when going through a variable. `const q = { x:1, y:2, z:3 }; const p: Point = q;` works because q satisfies the Point shape (structural supertype)."
+    },
+    {
+      "id": "card-154",
+      "lesson_id": "L13",
+      "type": "application",
+      "front": "Convert a callback-based function to return a Promise",
+      "back": "function readFileAsync(path: string): Promise<string> {\n  return new Promise((resolve, reject) => {\n    fs.readFile(path, 'utf-8', (err, data) => {\n      if (err) reject(err);\n      else resolve(data);\n    });\n  });\n}"
+    },
+    {
+      "id": "card-155",
+      "lesson_id": "L25",
+      "type": "application",
+      "front": "Gracefully shut down a Node.js HTTP server on SIGTERM",
+      "back": "process.on('SIGTERM', () => {\n  server.close(() => {\n    console.log('Server closed');\n    process.exit(0);\n  });\n});\n\nserver.close() stops accepting new connections but waits for existing ones to finish."
+    },
+    {
+      "id": "card-156",
+      "lesson_id": "L07",
+      "type": "application",
+      "front": "TypeScript: make a function parameter optional with a default value",
+      "back": "function greet(name: string, greeting: string = 'Hello'): string {\n  return `${greeting}, ${name}`;\n}\n\nThe parameter type is string (not string | undefined) — the default handles the missing case."
+    }
+  ]
+}

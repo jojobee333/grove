@@ -1,0 +1,82 @@
+{
+  "quiz_id": "quiz-M11",
+  "module_id": "M11",
+  "title": "Module 11 Quiz — Node.js Foundations",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "q01",
+      "type": "mcq",
+      "prompt": "Why shouldn't you use readFileSync in a production HTTP server?",
+      "options": [
+        "It requires sudo permissions",
+        "It blocks the event loop until the file is read — no other requests are served",
+        "It only works in CJS modules",
+        "It doesn't support UTF-8 encoding"
+      ],
+      "correct": 1,
+      "explanation": "Synchronous I/O blocks the event loop. While reading, all other connections wait. Use fs/promises or callbacks instead."
+    },
+    {
+      "id": "q02",
+      "type": "mcq",
+      "prompt": "process.env.API_KEY in TypeScript has type:",
+      "options": ["string", "string | null", "string | undefined", "unknown"],
+      "correct": 2,
+      "explanation": "TypeScript types all process.env values as string | undefined because they may not be set."
+    },
+    {
+      "id": "q03",
+      "type": "mcq",
+      "prompt": "How do you get __dirname in an ES module Node.js file?",
+      "options": [
+        "__dirname is available in ESM just like in CJS",
+        "import { __dirname } from 'node:path'",
+        "Derive it from import.meta.url using fileURLToPath and path.dirname",
+        "Use process.cwd() as a substitute"
+      ],
+      "correct": 2,
+      "explanation": "__dirname doesn't exist in ESM. You derive it: const __dirname = path.dirname(fileURLToPath(import.meta.url))"
+    },
+    {
+      "id": "q04",
+      "type": "mcq",
+      "prompt": "In a raw Node.js HTTP server, how does the request body arrive?",
+      "options": [
+        "As a parsed object in req.body",
+        "As a Buffer in req.buffer",
+        "As a stream of chunks via 'data' events",
+        "As a string in req.text"
+      ],
+      "correct": 2,
+      "explanation": "The body is a readable stream. You must collect 'data' events and assemble the full body, then parse it."
+    },
+    {
+      "id": "q05",
+      "type": "mcq",
+      "prompt": "What happens if you never call res.end() in a Node.js HTTP handler?",
+      "options": [
+        "Node.js automatically closes the response after 30 seconds",
+        "The connection hangs until the client times out",
+        "Node.js throws an unhandled error",
+        "The response sends with empty body automatically"
+      ],
+      "correct": 1,
+      "explanation": "You must always call res.end(). Failing to do so keeps the connection open until the client or server times out."
+    },
+    {
+      "id": "q06",
+      "type": "short_answer",
+      "prompt": "Write a Node.js HTTP handler that returns a 200 JSON response { ok: true }.",
+      "answer_key": "res.writeHead(200, { 'Content-Type': 'application/json' });\nres.end(JSON.stringify({ ok: true }));"
+    },
+    {
+      "id": "q07",
+      "type": "mcq",
+      "prompt": "Which signal should a Node.js server listen for to handle graceful shutdown in a container?",
+      "options": ["SIGKILL", "SIGSTOP", "SIGTERM", "SIGHUP"],
+      "correct": 2,
+      "explanation": "Containers send SIGTERM before stopping. SIGKILL cannot be caught. Handling SIGTERM lets you close the server cleanly."
+    }
+  ]
+}

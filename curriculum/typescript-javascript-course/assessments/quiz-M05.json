@@ -1,0 +1,72 @@
+{
+  "quiz_id": "quiz-M05",
+  "module_id": "M05",
+  "title": "Module 5 Quiz — this Binding",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "q01",
+      "type": "mcq",
+      "prompt": "const fn = obj.method; fn(); — what is this inside fn (strict mode)?",
+      "options": ["obj", "globalThis", "undefined", "window"],
+      "correct": 2,
+      "explanation": "Implicit binding is lost when a method is extracted. A plain function call uses default binding, which is undefined in strict mode."
+    },
+    {
+      "id": "q02",
+      "type": "mcq",
+      "prompt": "Which method binds this without immediately calling the function?",
+      "options": ["call", "apply", "bind", "new"],
+      "correct": 2,
+      "explanation": "bind() returns a new function with this permanently set. call() and apply() invoke immediately."
+    },
+    {
+      "id": "q03",
+      "type": "mcq",
+      "prompt": "Arrow functions: can you change their this with .call()?",
+      "options": [
+        "Yes — .call() always overrides this",
+        "No — arrow function this is baked in at creation and cannot be overridden",
+        "Only if the arrow function is at module scope",
+        "Only in non-strict mode"
+      ],
+      "correct": 1,
+      "explanation": "Arrow functions have no own this. Passing a different thisArg to .call(), .apply(), or .bind() has no effect."
+    },
+    {
+      "id": "q04",
+      "type": "mcq",
+      "prompt": "const obj = { name: 'Alice', greet: () => console.log(this.name) }; What does obj.greet() print?",
+      "options": ["Alice", "undefined", "TypeError", "globalThis.name"],
+      "correct": 1,
+      "explanation": "The arrow function captures this from its definition scope (module scope), where this is undefined (or globalThis.name in global scope, likely undefined)."
+    },
+    {
+      "id": "q05",
+      "type": "mcq",
+      "prompt": "What is the highest-priority this-binding rule?",
+      "options": ["Implicit binding", "Default binding", "new binding", "Explicit binding"],
+      "correct": 2,
+      "explanation": "Priority order: new > explicit (.call/.bind/.apply) > implicit (obj.method()) > default."
+    },
+    {
+      "id": "q06",
+      "type": "short_answer",
+      "prompt": "Give TWO ways to pass an object method as a callback while preserving its this.",
+      "answer_key": "1. btn.addEventListener('click', this.handler.bind(this))\n2. btn.addEventListener('click', () => this.handler())\n3. Define handler as arrow class property: handler = () => {}"
+    },
+    {
+      "id": "q07",
+      "type": "mcq",
+      "prompt": "call() vs apply() — what is the difference?",
+      "options": [
+        "call takes args as array; apply takes args individually",
+        "apply takes args as array; call takes args individually",
+        "call returns a new function; apply invokes immediately",
+        "There is no difference in modern JavaScript"
+      ],
+      "correct": 1,
+      "explanation": "fn.call(thisArg, arg1, arg2) — individual args. fn.apply(thisArg, [arg1, arg2]) — array of args."
+    }
+  ]
+}

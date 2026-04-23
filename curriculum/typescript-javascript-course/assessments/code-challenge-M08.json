@@ -1,0 +1,100 @@
+{
+  "id": "code-challenge-M08",
+  "type": "module",
+  "module": "M08",
+  "title": "Coding Challenges: TypeScript Foundations",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `formatNullable(value)` that handles a union type of `string | number | null | undefined`:\n\n- If `value` is `null` or `undefined` → return `'N/A'`\n- If `value` is a number → return it as a string\n- If `value` is a string → return it uppercased\n\nThis pattern is ubiquitous in TypeScript code with `strictNullChecks` enabled.",
+      "starter_code": "function formatNullable(value) {\n  // Handle null/undefined, number, and string cases\n  // Use == null to catch both null and undefined\n}\n",
+      "test_cases": [
+        {
+          "name": "null returns N/A",
+          "input": "null",
+          "expected_output": "N/A",
+          "visibility": "visible"
+        },
+        {
+          "name": "undefined returns N/A",
+          "input": "undefined",
+          "expected_output": "N/A",
+          "visibility": "visible"
+        },
+        {
+          "name": "Number returned as string",
+          "input": "42",
+          "expected_output": "42",
+          "visibility": "visible"
+        },
+        {
+          "name": "String returned uppercased",
+          "input": "'hello'",
+          "expected_output": "HELLO",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Zero is not null — returns '0'",
+          "input": "0",
+          "expected_output": "0",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Short string value uppercased",
+          "input": "'js'",
+          "expected_output": "JS",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["ts-union-types", "ts-strict-null-checks", "ts-literal-types"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L18",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L17", "L18"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `getInterfaceInfo(obj)` that takes an object matching the shape `{ name: string, age?: number, email?: string }` and returns a formatted string:\n\n`'<name>, <age or \"no age\">, <email or \"no email\">'`\n\nThis mirrors how TypeScript optional properties (`?`) are handled at runtime: check if the property is `undefined` and substitute a default.",
+      "starter_code": "function getInterfaceInfo(obj) {\n  // Build the output string from obj.name, obj.age (optional), obj.email (optional)\n  // Use 'no age' if age is undefined, 'no email' if email is undefined\n}\n",
+      "test_cases": [
+        {
+          "name": "Name and age provided — email missing",
+          "input": "{name: 'Alice', age: 30}",
+          "expected_output": "Alice, 30, no email",
+          "visibility": "visible"
+        },
+        {
+          "name": "Name and email — age missing",
+          "input": "{name: 'Bob', email: 'bob@example.com'}",
+          "expected_output": "Bob, no age, bob@example.com",
+          "visibility": "visible"
+        },
+        {
+          "name": "All three properties provided",
+          "input": "{name: 'Carl', age: 25, email: 'carl@example.com'}",
+          "expected_output": "Carl, 25, carl@example.com",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Only name — both optional fields missing",
+          "input": "{name: 'Dana'}",
+          "expected_output": "Dana, no age, no email",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["ts-structural-typing", "ts-interface-vs-type", "ts-strict-null-checks"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L19",
+      "pass_criteria": 1.0,
+      "remediation_lesson_ids": ["L18", "L19"]
+    }
+  ]
+}

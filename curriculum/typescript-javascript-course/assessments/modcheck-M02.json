@@ -1,0 +1,33 @@
+{
+  "modcheck_id": "modcheck-M02",
+  "module_id": "M02",
+  "title": "M02 Mastery Check — Variables, Types & Coercion",
+  "description": "Quick applied check. No looking things up. Answer from memory.",
+  "questions": [
+    {
+      "id": "mc01",
+      "type": "short_answer",
+      "prompt": "Fix the bug: for (var i = 0; i < 3; i++) { setTimeout(() => console.log(i), 0) } — it prints 3,3,3.",
+      "answer_key": "Change var to let. let creates a new binding per iteration, so each closure captures its own i."
+    },
+    {
+      "id": "mc02",
+      "type": "short_answer",
+      "prompt": "List all 6 falsy values in JavaScript.",
+      "answer_key": "false, 0, 0n, '' (empty string), null, undefined — also NaN"
+    },
+    {
+      "id": "mc03",
+      "type": "true_false",
+      "prompt": "const person = { name: 'Alice' }; person.name = 'Bob'; — This throws a TypeError.",
+      "correct": false,
+      "explanation": "const prevents rebinding the variable. Mutating properties of the object is allowed."
+    },
+    {
+      "id": "mc04",
+      "type": "short_answer",
+      "prompt": "An API returns price as the string '42.5'. How do you safely add 10 to it?",
+      "answer_key": "parseFloat('42.5') + 10 or Number('42.5') + 10 — either converts to number first. Do not use '42.5' + 10 which gives '42.510'."
+    }
+  ]
+}

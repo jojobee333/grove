@@ -143,6 +143,12 @@ p { font-size: 14px; line-height: 1.7; color: var(--muted); margin-bottom: 0.75r
 .rating-btn.okay { border-color: var(--warn); color: var(--warn); background: var(--warn-light); }
 .rating-btn.easy { border-color: var(--accent); color: var(--accent-text); background: var(--accent-light); }
 .fc-progress { font-size: 13px; color: var(--muted); text-align: center; margin-bottom: 1rem; }
+.confidence-inline { display: flex; justify-content: center; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 0.85rem; }
+.confidence-inline-label { font-size: 12px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+.confidence-pills { display: flex; gap: 8px; flex-wrap: wrap; }
+.confidence-pill { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--border-strong); background: var(--surface); color: var(--muted); font-size: 12px; font-weight: 600; cursor: pointer; }
+.confidence-pill:hover { border-color: var(--accent); color: var(--accent-text); }
+.confidence-pill.active { background: var(--accent-light); border-color: var(--accent); color: var(--accent-text); }
 
 /* Quiz */
 .question-card { border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 12px; }
@@ -197,6 +203,8 @@ p { font-size: 14px; line-height: 1.7; color: var(--muted); margin-bottom: 0.75r
 
 /* Learning paths (Phase C) */
 .path-active { border-color: var(--accent) !important; background: var(--accent-light); }
+.insight-stack { display: flex; flex-direction: column; gap: 10px; }
+.insight-card { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
 
 /* Code challenges */
 .code-challenge-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 12px; }
@@ -307,3 +315,36 @@ p { font-size: 14px; line-height: 1.7; color: var(--muted); margin-bottom: 0.75r
 }
 .pomo-collapsed:hover { background: var(--surface-raised); }
 .pomo-collapsed-time { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--text); }
+
+/* ── Feynman Mode ─────────────────────────────────────────────────────────── */
+.feynman-section { margin-top: 1.5rem; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+.feynman-header { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
+.feynman-header h3 { margin: 0; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+.feynman-header p { margin: 0; flex: 1; }
+.feynman-textarea { display: block; width: 100%; box-sizing: border-box; padding: 0.9rem 1rem; border: none; background: transparent; color: var(--text); font-size: 14px; line-height: 1.6; font-family: inherit; resize: vertical; outline: none; min-height: 130px; }
+.feynman-textarea::placeholder { color: var(--muted); opacity: 0.6; }
+.feynman-actions { display: flex; gap: 8px; flex-wrap: wrap; padding: 0.5rem 1rem 0.75rem; }
+.feynman-reveal { padding: 0.75rem 1rem; border-top: 1px solid var(--border); }
+.feynman-reveal-label { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.4px; color: var(--muted); margin: 0 0 6px; }
+.feynman-concept-list { margin: 0; padding-left: 1.25rem; }
+.feynman-concept-list li { font-size: 14px; padding: 3px 0; }
+
+/* ── Speed Round ──────────────────────────────────────────────────────────── */
+.speed-round-banner { background: var(--accent-light); border-color: var(--accent); margin-bottom: 8px; }
+.btn-success { background: #22c55e; border-color: #22c55e; color: white; }
+.btn-success:hover { opacity: 0.9; color: white; }
+.btn-danger  { background: #ef4444; border-color: #ef4444; color: white; }
+.btn-danger:hover  { opacity: 0.9; color: white; }
+.speed-round-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.speed-round-progress { font-size: 13px; color: var(--muted); }
+.speed-round-timer { font-size: 2rem; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--accent); letter-spacing: -1px; }
+.speed-round-question { text-align: center; padding: 2rem 1.5rem; }
+.speed-round-prompt { font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.6px; color: var(--muted); margin: 0 0 1rem; }
+.speed-round-actions { display: flex; gap: 12px; justify-content: center; margin-top: 1.25rem; }
+.speed-round-actions .btn { font-size: 15px; padding: 12px 28px; }
+.sprint-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+.sprint-stat { text-align: center; padding: 1rem; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--bg); }
+.sprint-stat-value { font-size: 2rem; font-weight: 800; font-variant-numeric: tabular-nums; }
+.sprint-stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 4px; }
+.sprint-improvement { text-align: center; font-size: 14px; }
+

@@ -256,6 +256,10 @@ for (const application of applicationsData.applications ?? []) {
           if (!allConceptIds.has(cid))
             errs.push(`${l.id}: concept "${cid}" not in concepts.json`);
         }
+        // Feynman reveal, Speed Round card prioritisation, and adaptive lesson sequencing
+        // all depend on teaches_concepts being populated.  Warn clearly when it is missing.
+        if (!l.teaches_concepts || l.teaches_concepts.length === 0)
+          console.warn(`  ⚠ ${l.id}: teaches_concepts is empty — Feynman reveal, Speed Round prioritisation, and adaptive sequencing are disabled for this lesson`);
       }
     }
   }

@@ -103,6 +103,19 @@
       "generated": "2026-04-19",
       "adaptive": true,
       "bundle_version": "3.0"
+    },
+    {
+      "slug": "typescript-javascript-course",
+      "title": "TypeScript & JavaScript for Developers",
+      "description": "A practical course for developers who already know Python, Java, or C# and need to master JavaScript and TypeScript — focusing on the mental model gaps and foot",
+      "total_modules": 11,
+      "total_lessons": 27,
+      "total_cards": 156,
+      "total_questions": 87,
+      "total_practical_applications": 0,
+      "generated": "2026-04-19",
+      "adaptive": true,
+      "bundle_version": "3.0"
     }
   ]
 }

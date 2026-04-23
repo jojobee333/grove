@@ -1,0 +1,33 @@
+{
+  "modcheck_id": "modcheck-M10",
+  "module_id": "M10",
+  "title": "M10 Mastery Check — DOM & Browser APIs",
+  "description": "Quick applied check. No looking things up. Answer from memory.",
+  "questions": [
+    {
+      "id": "mc01",
+      "type": "true_false",
+      "prompt": "Setting element.textContent with user input is safe from XSS.",
+      "correct": true,
+      "explanation": "textContent sets plain text — HTML is escaped. Unlike innerHTML, no script tags or HTML entities are parsed."
+    },
+    {
+      "id": "mc02",
+      "type": "short_answer",
+      "prompt": "Write code that toggles class 'open' on a button click.",
+      "answer_key": "button.addEventListener('click', () => { button.classList.toggle('open'); });"
+    },
+    {
+      "id": "mc03",
+      "type": "short_answer",
+      "prompt": "Explain event delegation in one sentence and give one advantage.",
+      "answer_key": "Event delegation attaches one listener to a parent to handle events on children via bubbling. Advantage: fewer listeners, works for dynamically added children."
+    },
+    {
+      "id": "mc04",
+      "type": "short_answer",
+      "prompt": "Why can't you removeEventListener with an inline arrow function?",
+      "answer_key": "removeEventListener requires the exact same function reference as addEventListener. A new inline () => {} is a different reference each time."
+    }
+  ]
+}

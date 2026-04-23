@@ -1,0 +1,67 @@
+{
+  "quiz_id": "quiz-M02",
+  "module_id": "M02",
+  "title": "Module 2 Quiz — Variables, Types & Coercion",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "q01",
+      "type": "mcq",
+      "prompt": "What does accessing a var variable before its declaration return?",
+      "options": ["ReferenceError", "null", "undefined", "TypeError"],
+      "correct": 2,
+      "explanation": "var is hoisted and initialized to undefined. Accessing it before assignment gives undefined, not an error."
+    },
+    {
+      "id": "q02",
+      "type": "mcq",
+      "prompt": "What is the output of: for (var i = 0; i < 3; i++) { setTimeout(() => console.log(i), 0) }",
+      "options": ["0, 1, 2", "3, 3, 3", "0, 0, 0", "undefined, undefined, undefined"],
+      "correct": 1,
+      "explanation": "var creates one shared binding. All closures capture the same i, which is 3 when the timers fire."
+    },
+    {
+      "id": "q03",
+      "type": "mcq",
+      "prompt": "What is typeof null?",
+      "options": ["\"null\"", "\"undefined\"", "\"object\"", "\"primitive\""],
+      "correct": 2,
+      "explanation": "typeof null === 'object' is a historical bug in JavaScript. Check for null with === null."
+    },
+    {
+      "id": "q04",
+      "type": "mcq",
+      "prompt": "What does '5' + 3 evaluate to?",
+      "options": ["8", "53", "\"53\"", "NaN"],
+      "correct": 2,
+      "explanation": "The + operator concatenates when either operand is a string. Result is '53'."
+    },
+    {
+      "id": "q05",
+      "type": "mcq",
+      "prompt": "Which of these is NOT a falsy value in JavaScript?",
+      "options": ["0", "\"\"", "[]", "null"],
+      "correct": 2,
+      "explanation": "[] (empty array) is truthy. Falsy values are: false, 0, 0n, \"\", null, undefined, NaN."
+    },
+    {
+      "id": "q06",
+      "type": "mcq",
+      "prompt": "const obj = { x: 1 }; obj.x = 2; — is this valid?",
+      "options": [
+        "No — const makes objects immutable",
+        "Yes — const prevents rebinding but not mutation",
+        "Only in non-strict mode",
+        "No — TypeError is thrown"
+      ],
+      "correct": 1,
+      "explanation": "const prevents rebinding (obj = something else would throw). The object itself is still mutable."
+    },
+    {
+      "id": "q07",
+      "type": "short_answer",
+      "prompt": "What is the Temporal Dead Zone (TDZ) and which declaration types does it affect?",
+      "answer_key": "TDZ is the period between entering a block scope and the let/const declaration line. Accessing the variable in TDZ throws ReferenceError. Affects let and const (not var)."
+    }
+  ]
+}

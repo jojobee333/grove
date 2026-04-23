@@ -1,0 +1,27 @@
+{
+  "modcheck_id": "modcheck-M01",
+  "module_id": "M01",
+  "title": "M01 Mastery Check — The JavaScript Landscape",
+  "description": "Quick applied check. No looking things up. Answer from memory.",
+  "questions": [
+    {
+      "id": "mc01",
+      "type": "short_answer",
+      "prompt": "Name the three layers that make up the JavaScript execution environment.",
+      "answer_key": "ECMAScript spec, JavaScript engine (e.g. V8), host environment (browser or Node.js)"
+    },
+    {
+      "id": "mc02",
+      "type": "short_answer",
+      "prompt": "What command do you run in CI to type-check a TypeScript project without emitting files?",
+      "answer_key": "tsc --noEmit"
+    },
+    {
+      "id": "mc03",
+      "type": "true_false",
+      "prompt": "TypeScript interfaces exist at runtime and can be used to validate incoming data.",
+      "correct": false,
+      "explanation": "Type erasure removes all TypeScript constructs. Nothing type-related survives to runtime."
+    }
+  ]
+}

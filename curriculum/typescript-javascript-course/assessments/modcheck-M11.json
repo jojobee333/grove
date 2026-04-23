@@ -1,0 +1,33 @@
+{
+  "modcheck_id": "modcheck-M11",
+  "module_id": "M11",
+  "title": "M11 Mastery Check — Node.js Foundations",
+  "description": "Quick applied check. No looking things up. Answer from memory.",
+  "questions": [
+    {
+      "id": "mc01",
+      "type": "true_false",
+      "prompt": "readFileSync() is appropriate in a high-traffic HTTP server.",
+      "correct": false,
+      "explanation": "readFileSync blocks the event loop. Use fs/promises readFile or a callback-based approach in servers."
+    },
+    {
+      "id": "mc02",
+      "type": "short_answer",
+      "prompt": "Read a file 'config.json' and parse it as JSON using async/await.",
+      "answer_key": "import { readFile } from 'node:fs/promises';\nconst raw = await readFile('./config.json', 'utf-8');\nconst config = JSON.parse(raw);"
+    },
+    {
+      "id": "mc03",
+      "type": "short_answer",
+      "prompt": "What happens if you forget to call res.end() in a Node.js HTTP handler?",
+      "answer_key": "The connection hangs until the client times out. Always call res.end() in every code path."
+    },
+    {
+      "id": "mc04",
+      "type": "short_answer",
+      "prompt": "How do you get __dirname in a Node.js ESM file?",
+      "answer_key": "import { fileURLToPath } from 'node:url';\nimport path from 'node:path';\nconst __dirname = path.dirname(fileURLToPath(import.meta.url));"
+    }
+  ]
+}

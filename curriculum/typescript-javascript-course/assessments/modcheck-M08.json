@@ -1,0 +1,33 @@
+{
+  "modcheck_id": "modcheck-M08",
+  "module_id": "M08",
+  "title": "M08 Mastery Check — TypeScript Foundations",
+  "description": "Quick applied check. No looking things up. Answer from memory.",
+  "questions": [
+    {
+      "id": "mc01",
+      "type": "true_false",
+      "prompt": "TypeScript type annotations can be used at runtime to validate data from an API.",
+      "correct": false,
+      "explanation": "Type erasure removes all annotations. At runtime there are no types. Use Zod or a type guard for runtime validation."
+    },
+    {
+      "id": "mc02",
+      "type": "short_answer",
+      "prompt": "Model a function that takes a userId (number) and returns Promise<User>.",
+      "answer_key": "async function getUser(userId: number): Promise<User> { ... }"
+    },
+    {
+      "id": "mc03",
+      "type": "short_answer",
+      "prompt": "When should you prefer interface over type alias?",
+      "answer_key": "For object shapes that need to be extended with extends or that benefit from declaration merging. Use type for unions, intersections, and utility type expressions."
+    },
+    {
+      "id": "mc04",
+      "type": "short_answer",
+      "prompt": "What is the difference in inference between: const x = 'hello' and let x = 'hello'?",
+      "answer_key": "const infers the literal type 'hello'. let infers the widened type string (since it can be reassigned)."
+    }
+  ]
+}

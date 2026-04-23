@@ -1,0 +1,152 @@
+{
+  "id": "code-challenge-M02",
+  "type": "module",
+  "module": "M02",
+  "title": "Coding Challenges: Variables, Types & Coercion",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `safeParse(value)` that takes a string and converts it to a number. If the result is `NaN`, return `0` instead. Use `Number()` for conversion.\n\nNote: `Number('')` returns `0` (not NaN), and `Number('abc')` returns `NaN`.",
+      "starter_code": "function safeParse(value) {\n  // Convert value to a number using Number()\n  // Return 0 if the result is NaN\n}\n",
+      "test_cases": [
+        {
+          "name": "Parses integer string",
+          "input": "'42'",
+          "expected_output": "42",
+          "visibility": "visible"
+        },
+        {
+          "name": "Parses decimal string",
+          "input": "'3.14'",
+          "expected_output": "3.14",
+          "visibility": "visible"
+        },
+        {
+          "name": "Non-numeric string returns 0",
+          "input": "'abc'",
+          "expected_output": "0",
+          "visibility": "visible"
+        },
+        {
+          "name": "Empty string becomes 0 (not NaN)",
+          "input": "''",
+          "expected_output": "0",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Zero string returns 0",
+          "input": "'0'",
+          "expected_output": "0",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Whitespace-only string returns 0",
+          "input": "'   '",
+          "expected_output": "0",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["js-type-coercion", "js-primitive-types"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L04",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L03", "L04"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `strictEquals(pair)` that takes an array of two values and returns `true` if they are strictly equal (`===`), or `false` otherwise.\n\nKey cases to handle: `1 === '1'` is `false` (different types), `NaN === NaN` is `false` (NaN is never equal to itself), `null === undefined` is `false`.",
+      "starter_code": "function strictEquals(pair) {\n  // Return true if pair[0] === pair[1], false otherwise\n  // Remember: NaN !== NaN, even with ===\n}\n",
+      "test_cases": [
+        {
+          "name": "Same numbers are equal",
+          "input": "[1, 1]",
+          "expected_output": "true",
+          "visibility": "visible"
+        },
+        {
+          "name": "Number and string are not equal",
+          "input": "[1, '1']",
+          "expected_output": "false",
+          "visibility": "visible"
+        },
+        {
+          "name": "NaN is never equal to itself",
+          "input": "[NaN, NaN]",
+          "expected_output": "false",
+          "visibility": "visible"
+        },
+        {
+          "name": "null and undefined are not strictly equal",
+          "input": "[null, undefined]",
+          "expected_output": "false",
+          "visibility": "hidden"
+        },
+        {
+          "name": "null equals null",
+          "input": "[null, null]",
+          "expected_output": "true",
+          "visibility": "hidden"
+        },
+        {
+          "name": "0 and false are not strictly equal",
+          "input": "[0, false]",
+          "expected_output": "false",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["js-strict-equality", "js-type-coercion"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L04",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L04"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `truthyCount(values)` that takes an array and returns the count of truthy values.\n\nRemember JavaScript's falsy values: `false`, `0`, `''`, `null`, `undefined`, `NaN`. Everything else is truthy — including `[]`, `{}`, and `'0'`.",
+      "starter_code": "function truthyCount(values) {\n  // Return the number of truthy values in the array\n  // Hint: use filter(Boolean) or filter(v => !!v)\n}\n",
+      "test_cases": [
+        {
+          "name": "Mixed truthy and falsy",
+          "input": "[0, 1, '', 'a', null, undefined, false, true]",
+          "expected_output": "3",
+          "visibility": "visible"
+        },
+        {
+          "name": "All falsy values return 0",
+          "input": "[0, false, null, undefined, '']",
+          "expected_output": "0",
+          "visibility": "visible"
+        },
+        {
+          "name": "Empty array and empty object are truthy",
+          "input": "[1, {}, [], 'text']",
+          "expected_output": "4",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Empty array returns 0",
+          "input": "[]",
+          "expected_output": "0",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["js-type-coercion", "js-primitive-types"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L04",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L03", "L04"]
+    }
+  ]
+}

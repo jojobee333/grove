@@ -1,0 +1,112 @@
+{
+  "id": "code-challenge-M01",
+  "type": "module",
+  "module": "M01",
+  "title": "Coding Challenges: The JavaScript Landscape",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `improvedTypeof(value)` that returns a more accurate type label than the built-in `typeof` operator. It should return `'null'` for `null` (not `'object'`), `'array'` for arrays (not `'object'`), and the standard `typeof` result for everything else.",
+      "starter_code": "function improvedTypeof(value) {\n  // Return 'null' for null, 'array' for arrays,\n  // and the standard typeof result for everything else.\n}\n",
+      "test_cases": [
+        {
+          "name": "null returns 'null' not 'object'",
+          "input": "null",
+          "expected_output": "null",
+          "visibility": "visible"
+        },
+        {
+          "name": "Array returns 'array' not 'object'",
+          "input": "[]",
+          "expected_output": "array",
+          "visibility": "visible"
+        },
+        {
+          "name": "Number returns 'number'",
+          "input": "42",
+          "expected_output": "number",
+          "visibility": "visible"
+        },
+        {
+          "name": "String returns 'string'",
+          "input": "'hello'",
+          "expected_output": "string",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Boolean returns 'boolean'",
+          "input": "true",
+          "expected_output": "boolean",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Object returns 'object'",
+          "input": "{}",
+          "expected_output": "object",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["js-engine", "host-environments"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 1,
+      "lesson_ref": "L01",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L01"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `formatJsVersion(edition)` that converts an ECMAScript edition number or year into the canonical version name.\n\n- Edition 1–5 → `'ES1'` through `'ES5'`\n- Edition 6 → `'ES2015'`, edition 7 → `'ES2016'`, and so on (add 2009 to editions 6+)\n- Year 2015 or higher → `'ES2015'`, `'ES2016'`, etc. (pass through as-is)\n\nExamples: `5` → `'ES5'`, `6` → `'ES2015'`, `2022` → `'ES2022'`",
+      "starter_code": "function formatJsVersion(edition) {\n  // Edition 1-5: return 'ES' + edition\n  // Edition 6+: return 'ES' + (edition + 2009)\n  // Year 2015+: return 'ES' + edition (pass through)\n}\n",
+      "test_cases": [
+        {
+          "name": "ES5 — old naming convention",
+          "input": "5",
+          "expected_output": "ES5",
+          "visibility": "visible"
+        },
+        {
+          "name": "Edition 6 → ES2015",
+          "input": "6",
+          "expected_output": "ES2015",
+          "visibility": "visible"
+        },
+        {
+          "name": "Year 2022 passes through",
+          "input": "2022",
+          "expected_output": "ES2022",
+          "visibility": "visible"
+        },
+        {
+          "name": "Edition 7 → ES2016",
+          "input": "7",
+          "expected_output": "ES2016",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Edition 9 → ES2018",
+          "input": "9",
+          "expected_output": "ES2018",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Year 2015 passes through",
+          "input": "2015",
+          "expected_output": "ES2015",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["ecmascript-tc39", "js-history"],
+      "cognitive_level": "knowledge",
+      "weight": 1.0,
+      "difficulty": 1,
+      "lesson_ref": "L00",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L00"]
+    }
+  ]
+}

@@ -1,0 +1,114 @@
+{
+  "course_slug": "typescript-javascript-course",
+  "version": "1.0.0",
+  "rules": [
+    {
+      "id": "rule-001",
+      "trigger": "quiz_score_below_threshold",
+      "condition": { "quiz_score": { "lt": 60 }, "module_id": "M02" },
+      "action": "recommend_review",
+      "recommendation": {
+        "message": "Your score on Variables, Types & Coercion suggests reviewing var/let/const hoisting and the falsy values list before moving on.",
+        "review_lessons": ["L02", "L03", "L04"],
+        "review_cards": ["card-005", "card-006", "card-007", "card-016"]
+      }
+    },
+    {
+      "id": "rule-002",
+      "trigger": "quiz_score_below_threshold",
+      "condition": { "quiz_score": { "lt": 60 }, "module_id": "M05" },
+      "action": "recommend_review",
+      "recommendation": {
+        "message": "this binding is tricky. Re-read L10 (the 5 rules) and L11 (arrow traps) before continuing.",
+        "review_lessons": ["L10", "L11"],
+        "review_cards": ["card-036", "card-037", "card-038", "card-040", "card-041", "card-042"]
+      }
+    },
+    {
+      "id": "rule-003",
+      "trigger": "quiz_score_below_threshold",
+      "condition": { "quiz_score": { "lt": 60 }, "module_id": "M06" },
+      "action": "recommend_review",
+      "recommendation": {
+        "message": "Async concepts need more practice. Focus on the event loop order and forEach/async pitfall.",
+        "review_lessons": ["L12", "L13", "L14"],
+        "review_cards": ["card-043", "card-044", "card-046", "card-047", "card-050", "card-051", "card-052"]
+      }
+    },
+    {
+      "id": "rule-004",
+      "trigger": "modcheck_failed",
+      "condition": { "modcheck_id": "modcheck-M09" },
+      "action": "flag_for_extra_practice",
+      "recommendation": {
+        "message": "Advanced TypeScript (generics, utility types, narrowing) is high-leverage. Practice writing Partial<T>, discriminated unions, and exhaustiveness patterns with your own code before the final quiz.",
+        "practice_exercises": [
+          "Model a shopping cart item with discriminated union for 'digital' vs 'physical'",
+          "Write a generic Repository<T> with find, findAll, save",
+          "Use Omit to create a CreatePost type from a Post interface"
+        ]
+      }
+    },
+    {
+      "id": "rule-005",
+      "trigger": "fast_completion",
+      "condition": { "module_completion_time_minutes": { "lt": 10 }, "module_id": { "in": ["M08", "M09"] } },
+      "action": "suggest_deeper_engagement",
+      "recommendation": {
+        "message": "TypeScript Advanced completed quickly. Consider doing the practice exercises before moving on — these patterns appear heavily in real codebases.",
+        "suggestion": "Try applying utility types to a real project: convert an existing interface to use Partial and Omit."
+      }
+    },
+    {
+      "id": "rule-006",
+      "trigger": "card_difficulty_spike",
+      "condition": { "concept_slug": "this-binding", "failed_reviews": { "gte": 3 } },
+      "action": "insert_review_session",
+      "recommendation": {
+        "message": "this binding cards are being missed frequently. This is one of JavaScript's most confusing behaviors — repetition is the fix.",
+        "review_cards": ["card-036", "card-037", "card-038", "card-039", "card-040", "card-041", "card-042", "card-046", "card-119", "card-146"]
+      }
+    },
+    {
+      "id": "rule-007",
+      "trigger": "card_difficulty_spike",
+      "condition": { "concept_slug": "closures", "failed_reviews": { "gte": 3 } },
+      "action": "insert_review_session",
+      "recommendation": {
+        "message": "Closures need reinforcement. The mental model to build: a function is a value that carries its scope with it.",
+        "review_cards": ["card-032", "card-033", "card-034", "card-035", "card-101", "card-118", "card-149"]
+      }
+    },
+    {
+      "id": "rule-008",
+      "trigger": "final_quiz_ready",
+      "condition": { "all_modules_complete": true, "min_module_score": 70 },
+      "action": "unlock_final_quiz",
+      "recommendation": {
+        "message": "All modules complete. You're ready for the final assessment. The final quiz covers L01–L26 and requires 75% to pass.",
+        "tip": "Review your modcheck answers and any cards marked 'hard' before starting."
+      }
+    },
+    {
+      "id": "rule-009",
+      "trigger": "final_quiz_failed",
+      "condition": { "quiz_id": "quiz-final", "quiz_score": { "lt": 75 } },
+      "action": "targeted_review",
+      "recommendation": {
+        "message": "Final quiz score below 75%. Review the modules corresponding to questions you missed before retaking.",
+        "modules_to_review": ["M05", "M06", "M09"],
+        "note": "this binding, async patterns, and TypeScript advanced types are the most commonly missed areas."
+      }
+    },
+    {
+      "id": "rule-010",
+      "trigger": "learner_profile_practical",
+      "condition": { "learner_goal": "apply-practically" },
+      "action": "emphasize_application_cards",
+      "recommendation": {
+        "message": "Your profile targets practical application. Prioritize 'application' type flashcards and write code for each lesson's examples in a scratch file.",
+        "card_type_priority": ["application", "distinction", "claim", "definition"]
+      }
+    }
+  ]
+}

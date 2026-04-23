@@ -1,0 +1,33 @@
+{
+  "modcheck_id": "modcheck-M05",
+  "module_id": "M05",
+  "title": "M05 Mastery Check — this Binding",
+  "description": "Quick applied check. No looking things up. Answer from memory.",
+  "questions": [
+    {
+      "id": "mc01",
+      "type": "short_answer",
+      "prompt": "const go = obj.run; go(); — what is this inside go in strict mode?",
+      "answer_key": "undefined — implicit binding is lost when the method is extracted from the object."
+    },
+    {
+      "id": "mc02",
+      "type": "short_answer",
+      "prompt": "List the 5 this-binding rules in priority order (highest first).",
+      "answer_key": "1. new binding, 2. Explicit binding (call/apply/bind), 3. Implicit binding (obj.method()), 4. Default binding, 5. Arrow (lexical, cannot be overridden)"
+    },
+    {
+      "id": "mc03",
+      "type": "true_false",
+      "prompt": "fn.bind(obj) calls fn immediately and returns the result.",
+      "correct": false,
+      "explanation": "bind() returns a new function with this permanently set but does NOT invoke it. call() and apply() invoke immediately."
+    },
+    {
+      "id": "mc04",
+      "type": "short_answer",
+      "prompt": "Give two ways to pass a class method as a callback while keeping the correct this.",
+      "answer_key": "1. this.method.bind(this), 2. () => this.method(), 3. Define as arrow class property: method = () => {}"
+    }
+  ]
+}

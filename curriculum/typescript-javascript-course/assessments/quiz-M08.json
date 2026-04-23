@@ -1,0 +1,72 @@
+{
+  "quiz_id": "quiz-M08",
+  "module_id": "M08",
+  "title": "Module 8 Quiz — TypeScript Foundations",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "q01",
+      "type": "mcq",
+      "prompt": "Type erasure means:",
+      "options": [
+        "Types are converted to runtime checks",
+        "TypeScript removes all type info before the output runs",
+        "Type errors are silently ignored",
+        "Generics are replaced with any at runtime"
+      ],
+      "correct": 1,
+      "explanation": "All TypeScript annotations, interfaces, and generics are stripped. The compiled output is pure JavaScript with no type information."
+    },
+    {
+      "id": "q02",
+      "type": "mcq",
+      "prompt": "const greeting = 'hello'; — what is TypeScript's inferred type?",
+      "options": ["string", "\"hello\"", "const", "unknown"],
+      "correct": 1,
+      "explanation": "const narrows inference to the literal type 'hello' because the value cannot change."
+    },
+    {
+      "id": "q03",
+      "type": "mcq",
+      "prompt": "Which utility handles null AND undefined together?",
+      "options": ["Partial<T>", "Exclude<T, null>", "NonNullable<T>", "Required<T>"],
+      "correct": 2,
+      "explanation": "NonNullable<T> = Exclude<T, null | undefined>. It removes both null and undefined from a type."
+    },
+    {
+      "id": "q04",
+      "type": "mcq",
+      "prompt": "interface vs type — which supports declaration merging?",
+      "options": ["type only", "interface only", "Both", "Neither"],
+      "correct": 1,
+      "explanation": "Interfaces can be declared multiple times and TypeScript merges them. Type aliases cannot be redeclared."
+    },
+    {
+      "id": "q05",
+      "type": "mcq",
+      "prompt": "function f(x?: string) — what is the type of x inside the function?",
+      "options": ["string", "string | null", "string | undefined", "unknown"],
+      "correct": 2,
+      "explanation": "Optional parameters become T | undefined. x is either a string or undefined (if not passed)."
+    },
+    {
+      "id": "q06",
+      "type": "short_answer",
+      "prompt": "When should you add explicit type annotations vs relying on TypeScript inference?",
+      "answer_key": "Always annotate function parameters (TypeScript cannot infer them). Optionally annotate public function return types for documentation. Skip annotations for variable initializations with obvious literals and function returns in simple cases — inference handles these well."
+    },
+    {
+      "id": "q07",
+      "type": "mcq",
+      "prompt": "Why is `as User` on JSON.parse() output dangerous?",
+      "options": [
+        "TypeScript does not allow as on JSON.parse",
+        "It makes the code slower",
+        "It silences type checking with no runtime validation",
+        "JSON.parse already returns the correct type"
+      ],
+      "correct": 2,
+      "explanation": "as User tells TypeScript to trust you without checking. If the data has wrong shape, you'll get runtime errors TypeScript couldn't catch."
+    }
+  ]
+}

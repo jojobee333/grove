@@ -1,0 +1,176 @@
+{
+  "id": "code-challenge-M11",
+  "type": "module",
+  "module": "M11",
+  "title": "Coding Challenges: Node.js Foundations",
+  "challenges": [
+    {
+      "id": "CC01",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `parseEnvLine(line)` that parses a single `.env` file line:\n\n- Trim the line. If it's empty or starts with `#`, return `'skip'`\n- Otherwise, split on the first `=`, trim both sides, and return `'KEY=value'`\n\nThis is the core of how `dotenv` works internally.",
+      "starter_code": "function parseEnvLine(line) {\n  // Trim the line first\n  // Skip empty lines and comments (starting with #)\n  // Split on first '=', trim key and value, return 'KEY=value'\n}\n",
+      "test_cases": [
+        {
+          "name": "Standard key=value",
+          "input": "'PORT=3000'",
+          "expected_output": "PORT=3000",
+          "visibility": "visible"
+        },
+        {
+          "name": "Comment line is skipped",
+          "input": "'# This is a comment'",
+          "expected_output": "skip",
+          "visibility": "visible"
+        },
+        {
+          "name": "Empty line is skipped",
+          "input": "''",
+          "expected_output": "skip",
+          "visibility": "visible"
+        },
+        {
+          "name": "Padded key and value trimmed",
+          "input": "'  DB_URL = postgres://localhost  '",
+          "expected_output": "DB_URL=postgres://localhost",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Empty value is valid",
+          "input": "'EMPTY='",
+          "expected_output": "EMPTY=",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Whitespace-only line is skipped",
+          "input": "'   '",
+          "expected_output": "skip",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["node-runtime", "node-built-ins"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 2,
+      "lesson_ref": "L25",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L25"]
+    },
+    {
+      "id": "CC02",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `routeRequest(config)` that takes `{ method, path }` and returns the handler name — simulating the routing logic inside a Node.js `http.createServer` handler.\n\nRouting table:\n- `GET /health` → `'healthCheck'`\n- `GET /users` → `'listUsers'`\n- `POST /users` → `'createUser'`\n- `GET /users/:id` (path matches `/users/` + digits) → `'getUser'`\n- `PUT /users/:id` → `'updateUser'`\n- `DELETE /users/:id` → `'deleteUser'`\n- Anything else → `'notFound'`",
+      "starter_code": "function routeRequest(config) {\n  const { method, path } = config;\n  // Match /health, /users, /users/:id patterns\n  // Use a regex like /^\\/users\\/\\d+$/ for parameterized routes\n}\n",
+      "test_cases": [
+        {
+          "name": "GET /users → listUsers",
+          "input": "{method: 'GET', path: '/users'}",
+          "expected_output": "listUsers",
+          "visibility": "visible"
+        },
+        {
+          "name": "POST /users → createUser",
+          "input": "{method: 'POST', path: '/users'}",
+          "expected_output": "createUser",
+          "visibility": "visible"
+        },
+        {
+          "name": "GET /health → healthCheck",
+          "input": "{method: 'GET', path: '/health'}",
+          "expected_output": "healthCheck",
+          "visibility": "visible"
+        },
+        {
+          "name": "GET /users/42 → getUser",
+          "input": "{method: 'GET', path: '/users/42'}",
+          "expected_output": "getUser",
+          "visibility": "hidden"
+        },
+        {
+          "name": "PUT /users/3 → updateUser",
+          "input": "{method: 'PUT', path: '/users/3'}",
+          "expected_output": "updateUser",
+          "visibility": "hidden"
+        },
+        {
+          "name": "DELETE /users/5 → deleteUser",
+          "input": "{method: 'DELETE', path: '/users/5'}",
+          "expected_output": "deleteUser",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Unknown route → notFound",
+          "input": "{method: 'GET', path: '/unknown'}",
+          "expected_output": "notFound",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["node-http-server", "node-runtime"],
+      "cognitive_level": "application",
+      "weight": 1.0,
+      "difficulty": 3,
+      "lesson_ref": "L26",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L25", "L26"]
+    },
+    {
+      "id": "CC03",
+      "type": "code-challenge",
+      "language": "javascript",
+      "prompt": "Write a function `parseHttpStatus(code)` that takes an HTTP status code number and returns its category:\n\n- 100–199 → `'informational'`\n- 200–299 → `'success'`\n- 300–399 → `'redirect'`\n- 400–499 → `'client-error'`\n- 500–599 → `'server-error'`\n- Anything outside these ranges → `'unknown'`",
+      "starter_code": "function parseHttpStatus(code) {\n  // Return the category for the given HTTP status code\n}\n",
+      "test_cases": [
+        {
+          "name": "200 → success",
+          "input": "200",
+          "expected_output": "success",
+          "visibility": "visible"
+        },
+        {
+          "name": "404 → client-error",
+          "input": "404",
+          "expected_output": "client-error",
+          "visibility": "visible"
+        },
+        {
+          "name": "500 → server-error",
+          "input": "500",
+          "expected_output": "server-error",
+          "visibility": "visible"
+        },
+        {
+          "name": "301 → redirect",
+          "input": "301",
+          "expected_output": "redirect",
+          "visibility": "hidden"
+        },
+        {
+          "name": "100 → informational",
+          "input": "100",
+          "expected_output": "informational",
+          "visibility": "hidden"
+        },
+        {
+          "name": "201 Created → success",
+          "input": "201",
+          "expected_output": "success",
+          "visibility": "hidden"
+        },
+        {
+          "name": "Out-of-range code → unknown",
+          "input": "999",
+          "expected_output": "unknown",
+          "visibility": "hidden"
+        }
+      ],
+      "concepts": ["node-http-server"],
+      "cognitive_level": "knowledge",
+      "weight": 1.0,
+      "difficulty": 1,
+      "lesson_ref": "L26",
+      "pass_criteria": 0.75,
+      "remediation_lesson_ids": ["L26"]
+    }
+  ]
+}

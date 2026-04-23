@@ -11,19 +11,26 @@ import { mapKeyToCardAction }                                       from './modu
 import { parseClozeText, renderClozeQuestion, renderClozeAnswer, scoreClozeAnswer } from './modules/cloze.js';
 import { saveNote, loadNote, getAllNotes, getNoteCount, groupNotesByModule, formatNotesAsMarkdown, formatNotesAsJson } from './modules/notes.js';
 import { initPomodoro, pomodoroStart, pomodoroPause, pomodoroReset, pomodoroSetMode, pomodoroToggleCollapse } from './modules/pomodoro.js';
+import { recordConfidenceAttempt, summarizeConfidenceLog }       from './modules/confidence.js';
+import { getDueMistakes, recordMistake, resolveMistake, resolveMistakesForItem, summarizeMistakeJournal } from './modules/mistake-journal.js';
+import { compileSessionPlan }                                    from './modules/session-compiler.js';
+import { saveFeynmanEntry, getFeynmanEntry }                    from './modules/feynman.js';
+import { selectSpeedRoundCards, recordSprintResult, computeSprintStats, SPRINT_DURATION_MS } from './modules/speed-round.js';
+import { reorderByStruggle }                                    from './modules/adaptive-sequencer.js';
 
 // ── STATE ──────────────────────────────────────────────────
 let course = null;
 let cards = null;
 let assessments = {};
 let progress = {};
-let cardSession = { queue: [], current: 0, flipped: false, moduleId: null, label: '' };
-let quizState = { answers: {}, submitted: false };
+let cardSession = { queue: [], current: 0, flipped: false, moduleId: null, label: '', confidence: null, lastCardCorrect: null };
+let quizState = { answers: {}, confidence: {}, submitted: false };
 let bundle = null;        // v3 bundle (loaded from bundle.json)
 let concepts = { concepts: [] };
 let adaptiveRules = {};
 let learningPaths = { paths: [] };
 let practicalApplications = {};
+let speedRound = { queue: [], current: 0, results: [], startMs: 0, cardStartMs: 0, timerInterval: null };
 
 function saveProgress() {
   if (!course) return;
@@ -40,6 +47,10 @@ function loadProgress() {
   if (!progress.codeChallenges)  progress.codeChallenges  = {};
   if (!progress.conceptMastery)  progress.conceptMastery  = {};
   if (!progress.modchecks)       progress.modchecks       = {};
+  if (!progress.confidenceLog)   progress.confidenceLog   = { entries: [] };
+  if (!progress.mistakeJournal)  progress.mistakeJournal  = { entries: [] };
+  if (!progress.feynmanStore)    progress.feynmanStore    = {};
+  if (!progress.sprintHistory)   progress.sprintHistory   = [];
 }
 
 // ── FILE LOADING ───────────────────────────────────────────
@@ -81,7 +92,7 @@ function initFromBundle(data) {
     if (saved) Object.assign(sr, saved);
     return { ...c, sr };
   });
-  cardSession = { queue: [], current: 0, flipped: false, moduleId: null, label: '' };
+  cardSession = { queue: [], current: 0, flipped: false, moduleId: null, label: '', confidence: null, lastCardCorrect: null };
   buildSidebar();
   showView('plan');
   document.getElementById('course-meta').style.display = 'block';
@@ -100,6 +111,9 @@ function initFromBundle(data) {
   if (napps) napps.style.display = hasApplications ? '' : 'none';
   const nnotes = document.getElementById('nav-notes');
   if (nnotes) nnotes.style.display = '';
+  const nmistakes = document.getElementById('nav-mistakes');
+  if (nmistakes) nmistakes.style.display = '';
+  updateAdaptiveNavDots();
 }
 
 function loadCards(file) {
@@ -113,7 +127,7 @@ function loadCards(file) {
         c.sr = { ease: 2.5, interval: 0, reviews: 0, lapses: 0, next_review: null, ...(c.sr || {}) };
         if (progress.cards[c.id]) Object.assign(c.sr, progress.cards[c.id]);
       });
-      cardSession = { queue: [], current: 0, flipped: false, moduleId: null, label: '' };
+      cardSession = { queue: [], current: 0, flipped: false, moduleId: null, label: '', confidence: null, lastCardCorrect: null };
       showView('cards');
     } catch(err) { alert('Could not parse cards.json'); }
   };
@@ -136,7 +150,85 @@ function moduleProgress(m)      { return _moduleProgress(m, progress); }
 function isLessonLocked(l)      { return _isLessonLocked(l, progress); }
 function isModcheckUnlocked(id) { return _isModcheckUnlocked(id, { course, bundle, progress }); }
 function computeNextSteps() {
-  return _computeNextSteps({ course, bundle, cards, concepts, adaptiveRules, learningPaths, progress });
+  const nextSteps = _computeNextSteps({ course, bundle, cards, concepts, adaptiveRules, learningPaths, progress });
+  nextSteps.nextLessons = reorderByStruggle(nextSteps.nextLessons, {
+    mistakeJournal: progress.mistakeJournal,
+    confidenceLog:  progress.confidenceLog,
+  });
+  return nextSteps;
+}
+
+function getLessonContext(lessonId) {
+  for (const module of course?.modules || []) {
+    const lesson = module.lessons?.find(item => item.id === lessonId);
+    if (lesson) return { moduleId: module.id, moduleTitle: module.title, lesson };
+  }
+  return { moduleId: null, moduleTitle: null, lesson: null };
+}
+
+function logConfidenceAttempt(attempt) {
+  progress.confidenceLog = recordConfidenceAttempt(progress.confidenceLog, attempt);
+}
+
+function logMistake(entry) {
+  progress.mistakeJournal = recordMistake(progress.mistakeJournal, entry);
+}
+
+function resolveMistakeEntry(fingerprint) {
+  progress.mistakeJournal = resolveMistake(progress.mistakeJournal, fingerprint);
+  saveProgress();
+  updateAdaptiveNavDots();
+  renderMistakesView();
+}
+
+function resolveMistakesForSuccess(item) {
+  progress.mistakeJournal = resolveMistakesForItem(progress.mistakeJournal, item);
+}
+
+function updateAdaptiveNavDots() {
+  if (!course) return;
+  const notesDot = document.getElementById('dot-notes');
+  if (notesDot) notesDot.className = 'nav-dot' + (getNoteCount(course.slug) > 0 ? ' current' : '');
+
+  const mistakeSummary = summarizeMistakeJournal(progress.mistakeJournal);
+  const mistakesDot = document.getElementById('dot-mistakes');
+  if (mistakesDot) mistakesDot.className = 'nav-dot' + (mistakeSummary.openCount > 0 ? ' current' : '');
+}
+
+function buildSessionPlan(nextSteps) {
+  const nextLessons = (nextSteps.nextLessons || []).map(lesson => ({
+    ...lesson,
+    ...getLessonContext(lesson.id),
+  }));
+  return compileSessionPlan({
+    learner: bundle?.learner ?? course?.learner ?? {},
+    nextLessons,
+    reviewQueue: nextSteps.reviewQueue || [],
+    weakConcepts: nextSteps.weakConcepts || [],
+    unlockedModchecks: nextSteps.unlockedModchecks || [],
+    dueMistakes: getDueMistakes(progress.mistakeJournal),
+  });
+}
+
+function renderConfidenceOptions(scope, id, selected = null) {
+  const levels = [
+    { value: 'low', label: 'Low' },
+    { value: 'medium', label: 'Medium' },
+    { value: 'high', label: 'High' },
+  ];
+  const buttons = levels.map(level => {
+    const active = selected === level.value ? ' active' : '';
+    const action = scope === 'quiz'
+      ? `selectQuizConfidence('${id}','${level.value}')`
+      : `setCardConfidence('${level.value}')`;
+    return `<button type="button" class="confidence-pill${active}" data-confidence-scope="${scope}" data-confidence-id="${id}" data-confidence-value="${level.value}" onclick="${action}">${level.label}</button>`;
+  }).join('');
+  return `
+    <div class="confidence-inline">
+      <span class="confidence-inline-label">Confidence</span>
+      <div class="confidence-pills">${buttons}</div>
+    </div>
+  `;
 }
 
 // ── MASTERY TRACKING ───────────────────────────────────────
@@ -290,7 +382,7 @@ function updateOverallProgress() {
 
 // ── VIEWS ──────────────────────────────────────────────────
 function showView(view) {
-  ['plan','cards','code','applications','notes','progress','paths'].forEach(v => {
+  ['plan','cards','code','applications','notes','mistakes','progress','paths'].forEach(v => {
     const el = document.getElementById('nav-' + v);
     if (el) el.classList.toggle('active', v === view);
   });
@@ -299,6 +391,7 @@ function showView(view) {
   if (view === 'code')     renderCodeView();
   if (view === 'applications') renderApplicationsView();
   if (view === 'notes')    renderNotesView();
+  if (view === 'mistakes') renderMistakesView();
   if (view === 'progress') renderProgress();
   if (view === 'paths')    renderPaths();
 }
@@ -318,8 +411,110 @@ function renderPlan() {
   let adaptiveHtml = '';
   let masteryGateHtml = '';
   if (bundle) {
-    const { nextLessons, weakConcepts, reviewQueue, blockedByMastery, unlockedModchecks } = computeNextSteps();
+    const nextSteps = computeNextSteps();
+    const { nextLessons, weakConcepts, reviewQueue, blockedByMastery, unlockedModchecks } = nextSteps;
     const completedCount = Object.keys(progress.lessons || {}).length;
+    const dueMistakes = getDueMistakes(progress.mistakeJournal);
+    const mistakeSummary = summarizeMistakeJournal(progress.mistakeJournal);
+    const confidenceSummary = summarizeConfidenceLog(progress.confidenceLog);
+    const sessionPlan = buildSessionPlan(nextSteps);
+
+    const missionHtml = sessionPlan.blocks.length > 0 ? `
+      <div class="card" style="margin-bottom:1rem;background:var(--surface-raised)">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:0.75rem">
+          <div>
+            <h2 style="margin-bottom:0.25rem">Today's mission</h2>
+            <p style="margin-bottom:0">${sessionPlan.totalMinutes}/${sessionPlan.budgetMinutes} min planned</p>
+          </div>
+          <span class="badge badge-gray">${sessionPlan.blocks.length} block${sessionPlan.blocks.length === 1 ? '' : 's'}</span>
+        </div>
+        <div class="insight-stack">
+          ${sessionPlan.blocks.map(block => {
+            const action = block.type === 'lesson'
+              ? `<button class="btn btn-primary" onclick="showLesson('${block.lessonId}','${block.moduleId}')">Open lesson</button>`
+              : block.type === 'card-review'
+                ? `<button class="btn btn-primary" onclick="showView('cards')">Review cards</button>`
+                : block.type === 'modcheck'
+                  ? `<button class="btn btn-primary" onclick="showModcheck('${block.moduleId}')">Start check</button>`
+                  : '';
+            const detail = block.type === 'mistake-review'
+              ? `${block.count} due misconception${block.count === 1 ? '' : 's'}`
+              : block.type === 'card-review'
+                ? `${block.count} due card${block.count === 1 ? '' : 's'}`
+                : block.type === 'modcheck'
+                  ? 'Checkpoint recall pass'
+                  : 'Focused study block';
+            return `
+              <div class="insight-card">
+                <div>
+                  <div style="font-size:14px;font-weight:600">${block.title}</div>
+                  <div class="text-muted">${detail}</div>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                  <span class="badge badge-gray">${block.minutes} min</span>
+                  ${action}
+                </div>
+              </div>`;
+          }).join('')}
+        </div>
+      </div>` : '';
+
+    const journalHtml = (mistakeSummary.openCount > 0 || dueMistakes.length > 0) ? `
+      <div class="card" style="margin-bottom:1rem;background:var(--danger-light);border-color:var(--danger)">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:0.75rem">
+          <h2 style="margin-bottom:0;color:var(--danger)">Mistake journal</h2>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <span class="badge badge-red">${mistakeSummary.openCount} open</span>
+            ${mistakeSummary.dueCount > 0 ? `<span class="badge badge-amber">${mistakeSummary.dueCount} due now</span>` : ''}
+            <button class="btn" onclick="showView('mistakes')" style="font-size:12px;padding:5px 10px">Open journal</button>
+          </div>
+        </div>
+        <div class="insight-stack">
+          ${dueMistakes.slice(0, 3).map(entry => `
+            <div class="insight-card">
+              <div>
+                <div style="font-size:14px;font-weight:600">${entry.sourceType === 'challenge' ? 'Code challenge retry' : 'Quiz correction'}</div>
+                <div class="text-muted">${escapeHtml((entry.prompt || '').slice(0, 90))}${(entry.prompt || '').length > 90 ? '…' : ''}</div>
+              </div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end">
+                ${(entry.conceptIds || []).slice(0, 2).map(conceptId => `<span class="badge badge-gray">${conceptId}</span>`).join('')}
+              </div>
+            </div>
+          `).join('')}
+          ${mistakeSummary.focusConceptIds.length ? `<div class="text-muted">Focus concepts: ${mistakeSummary.focusConceptIds.slice(0, 4).join(', ')}</div>` : ''}
+        </div>
+      </div>` : '';
+
+    const calibrationHtml = confidenceSummary.total > 0 ? `
+      <div class="card" style="margin-bottom:1rem;background:var(--accent-light);border-color:var(--accent)">
+        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:0.75rem">
+          <h2 style="margin-bottom:0;color:var(--accent-text)">Confidence calibration</h2>
+          <span class="badge badge-green">${confidenceSummary.total} logged</span>
+        </div>
+        <div class="insight-stack">
+          <div class="insight-card">
+            <div>
+              <div style="font-size:14px;font-weight:600">High-confidence accuracy</div>
+              <div class="text-muted">${confidenceSummary.accuracy.high === null ? 'No data yet' : Math.round(confidenceSummary.accuracy.high * 100) + '%'} · ${confidenceSummary.counts.high} attempts</div>
+            </div>
+            <span class="badge badge-gray">${confidenceSummary.overconfidentCount} overconfident misses</span>
+          </div>
+          <div class="insight-card">
+            <div>
+              <div style="font-size:14px;font-weight:600">Low-confidence wins</div>
+              <div class="text-muted">${confidenceSummary.accuracy.low === null ? 'No data yet' : Math.round(confidenceSummary.accuracy.low * 100) + '%'} · ${confidenceSummary.counts.low} attempts</div>
+            </div>
+            <span class="badge badge-gray">${confidenceSummary.underconfidentCount} underconfident wins</span>
+          </div>
+          <div class="insight-card">
+            <div>
+              <div style="font-size:14px;font-weight:600">Medium-confidence accuracy</div>
+              <div class="text-muted">${confidenceSummary.accuracy.medium === null ? 'No data yet' : Math.round(confidenceSummary.accuracy.medium * 100) + '%'} · ${confidenceSummary.counts.medium} attempts</div>
+            </div>
+            <span class="badge badge-gray">${confidenceSummary.overconfidentConceptIds.length ? confidenceSummary.overconfidentConceptIds.slice(0, 2).join(', ') : 'No hot spots yet'}</span>
+          </div>
+        </div>
+      </div>` : '';
 
     // Recommended next — prefer unlocked modchecks over new lessons
     let nextHtml = '';
@@ -384,7 +579,7 @@ function renderPlan() {
         </div>
         <p style="font-size:13px;color:var(--warn);margin:4px 0 0">Take the ${l.moduleName} quiz or review flashcards to unlock this milestone.</p>`).join('')}
       </div>` : '';
-    adaptiveHtml = `<div class="card" style="margin-bottom:1.5rem;background:var(--accent-light);border-color:var(--accent)">
+    adaptiveHtml = `${missionHtml}${journalHtml}${calibrationHtml}<div class="card" style="margin-bottom:1.5rem;background:var(--accent-light);border-color:var(--accent)">
       <h2 style="margin-bottom:12px;color:var(--accent-text)">What's next?</h2>
       ${nextHtml}${reviewHtml}${weakHtml}
     </div>`;
@@ -684,6 +879,116 @@ function renderNotesView() {
   `;
 }
 
+function renderMistakesView() {
+  const main = document.getElementById('main');
+  if (!bundle || !course) {
+    main.innerHTML = '<div class="card"><p>Load a bundle.json to see the mistake journal.</p></div>';
+    return;
+  }
+
+  const entries = [...(progress.mistakeJournal?.entries || [])];
+  const openEntries = entries.filter(entry => entry.status !== 'resolved');
+  const resolvedEntries = entries.filter(entry => entry.status === 'resolved').slice(-5).reverse();
+  const summary = summarizeMistakeJournal(progress.mistakeJournal);
+
+  if (!entries.length) {
+    main.innerHTML = `
+      <div class="card" style="text-align:center;padding:2.5rem">
+        <h1 style="margin-bottom:0.5rem">Mistake journal</h1>
+        <p class="text-muted">No mistakes logged yet. Wrong quiz answers, hard flashcards, and failed code challenge submissions will appear here.</p>
+      </div>
+    `;
+    return;
+  }
+
+  const openHtml = openEntries.length ? openEntries.map(entry => `
+    <div class="card" style="margin-bottom:1rem">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;flex-wrap:wrap;margin-bottom:0.75rem">
+        <div>
+          <h3 style="margin-bottom:0.25rem">${entry.sourceType === 'challenge' ? 'Code challenge retry' : entry.sourceType === 'card' ? 'Flashcard review' : 'Quiz correction'}</h3>
+          <div class="text-muted">${entry.moduleId || 'General'} · ${entry.itemId}</div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="badge badge-red">${entry.attempts} attempt${entry.attempts === 1 ? '' : 's'}</span>
+          <span class="badge badge-amber">Due ${new Date(entry.dueAt).toLocaleDateString()}</span>
+        </div>
+      </div>
+      <p style="margin-bottom:0.5rem;color:var(--text)">${escapeHtml(entry.prompt || '')}</p>
+      <div class="insight-stack" style="margin-bottom:0.75rem">
+        <div class="insight-card">
+          <div>
+            <div style="font-size:13px;font-weight:600">Your last answer</div>
+            <div class="text-muted">${escapeHtml(entry.learnerAnswer || 'No answer')}</div>
+          </div>
+        </div>
+        <div class="insight-card">
+          <div>
+            <div style="font-size:13px;font-weight:600">Correct answer</div>
+            <div class="text-muted">${escapeHtml(entry.correctAnswer || 'See source')}</div>
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          ${(entry.conceptIds || []).map(conceptId => `<span class="badge badge-gray">${conceptId}</span>`).join('')}
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn" onclick="openMistakeSource('${entry.fingerprint}')">Open source</button>
+          <button class="btn btn-primary" onclick="resolveMistakeEntry('${entry.fingerprint}')">Mark resolved</button>
+        </div>
+      </div>
+    </div>
+  `).join('') : '<p class="text-muted">No open mistakes.</p>';
+
+  const resolvedHtml = resolvedEntries.length ? resolvedEntries.map(entry => `
+    <div class="insight-card">
+      <div>
+        <div style="font-size:13px;font-weight:600">${entry.itemId}</div>
+        <div class="text-muted">Resolved ${entry.resolvedAt ? new Date(entry.resolvedAt).toLocaleDateString() : ''}</div>
+      </div>
+      <span class="badge badge-green">resolved</span>
+    </div>
+  `).join('') : '<p class="text-muted">No resolved items yet.</p>';
+
+  main.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:1rem">
+      <div>
+        <h1>Mistake journal</h1>
+        <p class="text-muted">A running list of misconceptions and failed attempts that still need reinforcement.</p>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span class="badge badge-red">${summary.openCount} open</span>
+        <span class="badge badge-amber">${summary.dueCount} due now</span>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:1rem;background:var(--surface-raised)">
+      <h2 style="margin-bottom:0.5rem">Focus concepts</h2>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        ${summary.focusConceptIds.length ? summary.focusConceptIds.slice(0, 6).map(conceptId => `<span class="badge badge-gray">${conceptId}</span>`).join('') : '<span class="text-muted">No concept tags yet.</span>'}
+      </div>
+    </div>
+    ${openHtml}
+    <div class="card">
+      <h2 style="margin-bottom:0.75rem">Recently resolved</h2>
+      <div class="insight-stack">${resolvedHtml}</div>
+    </div>
+  `;
+}
+
+function openMistakeSource(fingerprint) {
+  const entry = progress.mistakeJournal?.entries?.find(item => item.fingerprint === fingerprint);
+  if (!entry) return;
+  if (entry.sourceType === 'challenge') {
+    showChallenge(entry.moduleId, entry.itemId);
+    return;
+  }
+  if (entry.sourceType === 'card') {
+    startCardSession(entry.moduleId, 'all');
+    return;
+  }
+  showQuiz(entry.moduleId);
+}
+
 function exportNotes(format) {
   if (!course) return;
   const allNotes = getAllNotes(course.slug);
@@ -816,6 +1121,14 @@ function showLesson(lessonId, moduleId) {
   const prev = idx > 0 ? allLessons[idx-1] : null;
   const next = idx < allLessons.length-1 ? allLessons[idx+1] : null;
 
+  // Feynman data — computed before innerHTML so we can embed in template
+  const teachedConceptTitles = (l.teaches_concepts ?? []).map(cid => {
+    const c = concepts.concepts.find(x => x.id === cid);
+    return c?.title ?? cid;
+  });
+  const feynmanEntry = getFeynmanEntry(progress.feynmanStore, { slug: course.slug, lessonId });
+  const feynmanText  = feynmanEntry?.text ?? '';
+
   const main = document.getElementById('main');
   main.innerHTML = `
     <div class="flex items-center gap-8 mb-4" style="flex-wrap:wrap">
@@ -856,6 +1169,20 @@ function showLesson(lessonId, moduleId) {
         ${next ? `<button class="btn" onclick="showLesson('${next.id}','${getModuleForLesson(next.id)}')">Next →</button>` : ''}
       </div>
     </div>
+
+    <div class="feynman-section" id="feynman-section">
+      <div class="feynman-header">
+        <h3>Feynman test</h3>
+        <p class="text-muted">Explain this lesson in your own words — without looking back.</p>
+        <span id="feynman-saved" class="lesson-note-saved"></span>
+      </div>
+      <textarea id="feynman-area" class="feynman-textarea" placeholder="Teach this lesson from memory…" rows="6"></textarea>
+      <div class="feynman-actions">
+        <button class="btn" onclick="saveFeynmanText('${lessonId}')">Save explanation</button>
+        ${teachedConceptTitles.length ? `<button class="btn" onclick="feynmanReveal('${lessonId}','${moduleId}')">Reveal key concepts</button>` : ''}
+      </div>
+      <div id="feynman-reveal" style="display:none" class="feynman-reveal"></div>
+    </div>
   `;
   if (bundle?.lessons?.[lessonId]) highlightLessonCode();
   // Wire note textarea (must happen after innerHTML is set)
@@ -874,8 +1201,13 @@ function showLesson(lessonId, moduleId) {
       // Refresh notes nav dot if notes view has been visited
       const nnotes = document.getElementById('nav-notes');
       if (nnotes) nnotes.style.display = '';
+      updateAdaptiveNavDots();
     });
   }
+
+  // Restore previously saved Feynman explanation
+  const feynmanArea = document.getElementById('feynman-area');
+  if (feynmanArea && feynmanText) feynmanArea.value = feynmanText;
 }
 
 function loadLessonFile(event, lessonId, moduleId) {
@@ -1247,6 +1579,12 @@ function renderCards() {
     `;
   }).join('');
 
+  // Speed Round banner data — compute before innerHTML
+  const sprintStats = computeSprintStats(progress.sprintHistory);
+  const sprintStatsSummary = (progress.sprintHistory ?? []).length
+    ? `<span class="badge badge-gray">Last sprint: ${sprintStats.correct}/${sprintStats.total} correct</span>`
+    : `<span class="text-muted" style="font-size:0.85rem">No sprints yet</span>`;
+
   main.innerHTML = `
     <h1>Flashcards</h1>
     <div class="card">
@@ -1256,6 +1594,16 @@ function renderCards() {
         <span class="badge badge-green">${reachedSummaries.length} reached modules</span>
         <span class="badge badge-amber">${reachedDue} due now</span>
         <span class="badge badge-gray">${totalCards} cards total</span>
+      </div>
+    </div>
+    <div class="card speed-round-banner">
+      <div class="flex items-center" style="justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div>
+          <h3 style="margin:0 0 4px">⚡ Speed Round</h3>
+          <p class="text-muted" style="margin:0 0 6px">10 cards · 2 minutes · weak concepts first</p>
+          ${sprintStatsSummary}
+        </div>
+        <button class="btn btn-primary" onclick="startSpeedRound()">Start sprint →</button>
       </div>
     </div>
     <div class="module-grid">${moduleCards}</div>
@@ -1269,7 +1617,7 @@ function startCardSession(moduleId, scope = 'due') {
     ? (cards ?? []).filter(card => card.module === moduleId)
     : dueQueue;
   if (!summary || !queue.length) {
-    cardSession = { queue: [], current: 0, flipped: false, moduleId: null, label: '' };
+    cardSession = { queue: [], current: 0, flipped: false, moduleId: null, label: '', confidence: null, lastCardCorrect: null };
     renderCards();
     return;
   }
@@ -1280,12 +1628,14 @@ function startCardSession(moduleId, scope = 'due') {
     flipped: false,
     moduleId,
     label: `${summary.moduleId} — ${summary.title}${scope === 'all' ? ' · full deck' : ''}`,
+    confidence: null,
+    lastCardCorrect: null,
   };
   renderCard();
 }
 
 function resetCardSession() {
-  cardSession = { queue: [], current: 0, flipped: false, moduleId: null, label: '' };
+  cardSession = { queue: [], current: 0, flipped: false, moduleId: null, label: '', confidence: null, lastCardCorrect: null };
   renderCards();
 }
 
@@ -1326,6 +1676,7 @@ function renderCard() {
       <h1>Flashcards</h1>
       <p class="text-muted" style="margin-bottom:0.75rem">${cardSession.label}</p>
       <div class="fc-progress">${current + 1} of ${queue.length} due in this module</div>
+      ${renderConfidenceOptions('card', card.id, cardSession.confidence)}
       <div class="flashcard-wrap">
         <div class="flashcard" id="fc" style="cursor:default">
           <div class="fc-face" style="display:flex">
@@ -1354,6 +1705,7 @@ function renderCard() {
     <h1>Flashcards</h1>
     <p class="text-muted" style="margin-bottom:0.75rem">${cardSession.label}</p>
     <div class="fc-progress">${current + 1} of ${queue.length} due in this module</div>
+    ${renderConfidenceOptions('card', card.id, cardSession.confidence)}
     <div class="flashcard-wrap">
       <div class="flashcard" id="fc" onclick="flipCard()">
         <div class="fc-face">
@@ -1413,6 +1765,7 @@ function flipCard() {
     const rr = document.getElementById('rating-row');
     if (rr) rr.style.display = 'flex';
     cardSession.flipped = true;
+    cardSession.lastCardCorrect = allCorrect;
     return;
   }
 
@@ -1424,16 +1777,56 @@ function flipCard() {
   cardSession.flipped = true;
 }
 
+function setCardConfidence(level) {
+  cardSession.confidence = level;
+  document.querySelectorAll('[data-confidence-scope="card"]').forEach(el => {
+    el.classList.toggle('active', el.dataset.confidenceValue === level);
+  });
+}
+
 function rateCard(quality) {
   const card   = cardSession.queue[cardSession.current];
   const newSr  = sm2Step(card.sr, quality);
   card.sr      = newSr;
 
+  const correct = cardSession.lastCardCorrect ?? quality >= 3;
+  if (cardSession.confidence) {
+    logConfidenceAttempt({
+      sourceType: 'card',
+      sourceId: card.id,
+      itemId: card.id,
+      moduleId: card.module,
+      confidence: cardSession.confidence,
+      correct,
+      conceptIds: card.concepts ?? [],
+      answeredAt: new Date().toISOString(),
+    });
+  }
+  if (!correct || quality === 1) {
+    logMistake({
+      sourceType: 'card',
+      sourceId: card.id,
+      itemId: card.id,
+      moduleId: card.module,
+      prompt: card.front,
+      learnerAnswer: quality === 1 ? 'Marked hard' : 'Incorrect recall',
+      correctAnswer: card.back,
+      conceptIds: card.concepts ?? [],
+      createdAt: new Date().toISOString(),
+    });
+  } else {
+    resolveMistakesForSuccess({ sourceType: 'card', sourceId: card.id, itemId: card.id });
+  }
+
   updateConceptMasteryFromCard(card, quality);
   progress.cards[card.id] = { ...newSr };
   saveProgress();
+  updateAdaptiveNavDots();
 
   cardSession.current++;
+  cardSession.confidence = null;
+  cardSession.lastCardCorrect = null;
+  cardSession.flipped = false;
   renderCard();
 }
 
@@ -1654,10 +2047,27 @@ async function submitChallenge(moduleId, challengeId) {
     const passed = testsPassed >= challenge.test_cases.length * (challenge.pass_criteria ?? 0.70);
     updateConceptMasteryFromCodeChallenge(moduleId, challengeId, testsPassed, challenge.test_cases.length);
 
+    if (!passed) {
+      logMistake({
+        sourceType: 'challenge',
+        sourceId: challengeId,
+        itemId: challengeId,
+        moduleId,
+        prompt: challenge.prompt,
+        learnerAnswer: `${testsPassed}/${challenge.test_cases.length} tests passed`,
+        correctAnswer: `Meet ${Math.round((challenge.pass_criteria ?? 0.70) * 100)}% pass threshold`,
+        conceptIds: challenge.concepts ?? [],
+        createdAt: new Date().toISOString(),
+      });
+    } else {
+      resolveMistakesForSuccess({ sourceType: 'challenge', sourceId: challengeId, itemId: challengeId });
+    }
+
     if (!progress.codeChallenges)              progress.codeChallenges = {};
     if (!progress.codeChallenges[moduleId])    progress.codeChallenges[moduleId] = {};
     progress.codeChallenges[moduleId][challengeId] = { passed, testsPassed, testsTotal: challenge.test_cases.length, date: new Date().toISOString() };
     saveProgress();
+    updateAdaptiveNavDots();
 
     const dotCode = document.getElementById('dot-code');
     if (dotCode) {
@@ -1694,7 +2104,7 @@ function promptQuiz(moduleId) {
 function showQuiz(moduleId) {
   const quiz = assessments[moduleId];
   if (!quiz) return;
-  quizState = { answers: {}, submitted: false };
+  quizState = { answers: {}, confidence: {}, submitted: false };
 
   const main = document.getElementById('main');
   const questions = (quiz.questions || []).map((q, i) => renderQuestion(q, i + 1)).join('');
@@ -1728,6 +2138,7 @@ function renderQuestion(q, i) {
       <div class="question-card">
         <div class="question-text">${i}. ${q.question}</div>
         <div class="option-list">${opts}</div>
+        ${renderConfidenceOptions('quiz', q.id, quizState.confidence?.[q.id] ?? null)}
         <div class="explanation" id="exp-${q.id}">${q.explanation || ''}</div>
       </div>
     `;
@@ -1772,6 +2183,13 @@ function selectOption(qId, key) {
   if (sel) sel.classList.add('selected');
 }
 
+function selectQuizConfidence(qId, level) {
+  quizState.confidence[qId] = level;
+  document.querySelectorAll(`[data-confidence-scope="quiz"][data-confidence-id="${qId}"]`).forEach(el => {
+    el.classList.toggle('active', el.dataset.confidenceValue === level);
+  });
+}
+
 function submitQuiz(moduleId) {
   const quiz = assessments[moduleId];
   const mcqs = (quiz.questions || []).filter(q => q.type === 'mcq');
@@ -1788,7 +2206,37 @@ function submitQuiz(moduleId) {
     });
     const exp = document.getElementById('exp-' + q.id);
     if (exp) exp.classList.add('show');
-    if (chosen === q.correct) correct++;
+    const isCorrect = chosen === q.correct;
+    if (isCorrect) correct++;
+
+    if (quizState.confidence?.[q.id]) {
+      logConfidenceAttempt({
+        sourceType: 'quiz',
+        sourceId: moduleId,
+        itemId: q.id,
+        moduleId,
+        confidence: quizState.confidence[q.id],
+        correct: isCorrect,
+        conceptIds: q.concepts ?? [],
+        answeredAt: new Date().toISOString(),
+      });
+    }
+
+    if (!isCorrect) {
+      logMistake({
+        sourceType: 'quiz',
+        sourceId: moduleId,
+        itemId: q.id,
+        moduleId,
+        prompt: q.question,
+        learnerAnswer: chosen ? (q.options?.[chosen] ?? chosen) : 'No answer',
+        correctAnswer: q.options?.[q.correct] ?? q.correct,
+        conceptIds: q.concepts ?? [],
+        createdAt: new Date().toISOString(),
+      });
+    } else {
+      resolveMistakesForSuccess({ sourceType: 'quiz', sourceId: moduleId, itemId: q.id });
+    }
   });
 
   quiz.questions.filter(q => q.type !== 'mcq').forEach(q => {
@@ -1803,6 +2251,7 @@ function submitQuiz(moduleId) {
   updateConceptMasteryFromQuiz(moduleId);
 
   saveProgress();
+  updateAdaptiveNavDots();
   const result = document.getElementById('quiz-result');
   if (result) {
     result.style.display = 'block';
@@ -1939,6 +2388,173 @@ function renderTestResults(results, challengeId) {
   `;
 }
 
+// ── FEYNMAN MODE ───────────────────────────────────────────
+function saveFeynmanText(lessonId) {
+  const area = document.getElementById('feynman-area');
+  if (!area) return;
+  progress.feynmanStore = saveFeynmanEntry(progress.feynmanStore, {
+    slug: course.slug,
+    lessonId,
+    text: area.value,
+  });
+  saveProgress();
+  const indicator = document.getElementById('feynman-saved');
+  if (indicator) {
+    indicator.textContent = 'Saved';
+    setTimeout(() => { indicator.textContent = ''; }, 1500);
+  }
+}
+
+function feynmanReveal(lessonId, moduleId) {
+  saveFeynmanText(lessonId);
+  const m = course.modules.find(x => x.id === moduleId);
+  const l = m?.lessons.find(x => x.id === lessonId);
+  const revealDiv = document.getElementById('feynman-reveal');
+  if (!revealDiv || !l) return;
+
+  const conceptTitles = (l.teaches_concepts ?? []).map(cid => {
+    const c = concepts.concepts.find(x => x.id === cid);
+    return c?.title ?? cid;
+  });
+
+  revealDiv.innerHTML = conceptTitles.length
+    ? `<p class="feynman-reveal-label">Key concepts this lesson introduces:</p>
+       <ul class="feynman-concept-list">${conceptTitles.map(t => `<li>${t}</li>`).join('')}</ul>`
+    : `<p class="text-muted">No key concepts tagged for this lesson yet.</p>`;
+  revealDiv.style.display = '';
+}
+
+// ── SPEED ROUND ────────────────────────────────────────────
+function startSpeedRound() {
+  const nextSteps = computeNextSteps();
+  const weakConceptIds = nextSteps.weakConcepts ?? [];
+  const allCards = Array.isArray(cards) ? cards : [];
+
+  if (!allCards.length) {
+    alert('No flashcards available yet. Complete some lessons first!');
+    return;
+  }
+
+  const selectedCards = selectSpeedRoundCards(allCards, progress, weakConceptIds);
+  speedRound = {
+    queue: [...selectedCards].sort(() => Math.random() - 0.5),
+    current: 0,
+    results: [],
+    startMs: Date.now(),
+    cardStartMs: Date.now(),
+    timerInterval: null,
+  };
+
+  renderSpeedRoundCard();
+}
+
+function renderSpeedRoundCard() {
+  const main = document.getElementById('main');
+  const { queue, current } = speedRound;
+
+  const elapsed = Date.now() - speedRound.startMs;
+  const remaining = Math.max(0, SPRINT_DURATION_MS - elapsed);
+
+  if (current >= queue.length || remaining === 0) {
+    renderSpeedRoundResult();
+    return;
+  }
+
+  speedRound.cardStartMs = Date.now();
+  const card = queue[current];
+  const remSecs = Math.ceil(remaining / 1000);
+  const timerText = `${Math.floor(remSecs / 60)}:${(remSecs % 60).toString().padStart(2, '0')}`;
+
+  main.innerHTML = `
+    <div class="speed-round-header">
+      <div class="speed-round-progress">Card ${current + 1} of ${queue.length}</div>
+      <div class="speed-round-timer" id="speed-timer">${timerText}</div>
+    </div>
+    <div class="card speed-round-question">
+      <p class="speed-round-prompt">What does this mean?</p>
+      <h2 style="margin:0">${card.front ?? card.term ?? ''}</h2>
+    </div>
+    <div class="speed-round-actions">
+      <button class="btn btn-danger" onclick="rateSpeedCard(false)">✗ Missed</button>
+      <button class="btn btn-success" onclick="rateSpeedCard(true)">✓ Got it</button>
+    </div>
+  `;
+
+  if (speedRound.timerInterval) clearInterval(speedRound.timerInterval);
+  speedRound.timerInterval = setInterval(() => {
+    const el = document.getElementById('speed-timer');
+    if (!el) { clearInterval(speedRound.timerInterval); return; }
+    const rem = Math.max(0, SPRINT_DURATION_MS - (Date.now() - speedRound.startMs));
+    if (rem === 0) {
+      clearInterval(speedRound.timerInterval);
+      renderSpeedRoundResult();
+      return;
+    }
+    const s = Math.ceil(rem / 1000);
+    el.textContent = `${Math.floor(s / 60)}:${(s % 60).toString().padStart(2, '0')}`;
+  }, 1000);
+}
+
+function rateSpeedCard(correct) {
+  const card = speedRound.queue[speedRound.current];
+  if (!card) return;
+  speedRound.results.push({ cardId: card.id, correct, timeMs: Date.now() - speedRound.cardStartMs });
+  speedRound.current++;
+  const outOfTime = Date.now() - speedRound.startMs >= SPRINT_DURATION_MS;
+  if (speedRound.current >= speedRound.queue.length || outOfTime) {
+    if (speedRound.timerInterval) clearInterval(speedRound.timerInterval);
+    renderSpeedRoundResult();
+  } else {
+    renderSpeedRoundCard();
+  }
+}
+
+function renderSpeedRoundResult() {
+  if (speedRound.timerInterval) clearInterval(speedRound.timerInterval);
+  progress.sprintHistory = recordSprintResult(progress.sprintHistory, {
+    cards: speedRound.results,
+    completedAt: new Date().toISOString(),
+    totalMs: Date.now() - speedRound.startMs,
+  });
+  saveProgress();
+
+  const stats = computeSprintStats(progress.sprintHistory);
+  const accuracy = Math.round((stats.correct / Math.max(stats.total, 1)) * 100);
+  const improvHtml = stats.improvement === null
+    ? `<span class="text-muted">First sprint — nothing to compare yet</span>`
+    : stats.improvement > 0
+      ? `<span style="color:var(--green,#22c55e)">+${stats.improvement} correct vs last sprint 🎯</span>`
+      : stats.improvement < 0
+        ? `<span style="color:var(--red,#ef4444)">${stats.improvement} correct vs last sprint</span>`
+        : `<span class="text-muted">Same score as last sprint</span>`;
+
+  const main = document.getElementById('main');
+  main.innerHTML = `
+    <h1>Speed Round complete!</h1>
+    <div class="card">
+      <div class="sprint-stats">
+        <div class="sprint-stat">
+          <div class="sprint-stat-value">${stats.correct}/${stats.total}</div>
+          <div class="sprint-stat-label">Correct</div>
+        </div>
+        <div class="sprint-stat">
+          <div class="sprint-stat-value">${(stats.avgTimeMs / 1000).toFixed(1)}s</div>
+          <div class="sprint-stat-label">Avg per card</div>
+        </div>
+        <div class="sprint-stat">
+          <div class="sprint-stat-value">${accuracy}%</div>
+          <div class="sprint-stat-label">Accuracy</div>
+        </div>
+      </div>
+      <div class="sprint-improvement mt-4">${improvHtml}</div>
+    </div>
+    <div class="flex gap-8 mt-4">
+      <button class="btn btn-primary" onclick="startSpeedRound()">Go again →</button>
+      <button class="btn" onclick="renderCards()">Back to cards</button>
+    </div>
+  `;
+}
+
 // ── GLOBAL BINDINGS (expose functions used in inline HTML onclick attributes) ──
 Object.assign(window, {
   loadCourse, showView, showModule, toggleModule,
@@ -1949,9 +2565,11 @@ Object.assign(window, {
   renderApplicationsView, showPracticalApplication,
   runChallengeTests, submitChallenge, renderCards, startCardSession,
   resetCardSession, restartCardSession, flipCard,
-  rateCard, selectPath, loadCards, loadQuiz, loadLessonFile,
-  exportNotes, filterNotes,
+  rateCard, setCardConfidence, selectQuizConfidence, selectPath, loadCards, loadQuiz, loadLessonFile,
+  exportNotes, filterNotes, renderMistakesView, openMistakeSource, resolveMistakeEntry,
   pomodoroStart, pomodoroPause, pomodoroReset, pomodoroSetMode, pomodoroToggleCollapse,
+  saveFeynmanText, feynmanReveal,
+  startSpeedRound, renderSpeedRoundCard, rateSpeedCard, renderSpeedRoundResult,
 });
 
 // ── KEYBOARD SHORTCUTS ───────────────────────────────────────
@@ -1987,7 +2605,9 @@ initPomodoro();
     return;
   }
 
-  fetch('/curriculum/' + slug + '/bundle.json')
+  const bundleUrl = new URL(`../curriculum/${slug}/bundle.json`, window.location.href);
+
+  fetch(bundleUrl)
     .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(data => initFromBundle(data))
     .catch(() => {

@@ -101,6 +101,11 @@ Source: contradictions.md
 > `teaches_concepts` from `course.json`. The `lesson` field on each card is the key the
 > bundler uses to look up the lesson and derive its adaptive metadata.
 > Authoring these fields manually will have no effect — the bundler overwrites them.
+>
+> **Speed Round compatibility:** The Speed Round feature selects cards to quiz based on concept weakness.
+> It prioritises cards whose inherited `concepts` overlap with the learner's current weak-concept set.
+> This only works if the source lesson has `teaches_concepts` populated in `course.json`.
+> If `teaches_concepts` is empty, these cards get the same priority as any other card (no weak-concept boost).
 
 The `sr` block is the SM-2 spaced repetition state. The Grove app updates this
 as the learner reviews cards. Initial values are always: interval 1, ease 2.5, reviews 0.

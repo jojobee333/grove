@@ -1,0 +1,33 @@
+{
+  "modcheck_id": "modcheck-M06",
+  "module_id": "M06",
+  "title": "M06 Mastery Check — Async JavaScript",
+  "description": "Quick applied check. No looking things up. Answer from memory.",
+  "questions": [
+    {
+      "id": "mc01",
+      "type": "short_answer",
+      "prompt": "What prints first: a Promise.then callback or a setTimeout(0) callback? Why?",
+      "answer_key": "Promise.then — it's a microtask. Microtasks drain after each synchronous task, before any macrotask (setTimeout)."
+    },
+    {
+      "id": "mc02",
+      "type": "short_answer",
+      "prompt": "Fix: items.forEach(async item => { await save(item); }) — processing should be sequential.",
+      "answer_key": "for (const item of items) { await save(item); } — for...of respects await. forEach ignores returned Promises."
+    },
+    {
+      "id": "mc03",
+      "type": "true_false",
+      "prompt": "An async function that returns 42 actually returns Promise<number>.",
+      "correct": true,
+      "explanation": "async functions always return a Promise. The 42 is wrapped: Promise.resolve(42)."
+    },
+    {
+      "id": "mc04",
+      "type": "short_answer",
+      "prompt": "You need to fetch user data and user settings at the same time. Write the call.",
+      "answer_key": "const [user, settings] = await Promise.all([fetchUser(id), fetchSettings(id)]);"
+    }
+  ]
+}

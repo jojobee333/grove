@@ -1,0 +1,580 @@
+{
+  "topic": "TypeScript & JavaScript for Developers",
+  "slug": "typescript-javascript-course",
+  "strata_source": "research/typescript-javascript-course/",
+  "generated": "2026-04-19",
+  "learner": {
+    "goal": "apply practically",
+    "background": "intermediate",
+    "session_time_min": 60
+  },
+  "summary": "A practical course for developers who already know Python, Java, or C# and need to master JavaScript and TypeScript — focusing on the mental model gaps and footguns that trip up experienced programmers.",
+  "modules": [
+    {
+      "id": "M01",
+      "title": "The JavaScript Landscape",
+      "strata_theme": "Host environments, runtime model, and what TypeScript actually is",
+      "description": "Understand what JavaScript is, where it runs, and how TypeScript relates to it — before writing a single line.",
+      "objectives": [
+        "Distinguish the JavaScript language from its host environments (browser vs Node.js)",
+        "Explain what TypeScript adds to JavaScript and why types are erased at runtime",
+        "Identify the three layers: ECMAScript spec, V8 engine, host APIs"
+      ],
+      "lessons": [
+        {
+          "id": "L00",
+          "title": "What Is JavaScript — and Why Does It Exist?",
+          "strata_claim": "C6",
+          "type": "orientation",
+          "estimated_minutes": 25,
+          "description": "A developer-to-developer history of JavaScript: the 10-day origin story, ECMAScript standardization, TypeScript's emergence, and an honest comparison to Python, Java, Go, and Rust — before any code is written.",
+          "difficulty": 1,
+          "prerequisites": [],
+          "teaches_concepts": ["js-history", "ecmascript-tc39", "ts-origin", "js-strengths-weaknesses"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "none",
+          "review_after_days": [7]
+        },
+        {
+          "id": "L01",
+          "title": "Runtimes, Engines, and Host Environments",
+          "strata_claim": "C6",
+          "type": "core",
+          "estimated_minutes": 30,
+          "description": "The three-layer model of JS: language spec, engine, host APIs — and why the same code behaves differently in browser vs Node.js.",
+          "difficulty": 2,
+          "prerequisites": ["L00"],
+          "teaches_concepts": ["host-environments", "js-engine", "ts-erased-types"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M02",
+      "title": "Variables, Types & Coercion",
+      "strata_theme": "JS gotchas for experienced developers — scoping, types, and coercion",
+      "description": "The footguns that bite experienced developers on day one: var hoisting, TDZ, type coercion, and why == is broken.",
+      "objectives": [
+        "Use let and const correctly and explain why var should be avoided",
+        "Apply strict equality (===) and explain when coercion surprises occur",
+        "Identify all 8 JS primitive types and their typeof quirks"
+      ],
+      "lessons": [
+        {
+          "id": "L02",
+          "title": "var, let, and const — Scoping Pitfalls",
+          "strata_claim": "C1",
+          "type": "applied",
+          "estimated_minutes": 40,
+          "description": "How var hoisting and function scope break programmer intuition — and how let/const fix it.",
+          "difficulty": 2,
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["js-var-hoisting", "js-tdz", "js-block-scope"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        },
+        {
+          "id": "L03",
+          "title": "Primitive Types and typeof",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 30,
+          "description": "The 8 primitive types, the typeof operator, and the infamous typeof null === 'object' quirk.",
+          "difficulty": 2,
+          "prerequisites": ["L02"],
+          "teaches_concepts": ["js-primitive-types", "js-typeof"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        },
+        {
+          "id": "L04",
+          "title": "Equality and Type Coercion",
+          "strata_claim": "C1",
+          "type": "applied",
+          "estimated_minutes": 35,
+          "description": "Why == is dangerous, how + causes string coercion, and the rules for always using ===.",
+          "difficulty": 3,
+          "prerequisites": ["L03"],
+          "teaches_concepts": ["js-type-coercion", "js-strict-equality"],
+          "reinforces_concepts": ["js-primitive-types"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M03",
+      "title": "Collections & Iteration",
+      "strata_theme": "Arrays, objects, destructuring, and idiomatic modern JS iteration",
+      "description": "Work with arrays and objects using the functional methods and destructuring syntax that define modern JavaScript.",
+      "objectives": [
+        "Use map, filter, reduce, find, and spread to manipulate arrays idiomatically",
+        "Apply object destructuring and spread in function parameters and assignments",
+        "Explain why for...in on arrays is a footgun and use for...of instead"
+      ],
+      "lessons": [
+        {
+          "id": "L05",
+          "title": "Arrays and Functional Iteration",
+          "strata_claim": "C1",
+          "type": "applied",
+          "estimated_minutes": 45,
+          "description": "map, filter, reduce, find — the array methods that replace imperative loops in modern JS.",
+          "difficulty": 2,
+          "prerequisites": ["L04"],
+          "teaches_concepts": ["js-array-methods", "js-spread-rest"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        },
+        {
+          "id": "L06",
+          "title": "Objects and Destructuring",
+          "strata_claim": "C1",
+          "type": "applied",
+          "estimated_minutes": 40,
+          "description": "Object literals, shorthand properties, computed keys, spread, and destructuring in function parameters.",
+          "difficulty": 2,
+          "prerequisites": ["L05"],
+          "teaches_concepts": ["js-destructuring", "js-object-spread"],
+          "reinforces_concepts": ["js-spread-rest"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M04",
+      "title": "Functions, Scope & Closures",
+      "strata_theme": "Lexical scope, closures, and the patterns they enable",
+      "description": "How JavaScript scoping and closures work — and why understanding this is a prerequisite for everything that follows.",
+      "objectives": [
+        "Explain the difference between function declarations, expressions, and arrow functions",
+        "Demonstrate how closures capture lexical environments, not values",
+        "Fix the classic loop-var closure bug using let or factory functions"
+      ],
+      "lessons": [
+        {
+          "id": "L07",
+          "title": "Function Forms",
+          "strata_claim": "C4",
+          "type": "core",
+          "estimated_minutes": 35,
+          "description": "Declarations vs expressions vs arrow functions — hoisting differences and when each form is appropriate.",
+          "difficulty": 2,
+          "prerequisites": ["L06"],
+          "teaches_concepts": ["js-function-forms", "js-hoisting"],
+          "reinforces_concepts": ["js-var-hoisting"],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        },
+        {
+          "id": "L08",
+          "title": "Lexical Scope",
+          "strata_claim": "C4",
+          "type": "core",
+          "estimated_minutes": 35,
+          "description": "Scope is determined at write-time, not call-time — the foundation of closures and why this matters.",
+          "difficulty": 2,
+          "prerequisites": ["L07"],
+          "teaches_concepts": ["js-lexical-scope"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        },
+        {
+          "id": "L09",
+          "title": "Closures",
+          "strata_claim": "C4",
+          "type": "applied",
+          "estimated_minutes": 50,
+          "description": "Closures in practice: the loop-var bug, factory functions, memoization, and data encapsulation.",
+          "difficulty": 3,
+          "prerequisites": ["L08"],
+          "teaches_concepts": ["js-closures", "js-loop-closure-bug"],
+          "reinforces_concepts": ["js-lexical-scope", "js-var-hoisting"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M05",
+      "title": "this Binding",
+      "strata_theme": "The this keyword — call-site rules and the most common source of bugs",
+      "description": "The single hardest concept for developers from Python/Java/C#. Five call-site rules, common traps, and the modern fixes.",
+      "objectives": [
+        "Apply the five this call-site rules to predict this in any context",
+        "Diagnose and fix callback context-loss bugs in real code",
+        "Explain why this in JS differs fundamentally from self/this in Python/Java/C#"
+      ],
+      "lessons": [
+        {
+          "id": "L10",
+          "title": "The Five this Call-Site Rules",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 45,
+          "description": "Method, plain, arrow, explicit (call/apply/bind), and constructor calls — the complete mental model for this.",
+          "difficulty": 3,
+          "prerequisites": ["L09"],
+          "teaches_concepts": ["js-this-binding", "js-this-call-site-rules", "js-explicit-binding"],
+          "reinforces_concepts": ["js-arrow-functions"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        },
+        {
+          "id": "L11",
+          "title": "Common this Traps and Fixes",
+          "strata_claim": "C1",
+          "type": "applied",
+          "estimated_minutes": 45,
+          "description": "Three ways you lose this in real code — and three ways to fix it with bind, arrow fields, and wrapper arrows.",
+          "difficulty": 3,
+          "prerequisites": ["L10"],
+          "teaches_concepts": ["js-arrow-functions"],
+          "reinforces_concepts": ["js-this-binding", "js-this-call-site-rules", "js-explicit-binding"],
+          "mastery_threshold": 0.8,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M06",
+      "title": "Async JavaScript",
+      "strata_theme": "Event loop, Promises, and async/await — the complete async mental model",
+      "description": "Master the event loop model and write async code confidently — including parallel execution with Promise.all.",
+      "objectives": [
+        "Explain the event loop, call stack, and the difference between the microtask and task queues",
+        "Chain Promises correctly with .then() and handle errors with .catch()",
+        "Use async/await with try/catch and Promise.all for sequential and parallel async code"
+      ],
+      "lessons": [
+        {
+          "id": "L12",
+          "title": "The Event Loop",
+          "strata_claim": "C3",
+          "type": "core",
+          "estimated_minutes": 45,
+          "description": "Call stack, task queue, microtask queue — the complete mental model for how JS handles async operations.",
+          "difficulty": 3,
+          "prerequisites": ["L11"],
+          "teaches_concepts": ["js-event-loop", "js-microtask-queue"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        },
+        {
+          "id": "L13",
+          "title": "Promises",
+          "strata_claim": "C3",
+          "type": "applied",
+          "estimated_minutes": 50,
+          "description": "Promise states, .then() chaining, .catch() for error handling, Promise.all, Promise.any, Promise.allSettled.",
+          "difficulty": 3,
+          "prerequisites": ["L12"],
+          "teaches_concepts": ["js-promises", "js-promise-all"],
+          "reinforces_concepts": ["js-event-loop", "js-microtask-queue"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        },
+        {
+          "id": "L14",
+          "title": "async/await",
+          "strata_claim": "C3",
+          "type": "applied",
+          "estimated_minutes": 45,
+          "description": "async/await as syntactic sugar over Promises — try/catch for errors, parallel execution, and the 'always returns a Promise' gotcha.",
+          "difficulty": 3,
+          "prerequisites": ["L13"],
+          "teaches_concepts": ["js-async-await"],
+          "reinforces_concepts": ["js-promises", "js-promise-all", "js-event-loop"],
+          "mastery_threshold": 0.8,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M07",
+      "title": "Modules & Tooling",
+      "strata_theme": "ES modules, CommonJS, tsc, and tsconfig — the compile pipeline",
+      "description": "Use ES modules in browser and Node.js, configure TypeScript, and understand the compilation pipeline.",
+      "objectives": [
+        "Use ES module named and default exports/imports correctly",
+        "Configure tsconfig.json with the key options for strict, target, and module",
+        "Explain what tsc --noEmit does and why it's used in CI"
+      ],
+      "lessons": [
+        {
+          "id": "L15",
+          "title": "Module Systems: ESM and CommonJS",
+          "strata_claim": "C6",
+          "type": "core",
+          "estimated_minutes": 35,
+          "description": "Named vs default exports, ESM vs CJS interop, and the gotchas you'll encounter when mixing them.",
+          "difficulty": 2,
+          "prerequisites": ["L14"],
+          "teaches_concepts": ["js-es-modules", "js-cjs-vs-esm"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        },
+        {
+          "id": "L16",
+          "title": "TypeScript Configuration",
+          "strata_claim": "C2",
+          "type": "applied",
+          "estimated_minutes": 35,
+          "description": "tsconfig.json key options, strict mode flags, .d.ts declaration files, and @types/ packages.",
+          "difficulty": 2,
+          "prerequisites": ["L15"],
+          "teaches_concepts": ["tsconfig"],
+          "reinforces_concepts": ["ts-erased-types"],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M08",
+      "title": "TypeScript Foundations",
+      "strata_theme": "Type inference, everyday types, structural typing — TS as a tool for intermediate JS devs",
+      "description": "Write TypeScript with confidence: type inference, everyday annotations, the structural type system, and how to work with strictNullChecks.",
+      "objectives": [
+        "Use TypeScript's type inference to minimize annotations while retaining type safety",
+        "Write interface and type alias definitions and explain when to use each",
+        "Apply the structural type system to explain why TS accepts shapes, not names"
+      ],
+      "lessons": [
+        {
+          "id": "L17",
+          "title": "Why TypeScript and How It Works",
+          "strata_claim": "C2",
+          "type": "core",
+          "estimated_minutes": 35,
+          "description": "What TS catches that JS doesn't, type inference, erased types at runtime, and why noImplicitAny matters.",
+          "difficulty": 2,
+          "prerequisites": ["L16"],
+          "teaches_concepts": ["ts-type-inference", "ts-erased-types"],
+          "reinforces_concepts": ["tsconfig"],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        },
+        {
+          "id": "L18",
+          "title": "Everyday Types",
+          "strata_claim": "C2",
+          "type": "applied",
+          "estimated_minutes": 50,
+          "description": "string/number/boolean, arrays, tuples, objects, optional props, union types, null/undefined under strictNullChecks, literal types.",
+          "difficulty": 2,
+          "prerequisites": ["L17"],
+          "teaches_concepts": ["ts-union-types", "ts-strict-null-checks", "ts-literal-types"],
+          "reinforces_concepts": ["ts-type-inference"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        },
+        {
+          "id": "L19",
+          "title": "Interfaces, Type Aliases & Structural Typing",
+          "strata_claim": "C2",
+          "type": "applied",
+          "estimated_minutes": 50,
+          "description": "Interface vs type alias, structural typing (duck typing at compile time), type assertions, and the non-null assertion operator.",
+          "difficulty": 3,
+          "prerequisites": ["L18"],
+          "teaches_concepts": ["ts-structural-typing", "ts-interface-vs-type"],
+          "reinforces_concepts": ["ts-union-types", "ts-strict-null-checks"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M09",
+      "title": "TypeScript Advanced",
+      "strata_theme": "Generics, utility types, and discriminated unions — reusable, type-safe patterns",
+      "description": "Use generics, utility types, and discriminated unions to write reusable, type-safe code — including the Partial/Pick/Omit/ReturnType toolkit.",
+      "objectives": [
+        "Write generic functions and interfaces with type constraints using extends and keyof",
+        "Apply Partial, Required, Readonly, Record, Pick, Omit, ReturnType, and Parameters utility types",
+        "Use discriminated unions with exhaustiveness checking to model variant data"
+      ],
+      "lessons": [
+        {
+          "id": "L20",
+          "title": "Generics",
+          "strata_claim": "C5",
+          "type": "applied",
+          "estimated_minutes": 50,
+          "description": "Type parameters as variables, constrained generics with extends, keyof, and the identity function as entry point.",
+          "difficulty": 3,
+          "prerequisites": ["L19"],
+          "teaches_concepts": ["ts-generics", "ts-keyof"],
+          "reinforces_concepts": ["ts-structural-typing", "ts-interface-vs-type"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        },
+        {
+          "id": "L21",
+          "title": "Utility Types",
+          "strata_claim": "C5",
+          "type": "applied",
+          "estimated_minutes": 55,
+          "description": "Partial, Required, Readonly, Record, Pick, Omit, NonNullable, ReturnType, Parameters, Awaited — practical uses for each.",
+          "difficulty": 3,
+          "prerequisites": ["L20"],
+          "teaches_concepts": ["ts-utility-types"],
+          "reinforces_concepts": ["ts-generics", "ts-keyof"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        },
+        {
+          "id": "L22",
+          "title": "Narrowing and Discriminated Unions",
+          "strata_claim": "C2",
+          "type": "applied",
+          "estimated_minutes": 50,
+          "description": "Type narrowing with typeof/in/instanceof, discriminated unions for variant data, never for exhaustiveness.",
+          "difficulty": 3,
+          "prerequisites": ["L21"],
+          "teaches_concepts": ["ts-type-narrowing", "ts-discriminated-unions"],
+          "reinforces_concepts": ["ts-union-types", "ts-generics"],
+          "mastery_threshold": 0.8,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M10",
+      "title": "DOM & Browser APIs",
+      "strata_theme": "The DOM as a host API — querying, mutating, and responding to events",
+      "description": "Manipulate the DOM and respond to user events without a framework — building the mental model that makes framework debugging possible.",
+      "objectives": [
+        "Query and manipulate DOM nodes using querySelector, createElement, and classList",
+        "Attach event listeners and correctly handle event bubbling and delegation",
+        "Explain why DOM APIs are absent in Node.js and how that shapes architecture decisions"
+      ],
+      "lessons": [
+        {
+          "id": "L23",
+          "title": "The DOM Tree and Manipulation",
+          "strata_claim": "C6",
+          "type": "applied",
+          "estimated_minutes": 45,
+          "description": "DOM as a host API, querySelector/querySelectorAll, createElement/appendChild/remove, textContent vs innerHTML (XSS note).",
+          "difficulty": 2,
+          "prerequisites": ["L19"],
+          "teaches_concepts": ["dom-model", "dom-query-selectors"],
+          "reinforces_concepts": ["host-environments"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        },
+        {
+          "id": "L24",
+          "title": "Events and Delegation",
+          "strata_claim": "C6",
+          "type": "applied",
+          "estimated_minutes": 45,
+          "description": "addEventListener, event object, bubbling, stopPropagation, event delegation as a performance pattern.",
+          "difficulty": 3,
+          "prerequisites": ["L23"],
+          "teaches_concepts": ["dom-events", "dom-event-delegation"],
+          "reinforces_concepts": ["dom-model", "js-this-binding"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M11",
+      "title": "Node.js Foundations",
+      "strata_theme": "Node as a runtime — process, built-in modules, HTTP server, and async I/O",
+      "description": "Write Node.js scripts and HTTP servers using built-in modules and modern ESM syntax.",
+      "objectives": [
+        "Use process.env, process.argv, and built-in modules (node:fs, node:path) in Node.js scripts",
+        "Build a minimal HTTP server using node:http",
+        "Explain why Node.js suits I/O-heavy workloads and where its single-threaded model has limits"
+      ],
+      "lessons": [
+        {
+          "id": "L25",
+          "title": "Node.js as a Runtime",
+          "strata_claim": "C6",
+          "type": "core",
+          "estimated_minutes": 40,
+          "description": "V8 outside the browser, process object, node:fs and node:path, async file I/O with Promises, ESM in Node.",
+          "difficulty": 2,
+          "prerequisites": ["L14", "L16"],
+          "teaches_concepts": ["node-runtime", "node-built-ins"],
+          "reinforces_concepts": ["host-environments", "js-async-await", "js-es-modules"],
+          "mastery_threshold": 0.7,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        },
+        {
+          "id": "L26",
+          "title": "HTTP and the Server Model",
+          "strata_claim": "C6",
+          "type": "applied",
+          "estimated_minutes": 45,
+          "description": "Non-blocking I/O model, node:http createServer, environment-based config, and tsx for TypeScript in Node.",
+          "difficulty": 3,
+          "prerequisites": ["L25"],
+          "teaches_concepts": ["node-http-server"],
+          "reinforces_concepts": ["node-runtime", "js-event-loop", "node-built-ins"],
+          "mastery_threshold": 0.75,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [7]
+        }
+      ],
+      "has_assessment": true
+    }
+  ],
+  "total_lessons": 27,
+  "total_estimated_hours": 17.7,
+  "learning_plan": {
+    "sessions_to_complete": 18,
+    "suggested_schedule": "3 sessions per week (3–4 lessons per session)",
+    "milestone_lessons": ["L01", "L09", "L14", "L19", "L22", "L26"]
+  }
+}

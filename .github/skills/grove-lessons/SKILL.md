@@ -52,10 +52,7 @@ For "teach" goal: why this is worth explaining to others.]
 ## A concrete example
 
 [1-2 paragraphs or a worked example. Make it specific.
-Vague examples teach nothing. Tie it to something the learner can picture.
-If the claim has 4+ supporting sources, include at least 2 distinct examples.
-For programming topics, at least one example must be a working code block.
-Label multiple examples clearly (e.g. **Example 1 — simple case**, **Example 2 — edge case**).]
+Vague examples teach nothing. Tie it to something the learner can picture.]
 
 ## Key points
 
@@ -66,9 +63,7 @@ Keep this to 3-5 bullets. If you have more, the lesson is covering too much.
 
 ## Go deeper
 
-[Required when the claim has 2+ source citations. List the 2–3 most directly
-relevant sources with a one-line reason each. Inline citations in the body
-are mandatory — this section is for readers who want the primary materials.]
+[Optional: 1-3 pointers to the most relevant source files for readers who want more]
 - [Source S00N](../../research/[slug]/01-sources/web/S00N-slug.md) — [why it's relevant]
 
 ---
@@ -104,31 +99,9 @@ Read `learner.json` before writing each lesson:
 - **Intermediate**: assume foundational vocabulary, focus on nuance
 - **Expert**: skip basics entirely, focus on implications and edge cases
 
-Word targets by learner background × session time:
-
-| Background    | 15 min      | 30 min      | 45 min      | 60 min      |
-|---------------|-------------|-------------|-------------|-------------|
-| Beginner      | 600–900     | 1000–1500   | 1500–2000   | 2000–2500   |
-| Intermediate  | 900–1300    | 1400–1800   | 1800–2400   | 2400–3000   |
-| Expert        | 1000–1500   | 1600–2200   | 2200–2800   | 2800–3500   |
-
-Bump up by 200–300 words if the claim has 4+ supporting sources — those sources
-contain detail worth surfacing, not compressing away.
-
-## Caveats and contradictions
-
-Every claim in `claims.md` has a `caveats` field. Always read it. Then:
-
-- **If the caveat is minor**: surface it as a qualifying sentence in the body
-  (e.g., "This holds for X but not Y because...")
-- **If the caveat is important**: add it as the final key point or a brief
-  "Limitations" subsection placed before the Key points section.
-- **If `Contradicted by` is non-empty**: add a "Debate" paragraph that names
-  both positions and explains why they differ. Do not resolve it artificially.
-  Label it clearly: "**There is a real disagreement here.**"
-
-A lesson that omits the claim's caveat teaches a cleaner version of reality
-than the evidence supports. That produces overconfident learners.
+- **15 min target**: 600-800 words, 1 example, 3 key points max
+- **30 min target**: 1000-1500 words, 2 examples, 4-5 key points
+- **1 hour target**: 2000-2500 words, 3+ examples, deeper treatment
 
 ## Source traceability
 

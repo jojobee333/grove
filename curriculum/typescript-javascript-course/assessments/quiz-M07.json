@@ -1,0 +1,74 @@
+{
+  "quiz_id": "quiz-M07",
+  "module_id": "M07",
+  "title": "Module 7 Quiz — Modules & Tooling",
+  "passing_score": 70,
+  "questions": [
+    {
+      "id": "q01",
+      "type": "mcq",
+      "prompt": "What does 'type': 'module' in package.json do?",
+      "options": [
+        "Forces all files to use TypeScript",
+        "Makes .js files treated as ES modules",
+        "Enables Node.js type checking",
+        "Loads the types field from package exports"
+      ],
+      "correct": 1,
+      "explanation": "\"type\": \"module\" tells Node.js to treat .js files as ESM. Without it, .js files default to CommonJS."
+    },
+    {
+      "id": "q02",
+      "type": "mcq",
+      "prompt": "A CommonJS module needs to use a pure ESM package. What is the correct approach?",
+      "options": [
+        "Add @ts-ignore at the top",
+        "Use require() — it automatically handles ESM",
+        "Use dynamic import(): const mod = await import('pkg')",
+        "Downgrade the package to its CommonJS version"
+      ],
+      "correct": 2,
+      "explanation": "Dynamic import() works in CJS and returns a Promise. It is the only way to load a pure ESM module from CJS."
+    },
+    {
+      "id": "q03",
+      "type": "mcq",
+      "prompt": "What is the most critical tsconfig setting for TypeScript strictness?",
+      "options": ["noImplicitAny", "strict", "noUncheckedIndexedAccess", "strictPropertyInitialization"],
+      "correct": 1,
+      "explanation": "strict: true enables all strict checks at once. It's the master flag — don't enable them piecemeal."
+    },
+    {
+      "id": "q04",
+      "type": "mcq",
+      "prompt": "When should you set noEmit: true in tsconfig?",
+      "options": [
+        "For library packages",
+        "When you only want to generate .d.ts files",
+        "When a bundler handles transpilation and tsc is only for type checking",
+        "For test files only"
+      ],
+      "correct": 2,
+      "explanation": "When Vite, Webpack, or esbuild compiles TypeScript, tsc's job is type checking only. noEmit prevents it from generating JS files."
+    },
+    {
+      "id": "q05",
+      "type": "mcq",
+      "prompt": "ESM has tree-shaking advantages over CJS because:",
+      "options": [
+        "ESM modules are loaded synchronously",
+        "ESM imports/exports are static and analyzable at build time",
+        "CJS is not supported by modern bundlers",
+        "ESM modules are smaller by default"
+      ],
+      "correct": 1,
+      "explanation": "ESM imports are static — the shape of exports is known at parse time. Bundlers can determine which exports are unused and eliminate them."
+    },
+    {
+      "id": "q06",
+      "type": "short_answer",
+      "prompt": "With module: NodeNext, what extension must you use in import statements for TypeScript files?",
+      "answer_key": ".js — e.g., import { foo } from './bar.js'. TypeScript resolves bar.js to bar.ts. This mirrors Node.js ESM's requirement for explicit extensions."
+    }
+  ]
+}
