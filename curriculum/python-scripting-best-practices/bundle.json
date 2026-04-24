@@ -1,7 +1,7 @@
 {
   "version": "3.0",
   "slug": "python-scripting-best-practices",
-  "bundled": "2026-04-19T14:29:02.542Z",
+  "bundled": "2026-04-24T00:32:21.909Z",
   "course": {
     "topic": "Python Scripting Best Practices",
     "slug": "python-scripting-best-practices",
@@ -458,7 +458,7 @@
       }
     ],
     "total_lessons": 13,
-    "total_estimated_hours": 2.6,
+    "total_estimated_hours": 2.5,
     "learning_plan": {
       "sessions_to_complete": 13,
       "suggested_schedule": "3 sessions per week (4–5 weeks)",

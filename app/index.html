@@ -154,5 +154,28 @@
 
 <!-- Pomodoro floating widget -->
 <div id="pomodoro-widget" class="pomo-widget"></div>
+
+<!-- Floating highlight toolbar (shown on text selection inside lesson body) -->
+<div id="hl-toolbar" role="toolbar" aria-label="Highlight selected text" onmousedown="event.preventDefault()">
+  <span class="hl-toolbar-label">Highlight</span>
+  <button class="hl-btn hl-btn-yellow" title="Yellow highlight" onclick="applyHighlight('yellow')">Yellow</button>
+  <button class="hl-btn hl-btn-green"  title="Green highlight"  onclick="applyHighlight('green')">Green</button>
+  <button class="hl-btn hl-btn-pink"   title="Pink highlight"   onclick="applyHighlight('pink')">Pink</button>
+</div>
+
+<!-- Sticky notes panel trigger + panel (shown in lesson view) -->
+<button id="notes-panel-trigger" onclick="toggleNotesPanel()" aria-label="Open lesson notes">
+  📝 Notes
+</button>
+<div id="notes-panel" role="complementary" aria-label="Lesson notes">
+  <div class="notes-panel-header">
+    <span class="notes-panel-title">My notes</span>
+    <div class="notes-panel-actions">
+      <button class="notes-panel-action-btn" id="notes-dock-btn" onclick="toggleNotesDock()" title="Float panel" aria-label="Undock notes panel"><svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1h4v4"/><path d="M11 1L6 6"/><path d="M5 11H1V7"/><path d="M1 11l5-5"/></svg></button>
+      <button class="notes-panel-close" onclick="toggleNotesPanel()" aria-label="Close notes panel">✕</button>
+    </div>
+  </div>
+  <textarea id="notes-panel-area" placeholder="Write notes for this lesson…" aria-label="Lesson notes textarea"></textarea>
+</div>
 </body>
 </html>

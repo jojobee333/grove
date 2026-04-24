@@ -17,6 +17,7 @@ import { compileSessionPlan }                                    from './modules
 import { saveFeynmanEntry, getFeynmanEntry }                    from './modules/feynman.js';
 import { selectSpeedRoundCards, recordSprintResult, computeSprintStats, SPRINT_DURATION_MS } from './modules/speed-round.js';
 import { reorderByStruggle }                                    from './modules/adaptive-sequencer.js';
+import { saveHighlight, removeHighlight, getHighlights }        from './modules/highlights.js';
 
 // ── STATE ──────────────────────────────────────────────────
 let course = null;
@@ -31,6 +32,7 @@ let adaptiveRules = {};
 let learningPaths = { paths: [] };
 let practicalApplications = {};
 let speedRound = { queue: [], current: 0, results: [], startMs: 0, cardStartMs: 0, timerInterval: null };
+let currentLessonId = null;
 
 function saveProgress() {
   if (!course) return;
@@ -51,6 +53,7 @@ function loadProgress() {
   if (!progress.mistakeJournal)  progress.mistakeJournal  = { entries: [] };
   if (!progress.feynmanStore)    progress.feynmanStore    = {};
   if (!progress.sprintHistory)   progress.sprintHistory   = [];
+  if (!progress.highlightStore)  progress.highlightStore  = {};
 }
 
 // ── FILE LOADING ───────────────────────────────────────────
@@ -386,6 +389,11 @@ function showView(view) {
     const el = document.getElementById('nav-' + v);
     if (el) el.classList.toggle('active', v === view);
   });
+  // Hide lesson-only overlays when navigating away
+  const trigger = document.getElementById('notes-panel-trigger');
+  if (trigger) trigger.style.display = 'none';
+  const panel = document.getElementById('notes-panel');
+  if (panel) panel.classList.remove('notes-panel-open');
   if (view === 'plan')     renderPlan();
   if (view === 'cards')    renderCards();
   if (view === 'code')     renderCodeView();
@@ -1185,6 +1193,11 @@ function showLesson(lessonId, moduleId) {
     </div>
   `;
   if (bundle?.lessons?.[lessonId]) highlightLessonCode();
+  currentLessonId = lessonId;
+  reapplyHighlights(lessonId);
+  // Show the sticky notes panel trigger
+  const trigger = document.getElementById('notes-panel-trigger');
+  if (trigger) trigger.style.display = 'flex';
   // Wire note textarea (must happen after innerHTML is set)
   const noteArea = document.getElementById('lesson-note-area');
   const noteIndicator = document.getElementById('note-saved-indicator');
@@ -1201,6 +1214,21 @@ function showLesson(lessonId, moduleId) {
       // Refresh notes nav dot if notes view has been visited
       const nnotes = document.getElementById('nav-notes');
       if (nnotes) nnotes.style.display = '';
+      updateAdaptiveNavDots();
+    });
+  }
+
+  // Wire sticky notes panel textarea to the same storage as the lesson note area
+  const panelArea = document.getElementById('notes-panel-area');
+  if (panelArea) {
+    panelArea.value = loadNote(course.slug, lessonId);
+    panelArea.addEventListener('input', () => {
+      saveNote(course.slug, lessonId, panelArea.value);
+      if (noteArea) noteArea.value = panelArea.value;
+      if (noteIndicator) {
+        noteIndicator.textContent = 'Saved';
+        setTimeout(() => { noteIndicator.textContent = ''; }, 1500);
+      }
       updateAdaptiveNavDots();
     });
   }
@@ -2555,6 +2583,200 @@ function renderSpeedRoundResult() {
   `;
 }
 
+// ── HIGHLIGHTS ─────────────────────────────────────────────
+
+/**
+ * Walk text nodes inside `root` and wrap the first occurrence of `quote`
+ * with a <mark> element for the given highlight color/id.
+ */
+function highlightTextInNode(root, quote, color, id) {
+  if (!quote || !quote.trim()) return;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  let node;
+  while ((node = walker.nextNode())) {
+    // Skip text nodes already inside a <mark> (avoid double-wrapping)
+    if (node.parentElement?.tagName === 'MARK') continue;
+    const idx = node.textContent.indexOf(quote);
+    if (idx === -1) continue;
+    const before = node.textContent.slice(0, idx);
+    const after  = node.textContent.slice(idx + quote.length);
+    const mark = document.createElement('mark');
+    mark.className = `hl-mark hl-${color}`;
+    mark.dataset.hlId = id;
+    mark.textContent = quote;
+    mark.title = 'Click to remove highlight';
+    mark.addEventListener('click', () => removeHighlightClick(currentLessonId, id));
+    const parent = node.parentNode;
+    if (!parent) continue;
+    if (before) parent.insertBefore(document.createTextNode(before), node);
+    parent.insertBefore(mark, node);
+    if (after) parent.insertBefore(document.createTextNode(after), node);
+    parent.removeChild(node);
+    return; // only first match per highlight
+  }
+}
+
+/** Re-apply all stored highlights for a lesson into #lesson-body DOM. */
+function reapplyHighlights(lessonId) {
+  const container = document.getElementById('lesson-body');
+  if (!container || !course) return;
+  const highlights = getHighlights(progress.highlightStore, { slug: course.slug, lessonId });
+  highlights.forEach(h => highlightTextInNode(container, h.quote, h.color, h.id));
+}
+
+/** Called from the floating highlight toolbar — saves and applies a new highlight. */
+function applyHighlight(color) {
+  if (!currentLessonId || !course) return;
+  const sel = window.getSelection();
+  if (!sel || sel.isCollapsed) return;
+  const quote = sel.toString().trim();
+  if (!quote) return;
+  // Check selection is inside #lesson-body
+  const body = document.getElementById('lesson-body');
+  if (!body) return;
+  const range = sel.getRangeAt(0);
+  if (!body.contains(range.commonAncestorContainer)) return;
+
+  progress.highlightStore = saveHighlight(progress.highlightStore, {
+    slug: course.slug, lessonId: currentLessonId, quote, color
+  });
+  saveProgress();
+  sel.removeAllRanges();
+  hideHighlightToolbar();
+
+  // Apply directly to DOM without full re-render
+  const newEntry = getHighlights(progress.highlightStore, { slug: course.slug, lessonId: currentLessonId }).at(-1);
+  highlightTextInNode(body, quote, color, newEntry.id);
+}
+
+/** Remove a highlight by id — called when user clicks a <mark> element. */
+function removeHighlightClick(lessonId, id) {
+  if (!course) return;
+  progress.highlightStore = removeHighlight(progress.highlightStore, { slug: course.slug, lessonId, id });
+  saveProgress();
+  // Remove the mark element from DOM and restore plain text
+  const mark = document.querySelector(`mark[data-hl-id="${id}"]`);
+  if (mark) {
+    const text = document.createTextNode(mark.textContent);
+    mark.parentNode.replaceChild(text, mark);
+  }
+}
+
+/** Show the floating highlight toolbar near the current selection. */
+function showHighlightToolbar() {
+  const sel = window.getSelection();
+  if (!sel || sel.isCollapsed || !sel.toString().trim()) return;
+  const body = document.getElementById('lesson-body');
+  if (!body) return;
+  const range = sel.getRangeAt(0);
+  if (!body.contains(range.commonAncestorContainer)) return;
+  const rect = range.getBoundingClientRect();
+  const toolbar = document.getElementById('hl-toolbar');
+  if (!toolbar) return;
+  toolbar.style.display = 'flex';
+  toolbar.style.top  = `${rect.top + window.scrollY - toolbar.offsetHeight - 8}px`;
+  toolbar.style.left = `${rect.left + window.scrollX + rect.width / 2 - toolbar.offsetWidth / 2}px`;
+}
+
+function hideHighlightToolbar() {
+  const t = document.getElementById('hl-toolbar');
+  if (t) t.style.display = 'none';
+}
+
+// Show toolbar on text selection within the lesson body
+document.addEventListener('mouseup', e => {
+  const body    = document.getElementById('lesson-body');
+  const toolbar = document.getElementById('hl-toolbar');
+  if (body && body.contains(e.target)) {
+    setTimeout(showHighlightToolbar, 0);
+  } else if (toolbar && toolbar.contains(e.target)) {
+    // Click was on the toolbar itself — keep it visible, let onclick run
+  } else {
+    hideHighlightToolbar();
+  }
+});
+
+document.addEventListener('keyup', e => {
+  const body = document.getElementById('lesson-body');
+  if (body && body.contains(e.target)) setTimeout(showHighlightToolbar, 0);
+});
+
+// ── STICKY NOTES PANEL ─────────────────────────────────────
+
+function toggleNotesPanel() {
+  const panel = document.getElementById('notes-panel');
+  if (!panel) return;
+  const isOpen = panel.classList.toggle('notes-panel-open');
+  if (isOpen && currentLessonId) {
+    // Sync the panel textarea with the lesson note area value
+    const panelArea = document.getElementById('notes-panel-area');
+    const mainArea  = document.getElementById('lesson-note-area');
+    if (panelArea && mainArea) panelArea.value = mainArea.value;
+  }
+}
+
+// ── DRAGGABLE NOTES PANEL ──────────────────────────────────
+(function setupNotesDrag() {
+  let dragging = false;
+  let startX = 0, startY = 0, panelX = 0, panelY = 0;
+
+  document.addEventListener('mousedown', e => {
+    const header = e.target.closest('.notes-panel-header');
+    if (!header) return;
+    const panel = document.getElementById('notes-panel');
+    // Only drag when the panel is floating (undocked)
+    if (!panel || !panel.classList.contains('notes-panel-floating')) return;
+    const rect = panel.getBoundingClientRect();
+    startX = e.clientX;
+    startY = e.clientY;
+    panelX = rect.left;
+    panelY = rect.top;
+    dragging = true;
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    const panel = document.getElementById('notes-panel');
+    if (!panel) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    const maxX = window.innerWidth  - panel.offsetWidth  - 4;
+    const maxY = window.innerHeight - panel.offsetHeight - 4;
+    panel.style.left = Math.max(4, Math.min(maxX, panelX + dx)) + 'px';
+    panel.style.top  = Math.max(4, Math.min(maxY, panelY + dy)) + 'px';
+  });
+
+  document.addEventListener('mouseup', () => { dragging = false; });
+})();
+
+/** Toggle the panel between docked (fixed corner) and floating (draggable anywhere). */
+function toggleNotesDock() {
+  const panel = document.getElementById('notes-panel');
+  const btn   = document.getElementById('notes-dock-btn');
+  if (!panel) return;
+
+  const SVG_UNDOCK = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1h4v4"/><path d="M11 1L6 6"/><path d="M5 11H1V7"/><path d="M1 11l5-5"/></svg>';
+  const SVG_DOCK   = '<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5H7V1"/><path d="M7 5L12 0"/><path d="M1 7h4v4"/><path d="M5 7L0 12"/></svg>';
+
+  const isNowFloating = panel.classList.toggle('notes-panel-floating');
+  if (isNowFloating) {
+    // Undock: switch from bottom/left CSS to absolute top/left at current position
+    const rect = panel.getBoundingClientRect();
+    panel.style.bottom = 'auto';
+    panel.style.left   = rect.left + 'px';
+    panel.style.top    = rect.top  + 'px';
+    if (btn) { btn.innerHTML = SVG_DOCK;   btn.title = 'Dock panel';   btn.setAttribute('aria-label', 'Dock notes panel'); }
+  } else {
+    // Dock: clear inline position overrides — CSS rules snap it back to bottom-left
+    panel.style.bottom = '';
+    panel.style.left   = '';
+    panel.style.top    = '';
+    if (btn) { btn.innerHTML = SVG_UNDOCK; btn.title = 'Float panel';  btn.setAttribute('aria-label', 'Undock notes panel'); }
+  }
+}
+
+
 // ── GLOBAL BINDINGS (expose functions used in inline HTML onclick attributes) ──
 Object.assign(window, {
   loadCourse, showView, showModule, toggleModule,
@@ -2570,6 +2792,7 @@ Object.assign(window, {
   pomodoroStart, pomodoroPause, pomodoroReset, pomodoroSetMode, pomodoroToggleCollapse,
   saveFeynmanText, feynmanReveal,
   startSpeedRound, renderSpeedRoundCard, rateSpeedCard, renderSpeedRoundResult,
+  applyHighlight, removeHighlightClick, toggleNotesPanel, toggleNotesDock,
 });
 
 // ── KEYBOARD SHORTCUTS ───────────────────────────────────────
@@ -2608,9 +2831,14 @@ initPomodoro();
   const bundleUrl = new URL(`../curriculum/${slug}/bundle.json`, window.location.href);
 
   fetch(bundleUrl)
-    .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status} fetching bundle`); return r.json(); })
     .then(data => initFromBundle(data))
-    .catch(() => {
-      // Bundle not available — silently stay on load screen
+    .catch(err => {
+      console.error('[Grove] Auto-load failed for slug:', slug, err);
+      const el = document.getElementById('main');
+      if (el) el.innerHTML = `<div style="padding:2rem;color:var(--muted)">
+        <p style="margin-bottom:0.5rem">Could not load course <strong>${slug}</strong>.</p>
+        <p style="font-size:13px">Make sure the server is running from the <code>grove/</code> folder and the bundle exists at <code>curriculum/${slug}/bundle.json</code>.</p>
+      </div>`;
     });
 })();

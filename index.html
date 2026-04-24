@@ -176,7 +176,9 @@ async function init() {
 }
 
 function openCourse(slug) {
-  window.location.href = `./app/index.html?course=${encodeURIComponent(slug)}`;
+  // Use directory URL (./app/) rather than ./app/index.html to avoid static
+  // server redirects that can silently strip the query string.
+  window.location.href = `./app/?course=${encodeURIComponent(slug)}`;
 }
 
 function loadBundle(event) {
@@ -194,7 +196,7 @@ function loadBundle(event) {
       }
       const slug = data.slug;
       sessionStorage.setItem('grove_pending_bundle_' + slug, e.target.result);
-      window.location.href = `./app/index.html?course=${encodeURIComponent(slug)}&from=home`;
+      window.location.href = `./app/?course=${encodeURIComponent(slug)}&from=home`;
     } catch(err) {
       alert('Could not parse file: ' + err.message);
     }

@@ -348,3 +348,124 @@ p { font-size: 14px; line-height: 1.7; color: var(--muted); margin-bottom: 0.75r
 .sprint-stat-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.4px; margin-top: 4px; }
 .sprint-improvement { text-align: center; font-size: 14px; }
 
+/* ── Text Highlights ───────────────────────────────────────────────── */
+mark.hl-mark { border-radius: 2px; cursor: pointer; padding: 0 2px; transition: opacity 0.15s; }
+mark.hl-mark:hover { opacity: 0.7; }
+mark.hl-yellow { background: #fde68a; color: inherit; }
+mark.hl-green  { background: #bbf7d0; color: inherit; }
+mark.hl-pink   { background: #fecdd3; color: inherit; }
+@media (prefers-color-scheme: dark) {
+  mark.hl-yellow { background: #78350f; color: #fef3c7; }
+  mark.hl-green  { background: #14532d; color: #bbf7d0; }
+  mark.hl-pink   { background: #4c0519; color: #fecdd3; }
+}
+
+/* Floating highlight toolbar */
+#hl-toolbar {
+  position: absolute;
+  display: none;
+  align-items: center;
+  gap: 4px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: 20px;
+  padding: 5px 10px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+  z-index: 900;
+  pointer-events: all;
+}
+.hl-btn {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  font-size: 0;
+  transition: transform 0.1s;
+}
+.hl-btn:hover { transform: scale(1.2); }
+.hl-btn-yellow { background: #fde68a; border-color: #f59e0b; }
+.hl-btn-green  { background: #bbf7d0; border-color: #22c55e; }
+.hl-btn-pink   { background: #fecdd3; border-color: #f43f5e; }
+.hl-toolbar-label { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.3px; padding-right: 4px; }
+
+/* ── Sticky Notes Panel ────────────────────────────────────────────── */
+#notes-panel-trigger {
+  position: fixed;
+  bottom: 24px;
+  left: 24px;
+  z-index: 800;
+  display: none;   /* shown only in lesson view via JS */
+  align-items: center;
+  gap: 6px;
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 24px;
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  transition: opacity 0.2s, transform 0.15s;
+}
+#notes-panel-trigger:hover { opacity: 0.9; transform: scale(1.04); }
+
+#notes-panel {
+  position: fixed;
+  bottom: 80px;
+  left: 24px;
+  width: 320px;
+  max-height: 340px;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+  z-index: 810;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(16px);
+  pointer-events: none;
+  transition: opacity 0.2s, transform 0.2s;
+}
+#notes-panel.notes-panel-open {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: all;
+}
+.notes-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid var(--border);
+  user-select: none;
+  cursor: default;
+}
+/* Only show grab cursor when floating/draggable */
+#notes-panel.notes-panel-floating .notes-panel-header { cursor: grab; }
+#notes-panel.notes-panel-floating .notes-panel-header:active { cursor: grabbing; }
+.notes-panel-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); }
+.notes-panel-actions { display: flex; align-items: center; gap: 2px; }
+.notes-panel-action-btn { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 15px; line-height: 1; padding: 1px 4px; border-radius: 4px; transition: color 0.1s, background 0.1s; }
+.notes-panel-action-btn:hover { color: var(--text); background: var(--border); }
+.notes-panel-close { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 16px; padding: 0 2px; line-height: 1; }
+.notes-panel-close:hover { color: var(--text); }
+#notes-panel-area {
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.85rem 1rem;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.6;
+  font-family: inherit;
+  resize: none;
+  outline: none;
+  min-height: 200px;
+}
+#notes-panel-area::placeholder { color: var(--muted); opacity: 0.6; }
+
+
