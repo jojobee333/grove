@@ -2631,22 +2631,68 @@ function applyHighlight(color) {
   if (!sel || sel.isCollapsed) return;
   const quote = sel.toString().trim();
   if (!quote) return;
-  // Check selection is inside #lesson-body
   const body = document.getElementById('lesson-body');
   if (!body) return;
-  const range = sel.getRangeAt(0);
+  // Clone range BEFORE clearing selection — we need it for DOM wrapping
+  const range = sel.getRangeAt(0).cloneRange();
   if (!body.contains(range.commonAncestorContainer)) return;
 
   progress.highlightStore = saveHighlight(progress.highlightStore, {
     slug: course.slug, lessonId: currentLessonId, quote, color
   });
   saveProgress();
+
+  const newEntry = getHighlights(progress.highlightStore, { slug: course.slug, lessonId: currentLessonId }).at(-1);
+
+  // Apply via Range directly — handles cross-element selections correctly
+  applyRangeHighlight(range, color, newEntry.id);
+
   sel.removeAllRanges();
   hideHighlightToolbar();
+}
 
-  // Apply directly to DOM without full re-render
-  const newEntry = getHighlights(progress.highlightStore, { slug: course.slug, lessonId: currentLessonId }).at(-1);
-  highlightTextInNode(body, quote, color, newEntry.id);
+/**
+ * Wrap a Range in a <mark> element. Uses surroundContents() for simple
+ * (single-element) selections; falls back to per-text-node wrapping when
+ * the range crosses element boundaries (e.g. selection over <code>, <strong>).
+ */
+function applyRangeHighlight(range, color, id) {
+  function makeMarkEl() {
+    const m = document.createElement('mark');
+    m.className = `hl-mark hl-${color}`;
+    m.dataset.hlId = id;
+    m.title = 'Click to remove highlight';
+    m.addEventListener('click', () => removeHighlightClick(currentLessonId, id));
+    return m;
+  }
+  try {
+    range.surroundContents(makeMarkEl());
+  } catch {
+    // Range crosses element boundaries — wrap each constituent text node individually
+    wrapTextNodesInRange(range, makeMarkEl);
+  }
+}
+
+/**
+ * Walk all text nodes that intersect `range` and wrap each one in a fresh
+ * <mark> returned by `makeMarkEl()`. Used as fallback when the selection
+ * spans across inline elements like <code> or <strong>.
+ */
+function wrapTextNodesInRange(range, makeMarkEl) {
+  const walker = document.createTreeWalker(range.commonAncestorContainer, NodeFilter.SHOW_TEXT);
+  const textNodes = [];
+  let node;
+  while ((node = walker.nextNode())) {
+    if (range.intersectsNode(node)) textNodes.push(node);
+  }
+  textNodes.forEach(textNode => {
+    const nr = document.createRange();
+    nr.selectNode(textNode);
+    if (textNode === range.startContainer) nr.setStart(textNode, range.startOffset);
+    if (textNode === range.endContainer)   nr.setEnd(textNode,   range.endOffset);
+    if (!nr.toString().trim()) return; // skip whitespace-only nodes
+    try { nr.surroundContents(makeMarkEl()); } catch { /* already inside a mark */ }
+  });
 }
 
 /** Remove a highlight by id — called when user clicks a <mark> element. */
@@ -2654,12 +2700,10 @@ function removeHighlightClick(lessonId, id) {
   if (!course) return;
   progress.highlightStore = removeHighlight(progress.highlightStore, { slug: course.slug, lessonId, id });
   saveProgress();
-  // Remove the mark element from DOM and restore plain text
-  const mark = document.querySelector(`mark[data-hl-id="${id}"]`);
-  if (mark) {
-    const text = document.createTextNode(mark.textContent);
-    mark.parentNode.replaceChild(text, mark);
-  }
+  // querySelectorAll handles cross-element highlights that produced multiple <mark> nodes
+  document.querySelectorAll(`mark[data-hl-id="${id}"]`).forEach(mark => {
+    mark.parentNode.replaceChild(document.createTextNode(mark.textContent), mark);
+  });
 }
 
 /** Show the floating highlight toolbar near the current selection. */
@@ -2673,9 +2717,13 @@ function showHighlightToolbar() {
   const rect = range.getBoundingClientRect();
   const toolbar = document.getElementById('hl-toolbar');
   if (!toolbar) return;
+  // Show first so offsetHeight/Width reflect actual rendered size
   toolbar.style.display = 'flex';
-  toolbar.style.top  = `${rect.top + window.scrollY - toolbar.offsetHeight - 8}px`;
-  toolbar.style.left = `${rect.left + window.scrollX + rect.width / 2 - toolbar.offsetWidth / 2}px`;
+  // position: fixed — coordinates are relative to viewport, no scroll offset needed
+  const idealTop  = rect.top - toolbar.offsetHeight - 8;
+  const idealLeft = rect.left + rect.width / 2 - toolbar.offsetWidth / 2;
+  toolbar.style.top  = `${Math.max(4, idealTop)}px`;
+  toolbar.style.left = `${Math.max(4, Math.min(window.innerWidth - toolbar.offsetWidth - 4, idealLeft))}px`;
 }
 
 function hideHighlightToolbar() {
@@ -2685,15 +2733,27 @@ function hideHighlightToolbar() {
 
 // Show toolbar on text selection within the lesson body
 document.addEventListener('mouseup', e => {
-  const body    = document.getElementById('lesson-body');
   const toolbar = document.getElementById('hl-toolbar');
-  if (body && body.contains(e.target)) {
-    setTimeout(showHighlightToolbar, 0);
-  } else if (toolbar && toolbar.contains(e.target)) {
-    // Click was on the toolbar itself — keep it visible, let onclick run
-  } else {
-    hideHighlightToolbar();
-  }
+  // Toolbar click: keep it visible so onclick fires
+  if (toolbar && toolbar.contains(e.target)) return;
+  // Defer so the selection is finalised before we read it
+  setTimeout(() => {
+    const sel = window.getSelection();
+    if (!sel || sel.isCollapsed || !sel.toString().trim()) {
+      hideHighlightToolbar();
+      return;
+    }
+    const body = document.getElementById('lesson-body');
+    if (!body) return;
+    try {
+      const range = sel.getRangeAt(0);
+      if (body.contains(range.commonAncestorContainer)) {
+        showHighlightToolbar();
+      } else {
+        hideHighlightToolbar();
+      }
+    } catch { hideHighlightToolbar(); }
+  }, 0);
 });
 
 document.addEventListener('keyup', e => {

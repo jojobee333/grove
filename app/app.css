@@ -362,7 +362,7 @@ mark.hl-pink   { background: #fecdd3; color: inherit; }
 
 /* Floating highlight toolbar */
 #hl-toolbar {
-  position: absolute;
+  position: fixed;
   display: none;
   align-items: center;
   gap: 4px;
