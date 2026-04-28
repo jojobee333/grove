@@ -1,0 +1,34 @@
+{
+  "modcheck_id": "modcheck-M05",
+  "module_id": "M05",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M05 Mastery Check — Server Architecture",
+  "version": "3.0",
+  "mastery_threshold": 0.80,
+  "tasks": [
+    {
+      "id": "MC05-T1",
+      "type": "produce",
+      "title": "Write the Express App Skeleton",
+      "prompt": "From memory, write the Meridian Express app.ts skeleton showing the complete middleware pipeline in correct order. Include at least: Helmet, CORS, rateLimit, JSON body parser, authMiddleware, and errorHandler registration. Use TypeScript.",
+      "success_criteria": [
+        "app.use(helmet()) is first",
+        "app.use(cors()) before rateLimit and JSON parser",
+        "app.use(rateLimit) before JSON body parser",
+        "app.use(express.json()) before authMiddleware",
+        "app.use(authMiddleware) before route registration",
+        "app.use(errorHandler) is last — four parameter signature"
+      ]
+    },
+    {
+      "id": "MC05-T2",
+      "type": "debug",
+      "title": "Find the Tenant Middleware Bug",
+      "prompt": "Review this tenant middleware and find the critical bug:\n\n```typescript\nexport const requireWorkspace = async (req, res, next) => {\n  const workspaceId = req.body.workspaceId\n  const member = await db.query.workspace_members.findFirst({\n    where: and(\n      eq(workspace_members.user_id, req.user!.id),\n      eq(workspace_members.workspace_id, workspaceId)\n    )\n  })\n  if (!member) return res.status(403).json({ error: 'Access denied' })\n  await db.execute(sql`SET app.current_workspace_id = ${workspaceId}`)\n  req.workspace = { id: workspaceId, role: member.role }\n  next()\n}\n```",
+      "success_criteria": [
+        "workspace_id from req.body — must be from req.params",
+        "SET not SET LOCAL — will cause workspace context to leak in connection pools"
+      ]
+    }
+  ]
+}

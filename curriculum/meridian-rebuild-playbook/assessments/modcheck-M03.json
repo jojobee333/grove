@@ -1,0 +1,33 @@
+{
+  "modcheck_id": "modcheck-M03",
+  "module_id": "M03",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M03 Mastery Check — Database Architecture",
+  "version": "3.0",
+  "mastery_threshold": 0.80,
+  "tasks": [
+    {
+      "id": "MC03-T1",
+      "type": "produce",
+      "title": "Write the complete RLS policy for the pages table",
+      "prompt": "From memory, write the SQL to: (1) enable RLS on the pages table, (2) create a RESTRICTIVE workspace isolation policy, (3) create the trigger function that the policy uses. Do not reference the lesson — reproduce the exact pattern.",
+      "success_criteria": [
+        "ALTER TABLE pages ENABLE ROW LEVEL SECURITY",
+        "Policy uses AS RESTRICTIVE",
+        "Policy USING clause: workspace_id = current_setting('app.current_workspace_id')::uuid",
+        "No use of superuser-level SET — the policy uses current_setting()"
+      ]
+    },
+    {
+      "id": "MC03-T2",
+      "type": "debug",
+      "title": "Debug the Memory Query",
+      "prompt": "Review this vector search query and identify every violation of Meridian's architecture rules:\n\n```sql\nSELECT memory_key, memory_value\nFROM user_memory\nWHERE user_id = $1\nORDER BY embedding <-> $2 LIMIT 10;\n```",
+      "success_criteria": [
+        "Identifies missing workspace_id = $N in WHERE clause",
+        "Identifies wrong operator: <-> (L2 distance) should be <=> (cosine distance)",
+        "Identifies no distance threshold filter (should add: AND distance < 0.3 using a subquery or CTE)"
+      ]
+    }
+  ]
+}

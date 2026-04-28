@@ -1,0 +1,62 @@
+{
+  "quiz_id": "quiz-M01",
+  "module_id": "M01",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M01 Quiz — System Design Before Code",
+  "version": "3.0",
+  "questions": [
+    {
+      "id": "M01-Q1",
+      "type": "mcq",
+      "question": "Which of the following is one of Meridian's three load-bearing constraints?",
+      "options": [
+        "Server-side rendering for SEO",
+        "Browser-only collaborative editing state",
+        "GraphQL API for flexible queries",
+        "Microservices architecture for scaling"
+      ],
+      "answer": "Browser-only collaborative editing state",
+      "explanation": "Yjs CRDT requires browser-only state. This constraint eliminates SSR frameworks like Next.js and forces a Vite SPA architecture."
+    },
+    {
+      "id": "M01-Q2",
+      "type": "mcq",
+      "question": "Why is Next.js incompatible with Meridian?",
+      "options": [
+        "Next.js doesn't support TypeScript",
+        "Next.js is slower than Vite for development",
+        "Server-side rendering conflicts with Yjs CRDT, which requires browser-only state",
+        "Next.js cannot connect to PostgreSQL"
+      ],
+      "answer": "Server-side rendering conflicts with Yjs CRDT, which requires browser-only state",
+      "explanation": "Collaborative editing state in Yjs lives in the browser. SSR would attempt to render this state on the server where it cannot exist."
+    },
+    {
+      "id": "M01-Q3",
+      "type": "mcq",
+      "question": "What does an Architecture Decision Record (ADR) document?",
+      "options": [
+        "A list of bugs found during code review",
+        "A technology choice with context, decision, rationale, and consequences",
+        "A deployment checklist",
+        "A database schema design"
+      ],
+      "answer": "A technology choice with context, decision, rationale, and consequences",
+      "explanation": "An ADR captures why a choice was made (not just what was chosen) and what it commits the project to. It makes implicit decisions explicit and auditable."
+    },
+    {
+      "id": "M01-Q4",
+      "type": "short_answer",
+      "question": "Name the three load-bearing constraints that determine Meridian's entire technology stack.",
+      "answer_key": "1. Browser-only collaborative editor (Lexical + Yjs CRDT). 2. Below-app-layer tenant isolation (PostgreSQL RLS). 3. In-database vector storage (pgvector).",
+      "rubric": "1 point each for correctly identifying and briefly explaining each constraint. Full credit requires all three."
+    },
+    {
+      "id": "M01-Q5",
+      "type": "short_answer",
+      "question": "What is the 'Consequences' section of an ADR for, and why is it important?",
+      "answer_key": "The Consequences section describes what the technology choice commits the project to: what becomes easier, what becomes harder, and what is no longer possible. It is important because it forces the author to think beyond the immediate decision to its long-term effects.",
+      "rubric": "Full credit: explains that Consequences documents long-term implications and commitments. Partial credit: mentions it describes trade-offs without the 'commitment' aspect."
+    }
+  ]
+}

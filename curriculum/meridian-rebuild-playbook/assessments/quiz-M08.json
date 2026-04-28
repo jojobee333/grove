@@ -1,0 +1,70 @@
+{
+  "quiz_id": "quiz-M08",
+  "module_id": "M08",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M08 Quiz — AI Layer Integration",
+  "version": "3.0",
+  "questions": [
+    {
+      "id": "M08-Q1",
+      "type": "mcq",
+      "question": "What two fields must ALWAYS appear in a Meridian vector search WHERE clause?",
+      "options": [
+        "user_id and session_id",
+        "workspace_id and created_at",
+        "user_id and workspace_id",
+        "embedding and tier"
+      ],
+      "answer": "user_id and workspace_id",
+      "explanation": "Both user_id and workspace_id must be present. Omitting user_id could return other users' memories. Omitting workspace_id could return memories from other workspaces. Both scopes are required."
+    },
+    {
+      "id": "M08-Q2",
+      "type": "mcq",
+      "question": "What HTTP mechanism does Meridian use for AI streaming responses?",
+      "options": [
+        "WebSocket with binary frames",
+        "Long-polling with JSON batches",
+        "Server-Sent Events (SSE)",
+        "HTTP/2 server push"
+      ],
+      "answer": "Server-Sent Events (SSE)",
+      "explanation": "SSE is used for AI streaming because it is server-to-client only (unidirectional), uses plain HTTP, and has native browser reconnect logic. WebSocket is bidirectional and used for Yjs document sync."
+    },
+    {
+      "id": "M08-Q3",
+      "type": "mcq",
+      "question": "What is the purpose of the `LLMProvider` interface?",
+      "options": [
+        "To cache AI responses for performance",
+        "To allow switching AI providers without changing route handlers",
+        "To validate LLM response formats",
+        "To rate limit AI API calls"
+      ],
+      "answer": "To allow switching AI providers without changing route handlers",
+      "explanation": "The LLMProvider abstraction decouples route handlers from specific providers (Anthropic, OpenAI, Ollama). The LLMRouter selects a provider at runtime. Changing providers requires no handler changes."
+    },
+    {
+      "id": "M08-Q4",
+      "type": "mcq",
+      "question": "What distance threshold does Meridian use to filter pgvector similarity results?",
+      "options": ["0.1", "0.3", "0.5", "0.7"],
+      "answer": "0.3",
+      "explanation": "distance < 0.3 (cosine distance) means only memories with ≥70% semantic similarity are included. Higher threshold returns more results with lower relevance."
+    },
+    {
+      "id": "M08-Q5",
+      "type": "short_answer",
+      "question": "Describe the complete `writeMemory` UPSERT pattern and explain why UPSERT is used instead of INSERT.",
+      "answer_key": "INSERT INTO user_memory (user_id, workspace_id, memory_key, memory_value, embedding, tier) VALUES (...) ON CONFLICT (user_id, workspace_id, memory_key) DO UPDATE SET memory_value = EXCLUDED.memory_value, embedding = EXCLUDED.embedding, last_accessed_at = NOW(). UPSERT is used because calling writeMemory with the same key should update the existing record, not create a duplicate. INSERT alone would fail or create multiple records for the same memory key.",
+      "rubric": "Full credit: includes ON CONFLICT clause, updates all three fields (value, embedding, last_accessed_at), explains duplicate prevention."
+    },
+    {
+      "id": "M08-Q6",
+      "type": "short_answer",
+      "question": "What does `X-Accel-Buffering: no` do, and why is it needed for SSE?",
+      "answer_key": "It disables Nginx's response buffering for this connection. Without it, Nginx buffers the full SSE stream before sending it to the client, defeating the streaming behavior — all tokens would arrive at once instead of incrementally. The header tells the proxy to pass bytes through immediately as they are written.",
+      "rubric": "Full credit: explains Nginx buffering AND the consequence (all tokens arrive at once). Partial: explains it disables buffering without the consequence."
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+  "quiz_id": "quiz-M07",
+  "module_id": "M07",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M07 Quiz — The Editor Layer",
+  "version": "3.0",
+  "questions": [
+    {
+      "id": "M07-Q1",
+      "type": "mcq",
+      "question": "What is Lexical's EditorState?",
+      "options": [
+        "A mutable DOM representation of editor content",
+        "An immutable snapshot of all editor content at a point in time",
+        "A Redux reducer for editor actions",
+        "The HTML string of the editor's current content"
+      ],
+      "answer": "An immutable snapshot of all editor content at a point in time",
+      "explanation": "EditorState is immutable. Every change produces a new EditorState. You read it with editor.getEditorState().read(() => {...}) and mutate via editor.update(() => {...})."
+    },
+    {
+      "id": "M07-Q2",
+      "type": "mcq",
+      "question": "How do you programmatically modify Lexical editor content?",
+      "options": [
+        "editor.setState({ ... })",
+        "editor.getEditorState().read(() => { /* mutate here */ })",
+        "editor.update(() => { /* mutations here */ })",
+        "document.querySelector('.lexical-editor').innerHTML = content"
+      ],
+      "answer": "editor.update(() => { /* mutations here */ })",
+      "explanation": "Mutations must be inside editor.update(). Lexical creates a new EditorState from the mutation. Mutations outside update() will throw or be silently ignored."
+    },
+    {
+      "id": "M07-Q3",
+      "type": "mcq",
+      "question": "What are the two data representations Meridian uses for page content?",
+      "options": [
+        "HTML string and JSON",
+        "Yjs Y.Doc (live CRDT) and blocks table (persistent PostgreSQL records)",
+        "Lexical JSON and Redis cache",
+        "Markdown and HTML"
+      ],
+      "answer": "Yjs Y.Doc (live CRDT) and blocks table (persistent PostgreSQL records)",
+      "explanation": "The Y.Doc is the live collaborative editing state in memory. The blocks table is the durable, queryable record in PostgreSQL. syncPageBlocks() reconciles them."
+    },
+    {
+      "id": "M07-Q4",
+      "type": "short_answer",
+      "question": "Explain the purpose of the `block_versions` table and what triggers a new version entry.",
+      "answer_key": "block_versions stores the full content history of each block as JSONB snapshots. A new row is inserted when a block's content changes (after a debounce threshold to avoid storing every keystroke). It enables version history, undo, and content auditing.",
+      "rubric": "Full credit: explains content history purpose, JSONB snapshot, debounce pattern. Partial: explains history but not the debounce mechanism."
+    },
+    {
+      "id": "M07-Q5",
+      "type": "short_answer",
+      "question": "What role does Yjs play in the Meridian editor, and how does it relate to Lexical?",
+      "answer_key": "Yjs is a CRDT (Conflict-free Replicated Data Type) library. The Y.Doc is the shared collaborative document state. It is connected to Lexical via a Yjs binding plugin that maps Lexical nodes to Yjs types. The WebSocket provider synchronizes the Y.Doc between all connected clients in real-time.",
+      "rubric": "Full credit: explains CRDT, Y.Doc as shared state, Lexical binding, WebSocket sync. Partial: explains sync without the binding mechanism."
+    }
+  ]
+}

@@ -863,7 +863,7 @@ function renderNotesView() {
             <button class="btn" style="font-size:12px;padding:4px 10px" onclick="showLesson('${n.lessonId}','${moduleId}')">${n.lessonTitle}</button>
             <span style="font-size:12px;color:var(--muted)">${formatDate(n.savedAt)}</span>
           </div>
-          <div id="notes-view-text-${n.lessonId}" style="white-space:pre-wrap;font-size:14px;line-height:1.6">${escapeHtml(n.text)}</div>
+          <div id="notes-view-text-${n.lessonId}" class="notes-rendered">${renderMarkdownNote(n.text)}</div>
         </div>
       `).join('')}
     </div>
@@ -1162,6 +1162,7 @@ function showLesson(lessonId, moduleId) {
         <span class="lesson-note-label">Notes</span>
         <span class="lesson-note-saved" id="note-saved-indicator"></span>
       </div>
+      ${noteToolbarHTML('lesson-note-area')}
       <textarea
         id="lesson-note-area"
         class="lesson-note-area"
@@ -2837,6 +2838,105 @@ function toggleNotesDock() {
 }
 
 
+// ── NOTE FORMATTING TOOLBAR ────────────────────────────────
+
+/**
+ * Insert or toggle markdown formatting at the cursor in a textarea.
+ * Block types (h1, h2, h3, ul, ol) prefix each selected line.
+ * Inline types (bold, italic, code) wrap/unwrap the selection.
+ */
+function insertNoteFormat(type, targetId) {
+  const ta = document.getElementById(targetId);
+  if (!ta) return;
+  const start = ta.selectionStart;
+  const end   = ta.selectionEnd;
+  const val   = ta.value;
+  const sel   = val.slice(start, end);
+  let newVal, newStart, newEnd;
+
+  if (['h1','h2','h3','ul','ol'].includes(type)) {
+    const prefix = { h1: '# ', h2: '## ', h3: '### ', ul: '- ', ol: '1. ' }[type];
+    const lineStart  = val.lastIndexOf('\n', start - 1) + 1;
+    const lineEndIdx = val.indexOf('\n', end);
+    const lineEnd    = lineEndIdx === -1 ? val.length : lineEndIdx;
+    const prefixed   = val.slice(lineStart, lineEnd).split('\n').map(line =>
+      line.startsWith(prefix) ? line.slice(prefix.length) : prefix + line
+    ).join('\n');
+    newVal   = val.slice(0, lineStart) + prefixed + val.slice(lineEnd);
+    newStart = lineStart;
+    newEnd   = lineStart + prefixed.length;
+  } else {
+    const markers = { bold: '**', italic: '_', code: '`' };
+    const m = markers[type];
+    if (!m) return;
+    if (sel.startsWith(m) && sel.endsWith(m) && sel.length >= m.length * 2) {
+      newVal   = val.slice(0, start) + sel.slice(m.length, -m.length) + val.slice(end);
+      newStart = start;
+      newEnd   = end - m.length * 2;
+    } else {
+      newVal   = val.slice(0, start) + m + sel + m + val.slice(end);
+      newStart = start + m.length;
+      newEnd   = end + m.length;
+    }
+  }
+
+  ta.value = newVal;
+  ta.setSelectionRange(newStart, newEnd);
+  ta.focus();
+  ta.dispatchEvent(new Event('input', { bubbles: true }));
+}
+
+/** Returns the HTML string for a formatting toolbar targeting a given textarea id. */
+function noteToolbarHTML(targetId) {
+  return `<div class="note-toolbar" role="toolbar" aria-label="Note formatting">
+    <button class="note-tb-btn" title="Heading 1" onmousedown="event.preventDefault()" onclick="insertNoteFormat('h1','${targetId}')">H1</button>
+    <button class="note-tb-btn" title="Heading 2" onmousedown="event.preventDefault()" onclick="insertNoteFormat('h2','${targetId}')">H2</button>
+    <span class="note-tb-sep"></span>
+    <button class="note-tb-btn note-tb-b" title="Bold" onmousedown="event.preventDefault()" onclick="insertNoteFormat('bold','${targetId}')"><strong>B</strong></button>
+    <button class="note-tb-btn note-tb-i" title="Italic" onmousedown="event.preventDefault()" onclick="insertNoteFormat('italic','${targetId}')"><em>I</em></button>
+    <button class="note-tb-btn" title="Inline code" onmousedown="event.preventDefault()" onclick="insertNoteFormat('code','${targetId}')" style="font-family:monospace;letter-spacing:-1px">\`\`</button>
+    <span class="note-tb-sep"></span>
+    <button class="note-tb-btn" title="Bullet list" onmousedown="event.preventDefault()" onclick="insertNoteFormat('ul','${targetId}')">• List</button>
+    <button class="note-tb-btn" title="Numbered list" onmousedown="event.preventDefault()" onclick="insertNoteFormat('ol','${targetId}')">1. List</button>
+  </div>`;
+}
+
+/** Tiny safe markdown renderer for displaying saved notes. XSS-safe via early HTML escaping. */
+function renderMarkdownNote(text) {
+  if (!text?.trim()) return '';
+  const esc    = s => s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const inline = s => s
+    .replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/_([^_\n]+)_/g, '<em>$1</em>')
+    .replace(/`([^`\n]+)`/g, '<code>$1</code>');
+  const lines = text.split('\n');
+  const out = [];
+  let inUl = false, inOl = false;
+  const closeList = () => {
+    if (inUl) { out.push('</ul>'); inUl = false; }
+    if (inOl) { out.push('</ol>'); inOl = false; }
+  };
+  for (const raw of lines) {
+    const line = esc(raw);
+    const h3 = line.match(/^### (.+)/);
+    const h2 = line.match(/^## (.+)/);
+    const h1 = line.match(/^# (.+)/);
+    const ul = line.match(/^- (.+)/);
+    const ol = line.match(/^\d+\. (.+)/);
+    if (!ul && inUl) { out.push('</ul>'); inUl = false; }
+    if (!ol && inOl) { out.push('</ol>'); inOl = false; }
+    if (h3)        { closeList(); out.push(`<h3>${inline(h3[1])}</h3>`); }
+    else if (h2)   { closeList(); out.push(`<h2>${inline(h2[1])}</h2>`); }
+    else if (h1)   { closeList(); out.push(`<h1>${inline(h1[1])}</h1>`); }
+    else if (ul)   { if (!inUl) { out.push('<ul>'); inUl = true; } out.push(`<li>${inline(ul[1])}</li>`); }
+    else if (ol)   { if (!inOl) { out.push('<ol>'); inOl = true; } out.push(`<li>${inline(ol[1])}</li>`); }
+    else if (!line.trim()) out.push('<div class="note-blank-line"></div>');
+    else           out.push(`<p>${inline(line)}</p>`);
+  }
+  closeList();
+  return out.join('\n');
+}
+
 // ── GLOBAL BINDINGS (expose functions used in inline HTML onclick attributes) ──
 Object.assign(window, {
   loadCourse, showView, showModule, toggleModule,
@@ -2853,6 +2953,7 @@ Object.assign(window, {
   saveFeynmanText, feynmanReveal,
   startSpeedRound, renderSpeedRoundCard, rateSpeedCard, renderSpeedRoundResult,
   applyHighlight, removeHighlightClick, toggleNotesPanel, toggleNotesDock,
+  insertNoteFormat,
 });
 
 // ── KEYBOARD SHORTCUTS ───────────────────────────────────────

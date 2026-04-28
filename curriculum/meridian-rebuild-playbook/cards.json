@@ -1,0 +1,818 @@
+{
+  "course_slug": "meridian-rebuild-playbook",
+  "version": "3.0",
+  "generated": "2026-04-24",
+  "total_cards": 81,
+  "cards": [
+    {
+      "id": "MRP-001",
+      "front": "What are the three load-bearing constraints that determine Meridian's entire technology stack?",
+      "back": "1. Browser-only collaborative editor (forces Lexical + Yjs CRDT)\n2. Below-app-layer tenant isolation (forces PostgreSQL RLS)\n3. In-database vector storage (forces pgvector, eliminates external vector DBs)",
+      "lesson_id": "L01",
+      "module_id": "M01",
+      "concept": "architectural-constraints",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-002",
+      "front": "Why is Next.js incompatible with Meridian's architecture?",
+      "back": "Next.js server-side rendering conflicts with Yjs CRDT, which requires browser-only state. Collaborative editing state cannot be rendered server-side. Vite SPA is architecturally mandatory.",
+      "lesson_id": "L01",
+      "module_id": "M01",
+      "concept": "architectural-constraints",
+      "difficulty": 2,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-003",
+      "front": "What is an Architecture Decision Record (ADR) and what four sections does it contain?",
+      "back": "An ADR documents a technology choice made in a project. Sections: (1) Context — the constraint or problem, (2) Decision — what was chosen, (3) Rationale — why it eliminates alternatives, (4) Consequences — what the choice commits you to.",
+      "lesson_id": "L02",
+      "module_id": "M01",
+      "concept": "architecture-decision-records",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-004",
+      "front": "What is the correct pnpm workspace structure for Meridian?",
+      "back": "Root package.json with `workspaces: ['client', 'server', 'db']`. Each package has its own package.json. Run `pnpm install` from the root to hoist shared dependencies. TypeScript project references link packages.",
+      "lesson_id": "L03",
+      "module_id": "M02",
+      "concept": "monorepo-setup",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-005",
+      "front": "What TypeScript compiler options are non-negotiable in Meridian's tsconfig?",
+      "back": "`strict: true`, `noUncheckedIndexedAccess: true`, `exactOptionalPropertyTypes: true`. These enforce TypeScript strict mode across all packages. No `any`, no `as unknown`.",
+      "lesson_id": "L03",
+      "module_id": "M02",
+      "concept": "typescript-config",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-006",
+      "front": "In Docker Compose for Meridian, what hostname does the server container use to connect to PostgreSQL?",
+      "back": "`postgres` — the service name in docker-compose.yml, not `localhost`. The server container and postgres container are on the same Docker network, so `postgres` resolves correctly.",
+      "lesson_id": "L04",
+      "module_id": "M02",
+      "concept": "docker-compose",
+      "difficulty": 2,
+      "type": "application"
+    },
+    {
+      "id": "MRP-007",
+      "front": "What are the four services in Meridian's Docker Compose topology?",
+      "back": "1. `postgres` — PostgreSQL 16 with pgvector\n2. `redis` — Redis 7 for session storage\n3. `server` — Node.js Express API\n4. `client` — Vite dev server with proxy\n\nServer depends_on postgres and redis.",
+      "lesson_id": "L04",
+      "module_id": "M02",
+      "concept": "docker-compose",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-008",
+      "front": "What primary key type do all Meridian tables use, and what extension provides it?",
+      "back": "UUID v4 primary keys using `uuid_generate_v4()`. Provided by the `uuid-ossp` extension. Never use auto-increment integers — UUIDs prevent ID enumeration attacks and work across distributed systems.",
+      "lesson_id": "L05",
+      "module_id": "M03",
+      "concept": "schema-design",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-009",
+      "front": "What timestamp type should all Meridian tables use for created_at and updated_at, and why?",
+      "back": "`TIMESTAMPTZ` (timestamp with time zone). Stores the absolute moment in UTC. Plain `TIMESTAMP` without timezone causes ambiguity when clients are in different timezones.",
+      "lesson_id": "L05",
+      "module_id": "M03",
+      "concept": "schema-design",
+      "difficulty": 1,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-010",
+      "front": "Why does the audit_log table use `ON DELETE SET NULL` for user_id and workspace_id foreign keys?",
+      "back": "Compliance. Audit records must survive entity deletion. If a user or workspace is deleted, the audit entry is preserved with `user_id = NULL` and `workspace_id = NULL` rather than being cascade-deleted.",
+      "lesson_id": "L05",
+      "module_id": "M03",
+      "concept": "audit-logging",
+      "difficulty": 3,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-011",
+      "front": "What SQL command enables Row Level Security on a table?",
+      "back": "`ALTER TABLE table_name ENABLE ROW LEVEL SECURITY;`\n\nRLS must be enabled per table AND a policy must be created. Enabling without a policy blocks all access by non-owners.",
+      "lesson_id": "L06",
+      "module_id": "M03",
+      "concept": "row-level-security",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-012",
+      "front": "What does `AS RESTRICTIVE` mean in an RLS policy, and why is it used in Meridian?",
+      "back": "`AS RESTRICTIVE` means the policy must be satisfied even when other policies allow access — it cannot be bypassed by any other permissive policy. Meridian uses it to guarantee workspace isolation cannot be overridden.",
+      "lesson_id": "L06",
+      "module_id": "M03",
+      "concept": "row-level-security",
+      "difficulty": 3,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-013",
+      "front": "What function sets the RLS workspace context, and what is its third parameter for?",
+      "back": "`set_config('app.current_workspace_id', workspaceId, true)`\n\nThird parameter `true` = transaction-local. The setting is scoped to the current transaction and reset automatically when the transaction ends.",
+      "lesson_id": "L06",
+      "module_id": "M03",
+      "concept": "row-level-security",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-014",
+      "front": "What database role privilege bypasses all RLS policies, and who should never have it?",
+      "back": "`BYPASSRLS` privilege bypasses all RLS policies. The application database user (`meridian_app`) must NEVER have this privilege. Verify with: `SELECT rolbypassrls FROM pg_roles WHERE rolname = 'meridian_app'` — must be `f`.",
+      "lesson_id": "L06",
+      "module_id": "M03",
+      "concept": "row-level-security",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-015",
+      "front": "What pgvector column type stores embeddings, and what dimension is used for Meridian?",
+      "back": "`vector(1536)` — the dimension matches the embedding model output (OpenAI text-embedding-ada-002 and compatible models produce 1536-dimensional vectors).",
+      "lesson_id": "L07",
+      "module_id": "M03",
+      "concept": "vector-storage",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-016",
+      "front": "What index type does Meridian use for pgvector similarity search, and what operator class?",
+      "back": "HNSW index with `vector_cosine_ops` operator class.\n```sql\nCREATE INDEX ON user_memory USING hnsw (embedding vector_cosine_ops);\n```\nHNSW provides approximate nearest neighbor search with better query performance than IVFFlat.",
+      "lesson_id": "L07",
+      "module_id": "M03",
+      "concept": "vector-storage",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-017",
+      "front": "What are the three memory tiers in Meridian's user_memory table?",
+      "back": "- `session` — cleared at end of conversation, ephemeral context\n- `medium` — persists days to weeks, subject to LRU eviction\n- `deep` — permanent, requires explicit promotion signal\n\nEnforced by `CHECK (tier IN ('session', 'medium', 'deep'))`.",
+      "lesson_id": "L07",
+      "module_id": "M03",
+      "concept": "memory-tiers",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-018",
+      "front": "What bcrypt cost factor does Meridian use for password hashing, and why not lower?",
+      "back": "`12`. This is the minimum cost defined by the architecture. Lower values (e.g., the Node.js default of `10`) are computationally cheaper to brute-force. Cost 12 adds ~400ms per hash — acceptable for login, expensive for an attacker.",
+      "lesson_id": "L08",
+      "module_id": "M04",
+      "concept": "password-hashing",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-019",
+      "front": "What JWT expiry time does Meridian use for access tokens, and what claim carries the user ID?",
+      "back": "15 minutes expiry (`expiresIn: '15m'`). The `sub` claim carries the user ID as a string. Short expiry limits the window of exploitation if a token is stolen.",
+      "lesson_id": "L08",
+      "module_id": "M04",
+      "concept": "jwt-authentication",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-020",
+      "front": "Why must login handlers use a dummy bcrypt hash when the user is not found?",
+      "back": "To prevent timing attacks. If the server returns immediately on 'user not found' but takes 400ms for 'wrong password', an attacker can enumerate valid email addresses by comparing response times. A dummy hash ensures consistent response time.",
+      "lesson_id": "L08",
+      "module_id": "M04",
+      "concept": "timing-attack-prevention",
+      "difficulty": 3,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-021",
+      "front": "How are refresh tokens stored in Redis, and why are they hashed?",
+      "back": "Key: `rt:{userId}`, value: SHA-256 hash of the token. Raw tokens are not stored. If Redis is compromised, the attacker gets hashes — not usable tokens. The client stores the raw token; the server only ever has the hash.",
+      "lesson_id": "L09",
+      "module_id": "M04",
+      "concept": "refresh-token-security",
+      "difficulty": 3,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-022",
+      "front": "What does refresh token reuse detection protect against, and how is it implemented?",
+      "back": "Protects against stolen refresh tokens. When a refresh request arrives and the Redis key is already gone (deleted by a previous rotation), it means the token was already used — either by the legitimate user or an attacker. The server revokes all tokens for the user.",
+      "lesson_id": "L09",
+      "module_id": "M04",
+      "concept": "refresh-token-security",
+      "difficulty": 4,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-023",
+      "front": "What is the correct Meridian middleware pipeline order?",
+      "back": "Helmet → CORS → rateLimit → JSON body parser → auth → workspace → Zod → handler → errorHandler\n\nOrder matters: security headers before any parsing, auth before workspace, validation before handler logic.",
+      "lesson_id": "L10",
+      "module_id": "M05",
+      "concept": "middleware-pipeline",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-024",
+      "front": "How does Express know which middleware handles 4xx validation errors vs 5xx server errors?",
+      "back": "Both use the four-parameter error handler `(err, req, res, next)`. Inside, check the error type: ZodError → 400, AuthenticationError → 401, AuthorizationError → 403, all others → 500. One handler, type-based branching.",
+      "lesson_id": "L10",
+      "module_id": "M05",
+      "concept": "error-handling",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-025",
+      "front": "What does Zod's `safeParse` return, and why use it instead of `parse`?",
+      "back": "`safeParse` returns `{ success: true, data }` or `{ success: false, error }`. It never throws. `parse` throws a `ZodError` on failure. In Express handlers, `safeParse` + early return is cleaner than wrapping every validation in try/catch.",
+      "lesson_id": "L11",
+      "module_id": "M05",
+      "concept": "zod-validation",
+      "difficulty": 2,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-026",
+      "front": "Where in a route handler must Zod validation occur?",
+      "back": "As the first action — before any DB queries, before any business logic. Validate, then act on `parsed.data` only. Any DB call using `req.body` directly (before validation) is a gap.",
+      "lesson_id": "L11",
+      "module_id": "M05",
+      "concept": "zod-validation",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-027",
+      "front": "What are the four steps of the `requireWorkspace` tenant middleware?",
+      "back": "1. Get `workspaceId` from `req.params` (not `req.body`)\n2. Verify user is a member of the workspace\n3. Call `SET LOCAL app.current_workspace_id = workspaceId`\n4. Attach `req.workspace = { id, role }` for use in handlers",
+      "lesson_id": "L12",
+      "module_id": "M05",
+      "concept": "tenant-middleware",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-028",
+      "front": "Why must `workspace_id` come from `req.params` (or verified middleware), never from `req.body`?",
+      "back": "A client can send any `workspace_id` in `req.body`. Trusting it would allow a user to scope their request to any workspace. `req.params` is controlled by the route pattern; `req.workspace.id` from middleware is verified against the user's memberships.",
+      "lesson_id": "L12",
+      "module_id": "M05",
+      "concept": "tenant-isolation",
+      "difficulty": 3,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-029",
+      "front": "What does Vite's `server.proxy` configuration do in Meridian's dev setup?",
+      "back": "Proxies API requests from the Vite dev server to the Express server, avoiding CORS issues during development. `/api/*` → `http://server:3000` (Docker network) or `http://localhost:3001` (local). The browser only talks to Vite; Vite forwards to Express.",
+      "lesson_id": "L13",
+      "module_id": "M06",
+      "concept": "vite-proxy",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-030",
+      "front": "What React 18 rule applies to all state updates, and why does it matter for Lexical?",
+      "back": "State updates must be immutable — never mutate objects in place. For Lexical: `EditorState` is immutable. Every change produces a new `EditorState`. Access state via `editor.getEditorState().read(() => {...})` — never mutate the existing state.",
+      "lesson_id": "L13",
+      "module_id": "M06",
+      "concept": "react-immutability",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-031",
+      "front": "What three states must a `RequireAuth` component handle?",
+      "back": "1. `isLoading === true` → render null or spinner (don't redirect while checking)\n2. `user !== null` → render `<Outlet />` (authenticated)\n3. `user === null` → `<Navigate to='/login' replace />` (not authenticated)",
+      "lesson_id": "L13",
+      "module_id": "M06",
+      "concept": "auth-routing",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-032",
+      "front": "What Zustand pattern prevents stale closures when reading store state outside React components?",
+      "back": "`useAuthStore.getState()` — direct store access that always returns the current state. Contrast with `useAuthStore()` (hook) which is only valid inside React components and subject to closure staleness.",
+      "lesson_id": "L14",
+      "module_id": "M06",
+      "concept": "zustand-state",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-033",
+      "front": "Why should a Zustand auth store include an `isLoading` field?",
+      "back": "On page load, the client needs to check for a valid session (call `/api/auth/me`). During this async check, the auth state is unknown. Without `isLoading`, the UI flashes the login screen before the session check completes. `isLoading: true` during the check prevents premature redirects.",
+      "lesson_id": "L14",
+      "module_id": "M06",
+      "concept": "zustand-state",
+      "difficulty": 3,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-034",
+      "front": "What are the three route tiers in Meridian's React Router structure?",
+      "back": "1. Public routes — `/login`, `/register` (no auth required)\n2. Auth guard — `RequireAuth` wrapper for all authenticated routes\n3. Workspace routes — `/workspace/:id/*` with `WorkspaceShell` and `requireWorkspace` middleware on the server",
+      "lesson_id": "L15",
+      "module_id": "M06",
+      "concept": "react-router",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-035",
+      "front": "What is Lexical's EditorState, and how do you read it without mutations?",
+      "back": "`EditorState` is an immutable snapshot of all editor content. Read it with: `editor.getEditorState().read(() => { const root = $getRoot(); ... })`. The `read()` callback provides a read-only context — mutations inside it will throw.",
+      "lesson_id": "L16",
+      "module_id": "M07",
+      "concept": "lexical-editor",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-036",
+      "front": "How do you make a change to Lexical editor content programmatically?",
+      "back": "`editor.update(() => { /* mutations here */ })` — mutations must be inside an `update()` callback. Lexical creates a new `EditorState` from the mutation. Never mutate nodes outside an `update()` call.",
+      "lesson_id": "L16",
+      "module_id": "M07",
+      "concept": "lexical-editor",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-037",
+      "front": "What two data representations does Meridian use for page content?",
+      "back": "1. **Yjs Y.Doc** — CRDT for real-time collaborative editing state in memory\n2. **`blocks` table** — persistent, queryable block model in PostgreSQL\n\nThe Yjs doc is the live state; blocks are the durable record. `syncPageBlocks()` reconciles them.",
+      "lesson_id": "L17",
+      "module_id": "M07",
+      "concept": "block-model",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-038",
+      "front": "What is the `LLMProvider` interface, and why use an abstraction instead of calling Anthropic directly?",
+      "back": "An interface that all AI providers implement: `{ complete(req): Promise<string>, stream(req): AsyncIterable<string> }`. Using an abstraction allows switching providers (Anthropic → OpenAI → Ollama) without changing route handlers. The `LLMRouter` selects the provider at runtime.",
+      "lesson_id": "L18",
+      "module_id": "M08",
+      "concept": "llm-abstraction",
+      "difficulty": 3,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-039",
+      "front": "What must happen to the `audit_log` table BEFORE calling any LLM provider method?",
+      "back": "`logAuditEvent()` must be called before `provider.complete()` or `provider.stream()`. If the provider call fails, the audit entry still exists. Logging after the call means failures leave no trace.",
+      "lesson_id": "L18",
+      "module_id": "M08",
+      "concept": "audit-logging",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-040",
+      "front": "What HTTP mechanism does Meridian use for AI streaming responses, and how does the server signal the start/end?",
+      "back": "Server-Sent Events (SSE). Server sets `Content-Type: text/event-stream`, `X-Accel-Buffering: no`, and `Cache-Control: no-cache`. Each chunk: `data: {text}\\n\\n`. End: `data: [DONE]\\n\\n`. Connection closes after `[DONE]`.",
+      "lesson_id": "L19",
+      "module_id": "M08",
+      "concept": "sse-streaming",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-041",
+      "front": "What two fields must ALWAYS appear in the WHERE clause of a pgvector similarity search in Meridian?",
+      "back": "`user_id = $1 AND workspace_id = $2` — both must be present. Omitting either creates a privacy gap: user memories from another user (missing `user_id`) or another workspace (missing `workspace_id`) could be returned.",
+      "lesson_id": "L20",
+      "module_id": "M08",
+      "concept": "vector-search",
+      "difficulty": 4,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-042",
+      "front": "What distance threshold does Meridian use to filter pgvector results, and what does it represent?",
+      "back": "`distance < 0.3` (cosine distance). Values closer to 0 are more similar. Threshold 0.3 means only memories with ≥70% semantic similarity to the query are included. Higher threshold = more results but lower relevance.",
+      "lesson_id": "L20",
+      "module_id": "M08",
+      "concept": "vector-search",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-043",
+      "front": "What SQL operator performs cosine distance comparison in pgvector?",
+      "back": "`<=>` — cosine distance operator. Example: `ORDER BY embedding <=> $query_vector LIMIT 10`. Lower values = more similar. Also available: `<->` (L2/Euclidean), `<#>` (inner product).",
+      "lesson_id": "L20",
+      "module_id": "M08",
+      "concept": "vector-search",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-044",
+      "front": "How are session memories cleared in Meridian?",
+      "back": "Explicit deletion at session end: `db.delete(user_memory).where(and(eq(user_memory.user_id, userId), eq(user_memory.workspace_id, workspaceId), eq(user_memory.tier, 'session')))`. Session memories are not TTL-expired — they are explicitly cleared.",
+      "lesson_id": "L21",
+      "module_id": "M08",
+      "concept": "memory-tiers",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-045",
+      "front": "What triggers medium memory eviction, and what column determines staleness?",
+      "back": "`last_accessed_at` — if not accessed for 30 days, the medium memory is evicted. Every read of a memory updates `last_accessed_at`. This is LRU eviction at the tier level.",
+      "lesson_id": "L21",
+      "module_id": "M08",
+      "concept": "memory-tiers",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-046",
+      "front": "In what order should memory tiers be retrieved for AI context assembly?",
+      "back": "Session memories first (most current context), then deep memories (permanent facts), then medium memories (recent context). Session context overrides long-term context when relevant.",
+      "lesson_id": "L21",
+      "module_id": "M08",
+      "concept": "memory-tiers",
+      "difficulty": 2,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-047",
+      "front": "What SQL query verifies RLS is enabled on all workspace-scoped tables?",
+      "back": "`SELECT tablename, rowsecurity FROM pg_tables WHERE schemaname = 'public' ORDER BY tablename;`\n\nExpect `rowsecurity = true` for: audit_log, block_versions, blocks, memory_graph, pages, user_memory, workspace_members.",
+      "lesson_id": "L22",
+      "module_id": "M09",
+      "concept": "rls-verification",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-048",
+      "front": "What is the adversarial RLS test, and why must it be in the automated test suite?",
+      "back": "Set context to workspace B, then query workspace A's data — expect 0 rows. If rows are returned, RLS is either disabled or misconfigured. Must be automated because RLS verification cannot be done by reading code alone; it requires runtime database behavior.",
+      "lesson_id": "L22",
+      "module_id": "M09",
+      "concept": "rls-verification",
+      "difficulty": 4,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-049",
+      "front": "What two PostgreSQL role attributes must the Meridian app user NEVER have?",
+      "back": "`rolsuper = f` (not superuser) and `rolbypassrls = f` (cannot bypass RLS). Verify: `SELECT rolsuper, rolbypassrls FROM pg_roles WHERE rolname = 'meridian_app';` — both must be `f`.",
+      "lesson_id": "L22",
+      "module_id": "M09",
+      "concept": "db-access-control",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-050",
+      "front": "Why should database migrations be run by a different role than the application role?",
+      "back": "The app role has SELECT/INSERT/UPDATE/DELETE only — no CREATE TABLE or schema modification. Migrations require DDL permissions. Mixing DDL and DML in one role violates least privilege. Use a separate migration role (or postgres superuser) for schema changes.",
+      "lesson_id": "L22",
+      "module_id": "M09",
+      "concept": "db-access-control",
+      "difficulty": 3,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-051",
+      "front": "What `ON DELETE` behavior does audit_log use for user_id and workspace_id, and why?",
+      "back": "`ON DELETE SET NULL`. Audit records persist when users or workspaces are deleted. The foreign key becomes null, preserving the historical record. `ON DELETE CASCADE` would destroy the audit trail — never use cascade on audit tables.",
+      "lesson_id": "L23",
+      "module_id": "M09",
+      "concept": "audit-logging",
+      "difficulty": 3,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-052",
+      "front": "What should NOT be stored in the audit_log payload field?",
+      "back": "Message content, user-provided text, embedding vectors, system prompt content. The payload is JSONB and queryable — it must never contain PII. Log metadata only: model name, message count, memory tier, result count.",
+      "lesson_id": "L23",
+      "module_id": "M09",
+      "concept": "audit-logging",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-053",
+      "front": "What are the six AI action types that must be logged to audit_log?",
+      "back": "1. `ai.complete` — non-streaming completion\n2. `ai.stream` — streaming response\n3. `ai.memory.write` — memory stored\n4. `ai.memory.retrieve` — RAG retrieval\n5. `ai.memory.promote` — tier promotion\n6. `ai.memory.evict` — memory eviction",
+      "lesson_id": "L23",
+      "module_id": "M09",
+      "concept": "audit-logging",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-054",
+      "front": "What is prompt injection, and why can't it be fully prevented?",
+      "back": "Prompt injection is when user input overrides system instructions by being included in the LLM's instruction context. It cannot be fully prevented because LLMs process all text in context as potential instructions. Defense is structural isolation and impact reduction, not elimination.",
+      "lesson_id": "L24",
+      "module_id": "M09",
+      "concept": "prompt-injection",
+      "difficulty": 3,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-055",
+      "front": "Where must user input go in the LLM API call, and where must it NEVER go?",
+      "back": "User input MUST go in `messages[].content` — the structured messages array. It must NEVER be concatenated into the `systemPrompt` string. The API structurally separates these two inputs, limiting injection scope.",
+      "lesson_id": "L24",
+      "module_id": "M09",
+      "concept": "prompt-injection",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-056",
+      "front": "What two techniques protect against memory injection into the system prompt?",
+      "back": "1. **Sanitization** — strip phrases like 'ignore previous instructions', 'you are now', 'act as' from memory values before injection\n2. **XML framing** — wrap memory in `<user_context>` tags to signal 'this is data, not instructions'",
+      "lesson_id": "L24",
+      "module_id": "M09",
+      "concept": "prompt-injection",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-057",
+      "front": "What is Q1 of the Five-Question Efficacy Framework?",
+      "back": "Does every workspace-scoped DB query include `workspace_id` in the WHERE clause?\n\nFail pattern: `.where(eq(table.id, id))` without `eq(table.workspace_id, workspaceId)`. Even with RLS active, explicit scoping is mandatory.",
+      "lesson_id": "L25",
+      "module_id": "M10",
+      "concept": "efficacy-framework",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-058",
+      "front": "What is Q2 of the Five-Question Efficacy Framework?",
+      "back": "Is every POST/PUT/PATCH route protected by a Zod schema before any handler logic?\n\nFail pattern: Any DB call or business logic appearing before `safeParse` in a route handler.",
+      "lesson_id": "L25",
+      "module_id": "M10",
+      "concept": "efficacy-framework",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-059",
+      "front": "What is Q3 of the Five-Question Efficacy Framework?",
+      "back": "Is every AI action logged to `audit_log` BEFORE execution?\n\nFail pattern: `provider.complete(...)` or `provider.stream(...)` called before `logAuditEvent()`.",
+      "lesson_id": "L25",
+      "module_id": "M10",
+      "concept": "efficacy-framework",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-060",
+      "front": "What is Q4 of the Five-Question Efficacy Framework?",
+      "back": "Is bcrypt cost factor set to exactly 12?\n\nFail pattern: `bcrypt.hash(password, 10)` or `bcrypt.hash(password, ROUNDS)` where ROUNDS is not verified to be 12.",
+      "lesson_id": "L25",
+      "module_id": "M10",
+      "concept": "efficacy-framework",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-061",
+      "front": "What is Q5 of the Five-Question Efficacy Framework?",
+      "back": "Are refresh tokens rotated on every use with reuse detection?\n\nFail pattern: Refresh handler that reissues tokens without checking if the Redis key is already gone (reuse signal).",
+      "lesson_id": "L25",
+      "module_id": "M10",
+      "concept": "efficacy-framework",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-062",
+      "front": "What is the most dangerous gap in Meridian implementations and why?",
+      "back": "Missing `workspace_id` in DB queries — it silently allows cross-tenant data access. RLS may catch it as a safety net, but if the workspace context is not set (e.g., middleware skipped), the query returns data from any tenant.",
+      "lesson_id": "L26",
+      "module_id": "M10",
+      "concept": "implementation-gaps",
+      "difficulty": 3,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-063",
+      "front": "Why does `SET` instead of `SET LOCAL` in tenant middleware cause a critical bug?",
+      "back": "`SET` is session-level — persists for the lifetime of the connection in a pool. When the next request reuses the pooled connection, it inherits the previous request's `workspace_id`. `SET LOCAL` is transaction-scoped and resets automatically.",
+      "lesson_id": "L26",
+      "module_id": "M10",
+      "concept": "tenant-isolation",
+      "difficulty": 4,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-064",
+      "front": "What gap occurs when audit log is placed after the AI provider call?",
+      "back": "If the provider throws an error, the `await logAuditEvent()` line is never reached. The AI call occurs with no audit trace. Compliance requirement: every AI action must have a trace, including failed ones.",
+      "lesson_id": "L26",
+      "module_id": "M10",
+      "concept": "audit-logging",
+      "difficulty": 3,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-065",
+      "front": "What is a P0 gap in Meridian, and give two examples?",
+      "back": "P0 = fix immediately, before next commit. Examples:\n1. Missing `workspace_id` in a DB query (cross-tenant data leakage)\n2. `SET` not `SET LOCAL` in tenant middleware (workspace context bleeding between requests)",
+      "lesson_id": "L27",
+      "module_id": "M10",
+      "concept": "gap-prioritization",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-066",
+      "front": "What is a P1 gap in Meridian, and give two examples?",
+      "back": "P1 = fix before any user data enters the system. Examples:\n1. Missing `logAuditEvent` before AI provider call\n2. bcrypt cost factor < 12",
+      "lesson_id": "L27",
+      "module_id": "M10",
+      "concept": "gap-prioritization",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-067",
+      "front": "What is a P2 gap in Meridian, and give two examples?",
+      "back": "P2 = fix before external/public traffic. Examples:\n1. Missing Zod validation on a route (handler uses `req.body` directly)\n2. User input concatenated into the AI system prompt",
+      "lesson_id": "L27",
+      "module_id": "M10",
+      "concept": "gap-prioritization",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-068",
+      "front": "How should each gap fix be committed in version control?",
+      "back": "One gap per commit. Commit message format: `[security] Short description` with body explaining the gap reference (GAP-001), file, and rule violated. Small, focused commits are reversible and reviewable.",
+      "lesson_id": "L27",
+      "module_id": "M10",
+      "concept": "remediation-process",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-069",
+      "front": "What does a complete Meridian gap report entry contain?",
+      "back": "Gap ID, Five-Question number (Q1–Q5), file path, line number, description of the violation, risk if unresolved, and the specific code fix.",
+      "lesson_id": "L27",
+      "module_id": "M10",
+      "concept": "gap-report",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-070",
+      "front": "What six conditions define 'production-ready' for a Meridian implementation?",
+      "back": "1. All five framework questions: zero violations\n2. `audit_log` has entries for every AI action in test suite\n3. Adversarial RLS test passes\n4. All bcrypt hashes use cost 12\n5. Refresh token handler has reuse detection branch\n6. No user-provided text in any system prompt string",
+      "lesson_id": "L27",
+      "module_id": "M10",
+      "concept": "production-readiness",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-071",
+      "front": "What is tenant isolation and what two mechanisms enforce it in Meridian?",
+      "back": "Tenant isolation ensures one workspace cannot access another workspace's data. Enforced by: (1) PostgreSQL RLS with `SET LOCAL app.current_workspace_id` — database-level enforcement, and (2) explicit `workspace_id` in every WHERE clause — application-level enforcement. Defense-in-depth: both required.",
+      "lesson_id": "L06",
+      "module_id": "M03",
+      "concept": "tenant-isolation",
+      "difficulty": 3,
+      "type": "synthesis"
+    },
+    {
+      "id": "MRP-072",
+      "front": "Why does Meridian use Redis for refresh token storage rather than PostgreSQL?",
+      "back": "Redis TTL natively handles token expiry without cron jobs. Redis key deletion is O(1) — constant time. Refresh token operations are high-frequency and latency-sensitive. PostgreSQL is for durable relational data; Redis is for ephemeral session state.",
+      "lesson_id": "L09",
+      "module_id": "M04",
+      "concept": "refresh-token-security",
+      "difficulty": 3,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-073",
+      "front": "What is the difference between SSE and WebSocket, and when does Meridian use each?",
+      "back": "SSE = server-to-client only, unidirectional, HTTP, simple reconnect logic. WebSocket = bidirectional, persistent connection, custom protocol.\n\nMeridian uses SSE for AI streaming (server pushes text to client) and WebSocket (via ws library) for Yjs collaborative editing (bidirectional document sync).",
+      "lesson_id": "L19",
+      "module_id": "M08",
+      "concept": "sse-streaming",
+      "difficulty": 3,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-074",
+      "front": "What does `X-Accel-Buffering: no` do in SSE responses?",
+      "back": "Disables Nginx's response buffering for this connection. Without it, Nginx (if used as a proxy) buffers the entire SSE stream before sending to the client — defeating the streaming behavior. The header tells the proxy to pass bytes through immediately.",
+      "lesson_id": "L19",
+      "module_id": "M08",
+      "concept": "sse-streaming",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-075",
+      "front": "What is the Drizzle ORM `sql` tagged template, and when must you use it?",
+      "back": "`sql\\`...\\`` — creates a parameterized SQL expression that Drizzle executes safely. Must use it when writing raw SQL (e.g., `SET LOCAL`, `set_config()`). Drizzle cannot express PostgreSQL-specific operations like `SET LOCAL` through its query builder API.",
+      "lesson_id": "L12",
+      "module_id": "M05",
+      "concept": "drizzle-orm",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-076",
+      "front": "What Yjs data structure is used for a collaborative text document in Meridian?",
+      "back": "`Y.Doc` with `Y.Text` or `Y.XmlFragment` for text content. The Yjs provider (WebSocket) synchronizes the Y.Doc between clients. Lexical is connected to Yjs via a binding plugin that maps Lexical nodes to Yjs types.",
+      "lesson_id": "L17",
+      "module_id": "M07",
+      "concept": "yjs-crdt",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-077",
+      "front": "Why must secrets like JWT_SECRET and DATABASE_URL use environment variables, never hardcoded values?",
+      "back": "Hardcoded secrets are committed to version control, where they persist forever even after deletion. Environment variables keep secrets out of source code, allow per-environment values, and enable secret rotation without code changes. Meridian rule: always `process.env.X` or `import.meta.env.VITE_X`.",
+      "lesson_id": "L04",
+      "module_id": "M02",
+      "concept": "secrets-management",
+      "difficulty": 1,
+      "type": "reasoning"
+    },
+    {
+      "id": "MRP-078",
+      "front": "What Zod method validates URL path parameters (e.g., `:workspaceId`), and why are they validated separately from the body?",
+      "back": "`z.string().uuid()` applied to `req.params.workspaceId`. Path params are strings — they come from the URL, not JSON body. Even trusted-looking params can be malformed or malicious. Validate params with Zod before using them in DB queries.",
+      "lesson_id": "L11",
+      "module_id": "M05",
+      "concept": "zod-validation",
+      "difficulty": 3,
+      "type": "application"
+    },
+    {
+      "id": "MRP-079",
+      "front": "What does the `memory_graph` table store, and what does the `weight` column represent?",
+      "back": "`memory_graph` stores directed connections between memories: `from_memory_id → to_memory_id`. The `weight` (FLOAT, 0.0–1.0) represents relationship strength. Higher weight = stronger semantic association. Used for multi-hop memory retrieval: retrieve a memory, then follow edges with weight > 0.6 to include related memories.",
+      "lesson_id": "L07",
+      "module_id": "M03",
+      "concept": "memory-graph",
+      "difficulty": 3,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-080",
+      "front": "What is the `block_versions` table for, and what triggers a new version entry?",
+      "back": "`block_versions` stores the full content history of each block. A new row is inserted whenever a block's content changes (after debounce/threshold). Columns: `block_id`, `content` (JSONB snapshot), `created_at`. Used for version history and undo features.",
+      "lesson_id": "L17",
+      "module_id": "M07",
+      "concept": "block-model",
+      "difficulty": 2,
+      "type": "recall"
+    },
+    {
+      "id": "MRP-081",
+      "front": "What is the `writeMemory` UPSERT pattern, and why use UPSERT instead of INSERT?",
+      "back": "`INSERT INTO user_memory ... ON CONFLICT (user_id, workspace_id, memory_key) DO UPDATE SET memory_value = EXCLUDED.memory_value, embedding = EXCLUDED.embedding, last_accessed_at = NOW()`. UPSERT prevents duplicate memory keys for the same user/workspace — calling `writeMemory` with the same key updates the existing record rather than creating duplicates.",
+      "lesson_id": "L20",
+      "module_id": "M08",
+      "concept": "memory-writes",
+      "difficulty": 3,
+      "type": "recall"
+    }
+  ]
+}

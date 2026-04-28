@@ -1,0 +1,33 @@
+{
+  "modcheck_id": "modcheck-M08",
+  "module_id": "M08",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M08 Mastery Check — AI Layer Integration",
+  "version": "3.0",
+  "mastery_threshold": 0.80,
+  "tasks": [
+    {
+      "id": "MC08-T1",
+      "type": "produce",
+      "title": "Write the LLMProvider Interface",
+      "prompt": "Write the TypeScript LLMProvider interface and AnthropicProvider implementation skeleton. The interface must have complete and stream methods with correct TypeScript types. The AnthropicProvider must call logAuditEvent before making any API call.",
+      "success_criteria": [
+        "Interface has complete(req: LLMRequest): Promise<string>",
+        "Interface has stream(req: LLMRequest): AsyncIterable<string>",
+        "AnthropicProvider implements both methods",
+        "logAuditEvent called before Anthropic API call in both methods"
+      ]
+    },
+    {
+      "id": "MC08-T2",
+      "type": "debug",
+      "title": "Fix the Memory Retrieval Query",
+      "prompt": "This memory retrieval function has two architecture violations. Identify and fix both:\n\n```typescript\nasync function getMemories(userId: string, query: string) {\n  const embedding = await generateEmbedding(query)\n  return db.execute(sql`\n    SELECT memory_key, memory_value\n    FROM user_memory\n    WHERE user_id = ${userId}\n    ORDER BY embedding <=> ${JSON.stringify(embedding)}::vector\n    LIMIT 10\n  `)\n}\n```",
+      "success_criteria": [
+        "Missing workspace_id in WHERE clause — must add AND workspace_id = {workspaceId}",
+        "Missing distance threshold — should add AND embedding <=> ... < 0.3 or filter results",
+        "Function signature must accept workspaceId parameter"
+      ]
+    }
+  ]
+}

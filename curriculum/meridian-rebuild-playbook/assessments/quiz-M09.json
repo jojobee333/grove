@@ -1,0 +1,75 @@
+{
+  "quiz_id": "quiz-M09",
+  "module_id": "M09",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M09 Quiz — Security Hardening",
+  "version": "3.0",
+  "questions": [
+    {
+      "id": "M09-Q1",
+      "type": "mcq",
+      "question": "What SQL query verifies which tables have RLS enabled?",
+      "options": [
+        "SELECT * FROM pg_rls_policies;",
+        "SELECT tablename, rowsecurity FROM pg_tables WHERE schemaname = 'public';",
+        "SHOW rls_enabled;",
+        "SELECT * FROM information_schema.rls;"
+      ],
+      "answer": "SELECT tablename, rowsecurity FROM pg_tables WHERE schemaname = 'public';",
+      "explanation": "pg_tables contains a rowsecurity boolean for each table. Workspace-scoped tables must have rowsecurity = true."
+    },
+    {
+      "id": "M09-Q2",
+      "type": "mcq",
+      "question": "Where must user-provided text go in an LLM API call to prevent prompt injection?",
+      "options": [
+        "Concatenated into the system prompt string",
+        "In the messages[].content array only",
+        "In a custom X-User-Input header",
+        "In the model parameter"
+      ],
+      "answer": "In the messages[].content array only",
+      "explanation": "The LLM API structurally separates system (instructions) from messages (user content). User input in the system parameter gives users control over the instructions. User input must only go in messages[]."
+    },
+    {
+      "id": "M09-Q3",
+      "type": "mcq",
+      "question": "When must `logAuditEvent` be called relative to the AI provider call?",
+      "options": [
+        "After the AI call completes successfully",
+        "After the AI call in a finally block",
+        "Before the AI provider call",
+        "Asynchronously, without awaiting"
+      ],
+      "answer": "Before the AI provider call",
+      "explanation": "If the provider call fails, the audit log must still have a record. Logging after means failures leave no trace. Log before, always."
+    },
+    {
+      "id": "M09-Q4",
+      "type": "mcq",
+      "question": "What is the adversarial RLS test?",
+      "options": [
+        "Attempting SQL injection against the login endpoint",
+        "Setting workspace context to B, then querying workspace A's data and expecting 0 rows",
+        "Verifying that superusers cannot log in",
+        "Testing that the app user cannot create tables"
+      ],
+      "answer": "Setting workspace context to B, then querying workspace A's data and expecting 0 rows",
+      "explanation": "This test proves RLS is actually enforced at runtime. Setting context to workspace B and querying workspace A's data should return zero rows. If rows are returned, RLS is disabled or misconfigured."
+    },
+    {
+      "id": "M09-Q5",
+      "type": "short_answer",
+      "question": "Name two techniques for protecting against prompt injection via memory values injected into the system prompt.",
+      "answer_key": "1. Sanitization: strip phrases like 'ignore previous instructions', 'you are now', 'act as' from memory values before injection. 2. XML framing: wrap injected memory in <user_context> tags to signal to the model that the content is data, not instructions. 3. Hard length limits on injected memory values (e.g., 500 chars) to limit injection payload size.",
+      "rubric": "2 points: any two of the three techniques correctly described. 1 point: one technique described."
+    },
+    {
+      "id": "M09-Q6",
+      "type": "short_answer",
+      "question": "What six AI action types must be logged to audit_log?",
+      "answer_key": "ai.complete, ai.stream, ai.memory.write, ai.memory.retrieve, ai.memory.promote, ai.memory.evict",
+      "rubric": "1 point for each correct action type. 6 points total. Accept minor variations in naming as long as intent is clear."
+    }
+  ]
+}

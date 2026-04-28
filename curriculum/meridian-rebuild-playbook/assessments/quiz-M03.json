@@ -1,0 +1,65 @@
+{
+  "quiz_id": "quiz-M03",
+  "module_id": "M03",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M03 Quiz — Database Architecture",
+  "version": "3.0",
+  "questions": [
+    {
+      "id": "M03-Q1",
+      "type": "mcq",
+      "question": "What does `AS RESTRICTIVE` mean in a PostgreSQL RLS policy?",
+      "options": [
+        "The policy only applies to SELECT queries",
+        "The policy must be satisfied even when other permissive policies allow access",
+        "The policy applies to all roles including superusers",
+        "The policy uses row-level encryption"
+      ],
+      "answer": "The policy must be satisfied even when other permissive policies allow access",
+      "explanation": "RESTRICTIVE policies form an AND condition with all other policies. No permissive policy can override a restrictive policy. This guarantees workspace isolation cannot be bypassed."
+    },
+    {
+      "id": "M03-Q2",
+      "type": "mcq",
+      "question": "What is the third parameter of `set_config('app.current_workspace_id', id, true)` for?",
+      "options": [
+        "Enables encryption of the setting value",
+        "Makes the setting visible to all database users",
+        "Scopes the setting to the current transaction only",
+        "Sets the setting globally for all sessions"
+      ],
+      "answer": "Scopes the setting to the current transaction only",
+      "explanation": "The third parameter `true` means `is_local = true`. The setting is transaction-scoped and automatically reset when the transaction ends. This prevents workspace context from leaking between requests in a connection pool."
+    },
+    {
+      "id": "M03-Q3",
+      "type": "mcq",
+      "question": "What pgvector index type does Meridian use for similarity search?",
+      "options": ["IVFFlat", "B-tree", "HNSW", "GIN"],
+      "answer": "HNSW",
+      "explanation": "HNSW (Hierarchical Navigable Small World) provides approximate nearest neighbor search with better query performance than IVFFlat. Created with: CREATE INDEX ON user_memory USING hnsw (embedding vector_cosine_ops);"
+    },
+    {
+      "id": "M03-Q4",
+      "type": "mcq",
+      "question": "What `ON DELETE` behavior must the `audit_log` table use for `user_id` and `workspace_id` FKs?",
+      "options": ["CASCADE", "RESTRICT", "NO ACTION", "SET NULL"],
+      "answer": "SET NULL",
+      "explanation": "ON DELETE SET NULL preserves audit records when users or workspaces are deleted. Cascade would destroy the audit trail, which violates compliance requirements."
+    },
+    {
+      "id": "M03-Q5",
+      "type": "short_answer",
+      "question": "Explain why the application DB user must have `rolbypassrls = false`. What would happen if it were true?",
+      "answer_key": "If rolbypassrls = true, all RLS policies are silently ignored for that role. Every query would return all rows regardless of workspace_id, completely defeating tenant isolation. The app user must have rolbypassrls = false so that RLS policies are enforced on every query.",
+      "rubric": "Full credit: explains what BYPASSRLS does AND the tenant isolation consequence. Partial: states it bypasses RLS without explaining the consequence."
+    },
+    {
+      "id": "M03-Q6",
+      "type": "short_answer",
+      "question": "What are the three memory tiers in Meridian, and what is different about each tier's lifecycle?",
+      "answer_key": "Session: cleared explicitly at end of conversation. Medium: evicted after 30 days of inactivity (last_accessed_at), LRU eviction. Deep: permanent, requires explicit promotion signal, never auto-evicted.",
+      "rubric": "1 point per tier with correct lifecycle description. 3 points total."
+    }
+  ]
+}

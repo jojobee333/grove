@@ -1,0 +1,595 @@
+{
+  "topic": "Meridian Rebuild Playbook",
+  "slug": "meridian-rebuild-playbook",
+  "strata_source": "vault/research/meridian-rebuild-playbook/",
+  "generated": "2026-04-24",
+  "learner": {
+    "goal": "apply_practically",
+    "background": "intermediate",
+    "session_time_min": "flexible"
+  },
+  "summary": "A phase-by-phase guide to rebuilding Meridian from scratch. Each module is a build phase. You will understand every architectural decision, apply the correct pattern, and evaluate your implementation against the ideal spec.",
+  "modules": [
+    {
+      "id": "M00",
+      "title": "Course Orientation",
+      "strata_theme": "Pre-course reference",
+      "description": "The complete Meridian file tree, per-module install and wiring guide, module dependency graph, and environment variable reference. Read this first and return to it at the start of every module.",
+      "objectives": [
+        "Identify where every file in Meridian lives before writing any code",
+        "Know which packages to install and in which order for each module",
+        "Understand which modules depend on which — and why skipping one will break the next"
+      ],
+      "lessons": [
+        {
+          "id": "L00",
+          "title": "Scaffolding Map: Full File Tree and Wiring Guide",
+          "strata_claim": "C0",
+          "type": "reference",
+          "estimated_minutes": 20,
+          "description": "The complete Meridian file tree, per-module dependency installation, wiring steps between modules, and environment variable reference. Use as a persistent reference throughout the course.",
+          "prerequisites": [],
+          "teaches_concepts": ["monorepo-structure", "service-topology", "vite-spa"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.80,
+          "difficulty": 1,
+          "unlock_rule": "none",
+          "review_after_days": [1, 7, 30]
+        }
+      ],
+      "has_assessment": false
+    },
+    {
+      "id": "M01",
+      "title": "System Design Before Code",
+      "strata_theme": "Theme 1 — Constraints determine architecture",
+      "description": "How to read requirements as architectural constraints, why each Meridian technology choice is forced by those constraints, and how to produce architecture decision records before writing a line of code.",
+      "objectives": [
+        "Identify the three load-bearing constraints that determine Meridian's entire technology stack",
+        "Explain why Vite SPA is architecturally mandatory and Next.js is incompatible",
+        "Produce an Architecture Decision Record (ADR) for at least one Meridian technology choice"
+      ],
+      "lessons": [
+        {
+          "id": "L01",
+          "title": "Reading Requirements as Architectural Constraints",
+          "strata_claim": "C1",
+          "type": "core",
+          "estimated_minutes": 20,
+          "description": "The three load-bearing constraints of Meridian — browser-only editor, below-app-layer tenant isolation, in-database vector storage — and how each one eliminates a class of technology choices.",
+          "prerequisites": [],
+          "teaches_concepts": ["architectural-constraints", "constraint-driven-design"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L02",
+          "title": "Architecture Decision Records — Making Choices Explicit",
+          "strata_claim": "C1",
+          "type": "applied",
+          "estimated_minutes": 25,
+          "description": "How to write an ADR for a technology choice. Applies to the Vite vs Next.js, Drizzle vs Prisma, and pgvector vs Pinecone decisions in Meridian.",
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["architecture-decision-records", "technology-tradeoffs"],
+          "reinforces_concepts": ["architectural-constraints"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M02",
+      "title": "Monorepo and Infrastructure",
+      "strata_theme": "Theme 2 — The dev environment is part of the architecture",
+      "description": "Set up the pnpm workspace, Docker Compose multi-service environment, and TypeScript strict mode config as a unit. Understand why this specific setup is the correct one for Meridian.",
+      "objectives": [
+        "Configure a pnpm workspace with client/, server/, and db/ packages",
+        "Write a Docker Compose file that mirrors the Meridian service topology",
+        "Set TypeScript strict mode correctly in both client and server tsconfig.json and explain what each sub-flag does"
+      ],
+      "lessons": [
+        {
+          "id": "L03",
+          "title": "pnpm Workspaces and TypeScript Strict Config",
+          "strata_claim": "C2",
+          "type": "core",
+          "estimated_minutes": 20,
+          "description": "How pnpm-workspace.yaml defines package boundaries, how TypeScript strict mode is set per package, and what breaks without it.",
+          "prerequisites": ["L01"],
+          "teaches_concepts": ["pnpm-workspaces", "typescript-strict-mode", "monorepo-structure"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7]
+        },
+        {
+          "id": "L04",
+          "title": "Docker Compose — Local Multi-Service Topology",
+          "strata_claim": "C2",
+          "type": "applied",
+          "estimated_minutes": 30,
+          "description": "Write a Docker Compose file that runs postgres, redis, server (tsx watch), and client (Vite dev server). Understand service networking, volume mounts, and the .env.example convention.",
+          "prerequisites": ["L03"],
+          "teaches_concepts": ["docker-compose", "service-topology", "hot-reload"],
+          "reinforces_concepts": ["monorepo-structure"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M03",
+      "title": "Database Architecture",
+      "strata_theme": "Theme 3 — Schema is the specification",
+      "description": "Design and write the Meridian PostgreSQL schema. Understand why workspace_id is structural (not a query convention), how RLS works, and why pgvector must be defined from day one.",
+      "objectives": [
+        "Write the full Meridian schema including users, workspaces, pages, blocks, user_memory, and audit_log",
+        "Enable Row-Level Security on workspace-scoped tables and write the workspace_isolation policy",
+        "Define a pgvector column and explain why it cannot be added easily to a Prisma schema"
+      ],
+      "lessons": [
+        {
+          "id": "L05",
+          "title": "Schema Design — Tables, Constraints, and Relationships",
+          "strata_claim": "C3",
+          "type": "core",
+          "estimated_minutes": 30,
+          "description": "Write the full Meridian schema. Understand the workspace_id FK pattern, CHECK constraints as domain rules, UUID primary keys, and JSONB for block content.",
+          "prerequisites": ["L04"],
+          "teaches_concepts": ["postgresql-schema", "uuid-primary-keys", "check-constraints", "jsonb-content"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L06",
+          "title": "Row-Level Security — Tenant Isolation at the Database Layer",
+          "strata_claim": "C4",
+          "type": "core",
+          "estimated_minutes": 30,
+          "description": "Enable RLS on every workspace-scoped table. Write the workspace_isolation RESTRICTIVE policy. Understand why BYPASSRLS must never be granted to the app user, and how SET LOCAL propagates the workspace context.",
+          "prerequisites": ["L05"],
+          "teaches_concepts": ["postgresql-rls", "tenant-isolation", "set-local", "bypassrls-risk"],
+          "reinforces_concepts": ["postgresql-schema"],
+          "mastery_threshold": 0.85,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L07",
+          "title": "pgvector and the AI Memory Schema",
+          "strata_claim": "C3",
+          "type": "applied",
+          "estimated_minutes": 25,
+          "description": "Add the user_memory and memory_graph tables. Define vector(1536) columns, HNSW indexes, and the tier CHECK constraint. Understand why pgvector belongs in the same instance as your relational data.",
+          "prerequisites": ["L06"],
+          "teaches_concepts": ["pgvector", "vector-columns", "hnsw-index", "memory-schema"],
+          "reinforces_concepts": ["postgresql-schema"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M04",
+      "title": "Authentication Architecture",
+      "strata_theme": "Theme 4 — Auth as a system of cooperating components",
+      "description": "Implement Meridian authentication as four cooperating components: bcrypt password hashing, JWT access tokens, Redis-backed refresh token rotation, and httpOnly cookies. Understand what attack each component defends against.",
+      "objectives": [
+        "Implement password hashing with bcrypt cost factor 12 and explain why cost factor matters",
+        "Issue short-lived JWT access tokens and long-lived refresh tokens with correct signing",
+        "Implement refresh token rotation in Redis and explain how it makes token theft detectable"
+      ],
+      "lessons": [
+        {
+          "id": "L08",
+          "title": "bcrypt and JWT — Password Storage and Token Issuance",
+          "strata_claim": "C5",
+          "type": "core",
+          "estimated_minutes": 25,
+          "description": "How bcrypt cost factor 12 defends against offline dictionary attacks. How to issue a short-lived JWT access token with correct algorithm selection (HS256 vs RS256) and expiry.",
+          "prerequisites": ["L05"],
+          "teaches_concepts": ["bcrypt", "jwt-access-tokens", "algorithm-selection", "token-expiry"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.85,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L09",
+          "title": "Refresh Token Rotation and Redis Session Backing",
+          "strata_claim": "C5",
+          "type": "core",
+          "estimated_minutes": 30,
+          "description": "Implement refresh token rotation: issue a new refresh token on each use, invalidate the old one in Redis. Understand how reuse detection signals token theft. httpOnly cookie security.",
+          "prerequisites": ["L08"],
+          "teaches_concepts": ["refresh-token-rotation", "redis-session-store", "reuse-detection", "httponly-cookies"],
+          "reinforces_concepts": ["jwt-access-tokens"],
+          "mastery_threshold": 0.85,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M05",
+      "title": "Server Architecture",
+      "strata_theme": "Theme 5 — Middleware as composable security",
+      "description": "Build the Express middleware pipeline in the correct order. Understand why Helmet must run first, how Zod validation is the security boundary, and how the tenant middleware establishes the RLS context.",
+      "objectives": [
+        "Build the complete Express middleware pipeline in the correct order with reasoning for each position",
+        "Write a Zod-validated route that returns structured errors on invalid input",
+        "Implement the requireWorkspace middleware that validates membership and sets SET LOCAL"
+      ],
+      "lessons": [
+        {
+          "id": "L10",
+          "title": "The Express Middleware Pipeline",
+          "strata_claim": "C6",
+          "type": "core",
+          "estimated_minutes": 25,
+          "description": "Build the complete pipeline: Helmet → CORS → globalRateLimiter → express.json() → auth middleware → error handler. Understand why the order is load-bearing.",
+          "prerequisites": ["L08"],
+          "teaches_concepts": ["express-middleware-pipeline", "helmet", "cors", "rate-limiting", "error-handler"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7]
+        },
+        {
+          "id": "L11",
+          "title": "Zod Validation as the API Security Boundary",
+          "strata_claim": "C7",
+          "type": "applied",
+          "estimated_minutes": 20,
+          "description": "Write a Zod schema for a route, apply it as middleware, handle ZodError in the error handler. Understand why Zod at the boundary is different from Zod inside the handler.",
+          "prerequisites": ["L10"],
+          "teaches_concepts": ["zod-validation-boundary", "schema-as-type", "structured-errors"],
+          "reinforces_concepts": ["express-middleware-pipeline"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7]
+        },
+        {
+          "id": "L12",
+          "title": "Tenant Middleware — Establishing the RLS Context",
+          "strata_claim": "C6",
+          "type": "core",
+          "estimated_minutes": 35,
+          "description": "Implement requireWorkspace: validate workspace ID with Zod, check membership in workspace_members, acquire a DB client, BEGIN a transaction, run SET LOCAL app.current_workspace_id. Handle commit/rollback on response finish.",
+          "prerequisites": ["L11", "L06"],
+          "teaches_concepts": ["tenant-middleware", "set-local-rls", "transaction-scoping", "db-client-lifecycle"],
+          "reinforces_concepts": ["zod-validation-boundary", "postgresql-rls"],
+          "mastery_threshold": 0.85,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M06",
+      "title": "Frontend Foundation",
+      "strata_theme": "Theme 6 — Immutability as the rendering contract",
+      "description": "Build the React 18 + Vite + TypeScript frontend foundation: Zustand stores, React Router with protected routes, and the three-column workspace layout.",
+      "objectives": [
+        "Scaffold the React 18 + Vite app with TypeScript strict mode and Tailwind CSS",
+        "Build a Zustand workspace store with correct useSyncExternalStore semantics",
+        "Implement ProtectedRoute and the three-column WorkspaceShell layout"
+      ],
+      "lessons": [
+        {
+          "id": "L13",
+          "title": "React 18 + Vite + TypeScript — The Frontend Foundation",
+          "strata_claim": "C8",
+          "type": "core",
+          "estimated_minutes": 20,
+          "description": "Scaffold the Vite SPA with TypeScript strict mode. Understand why concurrent rendering mandates immutable state. Set up Tailwind CSS and verify the strict config.",
+          "prerequisites": ["L03"],
+          "teaches_concepts": ["vite-spa", "react-18-concurrent", "immutable-state-contract"],
+          "reinforces_concepts": ["typescript-strict-mode"],
+          "mastery_threshold": 0.80,
+          "difficulty": 2,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7]
+        },
+        {
+          "id": "L14",
+          "title": "Zustand Stores — Single Source of Truth",
+          "strata_claim": "C8",
+          "type": "applied",
+          "estimated_minutes": 25,
+          "description": "Build the workspace Zustand store. Understand useSyncExternalStore and why it matters for React 18. Implement loadWorkspaces, setCurrentWorkspace, and currentPageId.",
+          "prerequisites": ["L13"],
+          "teaches_concepts": ["zustand-store", "use-sync-external-store", "single-source-of-truth"],
+          "reinforces_concepts": ["immutable-state-contract"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7]
+        },
+        {
+          "id": "L15",
+          "title": "React Router, Protected Routes, and the Workspace Shell",
+          "strata_claim": "C8",
+          "type": "applied",
+          "estimated_minutes": 25,
+          "description": "Implement ProtectedRoute for auth-gated navigation. Build WorkspaceShell with the Sidebar | Editor | AIPanel three-column layout. Wire up workspace index redirect logic.",
+          "prerequisites": ["L14", "L09"],
+          "teaches_concepts": ["react-router-v6", "protected-routes", "workspace-shell"],
+          "reinforces_concepts": ["zustand-store"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M07",
+      "title": "The Editor Layer",
+      "strata_theme": "Theme 6 (continued) — Lexical as a load-bearing architectural commitment",
+      "description": "Build the Lexical editor integration. Understand EditorState immutability, the block model design, and why the Lexical + Yjs combination is architecturally correct for collaborative editing.",
+      "objectives": [
+        "Integrate Lexical editor into the React frontend with correct plugin structure",
+        "Explain why EditorState is frozen after reconcile and what this prevents",
+        "Connect block CRUD operations to the blocks API using the block content model"
+      ],
+      "lessons": [
+        {
+          "id": "L16",
+          "title": "Lexical Architecture — EditorState and the Plugin Model",
+          "strata_claim": "C9",
+          "type": "core",
+          "estimated_minutes": 30,
+          "description": "How Lexical's EditorState works: frozen snapshots, the update command pattern, and why reading state outside a command throws at runtime. How plugins compose behavior.",
+          "prerequisites": ["L13"],
+          "teaches_concepts": ["lexical-editor-state", "frozen-snapshot", "lexical-plugins", "update-command"],
+          "reinforces_concepts": ["immutable-state-contract"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L17",
+          "title": "Block Model — Types, Content, and Versioning",
+          "strata_claim": "C10",
+          "type": "applied",
+          "estimated_minutes": 30,
+          "description": "How the blocks table maps to Lexical nodes. block_type as a DB-level constraint, content JSONB as the payload, block_versions for history. Wire the BlockEditor to the blocks API.",
+          "prerequisites": ["L16", "L12"],
+          "teaches_concepts": ["block-model", "lexical-node-mapping", "block-versioning"],
+          "reinforces_concepts": ["lexical-editor-state", "jsonb-content"],
+          "mastery_threshold": 0.80,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M08",
+      "title": "AI Layer Integration",
+      "strata_theme": "Theme 7 — LLM abstraction, streaming, and tiered memory",
+      "description": "Build the full AI layer: LLM provider abstraction, SSE streaming, RAG with pgvector, and the tiered memory system. Every AI action must be logged to audit_log.",
+      "objectives": [
+        "Implement the LLMProvider interface and AnthropicProvider with SSE streaming",
+        "Write a RAG retrieval function that scopes vector search to both user_id AND workspace_id",
+        "Implement memory write and read for all three tiers (session, medium, deep)"
+      ],
+      "lessons": [
+        {
+          "id": "L18",
+          "title": "LLM Provider Abstraction and Routing",
+          "strata_claim": "C11",
+          "type": "core",
+          "estimated_minutes": 30,
+          "description": "Design the LLMProvider interface. Implement AnthropicProvider. Build the task-based router (TASK_PROVIDER_ORDER). Understand why the abstraction pays off in cost optimization and model rotation.",
+          "prerequisites": ["L10"],
+          "teaches_concepts": ["llm-provider-interface", "provider-abstraction", "task-routing"],
+          "reinforces_concepts": [],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7]
+        },
+        {
+          "id": "L19",
+          "title": "SSE Streaming — Real-Time AI Responses",
+          "strata_claim": "C11",
+          "type": "applied",
+          "estimated_minutes": 25,
+          "description": "Implement parseServerSentEvents for streaming tokens from any provider. Proxy the stream from Express to the React client. Handle connection errors and stream completion.",
+          "prerequisites": ["L18"],
+          "teaches_concepts": ["server-sent-events", "streaming-tokens", "sse-proxy"],
+          "reinforces_concepts": ["llm-provider-interface"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7]
+        },
+        {
+          "id": "L20",
+          "title": "RAG with pgvector — Scoped Semantic Retrieval",
+          "strata_claim": "C12",
+          "type": "core",
+          "estimated_minutes": 35,
+          "description": "Write a vector similarity search that filters by BOTH user_id AND workspace_id. Understand why omitting either filter is a data leakage vulnerability. Combine pgvector <=> with HNSW index.",
+          "prerequisites": ["L19", "L07"],
+          "teaches_concepts": ["rag-retrieval", "pgvector-similarity-search", "dual-scope-filter", "hnsw-index"],
+          "reinforces_concepts": ["pgvector", "tenant-isolation"],
+          "mastery_threshold": 0.85,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L21",
+          "title": "Tiered Memory — Session, Medium, and Deep",
+          "strata_claim": "C17",
+          "type": "applied",
+          "estimated_minutes": 30,
+          "description": "Implement memory write and retrieval for all three tiers. Understand the tier lifecycle (session = ephemeral, deep = persistent). Implement memory_graph writes for relationships between memories.",
+          "prerequisites": ["L20"],
+          "teaches_concepts": ["tiered-memory", "memory-graph", "memory-decay", "last-accessed-at"],
+          "reinforces_concepts": ["rag-retrieval", "memory-schema"],
+          "mastery_threshold": 0.80,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M09",
+      "title": "Security Hardening",
+      "strata_theme": "Theme 8 — Defense in depth across three independent layers",
+      "description": "Harden the complete Meridian implementation. Verify RLS policies, add audit logging to all AI actions, implement prompt injection defense, and run the code efficacy checklist.",
+      "objectives": [
+        "Verify RLS policies are active on all workspace-scoped tables and that BYPASSRLS is not granted",
+        "Add audit_log writes to every AI action handler",
+        "Implement prompt sanitization to prevent injection of workspace context"
+      ],
+      "lessons": [
+        {
+          "id": "L22",
+          "title": "Database Security Layer — RLS Verification and Access Control",
+          "strata_claim": "C13",
+          "type": "core",
+          "estimated_minutes": 25,
+          "description": "Verify RLS is ENABLED on all workspace-scoped tables. Write a test query that proves RLS blocks cross-tenant access. Confirm the app DB user does not have BYPASSRLS.",
+          "prerequisites": ["L06"],
+          "teaches_concepts": ["rls-verification", "defense-in-depth", "access-control-test"],
+          "reinforces_concepts": ["postgresql-rls", "tenant-isolation"],
+          "mastery_threshold": 0.85,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L23",
+          "title": "Audit Logging — Every AI Action Leaves a Trail",
+          "strata_claim": "C14",
+          "type": "applied",
+          "estimated_minutes": 20,
+          "description": "Add audit_log writes to every AI route handler. Understand what to log (workspace_id, user_id, action, payload). Verify the audit trail covers all AI entry points.",
+          "prerequisites": ["L18", "L22"],
+          "teaches_concepts": ["audit-logging", "ai-action-trail", "atip-readiness"],
+          "reinforces_concepts": ["defense-in-depth"],
+          "mastery_threshold": 0.85,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7]
+        },
+        {
+          "id": "L24",
+          "title": "Prompt Injection Defense — Isolating User Input in AI Context",
+          "strata_claim": "C13",
+          "type": "applied",
+          "estimated_minutes": 25,
+          "description": "How prompt injection works and why user content must never be directly concatenated into system prompts. Implement a context wrapper that frames user input safely. Test with adversarial inputs.",
+          "prerequisites": ["L18"],
+          "teaches_concepts": ["prompt-injection", "context-framing", "ai-input-sanitization"],
+          "reinforces_concepts": ["defense-in-depth"],
+          "mastery_threshold": 0.85,
+          "difficulty": 4,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    },
+    {
+      "id": "M10",
+      "title": "Code Efficacy — Evaluating Your Implementation",
+      "strata_theme": "Theme 9 — The ideal spec as a measurement tool",
+      "description": "Use the architectural patterns and non-negotiable rules to evaluate your Meridian implementation. Apply the five-question efficacy framework and produce a prioritized gap report.",
+      "objectives": [
+        "Apply the five-question efficacy framework to your own Meridian codebase",
+        "Identify which non-negotiable rules are missing from your implementation",
+        "Produce a prioritized gap report with concrete remediation steps"
+      ],
+      "lessons": [
+        {
+          "id": "L25",
+          "title": "The Five-Question Efficacy Framework",
+          "strata_claim": "C15",
+          "type": "core",
+          "estimated_minutes": 25,
+          "description": "The five binary questions that map to Meridian's non-negotiable rules: workspace_id in every query, Zod on every route, dual-scope vector search, audit log on AI actions, secrets from env. How to apply them as a code review checklist.",
+          "prerequisites": ["L12", "L20", "L23"],
+          "teaches_concepts": ["efficacy-framework", "code-review-checklist", "non-negotiable-rules"],
+          "reinforces_concepts": ["defense-in-depth", "zod-validation-boundary", "dual-scope-filter"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7]
+        },
+        {
+          "id": "L26",
+          "title": "Common Implementation Gaps and How to Fix Them",
+          "strata_claim": "C18",
+          "type": "applied",
+          "estimated_minutes": 30,
+          "description": "The five most common gaps developers leave in Meridian implementations: missing RLS policies, Zod validation in the handler instead of at the boundary, single-scope vector searches, missing audit logs, and hardcoded secrets. Concrete fixes for each.",
+          "prerequisites": ["L25"],
+          "teaches_concepts": ["common-gaps", "remediation-patterns", "implementation-audit"],
+          "reinforces_concepts": ["efficacy-framework"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 3, 7, 14]
+        },
+        {
+          "id": "L27",
+          "title": "From Gap Report to Production-Ready Implementation",
+          "strata_claim": "C18",
+          "type": "applied",
+          "estimated_minutes": 30,
+          "description": "How to prioritize a gap report by security impact, data integrity risk, and compliance. Write a remediation plan. Understand what 'production-ready' means for a multi-tenant AI workspace.",
+          "prerequisites": ["L26"],
+          "teaches_concepts": ["gap-prioritization", "remediation-plan", "production-readiness"],
+          "reinforces_concepts": ["efficacy-framework", "non-negotiable-rules"],
+          "mastery_threshold": 0.80,
+          "difficulty": 3,
+          "unlock_rule": "all_prerequisites_mastered",
+          "review_after_days": [1, 7, 14]
+        }
+      ],
+      "has_assessment": true
+    }
+  ],
+  "learning_plan": {
+    "total_lessons": 27,
+    "total_modules": 10,
+    "estimated_total_hours": 13,
+    "recommended_order": ["M01","M02","M03","M04","M05","M06","M07","M08","M09","M10"],
+    "notes": "Each module builds on the previous. M03 (database) must precede M05 (server) and M08 (AI). M04 (auth) must precede M05 (server). M06 (frontend) is partially parallel with M05 but requires L03 from M02."
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "course_slug": "meridian-rebuild-playbook",
+  "version": "3.0",
+  "title": "Meridian Rebuild Playbook",
+  "status": "complete",
+  "created": "2026-04-24",
+  "modules": 10,
+  "lessons": 27,
+  "cards": 81,
+  "quizzes": 10,
+  "modchecks": 10,
+  "learning_paths": 3,
+  "concepts": 44,
+  "adaptive_rules": 5,
+  "bundle_ready": false,
+  "index_updated": false
+}

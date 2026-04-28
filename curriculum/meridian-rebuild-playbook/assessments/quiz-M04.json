@@ -1,0 +1,58 @@
+{
+  "quiz_id": "quiz-M04",
+  "module_id": "M04",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M04 Quiz — Authentication Architecture",
+  "version": "3.0",
+  "questions": [
+    {
+      "id": "M04-Q1",
+      "type": "mcq",
+      "question": "What bcrypt cost factor does Meridian require for password hashing?",
+      "options": ["8", "10", "12", "14"],
+      "answer": "12",
+      "explanation": "Cost factor 12 is the architecture minimum. Cost 10 (Node.js default) is too low for production. Cost 12 adds ~400ms per hash — expensive for an attacker, acceptable for a login."
+    },
+    {
+      "id": "M04-Q2",
+      "type": "mcq",
+      "question": "What JWT claim carries the user ID in Meridian?",
+      "options": ["id", "userId", "sub", "user"],
+      "answer": "sub",
+      "explanation": "The `sub` (subject) claim is the standard JWT claim for identifying the subject of the token. In Meridian, it contains the user's UUID as a string."
+    },
+    {
+      "id": "M04-Q3",
+      "type": "mcq",
+      "question": "Why must the login handler run a dummy bcrypt comparison when the user email is not found?",
+      "options": [
+        "To log the failed attempt",
+        "To prevent timing attacks that could enumerate valid email addresses",
+        "To comply with GDPR email privacy rules",
+        "To warm up the bcrypt cache"
+      ],
+      "answer": "To prevent timing attacks that could enumerate valid email addresses",
+      "explanation": "Without a dummy hash, 'user not found' returns instantly while 'wrong password' takes 400ms. This timing difference allows an attacker to determine which emails are registered."
+    },
+    {
+      "id": "M04-Q4",
+      "type": "mcq",
+      "question": "What does Meridian store in Redis for refresh tokens — the raw token or a hash?",
+      "options": [
+        "The raw token, for fast comparison",
+        "A SHA-256 hash of the token",
+        "An AES-encrypted token",
+        "A bcrypt hash of the token"
+      ],
+      "answer": "A SHA-256 hash of the token",
+      "explanation": "Storing the raw token means a Redis breach reveals all active sessions. SHA-256 hashes are stored; the client holds the raw token. If Redis is compromised, the attacker gets useless hashes."
+    },
+    {
+      "id": "M04-Q5",
+      "type": "short_answer",
+      "question": "Describe what happens in a refresh token reuse attack and how Meridian detects it.",
+      "answer_key": "An attacker steals a refresh token and uses it after the legitimate user has already rotated it. Meridian detects this because the Redis key (rt:{userId}) is already gone when the attacker's request arrives — the legitimate user already deleted it during rotation. The server sees a missing Redis key as a reuse signal and revokes all active tokens for the user.",
+      "rubric": "Full credit: explains stolen token scenario, Redis key already missing, and revoke-all response. Partial: understands reuse detection but misses the revoke-all consequence."
+    }
+  ]
+}

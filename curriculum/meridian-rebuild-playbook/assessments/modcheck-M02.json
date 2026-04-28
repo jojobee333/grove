@@ -1,0 +1,33 @@
+{
+  "modcheck_id": "modcheck-M02",
+  "module_id": "M02",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M02 Mastery Check — Monorepo & Infrastructure",
+  "version": "3.0",
+  "mastery_threshold": 0.80,
+  "tasks": [
+    {
+      "id": "MC02-T1",
+      "type": "produce",
+      "title": "Write the pnpm-workspace.yaml and root tsconfig.json",
+      "prompt": "From memory, write the pnpm-workspace.yaml file and the root tsconfig.json for Meridian. The workspace has three packages: client, server, db. The tsconfig must include all three non-negotiable TypeScript options.",
+      "success_criteria": [
+        "pnpm-workspace.yaml lists packages: ['client', 'server', 'db']",
+        "tsconfig.json includes strict: true",
+        "tsconfig.json includes noUncheckedIndexedAccess: true",
+        "tsconfig.json includes exactOptionalPropertyTypes: true"
+      ]
+    },
+    {
+      "id": "MC02-T2",
+      "type": "produce",
+      "title": "Identify and Fix Docker Compose Hostname Bug",
+      "prompt": "A colleague shares this .env for the server container: DATABASE_URL=postgresql://meridian:pass@localhost:5432/meridian. They say the server container cannot connect to PostgreSQL. Diagnose the problem and write the corrected DATABASE_URL.",
+      "success_criteria": [
+        "Correctly identifies 'localhost' as the bug",
+        "Explains that containers on the same Docker network resolve by service name",
+        "Corrects to: postgresql://meridian:pass@postgres:5432/meridian"
+      ]
+    }
+  ]
+}

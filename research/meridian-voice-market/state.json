@@ -1,0 +1,27 @@
+{
+  "topic": "Meridian Voice Market — Ghostwriters & Newsletter Writers",
+  "slug": "meridian-voice-market",
+  "created": "2026-04-25",
+  "last_updated": "2026-04-25",
+  "phase": "sourcing",
+  "progress": {
+    "brief_approved": true,
+    "plan_approved": false,
+    "sourcing_complete": false,
+    "analysis_complete": false,
+    "synthesis_complete": false,
+    "output_complete": false
+  },
+  "last_action": "Project initialized",
+  "next_action": "Review brief.md and plan.md, then approve to begin sourcing",
+  "source_counts": { "total": 0, "active": 0, "discarded": 0, "pending_review": 0 },
+  "questions": { "total": 6, "answered": 0, "unanswerable": 0 },
+  "open_issues": [],
+  "history": [
+    {
+      "date": "2026-04-25",
+      "session_summary": "Project initialized",
+      "actions": ["Created folder structure", "Wrote brief.md", "Wrote plan.md"]
+    }
+  ]
+}

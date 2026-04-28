@@ -1,0 +1,37 @@
+{
+  "modcheck_id": "modcheck-M04",
+  "module_id": "M04",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M04 Mastery Check — Authentication Architecture",
+  "version": "3.0",
+  "mastery_threshold": 0.80,
+  "tasks": [
+    {
+      "id": "MC04-T1",
+      "type": "debug",
+      "title": "Find All Auth Implementation Gaps",
+      "prompt": "Review this login handler and identify every violation of Meridian's authentication architecture:\n\n```typescript\nrouter.post('/login', async (req, res) => {\n  const { email, password } = req.body\n  const user = await db.query.users.findFirst({\n    where: eq(users.email, email)\n  })\n  if (!user) return res.status(401).json({ error: 'Invalid credentials' })\n  const valid = await bcrypt.compare(password, user.password_hash)\n  if (!valid) return res.status(401).json({ error: 'Invalid credentials' })\n  const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET!, { expiresIn: '7d' })\n  res.json({ token })\n})\n```",
+      "success_criteria": [
+        "Missing dummy bcrypt hash when user not found (timing attack vulnerability)",
+        "JWT payload uses 'userId' — should use 'sub' claim",
+        "JWT expiry is '7d' — should be '15m' for access tokens",
+        "No Zod validation on req.body",
+        "No refresh token issued — only access token"
+      ]
+    },
+    {
+      "id": "MC04-T2",
+      "type": "produce",
+      "title": "Write the Refresh Token Rotation Handler",
+      "prompt": "Write a TypeScript Express route handler for POST /auth/refresh. It must: validate the incoming refresh token, detect token reuse (Redis key already gone), rotate the token, and return a new access token. Include the reuse detection branch that revokes all tokens.",
+      "success_criteria": [
+        "Reads Redis key rt:{userId}",
+        "If key is missing: revokeAllTokensForUser and return 401",
+        "Computes SHA-256 of incoming token and compares to stored hash",
+        "Deletes old Redis key immediately",
+        "Generates new access token (15m) and new refresh token",
+        "Stores new refresh token hash in Redis"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "modcheck_id": "modcheck-M07",
+  "module_id": "M07",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M07 Mastery Check — The Editor Layer",
+  "version": "3.0",
+  "mastery_threshold": 0.80,
+  "tasks": [
+    {
+      "id": "MC07-T1",
+      "type": "debug",
+      "title": "Find the Lexical State Bug",
+      "prompt": "This code attempts to read the editor's text content. Find the bug:\n\n```typescript\nconst text = editor.getEditorState().root.children[0].text\n```",
+      "success_criteria": [
+        "Identifies direct property access on EditorState is wrong",
+        "Correct pattern: editor.getEditorState().read(() => { const root = $getRoot(); const text = root.getTextContent(); return text })",
+        "Explains that EditorState is opaque — content must be accessed inside a read() callback"
+      ]
+    },
+    {
+      "id": "MC07-T2",
+      "type": "produce",
+      "title": "Describe the Two-Representation Model",
+      "prompt": "Explain Meridian's two-representation model for page content: what each representation is, when each is the source of truth, and how they are kept in sync. No code required — written explanation only.",
+      "success_criteria": [
+        "Identifies Yjs Y.Doc as live collaborative state (source of truth while editing)",
+        "Identifies blocks table as durable persistent record (source of truth at rest)",
+        "Describes syncPageBlocks() or equivalent sync mechanism",
+        "Notes that Lexical is connected to Yjs via a binding"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "modcheck_id": "modcheck-M09",
+  "module_id": "M09",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M09 Mastery Check — Security Hardening",
+  "version": "3.0",
+  "mastery_threshold": 0.80,
+  "tasks": [
+    {
+      "id": "MC09-T1",
+      "type": "produce",
+      "title": "Write the Adversarial RLS Test",
+      "prompt": "Write a complete Vitest test that proves RLS workspace isolation works. The test must: set workspace context to workspace B, attempt to query workspace A's pages, and assert 0 rows are returned. Include a second test that proves workspace B's own pages ARE visible.",
+      "success_criteria": [
+        "Uses SET LOCAL or set_config to set context to workspace B",
+        "Queries pages WHERE workspace_id = workspaceA UUID",
+        "Asserts rows.length === 0",
+        "Second test sets context to workspace B, queries workspace B's pages, asserts length > 0"
+      ]
+    },
+    {
+      "id": "MC09-T2",
+      "type": "produce",
+      "title": "Write the sanitizeMemoryValue Function",
+      "prompt": "Write the TypeScript sanitizeMemoryValue function. It must: remove common injection phrases, enforce a maximum length of 500 characters, and be applied to all memory values before they are injected into a system prompt.",
+      "success_criteria": [
+        "Removes 'ignore.*instructions' pattern (case insensitive)",
+        "Removes 'you are now' pattern",
+        "Removes 'act as' pattern",
+        ".slice(0, 500) hard limit applied last",
+        "Returns sanitized string"
+      ]
+    }
+  ]
+}

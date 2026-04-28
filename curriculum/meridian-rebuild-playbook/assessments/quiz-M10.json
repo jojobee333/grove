@@ -1,0 +1,70 @@
+{
+  "quiz_id": "quiz-M10",
+  "module_id": "M10",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M10 Quiz — Code Efficacy Assessment",
+  "version": "3.0",
+  "questions": [
+    {
+      "id": "M10-Q1",
+      "type": "mcq",
+      "question": "Which gap is classified as P0 (fix immediately, before next commit)?",
+      "options": [
+        "Missing Zod validation on a POST route",
+        "bcrypt cost factor of 10",
+        "Missing workspace_id in a DB query",
+        "Audit log placed after AI provider call"
+      ],
+      "answer": "Missing workspace_id in a DB query",
+      "explanation": "Missing workspace_id is P0 because it can cause cross-tenant data leakage immediately. This is the highest blast radius gap and must be fixed before any other commit."
+    },
+    {
+      "id": "M10-Q2",
+      "type": "mcq",
+      "question": "What is the correct gap report priority for 'audit log placed after provider call'?",
+      "options": ["P0", "P1", "P2", "P3"],
+      "answer": "P1",
+      "explanation": "P1 = fix before any user data enters the system. Missing audit logs mean AI actions on user data are unaccountable. Critical but not the same blast radius as cross-tenant leakage (P0)."
+    },
+    {
+      "id": "M10-Q3",
+      "type": "mcq",
+      "question": "What grep pattern verifies bcrypt cost factor is correct across the codebase?",
+      "options": [
+        "grep -rn 'bcrypt' server/src",
+        "grep -rn 'bcrypt\\.hash(' server/src — then verify second argument is 12",
+        "grep -rn 'SALT_ROUNDS' server/src",
+        "grep -rn 'password' server/src"
+      ],
+      "answer": "grep -rn 'bcrypt\\.hash(' server/src — then verify second argument is 12",
+      "explanation": "grep finds all bcrypt.hash() calls. Each result must be manually inspected to confirm the second argument is 12, not a variable that could be any value."
+    },
+    {
+      "id": "M10-Q4",
+      "type": "mcq",
+      "question": "The Five-Question Framework produces a binary result for each question. What does 'binary' mean here?",
+      "options": [
+        "The output is encoded in binary format",
+        "Each question has exactly two sub-questions",
+        "Each question has a pass or fail answer — no gradient",
+        "The framework runs in two phases"
+      ],
+      "answer": "Each question has a pass or fail answer — no gradient",
+      "explanation": "Non-negotiable rules are binary: your code either follows them or it doesn't. There is no 'mostly compliant'. A single missing workspace_id is a fail for Q1."
+    },
+    {
+      "id": "M10-Q5",
+      "type": "short_answer",
+      "question": "List the six conditions that define 'production-ready' for a Meridian implementation.",
+      "answer_key": "1. All five framework questions return zero violations. 2. audit_log has entries for every AI action in the test suite. 3. Adversarial RLS test passes. 4. All bcrypt hashes use cost 12. 5. Refresh token handler has reuse detection branch. 6. No user-provided text in any system prompt string.",
+      "rubric": "1 point per condition. 6 points total."
+    },
+    {
+      "id": "M10-Q6",
+      "type": "short_answer",
+      "question": "Describe the complete gap remediation workflow: from identifying a gap to confirming it is resolved.",
+      "answer_key": "1. Run the Five-Question Framework grep patterns against the codebase. 2. Review each grep result manually. 3. Write a structured gap report entry (gap ID, question, file, line, description, risk, fix). 4. Prioritize by P0/P1/P2. 5. Apply one fix per commit with a structured commit message referencing the gap ID. 6. Re-run the specific grep pattern for that question to confirm the violation no longer appears. 7. Mark the gap as resolved in the gap report.",
+      "rubric": "Full credit: identifies all seven steps or equivalent. Partial: includes grep, report, prioritize, fix, re-run — 5 of 7 steps earns partial credit."
+    }
+  ]
+}

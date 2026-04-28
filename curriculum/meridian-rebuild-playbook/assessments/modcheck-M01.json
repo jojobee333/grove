@@ -1,0 +1,34 @@
+{
+  "modcheck_id": "modcheck-M01",
+  "module_id": "M01",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M01 Mastery Check — System Design Before Code",
+  "version": "3.0",
+  "mastery_threshold": 0.80,
+  "instructions": "Complete both tasks. You pass this module when you can produce both outputs from memory without referencing lesson material.",
+  "tasks": [
+    {
+      "id": "MC01-T1",
+      "type": "produce",
+      "title": "Derive the Stack from Constraints",
+      "prompt": "Given only these three requirements: (1) real-time collaborative editing in the browser, (2) enterprise multi-tenancy enforced below the application layer, (3) semantic search without an external service — derive the Meridian technology choices that each constraint forces. For each constraint, name the constraint, the forced technology, and at least one alternative it eliminates.",
+      "success_criteria": [
+        "Constraint 1 → Lexical + Yjs CRDT → eliminates Next.js/SSR frameworks",
+        "Constraint 2 → PostgreSQL RLS → eliminates application-layer multi-tenancy approaches",
+        "Constraint 3 → pgvector extension → eliminates Pinecone, Weaviate, external vector DBs"
+      ]
+    },
+    {
+      "id": "MC01-T2",
+      "type": "produce",
+      "title": "Write an ADR",
+      "prompt": "Write a complete Architecture Decision Record for Meridian's choice of Drizzle ORM over Prisma. Your ADR must include: Context, Decision, Rationale (with at least two reasons), and Consequences (what it commits you to).",
+      "success_criteria": [
+        "Context section explains the ORM selection problem",
+        "Decision clearly states Drizzle is chosen",
+        "Rationale includes TypeScript-first design and no code generation step",
+        "Consequences section mentions what trade-offs are accepted (e.g., less ecosystem tooling than Prisma)"
+      ]
+    }
+  ]
+}

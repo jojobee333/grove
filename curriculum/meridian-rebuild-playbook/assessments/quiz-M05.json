@@ -1,0 +1,62 @@
+{
+  "quiz_id": "quiz-M05",
+  "module_id": "M05",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M05 Quiz — Server Architecture",
+  "version": "3.0",
+  "questions": [
+    {
+      "id": "M05-Q1",
+      "type": "mcq",
+      "question": "What is the correct Express middleware pipeline order for Meridian?",
+      "options": [
+        "JSON → auth → Helmet → CORS → rateLimit → Zod → handler",
+        "Helmet → CORS → rateLimit → JSON → auth → workspace → Zod → handler",
+        "auth → Helmet → JSON → rateLimit → workspace → Zod → handler",
+        "Zod → auth → workspace → Helmet → JSON → handler"
+      ],
+      "answer": "Helmet → CORS → rateLimit → JSON → auth → workspace → Zod → handler",
+      "explanation": "Security headers (Helmet) must be first. Rate limiting before body parsing (prevents large body DoS). Auth before workspace (workspace check requires knowing who the user is). Zod immediately before handler logic."
+    },
+    {
+      "id": "M05-Q2",
+      "type": "mcq",
+      "question": "What does `safeParse` return when validation fails?",
+      "options": [
+        "It throws a ZodError",
+        "null",
+        "{ success: false, error: ZodError }",
+        "{ valid: false, errors: string[] }"
+      ],
+      "answer": "{ success: false, error: ZodError }",
+      "explanation": "safeParse never throws. It returns { success: true, data } on success and { success: false, error } on failure. The error is a ZodError with structured issue details."
+    },
+    {
+      "id": "M05-Q3",
+      "type": "mcq",
+      "question": "Where must the `workspace_id` come from in the tenant middleware — never from where?",
+      "options": [
+        "From req.body.workspaceId — never from req.params",
+        "From req.params or verified middleware — never from req.body",
+        "From req.headers — never from req.query",
+        "From the JWT claims — never from anywhere else"
+      ],
+      "answer": "From req.params or verified middleware — never from req.body",
+      "explanation": "A client can put any workspaceId in req.body. Trusting it allows users to scope requests to workspaces they don't belong to. req.params is controlled by route patterns and verified by membership checks."
+    },
+    {
+      "id": "M05-Q4",
+      "type": "short_answer",
+      "question": "What is the four-parameter Express error handler signature, and what happens inside it for a ZodError vs a generic error?",
+      "answer_key": "(err, req, res, next) => void. For a ZodError: return res.status(400).json({ errors: err.errors }). For AuthenticationError: return res.status(401). For AuthorizationError: return res.status(403). For all other errors: log the error, return res.status(500).json({ error: 'Internal server error' }).",
+      "rubric": "Full credit: correct four-parameter signature, 400 for Zod, correct status for at least two other error types, 500 fallback."
+    },
+    {
+      "id": "M05-Q5",
+      "type": "short_answer",
+      "question": "Why is `SET LOCAL` required instead of `SET` in tenant middleware, and what goes wrong with `SET`?",
+      "answer_key": "SET is session-level: the setting persists for the entire lifetime of the database connection. In a connection pool, connections are reused between requests. Using SET means the next request that reuses the connection inherits the previous request's workspace_id, causing cross-tenant context leakage. SET LOCAL is transaction-scoped and automatically resets when the transaction ends.",
+      "rubric": "Full credit: explains connection pool reuse AND transaction scope of SET LOCAL. Partial: mentions one but not both."
+    }
+  ]
+}

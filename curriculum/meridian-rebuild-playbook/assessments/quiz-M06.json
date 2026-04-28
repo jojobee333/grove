@@ -1,0 +1,68 @@
+{
+  "quiz_id": "quiz-M06",
+  "module_id": "M06",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M06 Quiz — Frontend Foundation",
+  "version": "3.0",
+  "questions": [
+    {
+      "id": "M06-Q1",
+      "type": "mcq",
+      "question": "What does Vite's `server.proxy` do in Meridian's development setup?",
+      "options": [
+        "Compresses static assets for production",
+        "Forwards /api/* requests from the Vite dev server to the Express backend",
+        "Enables HTTPS in development",
+        "Syncs environment variables between client and server"
+      ],
+      "answer": "Forwards /api/* requests from the Vite dev server to the Express backend",
+      "explanation": "The proxy allows the browser to make /api/* requests to Vite (same origin, no CORS), which Vite forwards to Express. This avoids CORS configuration during development."
+    },
+    {
+      "id": "M06-Q2",
+      "type": "mcq",
+      "question": "What is the React 18 rule about state updates?",
+      "options": [
+        "State must be updated synchronously",
+        "State updates must be immutable — never mutate objects in place",
+        "State must be stored in Redux",
+        "State updates are automatically batched into a single render"
+      ],
+      "answer": "State updates must be immutable — never mutate objects in place",
+      "explanation": "React 18 concurrent mode requires immutable state. Mutations to existing objects won't trigger re-renders. Always create new objects/arrays."
+    },
+    {
+      "id": "M06-Q3",
+      "type": "mcq",
+      "question": "What must `RequireAuth` render while the auth check is still loading?",
+      "options": [
+        "The login page immediately",
+        "null or a spinner — not a redirect",
+        "A 401 error page",
+        "The protected component"
+      ],
+      "answer": "null or a spinner — not a redirect",
+      "explanation": "If RequireAuth redirects to login while isLoading is true, authenticated users briefly see the login page and are then redirected back. Rendering null during loading prevents this flash."
+    },
+    {
+      "id": "M06-Q4",
+      "type": "mcq",
+      "question": "How do you read Zustand store state outside a React component without staleness issues?",
+      "options": [
+        "useStore() called at the top of the file",
+        "store.subscribe((state) => state.value)",
+        "useAuthStore.getState()",
+        "React.useMemo(() => useAuthStore(), [])"
+      ],
+      "answer": "useAuthStore.getState()",
+      "explanation": "getState() directly accesses the current store state without subscribing. The hook useAuthStore() only works inside React components and is subject to closure staleness in callbacks."
+    },
+    {
+      "id": "M06-Q5",
+      "type": "short_answer",
+      "question": "Describe the three-tier React Router structure in Meridian and what each tier protects.",
+      "answer_key": "Tier 1 — Public routes (/login, /register): no auth required, accessible to unauthenticated users. Tier 2 — Auth guard (RequireAuth): wraps all authenticated routes, redirects to login if user is null. Tier 3 — Workspace routes (/workspace/:id/*): nested inside auth guard, WorkspaceShell loads workspace context, server middleware verifies workspace membership.",
+      "rubric": "1 point per tier with correct description of what it protects. 3 points total."
+    }
+  ]
+}

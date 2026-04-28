@@ -1,0 +1,37 @@
+{
+  "modcheck_id": "modcheck-M10",
+  "module_id": "M10",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M10 Mastery Check — Code Efficacy Assessment",
+  "version": "3.0",
+  "mastery_threshold": 0.80,
+  "tasks": [
+    {
+      "id": "MC10-T1",
+      "type": "produce",
+      "title": "Run the Five-Question Framework on a Code Sample",
+      "prompt": "Review this route handler and apply all five questions of the efficacy framework. For each question, state: Pass or Fail, and if Fail, what the specific violation is and what priority it would be assigned.\n\n```typescript\nrouter.post('/workspace/:workspaceId/ai/complete', authMiddleware, requireWorkspace, async (req, res, next) => {\n  const { messages, model } = req.body\n  const result = await llmRouter.complete({ messages, model })\n  await logAuditEvent({ workspaceId: req.workspace!.id, userId: req.user!.id, action: 'ai.complete', payload: { model } })\n  res.json({ content: result })\n})\n```",
+      "success_criteria": [
+        "Q1: PASS — workspace_id comes from req.workspace.id (via verified middleware)",
+        "Q2: FAIL — no Zod safeParse on req.body before handler logic (P2)",
+        "Q3: FAIL — logAuditEvent is called AFTER the AI provider call (P1)",
+        "Q4: N/A — no bcrypt in this handler",
+        "Q5: N/A — no refresh token in this handler"
+      ]
+    },
+    {
+      "id": "MC10-T2",
+      "type": "produce",
+      "title": "Write a Gap Report Entry",
+      "prompt": "Write a structured gap report entry for the Q3 violation found in MC10-T1. Include: Gap ID, Question number, File (use a placeholder), Line number (estimate), Description, Risk, and the specific code fix.",
+      "success_criteria": [
+        "Gap ID assigned (e.g., GAP-001)",
+        "Q3 identified",
+        "Description explains audit log called after provider, not before",
+        "Risk: AI actions not logged if provider throws",
+        "Fix: move logAuditEvent to before llmRouter.complete()",
+        "Priority P1 assigned"
+      ]
+    }
+  ]
+}

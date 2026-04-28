@@ -1,0 +1,33 @@
+{
+  "modcheck_id": "modcheck-M06",
+  "module_id": "M06",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M06 Mastery Check — Frontend Foundation",
+  "version": "3.0",
+  "mastery_threshold": 0.80,
+  "tasks": [
+    {
+      "id": "MC06-T1",
+      "type": "produce",
+      "title": "Write the RequireAuth component",
+      "prompt": "Write the Meridian RequireAuth component in TypeScript React. It must handle all three authentication states correctly. Use Zustand's useAuthStore.",
+      "success_criteria": [
+        "If isLoading === true: return null (not a redirect)",
+        "If user !== null: return <Outlet />",
+        "If user === null: return <Navigate to='/login' replace />"
+      ]
+    },
+    {
+      "id": "MC06-T2",
+      "type": "produce",
+      "title": "Write the Auth Store",
+      "prompt": "Write a Zustand auth store (useAuthStore) for Meridian. It must include: user state (User | null), isLoading state, setUser action, and a checkSession async action that calls GET /api/auth/me and handles all three outcomes (loading, found, not found).",
+      "success_criteria": [
+        "isLoading: true initial state during session check",
+        "setIsLoading(false) called in both success and error paths",
+        "user set to null on 401 or error",
+        "checkSession sets isLoading to false before returning in all branches"
+      ]
+    }
+  ]
+}

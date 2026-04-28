@@ -175,6 +175,17 @@
       <button class="notes-panel-close" onclick="toggleNotesPanel()" aria-label="Close notes panel">✕</button>
     </div>
   </div>
+  <div class="note-toolbar" role="toolbar" aria-label="Note formatting">
+    <button class="note-tb-btn" title="Heading 1" onmousedown="event.preventDefault()" onclick="insertNoteFormat('h1','notes-panel-area')">H1</button>
+    <button class="note-tb-btn" title="Heading 2" onmousedown="event.preventDefault()" onclick="insertNoteFormat('h2','notes-panel-area')">H2</button>
+    <span class="note-tb-sep"></span>
+    <button class="note-tb-btn note-tb-b" title="Bold" onmousedown="event.preventDefault()" onclick="insertNoteFormat('bold','notes-panel-area')"><strong>B</strong></button>
+    <button class="note-tb-btn note-tb-i" title="Italic" onmousedown="event.preventDefault()" onclick="insertNoteFormat('italic','notes-panel-area')"><em>I</em></button>
+    <button class="note-tb-btn" title="Inline code" onmousedown="event.preventDefault()" onclick="insertNoteFormat('code','notes-panel-area')" style="font-family:monospace;letter-spacing:-1px">``</button>
+    <span class="note-tb-sep"></span>
+    <button class="note-tb-btn" title="Bullet list" onmousedown="event.preventDefault()" onclick="insertNoteFormat('ul','notes-panel-area')">• List</button>
+    <button class="note-tb-btn" title="Numbered list" onmousedown="event.preventDefault()" onclick="insertNoteFormat('ol','notes-panel-area')">1. List</button>
+  </div>
   <textarea id="notes-panel-area" placeholder="Write notes for this lesson…" aria-label="Lesson notes textarea"></textarea>
 </div>
 </body>

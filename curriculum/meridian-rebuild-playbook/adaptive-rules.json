@@ -1,0 +1,55 @@
+{
+  "course_slug": "meridian-rebuild-playbook",
+  "version": "3.0",
+  "rules": [
+    {
+      "id": "AR01",
+      "trigger": "quiz_score_below_threshold",
+      "condition": "quiz_score < 0.60",
+      "action": "add_review",
+      "params": {
+        "review_lesson_count": 2,
+        "review_from": "current_module",
+        "message": "Your score suggests a concept gap. Reviewing the key lessons before continuing."
+      }
+    },
+    {
+      "id": "AR02",
+      "trigger": "quiz_score_above_excellence",
+      "condition": "quiz_score >= 0.95",
+      "action": "unlock_fast_track",
+      "params": {
+        "next_module_suggestion": "fast-track",
+        "message": "Strong performance — you can skip the framing lesson in the next module if you'd like."
+      }
+    },
+    {
+      "id": "AR03",
+      "trigger": "card_recall_failing",
+      "condition": "card.ease_factor < 1.5",
+      "action": "increase_review_frequency",
+      "params": {
+        "multiplier": 0.5,
+        "message": "This concept is struggling — scheduling more frequent reviews."
+      }
+    },
+    {
+      "id": "AR04",
+      "trigger": "modcheck_task_failed",
+      "condition": "modcheck_task.pass === false",
+      "action": "link_remediation_lesson",
+      "params": {
+        "message": "Review the flagged lesson, then retry the mastery check."
+      }
+    },
+    {
+      "id": "AR05",
+      "trigger": "lesson_not_visited",
+      "condition": "days_since_visit > review_after_days",
+      "action": "surface_for_review",
+      "params": {
+        "message": "It has been a while since this lesson. Reviewing now reinforces retention."
+      }
+    }
+  ]
+}

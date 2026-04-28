@@ -1,0 +1,57 @@
+{
+  "quiz_id": "quiz-M02",
+  "module_id": "M02",
+  "course_slug": "meridian-rebuild-playbook",
+  "title": "M02 Quiz — Monorepo & Infrastructure",
+  "version": "3.0",
+  "questions": [
+    {
+      "id": "M02-Q1",
+      "type": "mcq",
+      "question": "In Meridian's Docker Compose setup, what hostname does the server container use to connect to PostgreSQL?",
+      "options": ["localhost", "127.0.0.1", "postgres", "db"],
+      "answer": "postgres",
+      "explanation": "In Docker Compose, containers on the same network resolve each other by service name. The postgres service is named 'postgres', so the server uses that as the hostname."
+    },
+    {
+      "id": "M02-Q2",
+      "type": "mcq",
+      "question": "Which TypeScript compiler option prevents accessing array elements without a null check?",
+      "options": [
+        "strict: true",
+        "noImplicitAny: true",
+        "noUncheckedIndexedAccess: true",
+        "strictNullChecks: true"
+      ],
+      "answer": "noUncheckedIndexedAccess: true",
+      "explanation": "noUncheckedIndexedAccess makes array[0] return T | undefined, forcing null checks on all indexed access. This catches a class of runtime errors that strict alone misses."
+    },
+    {
+      "id": "M02-Q3",
+      "type": "mcq",
+      "question": "What is the correct pnpm command to install all workspace dependencies?",
+      "options": [
+        "pnpm install --all",
+        "pnpm install (from the root)",
+        "pnpm workspace install",
+        "pnpm recursive install"
+      ],
+      "answer": "pnpm install (from the root)",
+      "explanation": "Running pnpm install from the workspace root installs all packages and hoists shared dependencies. You never need to run install separately in each package folder."
+    },
+    {
+      "id": "M02-Q4",
+      "type": "short_answer",
+      "question": "Why must secrets like JWT_SECRET never be hardcoded, and what is the correct pattern?",
+      "answer_key": "Hardcoded secrets are committed to version control and persist forever even after deletion. The correct pattern is process.env.JWT_SECRET on the server and import.meta.env.VITE_X on the client, loaded from a .env file that is in .gitignore.",
+      "rubric": "Full credit: explains the persistence in version history AND gives the correct env var pattern for both server and client."
+    },
+    {
+      "id": "M02-Q5",
+      "type": "short_answer",
+      "question": "What are the four services in Meridian's Docker Compose topology, and what depends on what?",
+      "answer_key": "postgres, redis, server, client. Server depends_on postgres and redis. Client depends_on server (for proxy forwarding). Postgres and redis have no dependencies.",
+      "rubric": "1 point for listing all four services. 1 point for correct dependency order (server depends on postgres + redis)."
+    }
+  ]
+}
